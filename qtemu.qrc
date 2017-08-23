@@ -1,0 +1,6 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>icon/32x32/qtemu.png</file>
+    </qresource>
+</RCC>

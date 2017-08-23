@@ -1,0 +1,51 @@
+QtEmu - A front-end for qemu emulator
+
+Copyright (C) 2006-2009 Urs Wolfer and Ben Klopfenstein
+Copyright (C) 2017 Sergio Carlavilla <carlavilla @ mailbox.org>
+
+===============================================================================
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the
+   Free Software Foundation, Inc.,
+   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
+
+   Or visit http://www.gnu.org/licenses/
+
+===============================================================================
+
+QtEmu is a graphical user interface for QEMU written in Qt.
+It has the ability to run virtual operating systems on native
+systems. This way you can easily test a new operating system
+or try a Live CD on your system without any troubles and dangers.
+
+Command line parameters
+===============================================================================
+In progress....
+
+
+Languages
+===============================================================================
+
+QtEmu is available in English, Czech, German, Russian, Spanish, Turkish,
+French, Italian, Brazilian Portuguese and Polish.
+
+If you want to translate to another language be free to do it :D
+
+Authors
+===============================================================================
+QtEmu is written by Urs Wolfer <uwolfer fwo ch>.
+It has been started as a project work for school.
+Ben Klopfenstein <benklop gmail com> began adding some features
+he wanted, and is now rather involved in writing the next few
+versions. He also uses it for school.

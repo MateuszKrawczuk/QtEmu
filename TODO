@@ -1,0 +1,121 @@
+-----------------------
+The QtEmu TODO List:
+-----------------------
+
+------------------
+Version 2.0:
+------------------
+
+-----------------------
+Missing or Broken Features:
+-----------------------
+Missing or broken features need to be completed or disabled.
+
+* Add the progress bar for long operations like suspend/resume and saving a snapshot to the image file.
+
+--- finishing touches ---
+
+* Add tooltips to many UI components (machinetab.cpp is the only file left that needs updating)
+
+* Make sure shortcuts don't overlap and everything has an appropriate shortcut
+
+* Finish new help files
+
+* Update old help file
+  -- currently in progress
+
+--- wishes ---
+
+* size of ram selection should be added to the wizard.
+
+* a system tray icon
+
+-----------------
+Known Bugs:
+-----------------
+Known bugs must be fixed before the next release.
+
+------------------
+Known issues:
+------------------
+Known issues may be resolved for a later release.
+
+* does not switch between icon sets properly
+    - this can be fixed using the resource system to switch between icons, instead of the current method
+
+* should use actions for everything
+    - should make the interface work better
+        * menu item for force poweroff
+        * fullscreen toolbar
+
+* allow sending special keys (keys intercepted by X, the operating system, or qtemu) - maybe not yet, can be done through the console if needed.
+
+* the preview screenshot may not be handled correctly when it is a different aspect ratio than the preview window. it should display in the correct aspect ratio, centered in the preview window, rather than stretched. (is this a big deal to anyone?)
+
+------------------
+Additional features:
+------------------
+These are planned future features for QtEmu.
+
+-------------------
+Version 2.1 +:
+-------------------
+
+* working network configuration.
+   --this will be handled by adding a few shell scripts or possibly apps, then autogenerating a shell script for ifup/ifdown that calls these smaller scripts.
+     > a script to create a tap device
+     > a script to delete a tap device
+     > a script to create a bridge device
+     > a script to delete a bridge device
+     > a script to add a given ethernet interface to a given bridge, saving the ethernet interface's old settings
+     > a script to remove a given ethernet interface from a bridge, restoring the ethernet interface's old settings
+     > a script to suspend NetworkManager
+     > a script to resume NetworkManager
+     IF these are scripts, they need to be set up in the sudoers file, because scripts can't be set up suid.
+
+
+* detect the running sound system (in order of perference: pulse audio, esd, ALSA, OSS) and set the sound interface type automatically.
+
+* information about the virtual machnine in a box below the screen preview (Image size / size on disk, memory, processor usage info for running machines, etc.).
+
+* the preview image should show the last connected machine state if a machine is disconnected, or the current state for suspended machines. when a machine is off (not suspended) show the usual preview.
+
+* passive notification for noncritical errors (maybe in the currently unused status bar area?)
+
+* when qemu supports it, on the fly switching between GUI modes (perhaps using SDL for a faster fullscreen mode)
+
+* multiple hard drives / optical disks.
+
+* removal and insertion of optical disks and hard drives on the fly.
+
+* inclusion of tools to make the guest os integrate with the host better.
+  -copy/paste (WORKING)
+  -resolution changing
+  -console inside host
+  -usb device selection
+  -the ability to change most options that take affect on-the-fly
+  -possibly include some of them in a control panel app instead of the systray icon?
+
+* Allow selecting audio hardware
+
+* A System Summary page in the settings tab.
+
+* Allow selecting already existing disk images from the wizard
+
+-------------------
+Long Term (3.0?)
+-------------------
+* a standalone backend with no GUI dependancy. this will run virtual machines on multiple servers with the ability to migrate VMs from one server to another. a QtEmu client can connect to the server to administer and view virtual machines.
+
+* a permissions structure for this backend so only certain authenticated clients can perform certain tasks. multiple levels of permission per machnine.
+
+* assisted OS installation? a system that allows QtEmu to help you install an OS. maybe automatic installation by filling out a form with desired settings and QtEmu fills in the values during installation for popular operating systems.
+
+-------------------
+Very Long Term (11.25+)
+-------------------
+* Run virtual machines truly virtually - without any hardware at all. Eliminate the Host by manipulating molecules in the surrounding environment to simulate a machine through natural processes.
+
+* increase the speed of virtual machines so they actually run FASTER than the host machine. Then move the host processes to run inside the virtual machine we just created. By doing this operation multiple times, any host can virtualize an unlimited number of machines at an ever increasing speed.
+
+* virtualize the user of the guest as well. By doing this, we can determine what actions the user will make as well as how the guest will respond before either action has occured. In this way we can make the response time of the guests not just near zero, but actually negative.
