@@ -1,5 +1,5 @@
 /*
- * This file is part of QtEmu.
+ * This file is part of QtEmu project.
  * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
  * Copyright (C) 2017 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
@@ -56,6 +56,8 @@ void MainWindow::createMenus() {
 
     // Help
     helpMenu = new QMenu(tr("&Help"), this);
+    helpMenu->addAction(helpManual);
+    helpMenu->addSeparator();
 
     // Add the menus to the main menu bar
     this->menuBar()->addMenu(fileMenu);
@@ -75,5 +77,10 @@ void MainWindow::createMenusActions() {
     // Actions for Machine menu
 
     // Actions for Help menu
+    helpManual = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+                             tr("QtEmu &Help"),
+                             this);
+    connect(helpManual, SIGNAL(triggered()), helpManualWidget, SLOT(show()));
+    helpManual->setShortcut(Qt::Key_F1);
 
 }

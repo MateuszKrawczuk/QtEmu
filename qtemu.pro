@@ -49,7 +49,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += src/main.cpp\
         src/mainwindow.cpp
 
-HEADERS  += src/mainwindow.h
+HEADERS  += src/mainwindow.h \
+    src/helpmanualwidget.h
 
 OTHER_FILES += \
     CHANGELOG \

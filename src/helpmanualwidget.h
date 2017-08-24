@@ -19,42 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef HELPMANUALWIDGET_H
+#define HELPMANUALWIDGET_H
 
-// Qt
-#include <QMainWindow>
-#include <QSettings>
-#include <QApplication>
-#include <QMenu>
-#include <QMenuBar>
-#include <QAction>
-#include <QDebug>
-
-// Local
-
-class MainWindow : public QMainWindow {
-    Q_OBJECT
-
-    public:
-        MainWindow(QWidget *parent = 0);
-        ~MainWindow();
-
-        void createMenus();
-        void createMenusActions();
-    protected:
-
-    private:
-        // Start menus
-        QMenu *fileMenu;
-        QMenu *machineMenu;
-        QMenu *helpMenu;
-
-        QAction *helpManual;
-        // End menus
-
-        // Widgets
-        HelpManualWidget *helpManualWidget;
-};
-
-#endif // MAINWINDOW_H
+#endif // HELPMANUALWIDGET_H
