@@ -19,7 +19,44 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef HELPMANUALWIDGET_H
-#define HELPMANUALWIDGET_H
+#ifndef HELPWIDGET_H
+#define HELPWIDGET_H
 
-#endif // HELPMANUALWIDGET_H
+// Qt
+
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QTextBrowser>
+#include <QPushButton>
+#include <QAction>
+#include <QCloseEvent>
+#include <QHideEvent>
+#include <QSettings>
+
+#include <QDebug>
+
+class HelpWidget : public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit HelpWidget(QWidget *parent = 0);
+        ~HelpWidget();
+
+    signals:
+
+    public slots:
+
+    protected:
+        virtual void closeEvent(QCloseEvent *event);
+        virtual void hideEvent(QHideEvent *event);
+
+    private:
+        QVBoxLayout *mainLayout;
+        QTextBrowser *helpTextBrowser;
+
+        QPushButton *closeButton;
+        QAction *closeAction;
+
+};
+
+#endif // HELPWIDGET_H

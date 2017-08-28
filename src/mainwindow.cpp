@@ -32,7 +32,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     QSettings settings;
 
+    helpwidget = new HelpWidget(nullptr);
+
     // Create the menus
+    createMenusActions();
     createMenus();
 
 }
@@ -56,7 +59,7 @@ void MainWindow::createMenus() {
 
     // Help
     helpMenu = new QMenu(tr("&Help"), this);
-    helpMenu->addAction(helpManual);
+    helpMenu->addAction(helpQuickHelp);
     helpMenu->addSeparator();
 
     // Add the menus to the main menu bar
@@ -77,10 +80,10 @@ void MainWindow::createMenusActions() {
     // Actions for Machine menu
 
     // Actions for Help menu
-    helpManual = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
-                             tr("QtEmu &Help"),
-                             this);
-    connect(helpManual, SIGNAL(triggered()), helpManualWidget, SLOT(show()));
-    helpManual->setShortcut(Qt::Key_F1);
+    helpQuickHelp = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+                                tr("QtEmu &Quick Help"),
+                                this);
+    helpQuickHelp -> setShortcut(Qt::Key_F1);
+    connect(helpQuickHelp, SIGNAL(triggered()), helpwidget, SLOT(show()));
 
 }

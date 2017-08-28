@@ -47,10 +47,11 @@ CONFIG += c++14
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += src/main.cpp\
-        src/mainwindow.cpp
+           src/mainwindow.cpp \
+           src/helpwidget.cpp
 
 HEADERS  += src/mainwindow.h \
-    src/helpmanualwidget.h
+            src/helpwidget.h
 
 OTHER_FILES += \
     CHANGELOG \

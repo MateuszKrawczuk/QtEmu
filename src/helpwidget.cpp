@@ -19,43 +19,39 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 // Qt
-#include <QMainWindow>
-#include <QSettings>
-#include <QApplication>
-#include <QMenu>
-#include <QMenuBar>
-#include <QAction>
-#include <QDebug>
 
 // Local
 #include "helpwidget.h"
 
-class MainWindow : public QMainWindow {
-    Q_OBJECT
+HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
+    this -> setWindowTitle(tr("Quick Help") + " - QtEmu");
+    this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")));
+    this -> setWindowFlag(Qt::Window);
+    this -> setMinimumSize(320, 240);
 
-    public:
-        MainWindow(QWidget *parent = 0);
-        ~MainWindow();
+    QSettings settings;
 
-        void createMenus();
-        void createMenusActions();
-    protected:
+    QString helpText;
 
-    private:
-        // Start menus
-        QMenu *fileMenu;
-        QMenu *machineMenu;
-        QMenu *helpMenu;
 
-        QAction *helpQuickHelp;
-        // End menus
+}
 
-        // Widgets
-        HelpWidget *helpwidget;
-};
+HelpWidget::~HelpWidget() {
+    qDebug() << "HelpWidget destroyed";
+}
 
-#endif // MAINWINDOW_H
+void HelpWidget::closeEvent(QCloseEvent *event) {
+    this -> hide();
+    event -> ignore();
+}
+
+void HelpWidget::hideEvent(QHideEvent *event) {
+    QSettings settings;
+
+    if (settings.isWritable()) {
+        settings.setValue("HelpWidget/helpWindowSize", this->size());
+    }
+
+    event -> accept();
+}
