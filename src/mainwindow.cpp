@@ -59,13 +59,18 @@ void MainWindow::createMenus() {
 
     // Help
     helpMenu = new QMenu(tr("&Help"), this);
-    helpMenu->addAction(helpQuickHelp);
-    helpMenu->addSeparator();
+    helpMenu -> addAction(helpQuickHelp);
+    helpMenu -> addSeparator();
+    helpMenu -> addAction(helpQtEmuWebsite);
+    helpMenu -> addAction(helpQtEmuBugTracker);
+    helpMenu -> addAction(helpQemuWebsite);
+    helpMenu -> addSeparator();
+    helpMenu -> addAction(helpAbout);
 
     // Add the menus to the main menu bar
-    this->menuBar()->addMenu(fileMenu);
-    this->menuBar()->addMenu(machineMenu);
-    this->menuBar()->addMenu(helpMenu);
+    this->menuBar() -> addMenu(fileMenu);
+    this->menuBar() -> addMenu(machineMenu);
+    this->menuBar() -> addMenu(helpMenu);
 }
 
 /*!
@@ -84,6 +89,55 @@ void MainWindow::createMenusActions() {
                                 tr("QtEmu &Quick Help"),
                                 this);
     helpQuickHelp -> setShortcut(Qt::Key_F1);
-    connect(helpQuickHelp, SIGNAL(triggered()), helpwidget, SLOT(show()));
+    connect(helpQuickHelp, &QAction::triggered,
+            helpwidget, &QWidget::show);
 
+    helpQtEmuWebsite = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+                                   tr("QtEmu &Website"),
+                                   this);
+    connect(helpQtEmuWebsite, &QAction::triggered,
+            this, &MainWindow::visitQtEmuWebsite);
+
+    helpQtEmuBugTracker = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+                                      tr("QtEmu Bug Tracker"),
+                                      this);
+    connect(helpQtEmuBugTracker, &QAction::triggered,
+            this, &MainWindow::visitQtEmuBugTracker);
+
+    helpQemuWebsite = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+                                  tr("Qemu &Website"),
+                                  this);
+    connect(helpQemuWebsite, &QAction::triggered,
+            this, &MainWindow::visitQemuWebsite);
+
+    helpAbout = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+                            tr("&About QtEmu"),
+                            this);
+}
+
+/*!
+ * \brief Open QtEmu Website
+ *
+ * Open the QtEmu official webpage into your browser
+ */
+void MainWindow::visitQtEmuWebsite() {
+    QDesktopServices::openUrl(QUrl("https://www.qtemu.org"));
+}
+
+/*!
+ * \brief Open QtEmu Bug Tracker
+ *
+ * Open the QtEmu Bug Tracker into your browser
+ */
+void MainWindow::visitQtEmuBugTracker() {
+    QDesktopServices::openUrl(QUrl("https://gitlab.com/carlavilla/Qtemu/issues"));
+}
+
+/*!
+ * \brief Open Qemu Website
+ *
+ * Open the Qemu official webpage into your browser
+ */
+void MainWindow::visitQemuWebsite() {
+    QDesktopServices::openUrl(QUrl("https://www.qemu.org/"));
 }

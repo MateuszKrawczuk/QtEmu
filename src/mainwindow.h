@@ -29,6 +29,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
+#include <QDesktopServices>
 #include <QDebug>
 
 // Local
@@ -43,6 +44,12 @@ class MainWindow : public QMainWindow {
 
         void createMenus();
         void createMenusActions();
+
+    public slots:
+        void visitQtEmuWebsite();
+        void visitQtEmuBugTracker();
+        void visitQemuWebsite();
+
     protected:
 
     private:
@@ -52,6 +59,10 @@ class MainWindow : public QMainWindow {
         QMenu *helpMenu;
 
         QAction *helpQuickHelp;
+        QAction *helpQtEmuWebsite;
+        QAction *helpQtEmuBugTracker;
+        QAction *helpQemuWebsite;
+        QAction *helpAbout;
         // End menus
 
         // Widgets
