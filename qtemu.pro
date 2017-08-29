@@ -48,10 +48,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += src/main.cpp\
            src/mainwindow.cpp \
-           src/helpwidget.cpp
+           src/helpwidget.cpp \
+           src/aboutwidget.cpp
 
 HEADERS  += src/mainwindow.h \
-            src/helpwidget.h
+            src/helpwidget.h \
+            src/aboutwidget.h
 
 OTHER_FILES += \
     CHANGELOG \

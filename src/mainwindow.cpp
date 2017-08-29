@@ -85,32 +85,37 @@ void MainWindow::createMenusActions() {
     // Actions for Machine menu
 
     // Actions for Help menu
-    helpQuickHelp = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+    helpQuickHelp = new QAction(QIcon::fromTheme("help-contents",
+                                                 QIcon(":/icon/32x32/qtemu.png")),
                                 tr("QtEmu &Quick Help"),
                                 this);
     helpQuickHelp -> setShortcut(Qt::Key_F1);
     connect(helpQuickHelp, &QAction::triggered,
             helpwidget, &QWidget::show);
 
-    helpQtEmuWebsite = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+    helpQtEmuWebsite = new QAction(QIcon::fromTheme("internet-web-browser",
+                                                    QIcon(":/icon/32x32/qtemu.png")),
                                    tr("QtEmu &Website"),
                                    this);
     connect(helpQtEmuWebsite, &QAction::triggered,
             this, &MainWindow::visitQtEmuWebsite);
 
-    helpQtEmuBugTracker = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+    helpQtEmuBugTracker = new QAction(QIcon::fromTheme("tools-report-bug",
+                                                       QIcon(":/icon/32x32/qtemu.png")),
                                       tr("QtEmu Bug Tracker"),
                                       this);
     connect(helpQtEmuBugTracker, &QAction::triggered,
             this, &MainWindow::visitQtEmuBugTracker);
 
-    helpQemuWebsite = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+    helpQemuWebsite = new QAction(QIcon::fromTheme("internet-web-browser",
+                                                   QIcon(":/icon/32x32/qtemu.png")),
                                   tr("Qemu &Website"),
                                   this);
     connect(helpQemuWebsite, &QAction::triggered,
             this, &MainWindow::visitQemuWebsite);
 
-    helpAbout = new QAction(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")),
+    helpAbout = new QAction(QIcon::fromTheme("qtemu",
+                                             QIcon(":/icon/32x32/qtemu.png")),
                             tr("&About QtEmu"),
                             this);
 }

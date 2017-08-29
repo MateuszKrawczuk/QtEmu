@@ -19,57 +19,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ABOUTWIDGET_H
+#define ABOUTWIDGET_H
 
 // Qt
-#include <QMainWindow>
-#include <QSettings>
-#include <QApplication>
-#include <QMenu>
-#include <QMenuBar>
+
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QPushButton>
 #include <QAction>
-#include <QDesktopServices>
+#include <QCloseEvent>
+#include <QHideEvent>
+#include <QSettings>
+
 #include <QDebug>
 
-// Local
-#include "helpwidget.h"
-#include "aboutwidget.h"
-
-class MainWindow : public QMainWindow {
+class AboutWidget : public QWidget {
     Q_OBJECT
 
     public:
-        MainWindow(QWidget *parent = 0);
-        ~MainWindow();
+        explicit AboutWidget(QWidget *parent = 0);
+        ~AboutWidget();
 
-        void createMenus();
-        void createMenusActions();
+    signals:
 
     public slots:
-        void visitQtEmuWebsite();
-        void visitQtEmuBugTracker();
-        void visitQemuWebsite();
 
     protected:
 
     private:
-        // Start menus
-        QMenu *fileMenu;
-        QMenu *machineMenu;
-        QMenu *helpMenu;
 
-        QAction *helpQuickHelp;
-        QAction *helpQtEmuWebsite;
-        QAction *helpQtEmuBugTracker;
-        QAction *helpQemuWebsite;
-        QAction *helpAbout;
-        // End menus
-
-        // Widgets
-        HelpWidget *helpwidget;
-        AboutWidget *aboutwidget;
 };
 
-
-#endif // MAINWINDOW_H
+#endif // ABOUTWIDGET_H
