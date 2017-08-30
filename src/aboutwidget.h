@@ -26,11 +26,15 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QAction>
 #include <QCloseEvent>
 #include <QHideEvent>
-#include <QSettings>
+#include <QTabWidget>
+#include <QLabel>
+#include <QPixmap>
+#include <QApplication>
 
 #include <QDebug>
 
@@ -46,9 +50,17 @@ class AboutWidget : public QWidget {
     public slots:
 
     protected:
+        virtual void closeEvent(QCloseEvent *event);
+        virtual void hideEvent(QHideEvent *event);
 
     private:
-
+        QVBoxLayout *mainLayout;
+        QHBoxLayout *iconLayout;
+        QPushButton *closeButton;
+        QAction *closeAction;
+        QTabWidget *tabWidget;
+        QLabel *qtemuIcon;
+        QLabel *qtemuAppInfo;
 };
 
 #endif // ABOUTWIDGET_H

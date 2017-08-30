@@ -190,16 +190,16 @@ HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
     closeShortcuts << QKeySequence(Qt::Key_Escape);
     closeShortcuts << QKeySequence(Qt::Key_F1);
     closeAction = new QAction(this);
-    closeAction->setShortcuts(closeShortcuts);
+    closeAction -> setShortcuts(closeShortcuts);
     connect(closeAction, &QAction::triggered,
             this, &QWidget::hide);
     this->addAction(closeAction);
 
     mainLayout = new QVBoxLayout();
-    mainLayout->setContentsMargins(2, 2, 2, 2);
-    mainLayout->addWidget(helpTextBrowser);
-    mainLayout->addWidget(closeButton, 0, Qt::AlignRight);
-    this->setLayout(mainLayout);
+    mainLayout -> setContentsMargins(2, 2, 2, 2);
+    mainLayout -> addWidget(helpTextBrowser);
+    mainLayout -> addWidget(closeButton, 0, Qt::AlignRight);
+    this -> setLayout(mainLayout);
 
     qDebug() << "HelpWidget created";
 }

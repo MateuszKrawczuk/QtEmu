@@ -25,9 +25,66 @@
 #include "aboutwidget.h"
 
 AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
+    this -> setWindowTitle(tr("About") + " - QtEmu");
+    this -> setWindowIcon(QIcon::fromTheme("qtemu",
+                                           QIcon(":/icon/32x32/qtemu.png")));
+    this -> setWindowFlag(Qt::Window);
+    this -> setFixedSize(625, 320);
 
+
+    /*closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
+                                  tr("&Close"),
+                                  this);
+
+    connect(closeButton, &QAbstractButton::clicked,
+            this, &QWidget::hide);
+
+    QList<QKeySequence> closeShortcuts;
+    closeShortcuts << QKeySequence(Qt::Key_Escape);
+    closeAction = new QAction(this);
+    closeAction -> setShortcuts(closeShortcuts);
+    connect(closeAction, &QAction::triggered,
+            this, &QWidget::hide);
+    this -> addAction(closeAction);
+
+    */
+
+    tabWidget = new QTabWidget(this);
+    tabWidget -> addTab(new AboutTab(), tr("About"));
+    tabWidget -> addTab(new AuthorsTab(), tr("Authors"));
+    tabWidget -> addTab(new LicenseTab(), tr("License"));
+
+    mainLayout = new QVBoxLayout();
+
+    iconLayout = new QHBoxLayout();
+    iconLayout -> setContentsMargins(0, 12, 0, 0);
+
+    qtemuIcon = new QLabel(this);
+    qtemuIcon -> setPixmap(QPixmap(":/icon/32x32/qtemu.png"));
+    iconLayout -> addWidget(qtemuIcon, 0, Qt::AlignTop);
+
+    qtemuAppInfo = new QLabel(QString("<h3><strong>%1 v%2</strong></h3>")
+                              .arg(qApp -> applicationName())
+                              .arg(qApp -> applicationVersion()), this);
+    qtemuAppInfo->setContentsMargins(10, 0, 0, 0);
+
+    iconLayout -> addWidget(qtemuAppInfo, 1, Qt::AlignTop);
+    mainLayout -> addItem(iconLayout);
+
+    this -> setLayout(mainLayout);
+
+    qDebug() << "AboutWidget created";
 }
 
 AboutWidget::~AboutWidget() {
     qDebug() << "AboutWidget destroyed";
+}
+
+void AboutWidget::closeEvent(QCloseEvent *event) {
+    this -> hide();
+    event -> ignore();
+}
+
+void AboutWidget::hideEvent(QHideEvent *event) {
+    event -> accept();
 }
