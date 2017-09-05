@@ -54,9 +54,9 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     tabWidget -> addTab(new AuthorsTab(), tr("Authors"));
     tabWidget -> addTab(new LicenseTab(), tr("License"));
 
-    mainLayout = new QVBoxLayout();
+    mainLayout = new QVBoxLayout(this);
 
-    iconLayout = new QHBoxLayout();
+    iconLayout = new QHBoxLayout(this);
     iconLayout -> setContentsMargins(0, 12, 0, 0);
 
     qtemuIcon = new QLabel(this);
@@ -70,6 +70,7 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
 
     iconLayout -> addWidget(qtemuAppInfo, 1, Qt::AlignTop);
     mainLayout -> addItem(iconLayout);
+    mainLayout -> addWidget(tabWidget);
 
     this -> setLayout(mainLayout);
 
@@ -87,4 +88,34 @@ void AboutWidget::closeEvent(QCloseEvent *event) {
 
 void AboutWidget::hideEvent(QHideEvent *event) {
     event -> accept();
+}
+
+AboutTab::AboutTab(QWidget *parent) : QWidget(parent) {
+
+
+
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    this -> setLayout(mainLayout);
+
+}
+
+AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent) {
+
+
+
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    this -> setLayout(mainLayout);
+
+}
+
+LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent) {
+
+
+
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    this -> setLayout(mainLayout);
+
 }

@@ -32,7 +32,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     QSettings settings;
 
-    helpwidget = new HelpWidget(nullptr);
+    helpwidget  = new HelpWidget(nullptr);
+    aboutwidget = new AboutWidget(nullptr);
 
     // Create the menus
     createMenusActions();
@@ -118,6 +119,8 @@ void MainWindow::createMenusActions() {
                                              QIcon(":/icon/32x32/qtemu.png")),
                             tr("&About QtEmu"),
                             this);
+    connect(helpAbout, &QAction::triggered,
+            aboutwidget, &QWidget::show);
 }
 
 /*!

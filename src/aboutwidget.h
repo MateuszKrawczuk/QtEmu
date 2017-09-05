@@ -38,6 +38,27 @@
 
 #include <QDebug>
 
+class AboutTab : public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit AboutTab(QWidget *parent = 0);
+};
+
+class AuthorsTab : public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit AuthorsTab(QWidget *parent = 0);
+};
+
+class LicenseTab : public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit LicenseTab(QWidget *parent = 0);
+};
+
 class AboutWidget : public QWidget {
     Q_OBJECT
 
@@ -56,6 +77,7 @@ class AboutWidget : public QWidget {
     private:
         QVBoxLayout *mainLayout;
         QHBoxLayout *iconLayout;
+        QHBoxLayout *btnCloseLayout;
         QPushButton *closeButton;
         QAction *closeAction;
         QTabWidget *tabWidget;
