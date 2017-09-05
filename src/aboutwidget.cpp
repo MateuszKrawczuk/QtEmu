@@ -31,11 +31,9 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     this -> setWindowFlag(Qt::Window);
     this -> setFixedSize(625, 320);
 
-
-    /*closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
+    closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
                                   tr("&Close"),
                                   this);
-
     connect(closeButton, &QAbstractButton::clicked,
             this, &QWidget::hide);
 
@@ -46,8 +44,6 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     connect(closeAction, &QAction::triggered,
             this, &QWidget::hide);
     this -> addAction(closeAction);
-
-    */
 
     tabWidget = new QTabWidget(this);
     tabWidget -> addTab(new AboutTab(), tr("About"));
@@ -70,9 +66,8 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
 
     iconLayout -> addWidget(qtemuAppInfo, 1, Qt::AlignTop);
     mainLayout -> addItem(iconLayout);
-    mainLayout -> addWidget(tabWidget);
-
-    this -> setLayout(mainLayout);
+    mainLayout -> addWidget(tabWidget, 0);
+    mainLayout -> addWidget(closeButton, 1, Qt::AlignRight);
 
     qDebug() << "AboutWidget created";
 }
@@ -91,31 +86,63 @@ void AboutWidget::hideEvent(QHideEvent *event) {
 }
 
 AboutTab::AboutTab(QWidget *parent) : QWidget(parent) {
-
-
-
-
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    this -> setLayout(mainLayout);
+    mainLayout = new QVBoxLayout(this);
 
 }
 
+AboutTab::~AboutTab() {
+    qDebug() << "AboutTab destroyed";
+}
+
 AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent) {
+    mainLayout = new QVBoxLayout(this);
 
+}
 
-
-
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    this -> setLayout(mainLayout);
-
+AuthorsTab::~AuthorsTab() {
+    qDebug() << "AuthorsTab destroyed";
 }
 
 LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent) {
 
+    QString license;
+
+    license.append("<center><p><strong>GNU GENERAL PUBLIC LICENSE</strong></p></center>"
+                   "<center><p>Version 2, June 1991<p></center>"
+                    "<hr />"
+                   "<p>"
+                      "Copyright (C) 1989, 1991 Free Software Foundation, Inc."
+                      "51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA"
+                   "</p>"
+                   "<p>"
+                      "Everyone is permitted to copy and distribute verbatim copies"
+                      "of this license document, but changing it is not allowed."
+                   "</p>"
+                   "<p><strong>Preamble</strong></p>"
+                   "<p>"
+                      "The licenses for most software are designed to take away your freedom "
+                      "to share and change it. By contrast, the GNU General Public License is "
+                      "intended to guarantee your freedom to share and change free software--to "
+                      "make sure the software is free for all its users. This General Public License "
+                      "applies to most of the Free Software Foundation's software and to any other "
+                      "program whose authors commit to using it. (Some other Free Software Foundation "
+                      "software is covered by the GNU Lesser General Public License instead.) "
+                      "You can apply it to your programs, too."
+                   "</p>"
+                    );
 
 
+    mainLayout = new QVBoxLayout(this);
+    mainLayout -> setContentsMargins(2, 2, 2, 2);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    this -> setLayout(mainLayout);
+    licenseBrowser = new QTextBrowser();
+    licenseBrowser -> setReadOnly(true);
+    licenseBrowser -> setOpenExternalLinks(false);
+    licenseBrowser -> setHtml(license);
 
+    mainLayout -> addWidget(licenseBrowser, 0);
+}
+
+LicenseTab::~LicenseTab() {
+    qDebug() << "LicenseTab destroyed";
 }

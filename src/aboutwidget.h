@@ -35,6 +35,7 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QApplication>
+#include <QTextBrowser>
 
 #include <QDebug>
 
@@ -43,6 +44,15 @@ class AboutTab : public QWidget {
 
     public:
         explicit AboutTab(QWidget *parent = 0);
+        ~AboutTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *mainLayout;
 };
 
 class AuthorsTab : public QWidget {
@@ -50,6 +60,16 @@ class AuthorsTab : public QWidget {
 
     public:
         explicit AuthorsTab(QWidget *parent = 0);
+        ~AuthorsTab();
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *mainLayout;
 };
 
 class LicenseTab : public QWidget {
@@ -57,6 +77,17 @@ class LicenseTab : public QWidget {
 
     public:
         explicit LicenseTab(QWidget *parent = 0);
+        ~LicenseTab();
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *mainLayout;
+        QTextBrowser *licenseBrowser;
 };
 
 class AboutWidget : public QWidget {
@@ -77,7 +108,6 @@ class AboutWidget : public QWidget {
     private:
         QVBoxLayout *mainLayout;
         QHBoxLayout *iconLayout;
-        QHBoxLayout *btnCloseLayout;
         QPushButton *closeButton;
         QAction *closeAction;
         QTabWidget *tabWidget;
