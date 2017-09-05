@@ -53,6 +53,9 @@ class AboutTab : public QWidget {
 
     private:
         QVBoxLayout *mainLayout;
+        QLabel *about;
+        QLabel *copyright;
+        QLabel *urlSite;
 };
 
 class AuthorsTab : public QWidget {
@@ -70,6 +73,7 @@ class AuthorsTab : public QWidget {
 
     private:
         QVBoxLayout *mainLayout;
+        QTextBrowser *authorsBrowser;
 };
 
 class LicenseTab : public QWidget {

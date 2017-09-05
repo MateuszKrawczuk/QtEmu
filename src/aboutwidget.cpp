@@ -86,7 +86,14 @@ void AboutWidget::hideEvent(QHideEvent *event) {
 }
 
 AboutTab::AboutTab(QWidget *parent) : QWidget(parent) {
+    QLabel *about = new QLabel(tr("QtEmu is a graphical user interface for QEMU"), this);
+    QLabel *copyright = new QLabel("Copyright (C) 2006-2009 Urs Wolfer\nCopyright (C) 2017 Sergio Carlavilla Delgado");
+    QLabel *urlSite = new QLabel("<a href=\"https://www.qtemu.org\">www.qtemu.org</a>");
+
     mainLayout = new QVBoxLayout(this);
+    mainLayout -> addWidget(about);
+    mainLayout -> addWidget(copyright);
+    mainLayout -> addWidget(urlSite, 0, Qt::AlignCenter);
 
 }
 
@@ -95,7 +102,36 @@ AboutTab::~AboutTab() {
 }
 
 AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent) {
+
+    QString authors;
+
+    authors.append(
+                   "<p>"
+                       "Urs Wolfer<br />"
+                       "&nbsp;&nbsp;" + tr("Email") + ": <a href=\"mailto\">uwolfer@fwo.ch</a><br />"
+                       "&nbsp;&nbsp;Original developer"
+                   "</p>"
+                   "<p>"
+                      "Ben Klopfenstein<br />"
+                      "&nbsp;&nbsp;" + tr("Email") + ": <a href=\"mailto\">benklop@gmail.com</a><br />"
+                      "&nbsp;&nbsp;Past developer, added some features"
+                   "</p>"
+                   "<p>"
+                      "Sergio Carlavilla Delgado<br />"
+                      "&nbsp;&nbsp;" + tr("Email") + ": <a href=\"mailto\">carlavilla@mailbox.org</a><br />"
+                      "&nbsp;&nbsp;Current developer"
+                   "</p>"
+                   );
+
     mainLayout = new QVBoxLayout(this);
+    mainLayout -> setContentsMargins(2, 2, 2, 2);
+
+    authorsBrowser = new QTextBrowser();
+    authorsBrowser -> setReadOnly(true);
+    authorsBrowser -> setOpenExternalLinks(false);
+    authorsBrowser -> setHtml(authors);
+
+    mainLayout -> addWidget(authorsBrowser, 0);
 
 }
 
