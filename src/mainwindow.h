@@ -59,6 +59,9 @@ class MainWindow : public QMainWindow {
         QMenu *machineMenu;
         QMenu *helpMenu;
 
+        QAction *exitApp;
+        QAction *preferencesApp;
+
         QAction *helpQuickHelp;
         QAction *helpQtEmuWebsite;
         QAction *helpQtEmuBugTracker;

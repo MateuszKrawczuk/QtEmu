@@ -54,6 +54,9 @@ void MainWindow::createMenus() {
 
     // File
     fileMenu = new QMenu(tr("&File"), this);
+    fileMenu -> addAction(preferencesApp);
+    fileMenu -> addSeparator();
+    fileMenu -> addAction(exitApp);
 
     // Machine
     machineMenu = new QMenu(tr("&Machine"), this);
@@ -82,6 +85,15 @@ void MainWindow::createMenus() {
 void MainWindow::createMenusActions() {
 
     // Actions for File menu
+    preferencesApp = new QAction(QIcon::fromTheme("configure",
+                                                  QIcon(":/icon/32x32/qtemu.png")),
+                                 tr("Preferences"),
+                                 this);
+
+    exitApp = new QAction(QIcon::fromTheme("application-exit",
+                                           QIcon(":/icon/32x32/qtemu.png")),
+                          tr("Exit"),
+                          this);
 
     // Actions for Machine menu
 
