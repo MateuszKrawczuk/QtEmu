@@ -25,7 +25,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> setWindowTitle("QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")));
-    this -> setMinimumSize(500, 600);
+    this -> setMinimumSize(700, 500);
 
     // Close the application when all windows are closed
     qApp->setQuitOnLastWindowClosed(true);
@@ -56,10 +56,18 @@ void MainWindow::createMenus() {
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu -> addAction(preferencesApp);
     fileMenu -> addSeparator();
+    fileMenu -> addAction(checkUpdateApp);
+    fileMenu -> addSeparator();
     fileMenu -> addAction(exitApp);
 
     // Machine
     machineMenu = new QMenu(tr("&Machine"), this);
+    machineMenu -> addAction(newMachine);
+    machineMenu -> addAction(addMachine);
+    machineMenu -> addAction(settingsMachine);
+    machineMenu -> addAction(duplicateMachine);
+    machineMenu -> addAction(removeMachine);
+    machineMenu -> addAction(groupMachine);
 
     // Help
     helpMenu = new QMenu(tr("&Help"), this);
@@ -90,12 +98,48 @@ void MainWindow::createMenusActions() {
                                  tr("Preferences"),
                                  this);
 
+    checkUpdateApp = new QAction(QIcon::fromTheme("update-none",
+                                                  QIcon(":/icon/32x32/qtemu.png")),
+                                 tr("Check for updates"),
+                                 this);
+
     exitApp = new QAction(QIcon::fromTheme("application-exit",
                                            QIcon(":/icon/32x32/qtemu.png")),
                           tr("Exit"),
                           this);
 
     // Actions for Machine menu
+
+    newMachine = new QAction(QIcon::fromTheme("project-development-new-template",
+                                              QIcon(":/icon/32x32/qtemu.png")),
+                             tr("New"),
+                             this);
+
+    addMachine = new QAction(QIcon::fromTheme("project-development",
+                                              QIcon(":/icon/32x32/qtemu.png")),
+                             tr("Add"),
+                             this);
+
+    settingsMachine = new QAction(QIcon::fromTheme("settings-configure",
+                                                   QIcon(":/icon/32x32/qtemu.png")),
+                                  tr("Settings"),
+                                  this);
+
+    duplicateMachine = new QAction(QIcon::fromTheme("edit-duplicate",
+                                                    QIcon(":/icon/32x32/qtemu.png")),
+                                   tr("Duplicate"),
+                                   this);
+
+    removeMachine = new QAction(QIcon::fromTheme("project-development-close",
+                                                 QIcon(":/icon/32x32/qtemu.png")),
+                                tr("Remove"),
+                                this);
+
+    groupMachine = new QAction(QIcon::fromTheme("view-group",
+                                                QIcon(":/icon/32x32/qtemu.png")),
+                               tr("Group"),
+                               this);
+
 
     // Actions for Help menu
     helpQuickHelp = new QAction(QIcon::fromTheme("help-contents",

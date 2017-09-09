@@ -60,7 +60,15 @@ class MainWindow : public QMainWindow {
         QMenu *helpMenu;
 
         QAction *exitApp;
+        QAction *checkUpdateApp;
         QAction *preferencesApp;
+
+        QAction *newMachine;
+        QAction *addMachine;
+        QAction *settingsMachine;
+        QAction *duplicateMachine;
+        QAction *removeMachine;
+        QAction *groupMachine;
 
         QAction *helpQuickHelp;
         QAction *helpQtEmuWebsite;
