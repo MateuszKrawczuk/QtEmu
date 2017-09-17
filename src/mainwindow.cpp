@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     QSettings settings;
 
+    configWindow = new ConfigWindow(this);
     helpwidget  = new HelpWidget(nullptr);
     aboutwidget = new AboutWidget(nullptr);
 
@@ -97,6 +98,9 @@ void MainWindow::createMenusActions() {
                                                   QIcon(":/icon/32x32/qtemu.png")),
                                  tr("Preferences"),
                                  this);
+    //preferencesApp -> setShortcut(Qt::Key_F1);
+    connect(preferencesApp, &QAction::triggered,
+            configWindow, &QWidget::show);
 
     checkUpdateApp = new QAction(QIcon::fromTheme("update-none",
                                                   QIcon(":/icon/32x32/qtemu.png")),

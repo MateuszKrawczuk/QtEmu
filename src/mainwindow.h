@@ -35,6 +35,7 @@
 // Local
 #include "helpwidget.h"
 #include "aboutwidget.h"
+#include "configwindow.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -78,6 +79,7 @@ class MainWindow : public QMainWindow {
         // End menus
 
         // Widgets
+        ConfigWindow *configWindow;
         HelpWidget *helpwidget;
         AboutWidget *aboutwidget;
 };
