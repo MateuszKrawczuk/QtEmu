@@ -26,6 +26,16 @@
 #include <QWidget>
 #include <QSettings>
 #include <QIcon>
+#include <QFileDialog>
+#include <QDir>
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QAction>
 
 #include <QDebug>
 
@@ -50,6 +60,24 @@ class ConfigWindow : public QWidget {
     protected:
 
     private:
+       QListWidget *optionsListWidget;
+
+       QStackedWidget *categoriesStackedWidget;
+
+       QLabel *defaultMachineFolder;
+
+       QVBoxLayout *mainLayout;
+       QVBoxLayout *generalPageLayout;
+
+       QHBoxLayout *topLayout;
+       QHBoxLayout *buttonsLayout;
+
+       QWidget *generalPageWidget;
+
+       QPushButton *saveButton;
+       QPushButton *closeButton;
+
+       QAction *closeAction;
 
 };
 
