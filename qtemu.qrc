@@ -2,15 +2,25 @@
     <qresource prefix="/">
         <file>icon/32x32/qtemu.png</file>
         <file>images/close.png</file>
-        <file>images/flags/brazil.svg</file>
-        <file>images/flags/czech.svg</file>
-        <file>images/flags/eeuu.svg</file>
-        <file>images/flags/france.svg</file>
-        <file>images/flags/germany.svg</file>
-        <file>images/flags/italy.svg</file>
-        <file>images/flags/poland.svg</file>
-        <file>images/flags/russia.svg</file>
-        <file>images/flags/spain.svg</file>
-        <file>images/flags/turkey.svg</file>
+        <file>icon/32x32/flags/brazil.png</file>
+        <file>icon/32x32/flags/czech.png</file>
+        <file>icon/32x32/flags/eeuu.png</file>
+        <file>icon/32x32/flags/france.png</file>
+        <file>icon/32x32/flags/germany.png</file>
+        <file>icon/32x32/flags/italy.png</file>
+        <file>icon/32x32/flags/poland.png</file>
+        <file>icon/32x32/flags/russia.png</file>
+        <file>icon/32x32/flags/spain.png</file>
+        <file>icon/32x32/flags/turkey.png</file>
+        <file>icon/64x64/flags/brazil.png</file>
+        <file>icon/64x64/flags/czech.png</file>
+        <file>icon/64x64/flags/eeuu.png</file>
+        <file>icon/64x64/flags/france.png</file>
+        <file>icon/64x64/flags/germany.png</file>
+        <file>icon/64x64/flags/italy.png</file>
+        <file>icon/64x64/flags/poland.png</file>
+        <file>icon/64x64/flags/russia.png</file>
+        <file>icon/64x64/flags/spain.png</file>
+        <file>icon/64x64/flags/turkey.png</file>
     </qresource>
 </RCC>

@@ -184,47 +184,59 @@ void ConfigWindow::createLanguagePage(){
 
     languagesListView -> addItem("English");
     languagesListView -> item(0) -> setIcon(QIcon::fromTheme("eeuu-flag",
-                                                              QIcon(":/images/flags/eeuu.svg")));
+                                                              QIcon(":/icon/32x32/flags/eeuu.png")));
 
     languagesListView -> addItem("Deutsch");
     languagesListView -> item(1) -> setIcon(QIcon::fromTheme("germany-flag",
-                                                              QIcon(":/images/flags/germany.svg")));
+                                                              QIcon(":/icon/32x32/flags/germany.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Türkçe"));
     languagesListView -> item(2) -> setIcon(QIcon::fromTheme("turkey-flag",
-                                                              QIcon(":/images/flags/turkey.svg")));
+                                                              QIcon(":/icon/32x32/flags/turkey.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Русский"));
     languagesListView -> item(3) -> setIcon(QIcon::fromTheme("russia-flag",
-                                                              QIcon(":/images/flags/russia.svg")));
+                                                              QIcon(":/icon/32x32/flags/russia.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Česky"));
     languagesListView -> item(4) -> setIcon(QIcon::fromTheme("czech-flag",
-                                                              QIcon(":/images/flags/czech.svg")));
+                                                              QIcon(":/icon/32x32/flags/czech.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Español"));
     languagesListView -> item(5) -> setIcon(QIcon::fromTheme("spain-flag",
-                                                              QIcon(":/images/flags/spain.svg")));
+                                                              QIcon(":/icon/32x32/flags/spain.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Français"));
     languagesListView -> item(6) -> setIcon(QIcon::fromTheme("france-flag",
-                                                              QIcon(":/images/flags/france.svg")));
+                                                              QIcon(":/icon/32x32/flags/france.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Italiano"));
     languagesListView -> item(7) -> setIcon(QIcon::fromTheme("italy-flag",
-                                                              QIcon(":/images/flags/italy.svg")));
+                                                              QIcon(":/icon/32x32/flags/italy.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Português do Brasil"));
     languagesListView -> item(8) -> setIcon(QIcon::fromTheme("brazil-flag",
-                                                              QIcon(":/images/flags/brazil.svg")));
+                                                              QIcon(":/icon/32x32/flags/brazil.png")));
 
     languagesListView -> addItem(QString::fromUtf8("Polski"));
     languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
-                                                              QIcon(":/images/flags/poland.svg")));
+                                                              QIcon(":/icon/32x32/flags/poland.png")));
+
+    languageDescription = new QLabel(tr("Language") + ":");
+    languageSelected = new QLabel();
+
+    connect(languagesListView, &QListWidget::currentTextChanged,
+            languageSelected, &QLabel::setText);
 
     languagePageLayout = new QVBoxLayout();
     languagePageLayout -> addWidget(languageLabel);
     languagePageLayout -> addWidget(languagesListView);
+
+    languageHLayout = new QHBoxLayout();
+    languageHLayout -> addWidget(languageDescription);
+    languageHLayout -> addWidget(languageSelected);
+
+    languagePageLayout -> addItem(languageHLayout);
 
     languagePageWidget = new QWidget(this);
     languagePageWidget -> setLayout(languagePageLayout);

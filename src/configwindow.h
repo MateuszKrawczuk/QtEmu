@@ -68,6 +68,7 @@ class ConfigWindow : public QWidget {
        QLabel *defaultMachineFolder;
        QLabel *languageLabel;
        QLabel *languageDescription;
+       QLabel *languageSelected;
        QLabel *languageAuthors;
 
        QVBoxLayout *mainLayout;
@@ -78,9 +79,9 @@ class ConfigWindow : public QWidget {
        QVBoxLayout *startPageLayout;
        QVBoxLayout *proxyPageLayout;
 
-
        QHBoxLayout *topLayout;
        QHBoxLayout *buttonsLayout;
+       QHBoxLayout *languageHLayout;
 
        QWidget *generalPageWidget;
        QWidget *inputPageWidget;
