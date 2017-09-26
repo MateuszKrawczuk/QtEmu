@@ -89,6 +89,11 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
                                              QSizePolicy::MinimumExpanding);
 
     categoriesStackedWidget -> addWidget(generalPageWidget);
+    categoriesStackedWidget -> addWidget(inputPageWidget);
+    categoriesStackedWidget -> addWidget(updatePageWidget);
+    categoriesStackedWidget -> addWidget(languagePageWidget);
+    categoriesStackedWidget -> addWidget(startPageWidget);
+    categoriesStackedWidget -> addWidget(proxyPageWidget);
 
     connect(optionsListWidget, &QListWidget::currentRowChanged,
             categoriesStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -153,20 +158,90 @@ void ConfigWindow::createGeneralPage() {
 
 void ConfigWindow::createInputPage(){
 
+    inputPageLayout = new QVBoxLayout();
+
+    inputPageWidget = new QWidget(this);
+    inputPageWidget -> setLayout(inputPageLayout);
 }
 
 void ConfigWindow::createUpdatePage(){
 
+    updatePageLayout = new QVBoxLayout();
+
+    updatePageWidget = new QWidget(this);
+    updatePageWidget -> setLayout(updatePageLayout);
 }
 
 void ConfigWindow::createLanguagePage(){
+    languageLabel = new QLabel(tr("Interface language"));
 
+    languagesListView = new QListWidget();
+
+    languagesListView -> setViewMode(QListView::ListMode);
+    languagesListView -> setIconSize(QSize(32, 32));
+    languagesListView -> setMovement(QListView::Static);
+    languagesListView -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    languagesListView -> addItem("English");
+    languagesListView -> item(0) -> setIcon(QIcon::fromTheme("eeuu-flag",
+                                                              QIcon(":/images/flags/eeuu.svg")));
+
+    languagesListView -> addItem("Deutsch");
+    languagesListView -> item(1) -> setIcon(QIcon::fromTheme("germany-flag",
+                                                              QIcon(":/images/flags/germany.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Türkçe"));
+    languagesListView -> item(2) -> setIcon(QIcon::fromTheme("turkey-flag",
+                                                              QIcon(":/images/flags/turkey.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Русский"));
+    languagesListView -> item(3) -> setIcon(QIcon::fromTheme("russia-flag",
+                                                              QIcon(":/images/flags/russia.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Česky"));
+    languagesListView -> item(4) -> setIcon(QIcon::fromTheme("czech-flag",
+                                                              QIcon(":/images/flags/czech.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Español"));
+    languagesListView -> item(5) -> setIcon(QIcon::fromTheme("spain-flag",
+                                                              QIcon(":/images/flags/spain.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Français"));
+    languagesListView -> item(6) -> setIcon(QIcon::fromTheme("france-flag",
+                                                              QIcon(":/images/flags/france.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Italiano"));
+    languagesListView -> item(7) -> setIcon(QIcon::fromTheme("italy-flag",
+                                                              QIcon(":/images/flags/italy.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Português do Brasil"));
+    languagesListView -> item(8) -> setIcon(QIcon::fromTheme("brazil-flag",
+                                                              QIcon(":/images/flags/brazil.svg")));
+
+    languagesListView -> addItem(QString::fromUtf8("Polski"));
+    languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
+                                                              QIcon(":/images/flags/poland.svg")));
+
+    languagePageLayout = new QVBoxLayout();
+    languagePageLayout -> addWidget(languageLabel);
+    languagePageLayout -> addWidget(languagesListView);
+
+    languagePageWidget = new QWidget(this);
+    languagePageWidget -> setLayout(languagePageLayout);
 }
 
 void ConfigWindow::createStartPage(){
 
+    startPageLayout = new QVBoxLayout();
+
+    startPageWidget = new QWidget(this);
+    startPageWidget -> setLayout(startPageLayout);
 }
 
 void ConfigWindow::createProxyPage(){
 
+    proxyPageLayout = new QVBoxLayout();
+
+    proxyPageWidget = new QWidget(this);
+    proxyPageWidget -> setLayout(proxyPageLayout);
 }

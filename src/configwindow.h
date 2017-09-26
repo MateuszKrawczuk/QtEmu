@@ -61,18 +61,33 @@ class ConfigWindow : public QWidget {
 
     private:
        QListWidget *optionsListWidget;
+       QListWidget *languagesListView;
 
        QStackedWidget *categoriesStackedWidget;
 
        QLabel *defaultMachineFolder;
+       QLabel *languageLabel;
+       QLabel *languageDescription;
+       QLabel *languageAuthors;
 
        QVBoxLayout *mainLayout;
        QVBoxLayout *generalPageLayout;
+       QVBoxLayout *inputPageLayout;
+       QVBoxLayout *updatePageLayout;
+       QVBoxLayout *languagePageLayout;
+       QVBoxLayout *startPageLayout;
+       QVBoxLayout *proxyPageLayout;
+
 
        QHBoxLayout *topLayout;
        QHBoxLayout *buttonsLayout;
 
        QWidget *generalPageWidget;
+       QWidget *inputPageWidget;
+       QWidget *updatePageWidget;
+       QWidget *languagePageWidget;
+       QWidget *startPageWidget;
+       QWidget *proxyPageWidget;
 
        QPushButton *saveButton;
        QPushButton *closeButton;

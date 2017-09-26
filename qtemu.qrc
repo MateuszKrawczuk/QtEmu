@@ -1,7 +1,16 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
+<RCC>
     <qresource prefix="/">
         <file>icon/32x32/qtemu.png</file>
         <file>images/close.png</file>
+        <file>images/flags/brazil.svg</file>
+        <file>images/flags/czech.svg</file>
+        <file>images/flags/eeuu.svg</file>
+        <file>images/flags/france.svg</file>
+        <file>images/flags/germany.svg</file>
+        <file>images/flags/italy.svg</file>
+        <file>images/flags/poland.svg</file>
+        <file>images/flags/russia.svg</file>
+        <file>images/flags/spain.svg</file>
+        <file>images/flags/turkey.svg</file>
     </qresource>
 </RCC>
