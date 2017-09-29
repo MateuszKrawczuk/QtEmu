@@ -222,11 +222,14 @@ void ConfigWindow::createLanguagePage(){
     languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
                                                               QIcon(":/icon/32x32/flags/poland.png")));
 
-    languageDescription = new QLabel(tr("Language") + ":");
-    languageSelected = new QLabel();
+    languageDescription = new QLabel();
+    languageAuthors = new QLabel();
 
     connect(languagesListView, &QListWidget::currentTextChanged,
-            languageSelected, &QLabel::setText);
+            this, &ConfigWindow::setLanguageLabel);
+
+    connect(languagesListView, &QListWidget::currentRowChanged,
+            this, &ConfigWindow::setAuthorsLabel);
 
     languagePageLayout = new QVBoxLayout();
     languagePageLayout -> addWidget(languageLabel);
@@ -234,7 +237,7 @@ void ConfigWindow::createLanguagePage(){
 
     languageHLayout = new QHBoxLayout();
     languageHLayout -> addWidget(languageDescription);
-    languageHLayout -> addWidget(languageSelected);
+    languageHLayout -> addWidget(languageAuthors);
 
     languagePageLayout -> addItem(languageHLayout);
 
@@ -256,4 +259,53 @@ void ConfigWindow::createProxyPage(){
 
     proxyPageWidget = new QWidget(this);
     proxyPageWidget -> setLayout(proxyPageLayout);
+}
+
+void ConfigWindow::setLanguageLabel(QString language){
+    QString description = tr("Language") + ": ";
+    description.append(language);
+
+    this -> languageDescription -> setText(description);
+}
+
+void ConfigWindow::setAuthorsLabel(int languagePosition){
+    QString authors = tr("Authors") + ": ";
+
+    switch (languagePosition) {
+        case 0:
+            authors.append(tr("QtEmu Developers"));
+            break;
+        case 1:
+            authors.append(tr("QtEmu Developers"));
+            break;
+        case 2:
+            authors.append(QString::fromUtf8("Necmettin Begiter"));
+            break;
+        case 3:
+            authors.append(QString::fromUtf8("Vasily Cheremisinov"));
+            break;
+        case 4:
+            authors.append(QString::fromUtf8("excamo"));
+            break;
+        case 5:
+            authors.append(QString::fromUtf8("Manolo Valdes"));
+            break;
+        case 6:
+            authors.append(QString::fromUtf8("Fathi Boudra"));
+            break;
+        case 7:
+            authors.append(QString::fromUtf8("Gianluca Cecchi"));
+            break;
+        case 8:
+            authors.append(QString::fromUtf8("Jackson Miliszewski"));
+            break;
+        case 9:
+            authors.append(QString::fromUtf8("Milosz Galazka"));
+            break;
+        default:
+            authors.append(tr("Unknown author"));
+            break;
+    }
+
+    this -> languageAuthors -> setText(authors);
 }

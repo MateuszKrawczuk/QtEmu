@@ -36,6 +36,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QAction>
+#include <QString>
 
 #include <QDebug>
 
@@ -46,16 +47,18 @@ class ConfigWindow : public QWidget {
         explicit ConfigWindow(QWidget *parent = 0);
         ~ConfigWindow();
 
-    void createGeneralPage();
-    void createInputPage();
-    void createUpdatePage();
-    void createLanguagePage();
-    void createStartPage();
-    void createProxyPage();
+        void createGeneralPage();
+        void createInputPage();
+        void createUpdatePage();
+        void createLanguagePage();
+        void createStartPage();
+        void createProxyPage();
 
     signals:
 
     public slots:
+        void setLanguageLabel(QString language);
+        void setAuthorsLabel(int languagePosition);
 
     protected:
 
@@ -68,7 +71,6 @@ class ConfigWindow : public QWidget {
        QLabel *defaultMachineFolder;
        QLabel *languageLabel;
        QLabel *languageDescription;
-       QLabel *languageSelected;
        QLabel *languageAuthors;
 
        QVBoxLayout *mainLayout;
