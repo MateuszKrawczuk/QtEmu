@@ -37,6 +37,7 @@
 #include <QPushButton>
 #include <QAction>
 #include <QString>
+#include <QPlainTextEdit>
 
 #include <QDebug>
 
@@ -63,39 +64,56 @@ class ConfigWindow : public QWidget {
     protected:
 
     private:
-       QListWidget *optionsListWidget;
-       QListWidget *languagesListView;
+        // Main layout
+        QVBoxLayout *mainLayout;
+        QHBoxLayout *topLayout;
+        QHBoxLayout *buttonsLayout;
 
-       QStackedWidget *categoriesStackedWidget;
+        QListWidget *optionsListWidget;
+        QStackedWidget *categoriesStackedWidget;
 
-       QLabel *defaultMachineFolder;
-       QLabel *languageLabel;
-       QLabel *languageDescription;
-       QLabel *languageAuthors;
+        QPushButton *saveButton;
+        QPushButton *closeButton;
 
-       QVBoxLayout *mainLayout;
-       QVBoxLayout *generalPageLayout;
-       QVBoxLayout *inputPageLayout;
-       QVBoxLayout *updatePageLayout;
-       QVBoxLayout *languagePageLayout;
-       QVBoxLayout *startPageLayout;
-       QVBoxLayout *proxyPageLayout;
+        QAction *closeAction;
 
-       QHBoxLayout *topLayout;
-       QHBoxLayout *buttonsLayout;
-       QHBoxLayout *languageHLayout;
+        // General page
+        QVBoxLayout *generalPageLayout;
+        QWidget *generalPageWidget;
+        QLabel *defaultMachineFolder;
 
-       QWidget *generalPageWidget;
-       QWidget *inputPageWidget;
-       QWidget *updatePageWidget;
-       QWidget *languagePageWidget;
-       QWidget *startPageWidget;
-       QWidget *proxyPageWidget;
+        // Input page
+        QVBoxLayout *inputPageLayout;
+        QWidget *inputPageWidget;
 
-       QPushButton *saveButton;
-       QPushButton *closeButton;
+        // Update QtEmu page
+        QVBoxLayout *updatePageLayout;
+        QWidget *updatePageWidget;
 
-       QAction *closeAction;
+        // Language
+        QVBoxLayout *languagePageLayout;
+        QHBoxLayout *languageHLayout;
+        QListWidget *languagesListView;
+
+        QLabel *languageLabel;
+        QLabel *languageDescription;
+        QLabel *languageAuthors;
+
+        QWidget *languagePageWidget;
+
+        // Start
+        QVBoxLayout *startPageLayout;
+        QWidget *startPageWidget;
+
+        QPlainTextEdit *beforeStart;
+        QPlainTextEdit *afterExit;
+
+        QLabel *beforeStartLabel;
+        QLabel *afterExitLabel;
+
+        // Proxy
+        QVBoxLayout *proxyPageLayout;
+        QWidget *proxyPageWidget;
 
 };
 

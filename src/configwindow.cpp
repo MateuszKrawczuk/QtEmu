@@ -247,7 +247,18 @@ void ConfigWindow::createLanguagePage(){
 
 void ConfigWindow::createStartPage(){
 
+    beforeStartLabel = new QLabel(tr("Execute before start") + ":");
+    afterExitLabel = new QLabel(tr("Execute after exit") + ":");
+
+    beforeStart = new QPlainTextEdit();
+    afterExit = new QPlainTextEdit();
+
     startPageLayout = new QVBoxLayout();
+
+    startPageLayout -> addWidget(beforeStartLabel);
+    startPageLayout -> addWidget(beforeStart);
+    startPageLayout -> addWidget(afterExitLabel);
+    startPageLayout -> addWidget(afterExit);
 
     startPageWidget = new QWidget(this);
     startPageWidget -> setLayout(startPageLayout);

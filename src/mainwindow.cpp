@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QSettings settings;
 
     configWindow = new ConfigWindow(this);
-    helpwidget  = new HelpWidget(nullptr);
-    aboutwidget = new AboutWidget(nullptr);
+    helpwidget  = new HelpWidget(this);
+    aboutwidget = new AboutWidget(this);
 
     // Create the menus
     createMenusActions();
