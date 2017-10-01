@@ -27,7 +27,7 @@
 
 message("Generating Makefile for QtEmu... $$escape_expand(\\n)")
 
-QT += core gui widgets
+QT += core gui widgets network
 message("Building with Qt v$$QT_VERSION")
 
 lessThan(QT_MAJOR_VERSION, 5) {

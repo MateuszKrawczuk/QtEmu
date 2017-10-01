@@ -266,7 +266,45 @@ void ConfigWindow::createStartPage(){
 
 void ConfigWindow::createProxyPage(){
 
-    proxyPageLayout = new QVBoxLayout();
+    proxyOptions = new QComboBox();
+    proxyOptions -> addItem(tr("Do not use a proxy"));
+    proxyOptions -> addItem("SOCKS 5");
+    proxyOptions -> addItem("HTTP");
+    proxyOptions -> setCurrentIndex(0);
+
+    serverNameProxy = new QLineEdit();
+    serverNameProxy -> setPlaceholderText("example.org");
+
+    portProxy = new QLineEdit();
+    portProxy -> setPlaceholderText("1080, 8080, etc...");
+
+    connect(proxyOptions, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &ConfigWindow::toggleUserPassword);
+
+    useAuth = new QCheckBox();
+    useAuth -> setChecked(false);
+
+    connect(useAuth, &QAbstractButton::toggled,
+                this, &ConfigWindow::toggleAuth);
+
+    userProxy = new QLineEdit();
+    userProxy -> setPlaceholderText(tr("Proxy username"));
+
+    passwordProxy = new QLineEdit();
+    passwordProxy -> setEchoMode(QLineEdit::Password);
+
+    // TODO: read the user settings
+    this -> toggleUserPassword(0);
+    this -> toggleAuth(false);
+
+    proxyPageLayout = new QFormLayout();
+
+    proxyPageLayout -> addRow(tr("Proxy type"), proxyOptions);
+    proxyPageLayout -> addRow(tr("Hostname"), serverNameProxy);
+    proxyPageLayout -> addRow(tr("Port"), portProxy);
+    proxyPageLayout -> addRow(tr("Use Authentication"), useAuth);
+    proxyPageLayout -> addRow(tr("User"), userProxy);
+    proxyPageLayout -> addRow(tr("Password"), passwordProxy);
 
     proxyPageWidget = new QWidget(this);
     proxyPageWidget -> setLayout(proxyPageLayout);
@@ -319,4 +357,23 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
     }
 
     this -> languageAuthors -> setText(authors);
+}
+
+void ConfigWindow::toggleUserPassword(int proxyOption){
+
+    if (proxyOption == 0) {
+        this -> serverNameProxy -> setEnabled(false);
+        this -> portProxy -> setEnabled(false);
+    } else {
+        this -> serverNameProxy -> setEnabled(true);
+        this -> portProxy -> setEnabled(true);
+    }
+
+}
+
+void ConfigWindow::toggleAuth(bool authState){
+
+    this -> userProxy -> setEnabled(authState);
+    this -> passwordProxy -> setEnabled(authState);
+
 }

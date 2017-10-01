@@ -38,6 +38,11 @@
 #include <QAction>
 #include <QString>
 #include <QPlainTextEdit>
+#include <QNetworkProxy>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QFormLayout>
 
 #include <QDebug>
 
@@ -60,6 +65,8 @@ class ConfigWindow : public QWidget {
     public slots:
         void setLanguageLabel(QString language);
         void setAuthorsLabel(int languagePosition);
+        void toggleUserPassword(int proxyOption);
+        void toggleAuth(bool authState);
 
     protected:
 
@@ -112,8 +119,17 @@ class ConfigWindow : public QWidget {
         QLabel *afterExitLabel;
 
         // Proxy
-        QVBoxLayout *proxyPageLayout;
+        QFormLayout *proxyPageLayout;
         QWidget *proxyPageWidget;
+
+        QComboBox *proxyOptions;
+
+        QLineEdit *serverNameProxy;
+        QLineEdit *portProxy;
+        QLineEdit *userProxy;
+        QLineEdit *passwordProxy;
+
+        QCheckBox *useAuth;
 
 };
 
