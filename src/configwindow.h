@@ -43,6 +43,8 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QFormLayout>
+#include <QFileDialog>
+#include <QGroupBox>
 
 #include <QDebug>
 
@@ -85,9 +87,23 @@ class ConfigWindow : public QWidget {
         QAction *closeAction;
 
         // General page
+        QGroupBox *machinePathGroup;
+        QGroupBox *startCommandGroup;
+        QHBoxLayout *machinePathLayout;
+        QHBoxLayout *startCommandLayout;
         QVBoxLayout *generalPageLayout;
         QWidget *generalPageWidget;
-        QLabel *defaultMachineFolder;
+
+        QLabel *machinePathLabel;
+        QLabel *startCommandLabel;
+
+        QLineEdit *machinePathLineEdit;
+        QLineEdit *startCommandLineEdit;
+
+        QPushButton *machinePathButton;
+        QPushButton *startCommandButton;
+
+        QFileDialog *machinePath;
 
         // Input page
         QVBoxLayout *inputPageLayout;

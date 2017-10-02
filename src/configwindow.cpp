@@ -147,10 +147,44 @@ ConfigWindow::~ConfigWindow() {
 }
 
 void ConfigWindow::createGeneralPage() {
-    defaultMachineFolder = new QLabel(tr("Default Machine Folder"), this);
+
+    machinePathGroup = new QGroupBox(tr("Machine Path"));
+
+    machinePathLabel  = new QLabel(tr("Default machine path") + ":");
+
+    machinePathLineEdit = new QLineEdit();
+    machinePathLineEdit -> setEnabled(false);
+
+    machinePathButton = new QPushButton();
+
+    machinePathLayout = new QHBoxLayout();
+    machinePathLayout -> setAlignment(Qt::AlignVCenter);
+    machinePathLayout -> addWidget(machinePathLabel);
+    machinePathLayout -> addWidget(machinePathLineEdit);
+    machinePathLayout -> addWidget(machinePathButton);
+
+    machinePathGroup -> setLayout(machinePathLayout);
+
+    startCommandGroup = new QGroupBox(tr("QEMU Command"));
+
+    startCommandLabel = new QLabel(tr("QEMU start command") + ":");
+
+    startCommandLineEdit = new QLineEdit();
+    startCommandLineEdit -> setEnabled(false);
+
+    startCommandButton = new QPushButton();
+
+    startCommandLayout = new QHBoxLayout();
+    startCommandLayout -> setAlignment(Qt::AlignVCenter);
+    startCommandLayout -> addWidget(startCommandLabel);
+    startCommandLayout -> addWidget(startCommandLineEdit);
+    startCommandLayout -> addWidget(startCommandButton);
+
+    startCommandGroup -> setLayout(startCommandLayout);
 
     generalPageLayout = new QVBoxLayout();
-    generalPageLayout -> addWidget(defaultMachineFolder);
+    generalPageLayout -> addWidget(machinePathGroup);
+    generalPageLayout -> addWidget(startCommandGroup);
 
     generalPageWidget = new QWidget(this);
     generalPageWidget -> setLayout(generalPageLayout);
