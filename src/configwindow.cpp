@@ -38,7 +38,8 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     this -> createGeneralPage();
 
-    this -> createInputPage();
+    // TODO
+    //this -> createInputPage();
 
     this -> createUpdatePage();
 
@@ -63,24 +64,24 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
                                                               QIcon(":/icon/32x32/qtemu.png")));
 
-    optionsListWidget -> addItem(tr("Input"));
-    optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",
-                                                              QIcon(":/icon/32x32/qtemu.png")));
+    //optionsListWidget -> addItem(tr("Input"));
+    //optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",
+    //                                                          QIcon(":/icon/32x32/qtemu.png")));
 
     optionsListWidget -> addItem(tr("Update QtEmu"));
-    optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("update-none",
+    optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
                                                               QIcon(":/icon/32x32/qtemu.png")));
 
     optionsListWidget -> addItem(tr("Language"));
-    optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("applications-education-language",
+    optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
                                                               QIcon(":/icon/32x32/qtemu.png")));
 
     optionsListWidget -> addItem(tr("Start"));
-    optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("practice-start",
+    optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
                                                               QIcon(":/icon/32x32/qtemu.png")));
 
     optionsListWidget -> addItem(tr("Proxy"));
-    optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("network-manager",
+    optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
                                                               QIcon(":/icon/32x32/qtemu.png")));
 
     // Prepare window
@@ -89,7 +90,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
                                              QSizePolicy::MinimumExpanding);
 
     categoriesStackedWidget -> addWidget(generalPageWidget);
-    categoriesStackedWidget -> addWidget(inputPageWidget);
+    //categoriesStackedWidget -> addWidget(inputPageWidget);
     categoriesStackedWidget -> addWidget(updatePageWidget);
     categoriesStackedWidget -> addWidget(languagePageWidget);
     categoriesStackedWidget -> addWidget(startPageWidget);
@@ -108,7 +109,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
                                  tr("Save"),
                                  this);
     connect(saveButton, &QAbstractButton::clicked,
-            this, &QWidget::hide); // TODO Method for save config options
+            this, &ConfigWindow::saveSettings);
 
     closeButton = new QPushButton(QIcon::fromTheme("dialog-cancel",
                                                    QIcon(":/icon/32x32/qtemu.png")),
@@ -155,7 +156,13 @@ void ConfigWindow::createGeneralPage() {
     machinePathLineEdit = new QLineEdit();
     machinePathLineEdit -> setEnabled(false);
 
-    machinePathButton = new QPushButton();
+    machinePathButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
+                                                         QIcon(":/icon/32x32/qtemu.png")),
+                                        "",
+                                        this);
+
+    connect(machinePathButton, &QAbstractButton::clicked,
+            this, &ConfigWindow::setMachinePath);
 
     machinePathLayout = new QHBoxLayout();
     machinePathLayout -> setAlignment(Qt::AlignVCenter);
@@ -170,15 +177,12 @@ void ConfigWindow::createGeneralPage() {
     startCommandLabel = new QLabel(tr("QEMU start command") + ":");
 
     startCommandLineEdit = new QLineEdit();
-    startCommandLineEdit -> setEnabled(false);
-
-    startCommandButton = new QPushButton();
+    startCommandLineEdit -> setText("qemu"); // TODO: add support for MacOS and Windows
 
     startCommandLayout = new QHBoxLayout();
     startCommandLayout -> setAlignment(Qt::AlignVCenter);
     startCommandLayout -> addWidget(startCommandLabel);
     startCommandLayout -> addWidget(startCommandLineEdit);
-    startCommandLayout -> addWidget(startCommandButton);
 
     startCommandGroup -> setLayout(startCommandLayout);
 
@@ -357,36 +361,47 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
     switch (languagePosition) {
         case 0:
             authors.append(tr("QtEmu Developers"));
+            languageISOCode = "en";
             break;
         case 1:
             authors.append(tr("QtEmu Developers"));
+            languageISOCode = "de";
             break;
         case 2:
             authors.append(QString::fromUtf8("Necmettin Begiter"));
+            languageISOCode = "tr";
             break;
         case 3:
             authors.append(QString::fromUtf8("Vasily Cheremisinov"));
+            languageISOCode = "ru";
             break;
         case 4:
             authors.append(QString::fromUtf8("excamo"));
+            languageISOCode = "cz";
             break;
         case 5:
             authors.append(QString::fromUtf8("Manolo Valdes"));
+            languageISOCode = "es";
             break;
         case 6:
             authors.append(QString::fromUtf8("Fathi Boudra"));
+            languageISOCode = "fr";
             break;
         case 7:
             authors.append(QString::fromUtf8("Gianluca Cecchi"));
+            languageISOCode = "it";
             break;
         case 8:
             authors.append(QString::fromUtf8("Jackson Miliszewski"));
+            languageISOCode = "pt-BR";
             break;
         case 9:
             authors.append(QString::fromUtf8("Milosz Galazka"));
+            languageISOCode = "pl";
             break;
         default:
             authors.append(tr("Unknown author"));
+            languageISOCode = "en";
             break;
     }
 
@@ -409,5 +424,54 @@ void ConfigWindow::toggleAuth(bool authState){
 
     this -> userProxy -> setEnabled(authState);
     this -> passwordProxy -> setEnabled(authState);
+
+}
+
+void ConfigWindow::setMachinePath(){
+
+    machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
+                                                    QDir::homePath(),
+                                                    QFileDialog::ShowDirsOnly |
+                                                    QFileDialog::DontResolveSymlinks
+                                                    );
+    if ( !machinePath.isEmpty() ) {
+        machinePathLineEdit -> setText(machinePath);
+    }
+
+}
+
+void ConfigWindow::saveSettings(){
+    QSettings settings;
+
+    if (!settings.isWritable()) {
+        return;
+    }
+
+    settings.beginGroup("Configuration");
+
+    // General
+    settings.setValue("machinePath", this -> machinePathLineEdit -> text());
+    settings.setValue("qemu", this -> startCommandLineEdit -> text());
+
+    // Language
+    settings.setValue("language", this -> languageISOCode);
+
+    // Start page
+    settings.setValue("startCommand", this -> beforeStart -> toPlainText());
+    settings.setValue("afterCommand", this -> afterExit -> toPlainText());
+
+    // Proxy
+    settings.setValue("proxyType", this -> proxyOptions -> currentIndex());
+    settings.setValue("proxyHostname", this -> serverNameProxy -> text());
+    settings.setValue("proxyPort", this -> portProxy -> text());
+    settings.setValue("proxyUser", this -> userProxy -> text());
+    settings.setValue("proxyPassword", this -> passwordProxy -> text().toUtf8().toBase64());
+
+    settings.endGroup();
+    settings.sync();
+
+    this -> hide();
+
+    qDebug() << "ConfigWindow: settings saved";
 
 }

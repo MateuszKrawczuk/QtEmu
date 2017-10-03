@@ -69,6 +69,8 @@ class ConfigWindow : public QWidget {
         void setAuthorsLabel(int languagePosition);
         void toggleUserPassword(int proxyOption);
         void toggleAuth(bool authState);
+        void setMachinePath();
+        void saveSettings();
 
     protected:
 
@@ -101,9 +103,12 @@ class ConfigWindow : public QWidget {
         QLineEdit *startCommandLineEdit;
 
         QPushButton *machinePathButton;
-        QPushButton *startCommandButton;
 
-        QFileDialog *machinePath;
+        QString machinePath;
+        QString startCommand;
+
+        QFileDialog *machinePathDialog;
+        QFileDialog *startCommandDialog;
 
         // Input page
         QVBoxLayout *inputPageLayout;
@@ -121,6 +126,8 @@ class ConfigWindow : public QWidget {
         QLabel *languageLabel;
         QLabel *languageDescription;
         QLabel *languageAuthors;
+
+        QString languageISOCode;
 
         QWidget *languagePageWidget;
 
