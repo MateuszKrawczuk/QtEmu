@@ -45,6 +45,7 @@
 #include <QFormLayout>
 #include <QFileDialog>
 #include <QGroupBox>
+#include <QRadioButton>
 
 #include <QDebug>
 
@@ -65,6 +66,10 @@ class ConfigWindow : public QWidget {
     signals:
 
     public slots:
+        void toggleUpdate(bool updateState);
+        void pushStableVersion(bool release);
+        void pushBetaVersion(bool release);
+        void pushDevelopmentVersion(bool release);
         void setLanguageLabel(QString language);
         void setAuthorsLabel(int languagePosition);
         void toggleUserPassword(int proxyOption);
@@ -116,8 +121,19 @@ class ConfigWindow : public QWidget {
         QWidget *inputPageWidget;
 
         // Update QtEmu page
-        QVBoxLayout *updatePageLayout;
+        QFormLayout *updatePageLayout;
+        QVBoxLayout *updateRadiosLayout;
         QWidget *updatePageWidget;
+
+        QCheckBox *updateCheckBox;
+
+        QGroupBox *updatesGroup;
+
+        QRadioButton *stableReleaseRadio;
+        QRadioButton *betaReleaseRadio;
+        QRadioButton *developmentRelaseRadio;
+
+        QString releaseString;
 
         // Language
         QVBoxLayout *languagePageLayout;

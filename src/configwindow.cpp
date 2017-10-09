@@ -207,7 +207,34 @@ void ConfigWindow::createInputPage(){
 
 void ConfigWindow::createUpdatePage(){
 
-    updatePageLayout = new QVBoxLayout();
+    updateCheckBox = new QCheckBox();
+    updateCheckBox -> setChecked(true);
+
+    connect(updateCheckBox, &QAbstractButton::toggled,
+                this, &ConfigWindow::toggleUpdate);
+
+    updatesGroup = new QGroupBox();
+
+    stableReleaseRadio = new QRadioButton(tr("Stable version"));
+    betaReleaseRadio = new QRadioButton(tr("Beta version"));
+    developmentRelaseRadio = new QRadioButton(tr("Development version"));
+
+    stableReleaseRadio -> setChecked(true);
+
+    connect(stableReleaseRadio, &QAbstractButton::toggled,
+                this, &ConfigWindow::pushStableVersion);
+
+    updateRadiosLayout = new QVBoxLayout();
+    updateRadiosLayout -> setAlignment(Qt::AlignVCenter);
+    updateRadiosLayout -> addWidget(stableReleaseRadio);
+    updateRadiosLayout -> addWidget(betaReleaseRadio);
+    updateRadiosLayout -> addWidget(developmentRelaseRadio);
+
+    updatesGroup -> setLayout(updateRadiosLayout);
+
+    updatePageLayout = new QFormLayout();
+    updatePageLayout -> addRow(tr("Check for updates"), updateCheckBox);
+    updatePageLayout -> addRow(updatesGroup);
 
     updatePageWidget = new QWidget(this);
     updatePageWidget -> setLayout(updatePageLayout);
@@ -351,6 +378,39 @@ void ConfigWindow::createProxyPage(){
     proxyPageWidget -> setLayout(proxyPageLayout);
 }
 
+void ConfigWindow::toggleUpdate(bool updateState){
+
+    this -> updatesGroup -> setEnabled(updateState);
+    this -> stableReleaseRadio -> setEnabled(updateState);
+    this -> betaReleaseRadio -> setEnabled(updateState);
+    this -> developmentRelaseRadio -> setEnabled(updateState);
+
+}
+
+void ConfigWindow::pushStableVersion(bool release){
+
+    if (release) {
+        releaseString = "stable";
+    }
+
+}
+
+void ConfigWindow::pushBetaVersion(bool release){
+
+    if (release) {
+        releaseString = "beta";
+    }
+
+}
+
+void ConfigWindow::pushDevelopmentVersion(bool release){
+
+    if (release) {
+        releaseString = "alpha";
+    }
+
+}
+
 void ConfigWindow::setLanguageLabel(QString language){
     QString description = tr("Language") + ": ";
     description.append(language);
@@ -472,6 +532,10 @@ void ConfigWindow::saveSettings(){
     settings.setValue("machinePath", this -> machinePathLineEdit -> text());
     settings.setValue("qemu", this -> startCommandLineEdit -> text());
 
+    // Update
+    settings.setValue("update", this -> updateCheckBox -> isChecked());
+    settings.setValue("release", this -> releaseString);
+
     // Language
     settings.setValue("language", this -> languageISOCode);
     settings.setValue("languagePos", this -> languagePos);
@@ -504,6 +568,10 @@ void ConfigWindow::loadSettings(){
     // General
     machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
     startCommandLineEdit -> setText(settings.value("qemu", "qemu").toString());
+
+    // Update
+    updateCheckBox -> setChecked(settings.value("update", true).toBool());
+    releaseString = settings.value("release", "stable").toString();
 
     // Language
     languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
