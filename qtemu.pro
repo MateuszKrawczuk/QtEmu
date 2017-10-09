@@ -38,6 +38,15 @@ lessThan(QT_MAJOR_VERSION, 5) {
     error("Aborting!")
 }
 
+# SOURCE_DATE_EPOCH is read from environment, to enable reproducible builds in Debian
+source_date_epoch = $$(SOURCE_DATE_EPOCH)
+!isEmpty(source_date_epoch) {
+    message("Creating a reproducible build (avoiding hardcoded timestamps) \
+             because SOURCE_DATE_EPOCH is defined: $$(SOURCE_DATE_EPOCH)")
+    DEFINES += REPRODUCIBLEBUILD
+}
+
+
 TARGET = qtemu
 
 TEMPLATE = app

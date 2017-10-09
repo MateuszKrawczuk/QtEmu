@@ -71,6 +71,7 @@ class ConfigWindow : public QWidget {
         void toggleAuth(bool authState);
         void setMachinePath();
         void saveSettings();
+        void loadSettings();
 
     protected:
 
@@ -128,6 +129,7 @@ class ConfigWindow : public QWidget {
         QLabel *languageAuthors;
 
         QString languageISOCode;
+        int languagePos;
 
         QWidget *languagePageWidget;
 

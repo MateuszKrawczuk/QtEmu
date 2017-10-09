@@ -139,6 +139,9 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     this -> optionsListWidget -> setCurrentRow(0);
     this -> optionsListWidget -> setFocus();
 
+    // Load settings
+    loadSettings();
+
     qDebug() << "ConfigWindow created";
 
 }
@@ -362,46 +365,57 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
         case 0:
             authors.append(tr("QtEmu Developers"));
             languageISOCode = "en";
+            languagePos = 0;
             break;
         case 1:
             authors.append(tr("QtEmu Developers"));
             languageISOCode = "de";
+            languagePos = 1;
             break;
         case 2:
             authors.append(QString::fromUtf8("Necmettin Begiter"));
             languageISOCode = "tr";
+            languagePos = 2;
             break;
         case 3:
             authors.append(QString::fromUtf8("Vasily Cheremisinov"));
             languageISOCode = "ru";
+            languagePos = 3;
             break;
         case 4:
             authors.append(QString::fromUtf8("excamo"));
             languageISOCode = "cz";
+            languagePos = 4;
             break;
         case 5:
             authors.append(QString::fromUtf8("Manolo Valdes"));
             languageISOCode = "es";
+            languagePos = 5;
             break;
         case 6:
             authors.append(QString::fromUtf8("Fathi Boudra"));
             languageISOCode = "fr";
+            languagePos = 6;
             break;
         case 7:
             authors.append(QString::fromUtf8("Gianluca Cecchi"));
             languageISOCode = "it";
+            languagePos = 7;
             break;
         case 8:
             authors.append(QString::fromUtf8("Jackson Miliszewski"));
             languageISOCode = "pt-BR";
+            languagePos = 8;
             break;
         case 9:
             authors.append(QString::fromUtf8("Milosz Galazka"));
             languageISOCode = "pl";
+            languagePos = 9;
             break;
         default:
             authors.append(tr("Unknown author"));
             languageISOCode = "en";
+            languagePos = 0;
             break;
     }
 
@@ -421,6 +435,11 @@ void ConfigWindow::toggleUserPassword(int proxyOption){
 }
 
 void ConfigWindow::toggleAuth(bool authState){
+
+    if (!authState) {
+        this -> userProxy -> setText("");
+        this -> passwordProxy -> setText("");
+    }
 
     this -> userProxy -> setEnabled(authState);
     this -> passwordProxy -> setEnabled(authState);
@@ -455,6 +474,7 @@ void ConfigWindow::saveSettings(){
 
     // Language
     settings.setValue("language", this -> languageISOCode);
+    settings.setValue("languagePos", this -> languagePos);
 
     // Start page
     settings.setValue("startCommand", this -> beforeStart -> toPlainText());
@@ -464,6 +484,7 @@ void ConfigWindow::saveSettings(){
     settings.setValue("proxyType", this -> proxyOptions -> currentIndex());
     settings.setValue("proxyHostname", this -> serverNameProxy -> text());
     settings.setValue("proxyPort", this -> portProxy -> text());
+    settings.setValue("auth", this -> useAuth -> isChecked());
     settings.setValue("proxyUser", this -> userProxy -> text());
     settings.setValue("proxyPassword", this -> passwordProxy -> text().toUtf8().toBase64());
 
@@ -474,4 +495,28 @@ void ConfigWindow::saveSettings(){
 
     qDebug() << "ConfigWindow: settings saved";
 
+}
+
+void ConfigWindow::loadSettings(){
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    // General
+    machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
+    startCommandLineEdit -> setText(settings.value("qemu", "qemu").toString());
+
+    // Language
+    languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
+
+    // Start page
+    beforeStart -> setPlainText(settings.value("startCommand", "").toString());
+    afterExit -> setPlainText(settings.value("afterCommand", "").toString());
+
+    // Proxy
+    proxyOptions -> setCurrentIndex(settings.value("proxyType", 0).toInt());
+    serverNameProxy -> setText(settings.value("proxyHostname", "").toString());
+    portProxy -> setText(settings.value("proxyPort", "").toString());
+    useAuth -> setChecked(settings.value("auth", false).toBool());
+    userProxy -> setText(settings.value("proxyUser", "").toString());
+    passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
 }

@@ -22,6 +22,7 @@
 // Qt
 #include <QApplication>
 #include <QTranslator>
+#include <QLibraryInfo>
 
 // C++ standard library
 #include <iostream>
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]) {
     QApplication qtemuApp(argc, argv);
     qtemuApp.setApplicationName("QtEmu");
     qtemuApp.setApplicationVersion("2.0-alpha");
-    qtemuApp.setOrganizationName("QtEmu Developers");
+    qtemuApp.setOrganizationName("QtEmu");
     qtemuApp.setOrganizationDomain("https://www.qtemu.org");
 
     std::cout << QString("QtEmu v%1 # QtEmu Developers")
@@ -42,10 +43,69 @@ int main(int argc, char *argv[]) {
 
     std::cout << QString("- Built with Qt v%1").arg(QT_VERSION_STR)
                                                .toStdString();
-    //TODO make reproductible builds
+
+    /*
+     * REPRODUCIBLEBUILD is defined via .pro file when SOURCE_DATE_EPOCH is
+     * defined in the build environment. This is used to avoid hardcoding
+     * timestamps and this way make the builds reproducible.
+     */
+    #ifndef REPRODUCIBLEBUILD
+        std::cout << QString(" on %1, %2")
+                     .arg(__DATE__)
+                     .arg(__TIME__).toStdString();
+    #endif
+
+    // Translations
+    QTranslator translatorQt;
+    QTranslator translatorQtEmu;
+    QString languageFile;
+    QString language;
+    bool languageLoaded;
+
+    QSettings settings;
+    language = settings.value("language", "en").toString();
+
+    qDebug() << "The language loaded" << language;
+
+    if (language.isEmpty()) {
+        language = QLocale::system().name();
+    }
+
+    languageFile = QString("qt_%1").arg(language);
+
+    std::cout << "\n"
+              << "Using Qt translation "
+              << QLibraryInfo::location(QLibraryInfo::TranslationsPath).toStdString()
+              << "/"
+              << languageFile.toStdString()
+              << "\n";
+
+    languageLoaded = translatorQt.load(languageFile, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+
+    if (languageLoaded) {
+        std::cout << "Language loaded";
+        qtemuApp.installTranslator(&translatorQt);
+    } else {
+        std::cout << "Language unavailable";
+    }
+
+    languageFile = QString(":/translations/qtemu_%1").arg(language);
+
+    std::cout << "\n"
+              << "Using QtEmu translation "
+              << languageFile.toStdString()
+              << "\n";
+
+    languageLoaded = translatorQtEmu.load(languageFile);
+
+    if (languageLoaded) {
+        std::cout << "Language loaded";
+        qtemuApp.installTranslator(&translatorQtEmu);
+    } else {
+        std::cout << "Language unavailable";
+    }
+
     //TODO implement command line arguments
-    //TODO implement translations
-    //TODO put all todo in TODO file
 
     std::cout << "\n";
 
