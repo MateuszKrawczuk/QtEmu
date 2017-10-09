@@ -63,6 +63,7 @@ int main(int argc, char *argv[]) {
     bool languageLoaded;
 
     QSettings settings;
+    settings.beginGroup("Configuration");
     language = settings.value("language", "en").toString();
 
     qDebug() << "The language loaded" << language;
