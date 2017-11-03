@@ -30,7 +30,13 @@
 #include <QMenuBar>
 #include <QAction>
 #include <QDesktopServices>
+#include <QToolBar>
 #include <QDebug>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QWidget>
+#include <QListWidget>
+#include <QStackedWidget>
 
 // Local
 #include "helpwidget.h"
@@ -46,6 +52,7 @@ class MainWindow : public QMainWindow {
 
         void createMenus();
         void createMenusActions();
+        void createToolBars();
 
     public slots:
         void visitQtEmuWebsite();
@@ -78,10 +85,23 @@ class MainWindow : public QMainWindow {
         QAction *helpAbout;
         // End menus
 
+        // Toolbar
+        QToolBar *mainToolBar;
+
         // Widgets
+        QWidget *mainWidget;
         ConfigWindow *configWindow;
         HelpWidget *helpwidget;
         AboutWidget *aboutwidget;
+
+        // Layouts
+        QVBoxLayout *mainLayout;
+        QHBoxLayout *containerLayout;
+
+        // List of OS
+        QListWidget *osListWidget;
+        QStackedWidget *osDetailsStackedWidget;
+
 };
 
 

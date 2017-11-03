@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> setMinimumSize(700, 500);
 
     // Close the application when all windows are closed
-    qApp->setQuitOnLastWindowClosed(true);
+    qApp -> setQuitOnLastWindowClosed(true);
 
     QSettings settings;
 
@@ -36,9 +36,37 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     helpwidget  = new HelpWidget(this);
     aboutwidget = new AboutWidget(this);
 
+    // Prepare main layout
+    osListWidget = new QListWidget();
+    osListWidget -> setViewMode(QListView::ListMode);
+    osListWidget -> setIconSize(QSize(32, 32));
+    osListWidget -> setMovement(QListView::Static);
+    osListWidget -> setMaximumWidth(170);
+    osListWidget -> setSpacing(7);
+
+    osDetailsStackedWidget = new QStackedWidget(this);
+    osDetailsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
+                                             QSizePolicy::MinimumExpanding);
+
+    containerLayout = new QHBoxLayout();
+    containerLayout -> addWidget(osListWidget);
+    containerLayout -> addWidget(osDetailsStackedWidget);
+
+    mainLayout = new QVBoxLayout();
+    mainLayout -> addLayout(containerLayout, 20);
+    mainLayout -> addSpacing(8);
+    mainLayout -> addStretch(1);
+
+    mainWidget = new QWidget(this);
+
+    mainWidget -> setLayout(mainLayout);
+
+    this -> setCentralWidget(mainWidget);
+
     // Create the menus
     createMenusActions();
     createMenus();
+    createToolBars();
 
 }
 
@@ -116,32 +144,32 @@ void MainWindow::createMenusActions() {
 
     newMachine = new QAction(QIcon::fromTheme("project-development-new-template",
                                               QIcon(":/icon/32x32/qtemu.png")),
-                             tr("New"),
+                             tr("New Machine"),
                              this);
 
     addMachine = new QAction(QIcon::fromTheme("project-development",
                                               QIcon(":/icon/32x32/qtemu.png")),
-                             tr("Add"),
+                             tr("Add Machine"),
                              this);
 
     settingsMachine = new QAction(QIcon::fromTheme("settings-configure",
                                                    QIcon(":/icon/32x32/qtemu.png")),
-                                  tr("Settings"),
+                                  tr("Machine Settings"),
                                   this);
 
     duplicateMachine = new QAction(QIcon::fromTheme("edit-duplicate",
                                                     QIcon(":/icon/32x32/qtemu.png")),
-                                   tr("Duplicate"),
+                                   tr("Duplicate Machine"),
                                    this);
 
     removeMachine = new QAction(QIcon::fromTheme("project-development-close",
                                                  QIcon(":/icon/32x32/qtemu.png")),
-                                tr("Remove"),
+                                tr("Remove Machine"),
                                 this);
 
     groupMachine = new QAction(QIcon::fromTheme("view-group",
                                                 QIcon(":/icon/32x32/qtemu.png")),
-                               tr("Group"),
+                               tr("Group Machines"),
                                this);
 
 
@@ -181,6 +209,19 @@ void MainWindow::createMenusActions() {
                             this);
     connect(helpAbout, &QAction::triggered,
             aboutwidget, &QWidget::show);
+}
+
+void MainWindow::createToolBars() {
+    this -> mainToolBar = addToolBar(tr("Toolbar"));
+
+    mainToolBar -> setToolButtonStyle(Qt::ToolButtonFollowStyle);
+
+    mainToolBar -> addAction(this -> newMachine);
+    mainToolBar -> addAction(this -> settingsMachine);
+    mainToolBar -> addSeparator();
+
+    mainToolBar -> setMovable(false);
+
 }
 
 /*!

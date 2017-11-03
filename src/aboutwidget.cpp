@@ -52,7 +52,7 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
 
     mainLayout = new QVBoxLayout(this);
 
-    iconLayout = new QHBoxLayout(this);
+    iconLayout = new QHBoxLayout();
     iconLayout -> setContentsMargins(0, 12, 0, 0);
 
     qtemuIcon = new QLabel(this);
