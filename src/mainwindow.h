@@ -58,6 +58,7 @@ class MainWindow : public QMainWindow {
         void visitQtEmuWebsite();
         void visitQtEmuBugTracker();
         void visitQemuWebsite();
+        void createNewMachine();
 
     protected:
 

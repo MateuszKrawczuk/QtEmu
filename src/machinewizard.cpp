@@ -26,18 +26,24 @@
 
 MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
 
-    setPage(Page_Intro, new MachineIntroPage(this));
     setPage(Page_Name, new MachineNamePage(this));
     setPage(Page_Memory, new MachineMemoryPage(this));
     setPage(Page_Disk, new MachineDiskPage(this));
     setPage(Page_Hardware, new MachineHardwarePage(this));
     setPage(Page_Conclusion, new MachineConclusionPage(this));
 
-    setStartId(Page_Intro);
+    setStartId(Page_Name);
 
     #ifndef Q_OS_MAC
-        setWizardStyle(ModernStyle);
+        setWizardStyle(ClassicStyle);
     #endif
+
+    #ifdef Q_OS_MAC
+        setWizardStyle(MacStyle);
+    #endif
+
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
+    setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));
 
     setWindowTitle(tr("Create a new Machine"));
 
@@ -48,16 +54,28 @@ MachineWizard::~MachineWizard() {
     qDebug() << "MachineWizard destroyed";
 }
 
-MachineIntroPage::MachineIntroPage(QWidget *parent) : QWizardPage(parent) {
-
-}
-
-MachineIntroPage::~MachineIntroPage() {
-    qDebug() << "MachineIntroPage destroyed";
-}
-
 MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
+    setTitle(tr("Machine name and operating system"));
+
+    descriptionLabel = new QLabel(tr("Select name and operating system for your new machine."));
+    machineNameLabel = new QLabel(tr("Name") + ":");
+    OSLabel = new QLabel(tr("Operating system") + ":");
+    OSTypeLabel = new QLabel(tr("Version:") + ":");
+
+    machineNameLineEdit = new QLineEdit();
+
+    machineNameLayout = new QHBoxLayout();
+    machineNameLayout -> setAlignment(Qt::AlignVCenter);
+    machineNameLayout -> setSpacing(5);
+
+    machineNameLayout -> addWidget(machineNameLabel);
+    machineNameLayout -> addWidget(machineNameLineEdit);
+
+    machineLayout = new QVBoxLayout;
+    machineLayout -> addWidget(descriptionLabel);
+    machineLayout -> addItem(machineNameLayout);
+    setLayout(machineLayout);
 }
 
 MachineNamePage::~MachineNamePage() {

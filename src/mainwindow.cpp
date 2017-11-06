@@ -21,6 +21,7 @@
 
 // Local
 #include "mainwindow.h"
+#include "machinewizard.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> setWindowTitle("QtEmu");
@@ -146,6 +147,8 @@ void MainWindow::createMenusActions() {
                                               QIcon(":/icon/32x32/qtemu.png")),
                              tr("New Machine"),
                              this);
+    connect(newMachine, &QAction::triggered,
+            this, &MainWindow::createNewMachine);
 
     addMachine = new QAction(QIcon::fromTheme("project-development",
                                               QIcon(":/icon/32x32/qtemu.png")),
@@ -249,4 +252,11 @@ void MainWindow::visitQtEmuBugTracker() {
  */
 void MainWindow::visitQemuWebsite() {
     QDesktopServices::openUrl(QUrl("https://www.qemu.org/"));
+}
+
+void MainWindow::createNewMachine() {
+    MachineWizard newMachineWizard(this);
+
+    newMachineWizard.show();
+    newMachineWizard.exec();
 }

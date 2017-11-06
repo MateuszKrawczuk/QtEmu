@@ -22,5 +22,6 @@
         <file>icon/64x64/flags/russia.png</file>
         <file>icon/64x64/flags/spain.png</file>
         <file>icon/64x64/flags/turkey.png</file>
+        <file>images/banner.png</file>
     </qresource>
 </RCC>

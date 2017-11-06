@@ -24,6 +24,11 @@
 
 // Qt
 #include <QWizard>
+#include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <QDebug>
 
@@ -34,7 +39,7 @@ class MachineWizard : public QWizard {
         explicit MachineWizard(QWidget *parent = 0);
         ~MachineWizard();
 
-        enum { Page_Intro, Page_Name, Page_Memory, Page_Disk,
+    enum { Page_Name, Page_Memory, Page_Disk,
                Page_Hardware, Page_Conclusion };
 
     signals:
@@ -45,22 +50,6 @@ class MachineWizard : public QWizard {
 
     private:
 
-};
-
-class MachineIntroPage: public QWizardPage {
-    Q_OBJECT
-
-    public:
-        explicit MachineIntroPage(QWidget *parent = 0);
-        ~MachineIntroPage();
-
-    signals:
-
-    public slots:
-
-    protected:
-
-    private:
 };
 
 class MachineNamePage: public QWizardPage {
@@ -77,6 +66,18 @@ class MachineNamePage: public QWizardPage {
     protected:
 
     private:
+        QVBoxLayout *machineLayout;
+        QHBoxLayout *machineNameLayout;
+
+        QLabel *descriptionLabel;
+        QLabel *machineNameLabel;
+        QLabel *OSLabel;
+        QLabel *OSTypeLabel;
+
+        QComboBox *OSType;
+        QComboBox *OSVerion;
+
+        QLineEdit *machineNameLineEdit;
 };
 
 class MachineMemoryPage: public QWizardPage {
