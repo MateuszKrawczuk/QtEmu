@@ -59,22 +59,29 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     setTitle(tr("Machine name and operating system"));
 
     descriptionLabel = new QLabel(tr("Select name and operating system for your new machine."));
-    machineNameLabel = new QLabel(tr("Name") + ":");
-    OSLabel = new QLabel(tr("Operating system") + ":");
-    OSTypeLabel = new QLabel(tr("Version:") + ":");
 
     machineNameLineEdit = new QLineEdit();
 
-    machineNameLayout = new QHBoxLayout();
-    machineNameLayout -> setAlignment(Qt::AlignVCenter);
-    machineNameLayout -> setSpacing(5);
+    OSType = new QComboBox();
+    OSType -> setMinimumContentsLength(40);
+    OSType -> setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    OSType -> addItem(tr("GNU/Linux"));
+    OSType -> addItem(tr("Microsoft Windows"));
+    OSType -> addItem(tr("BSD"));
+    OSType -> addItem(tr("Other"));
 
-    machineNameLayout -> addWidget(machineNameLabel);
-    machineNameLayout -> addWidget(machineNameLineEdit);
+    OSVerion = new QComboBox();
+
+    machineAttrLayout = new QFormLayout();
+    machineAttrLayout -> setAlignment(Qt::AlignVCenter);
+    machineAttrLayout -> setSpacing(5);
+    machineAttrLayout -> addRow(tr("Name") + ":", machineNameLineEdit);
+    machineAttrLayout -> addRow(tr("Type") + ":", OSType);
+    machineAttrLayout -> addRow(tr("Version") + ":", OSVerion);
 
     machineLayout = new QVBoxLayout;
     machineLayout -> addWidget(descriptionLabel);
-    machineLayout -> addItem(machineNameLayout);
+    machineLayout -> addItem(machineAttrLayout);
     setLayout(machineLayout);
 }
 

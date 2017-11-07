@@ -28,7 +28,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QFormLayout>
 
 #include <QDebug>
 
@@ -67,7 +67,7 @@ class MachineNamePage: public QWizardPage {
 
     private:
         QVBoxLayout *machineLayout;
-        QHBoxLayout *machineNameLayout;
+        QFormLayout *machineAttrLayout;
 
         QLabel *descriptionLabel;
         QLabel *machineNameLabel;
