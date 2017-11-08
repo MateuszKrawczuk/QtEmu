@@ -27,6 +27,8 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QSpinBox>
+#include <QSlider>
 #include <QVBoxLayout>
 #include <QFormLayout>
 
@@ -62,6 +64,7 @@ class MachineNamePage: public QWizardPage {
     signals:
 
     public slots:
+        void selectOS(int OSSelected);
 
     protected:
 
@@ -75,7 +78,7 @@ class MachineNamePage: public QWizardPage {
         QLabel *OSTypeLabel;
 
         QComboBox *OSType;
-        QComboBox *OSVerion;
+        QComboBox *OSVersion;
 
         QLineEdit *machineNameLineEdit;
 };

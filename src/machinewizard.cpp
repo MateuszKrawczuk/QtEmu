@@ -70,14 +70,21 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     OSType -> addItem(tr("BSD"));
     OSType -> addItem(tr("Other"));
 
-    OSVerion = new QComboBox();
+    connect(OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MachineNamePage::selectOS);
+
+    OSVersion = new QComboBox();
+    OSVersion -> setMinimumContentsLength(40);
+    OSVersion -> setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+
+    this -> selectOS(0);
 
     machineAttrLayout = new QFormLayout();
     machineAttrLayout -> setAlignment(Qt::AlignVCenter);
     machineAttrLayout -> setSpacing(5);
     machineAttrLayout -> addRow(tr("Name") + ":", machineNameLineEdit);
     machineAttrLayout -> addRow(tr("Type") + ":", OSType);
-    machineAttrLayout -> addRow(tr("Version") + ":", OSVerion);
+    machineAttrLayout -> addRow(tr("Version") + ":", OSVersion);
 
     machineLayout = new QVBoxLayout;
     machineLayout -> addWidget(descriptionLabel);
@@ -90,6 +97,8 @@ MachineNamePage::~MachineNamePage() {
 }
 
 MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
+
+    setTitle(tr("Machine memory"));
 
 }
 
@@ -119,4 +128,38 @@ MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(pare
 
 MachineConclusionPage::~MachineConclusionPage() {
     qDebug() << "MachineConclusionPage destroyed";
+}
+
+void MachineNamePage::selectOS(int OSSelected){
+
+    this -> OSVersion -> clear();
+
+    if (OSSelected == 0) {
+        this -> OSVersion -> addItem(tr("Debian"));
+        this -> OSVersion -> addItem(tr("Ubuntu"));
+        this -> OSVersion -> addItem(tr("Fedora"));
+        this -> OSVersion -> addItem(tr("OpenSuse"));
+        this -> OSVersion -> addItem(tr("Mageia"));
+        this -> OSVersion -> addItem(tr("Gentoo"));
+        this -> OSVersion -> addItem(tr("Arch Linux"));
+        this -> OSVersion -> addItem(tr("Linux 4.x"));
+    } else if (OSSelected == 1) {
+        this -> OSVersion -> addItem(tr("Microsoft 95"));
+        this -> OSVersion -> addItem(tr("Microsoft 98"));
+        this -> OSVersion -> addItem(tr("Microsoft 2000"));
+        this -> OSVersion -> addItem(tr("Microsoft XP"));
+        this -> OSVersion -> addItem(tr("Microsoft Vista"));
+        this -> OSVersion -> addItem(tr("Microsoft 7"));
+        this -> OSVersion -> addItem(tr("Microsoft 8"));
+        this -> OSVersion -> addItem(tr("Microsoft 10"));
+    } else if (OSSelected == 2) {
+        this -> OSVersion -> addItem(tr("FreeBSD"));
+        this -> OSVersion -> addItem(tr("OpenBSD"));
+        this -> OSVersion -> addItem(tr("NetBSD"));
+    } else if (OSSelected == 3) {
+        this -> OSVersion -> addItem(tr("Debian GNU Hurd"));
+        this -> OSVersion -> addItem(tr("Arch Hurd"));
+        this -> OSVersion -> addItem(tr("Minix"));
+        this -> OSVersion -> addItem(tr("ReactOS"));
+    }
 }
