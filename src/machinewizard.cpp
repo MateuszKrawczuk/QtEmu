@@ -58,13 +58,14 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine name and operating system"));
 
-    descriptionLabel = new QLabel(tr("Select name and operating system for your new machine."));
+    descriptionNameLabel = new QLabel(tr("Select name and operating system for your new machine."));
 
+    machineNameLabel = new QLabel(tr("Name") + ":");
     machineNameLineEdit = new QLineEdit();
 
+    OSTypeLabel = new QLabel(tr("Type") + ":");
     OSType = new QComboBox();
-    OSType -> setMinimumContentsLength(40);
-    OSType -> setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+
     OSType -> addItem(tr("GNU/Linux"));
     OSType -> addItem(tr("Microsoft Windows"));
     OSType -> addItem(tr("BSD"));
@@ -73,23 +74,28 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     connect(OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &MachineNamePage::selectOS);
 
+    OSVersionLabel = new QLabel(tr("Version") + ":");
     OSVersion = new QComboBox();
-    OSVersion -> setMinimumContentsLength(40);
-    OSVersion -> setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 
     this -> selectOS(0);
 
-    machineAttrLayout = new QFormLayout();
-    machineAttrLayout -> setAlignment(Qt::AlignVCenter);
-    machineAttrLayout -> setSpacing(5);
-    machineAttrLayout -> addRow(tr("Name") + ":", machineNameLineEdit);
-    machineAttrLayout -> addRow(tr("Type") + ":", OSType);
-    machineAttrLayout -> addRow(tr("Version") + ":", OSVersion);
+    mainLayout = new QGridLayout;
 
-    machineLayout = new QVBoxLayout;
-    machineLayout -> addWidget(descriptionLabel);
-    machineLayout -> addItem(machineAttrLayout);
-    setLayout(machineLayout);
+    mainLayout->setColumnStretch(1, 10);
+    mainLayout->setColumnStretch(2, 10);
+    mainLayout->setColumnStretch(3, 10);
+
+    mainLayout -> addWidget(descriptionNameLabel, 0, 0, 1, 4);
+    mainLayout -> addWidget(machineNameLabel, 1, 0, 1, 1);
+    mainLayout -> addWidget(machineNameLineEdit, 1, 1, 1, 3);
+    mainLayout -> addWidget(OSTypeLabel, 2, 0, 1, 1);
+    mainLayout -> addWidget(OSType, 2, 1, 1, 3);
+    mainLayout -> addWidget(OSVersionLabel, 3, 0, 1, 1);
+    mainLayout -> addWidget(OSVersion, 3, 1, 1, 3);
+
+    setLayout(mainLayout);
+
+    qDebug() << "MachineNamePage created";
 }
 
 MachineNamePage::~MachineNamePage() {
@@ -99,6 +105,22 @@ MachineNamePage::~MachineNamePage() {
 MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine memory"));
+
+    descriptionMemoryLabel = new QLabel(
+                tr("Select the amount of base memory (RAM) in megabytes for virtual machine allocating."));
+
+    memorySpinBox = new QSpinBox();
+    memorySlider = new QSlider(Qt::Horizontal);
+    memorySlider -> setTickPosition(QSlider::TicksBelow);
+    memorySlider -> setMinimum(1);
+    memorySlider -> setMaximum(400);
+
+    machineMemoryLayout = new QVBoxLayout;
+    machineMemoryLayout -> addWidget(descriptionMemoryLabel);
+    machineMemoryLayout -> addWidget(memorySlider);
+    machineMemoryLayout -> addWidget(memorySpinBox);
+
+    setLayout(machineMemoryLayout);
 
 }
 

@@ -25,12 +25,15 @@
 // Qt
 #include <QWizard>
 #include <QLabel>
+#include <QString>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QSpinBox>
 #include <QSlider>
-#include <QVBoxLayout>
-#include <QFormLayout>
+#include <QGridLayout>
+
+// GNU
+#include <sys/sysinfo.h>
 
 #include <QDebug>
 
@@ -69,13 +72,12 @@ class MachineNamePage: public QWizardPage {
     protected:
 
     private:
-        QVBoxLayout *machineLayout;
-        QFormLayout *machineAttrLayout;
+        QGridLayout *mainLayout;
 
-        QLabel *descriptionLabel;
+        QLabel *descriptionNameLabel;
         QLabel *machineNameLabel;
-        QLabel *OSLabel;
         QLabel *OSTypeLabel;
+        QLabel *OSVersionLabel;
 
         QComboBox *OSType;
         QComboBox *OSVersion;
@@ -97,6 +99,12 @@ class MachineMemoryPage: public QWizardPage {
     protected:
 
     private:
+        QVBoxLayout *machineMemoryLayout;
+
+        QSpinBox *memorySpinBox;
+        QSlider *memorySlider;
+
+        QLabel *descriptionMemoryLabel;
 };
 
 class MachineDiskPage: public QWizardPage {
