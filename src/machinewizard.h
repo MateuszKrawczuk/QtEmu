@@ -31,8 +31,6 @@
 #include <QSpinBox>
 #include <QSlider>
 #include <QGridLayout>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 
 #include <QDebug>
 
@@ -101,14 +99,15 @@ class MachineMemoryPage: public QWizardPage {
     protected:
 
     private:
-        QVBoxLayout *machineMemoryLayout;
-        QHBoxLayout *sliderMemoryLayout;
+        QGridLayout *machineMemoryLayout;
 
         QSpinBox *memorySpinBox;
         QSlider *memorySlider;
 
         QLabel *descriptionMemoryLabel;
         QLabel *spinBoxMemoryLabel;
+        QLabel *minMemoryLabel;
+        QLabel *maxMemorylabel;
 };
 
 class MachineDiskPage: public QWizardPage {

@@ -79,19 +79,19 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
     this -> selectOS(0);
 
-    mainLayout = new QGridLayout;
+    mainLayout = new QGridLayout();
 
-    mainLayout->setColumnStretch(1, 10);
-    mainLayout->setColumnStretch(2, 10);
-    mainLayout->setColumnStretch(3, 10);
+    mainLayout -> setColumnStretch(1, 10);
+    mainLayout -> setColumnStretch(2, 10);
+    mainLayout -> setColumnStretch(3, 10);
 
     mainLayout -> addWidget(descriptionNameLabel, 0, 0, 1, 4);
-    mainLayout -> addWidget(machineNameLabel, 1, 0, 1, 1);
-    mainLayout -> addWidget(machineNameLineEdit, 1, 1, 1, 3);
-    mainLayout -> addWidget(OSTypeLabel, 2, 0, 1, 1);
-    mainLayout -> addWidget(OSType, 2, 1, 1, 3);
-    mainLayout -> addWidget(OSVersionLabel, 3, 0, 1, 1);
-    mainLayout -> addWidget(OSVersion, 3, 1, 1, 3);
+    mainLayout -> addWidget(machineNameLabel,     1, 0, 1, 1);
+    mainLayout -> addWidget(machineNameLineEdit,  1, 1, 1, 3);
+    mainLayout -> addWidget(OSTypeLabel,          2, 0, 1, 1);
+    mainLayout -> addWidget(OSType,               2, 1, 1, 3);
+    mainLayout -> addWidget(OSVersionLabel,       3, 0, 1, 1);
+    mainLayout -> addWidget(OSVersion,            3, 1, 1, 3);
 
     setLayout(mainLayout);
 
@@ -128,15 +128,19 @@ MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
     connect(memorySlider, &QSlider::valueChanged,
             memorySpinBox, &QSpinBox::setValue);
 
-    sliderMemoryLayout = new QHBoxLayout();
-    sliderMemoryLayout -> setSpacing(5);
-    sliderMemoryLayout -> addWidget(memorySlider);
-    sliderMemoryLayout -> addWidget(memorySpinBox);
-    sliderMemoryLayout -> addWidget(spinBoxMemoryLabel);
+    minMemoryLabel = new QLabel("1 MiB");
+    maxMemorylabel = new QLabel(QString("%1 MiB").arg(totalRAM));
 
-    machineMemoryLayout = new QVBoxLayout;
-    machineMemoryLayout -> addWidget(descriptionMemoryLabel);
-    machineMemoryLayout -> addItem(sliderMemoryLayout);
+    machineMemoryLayout = new QGridLayout();
+
+    machineMemoryLayout -> setColumnStretch(1, 50);
+
+    machineMemoryLayout -> addWidget(descriptionMemoryLabel, 0, 0, 1, 5);
+    machineMemoryLayout -> addWidget(memorySlider,           1, 0, 1, 3);
+    machineMemoryLayout -> addWidget(memorySpinBox,          1, 3, 1, 1);
+    machineMemoryLayout -> addWidget(spinBoxMemoryLabel,     1, 4, 1, 1);
+    machineMemoryLayout -> addWidget(minMemoryLabel,         2, 0, 1, 1);
+    machineMemoryLayout -> addWidget(maxMemorylabel,         2, 2, 1, 1);
 
     setLayout(machineMemoryLayout);
 
@@ -149,6 +153,7 @@ MachineMemoryPage::~MachineMemoryPage() {
 
 MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
 
+    setTitle(tr(""));
 }
 
 MachineDiskPage::~MachineDiskPage() {
