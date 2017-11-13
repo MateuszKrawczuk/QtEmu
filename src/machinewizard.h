@@ -31,11 +31,13 @@
 #include <QSpinBox>
 #include <QSlider>
 #include <QGridLayout>
-
-// GNU
-#include <sys/sysinfo.h>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <QDebug>
+
+// Local
+#include "systemutils.h"
 
 class MachineWizard : public QWizard {
     Q_OBJECT
@@ -100,11 +102,13 @@ class MachineMemoryPage: public QWizardPage {
 
     private:
         QVBoxLayout *machineMemoryLayout;
+        QHBoxLayout *sliderMemoryLayout;
 
         QSpinBox *memorySpinBox;
         QSlider *memorySlider;
 
         QLabel *descriptionMemoryLabel;
+        QLabel *spinBoxMemoryLabel;
 };
 
 class MachineDiskPage: public QWizardPage {

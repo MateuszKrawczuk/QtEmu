@@ -60,13 +60,15 @@ SOURCES += src/main.cpp\
            src/helpwidget.cpp \
            src/aboutwidget.cpp \
     src/configwindow.cpp \
-    src/machinewizard.cpp
+    src/machinewizard.cpp \
+    src/systemutils.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
             src/aboutwidget.h \
     src/configwindow.h \
-    src/machinewizard.h
+    src/machinewizard.h \
+    src/systemutils.h
 
 OTHER_FILES += \
     CHANGELOG \

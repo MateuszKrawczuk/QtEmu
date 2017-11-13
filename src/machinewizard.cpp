@@ -109,19 +109,38 @@ MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
     descriptionMemoryLabel = new QLabel(
                 tr("Select the amount of base memory (RAM) in megabytes for virtual machine allocating."));
 
+    int32_t totalRAM = 0;
+
+    SystemUtils::getTotalMemory(totalRAM);
+
+    spinBoxMemoryLabel = new QLabel("MiB");
+
     memorySpinBox = new QSpinBox();
+    memorySpinBox -> setMinimum(1);
+    memorySpinBox -> setMaximum(totalRAM);
+
     memorySlider = new QSlider(Qt::Horizontal);
     memorySlider -> setTickPosition(QSlider::TicksBelow);
+    memorySlider -> setTickInterval(500);
     memorySlider -> setMinimum(1);
-    memorySlider -> setMaximum(400);
+    memorySlider -> setMaximum(totalRAM);
+
+    connect(memorySlider, &QSlider::valueChanged,
+            memorySpinBox, &QSpinBox::setValue);
+
+    sliderMemoryLayout = new QHBoxLayout();
+    sliderMemoryLayout -> setSpacing(5);
+    sliderMemoryLayout -> addWidget(memorySlider);
+    sliderMemoryLayout -> addWidget(memorySpinBox);
+    sliderMemoryLayout -> addWidget(spinBoxMemoryLabel);
 
     machineMemoryLayout = new QVBoxLayout;
     machineMemoryLayout -> addWidget(descriptionMemoryLabel);
-    machineMemoryLayout -> addWidget(memorySlider);
-    machineMemoryLayout -> addWidget(memorySpinBox);
+    machineMemoryLayout -> addItem(sliderMemoryLayout);
 
     setLayout(machineMemoryLayout);
 
+    qDebug() << "MachineMemoryPage created";
 }
 
 MachineMemoryPage::~MachineMemoryPage() {
