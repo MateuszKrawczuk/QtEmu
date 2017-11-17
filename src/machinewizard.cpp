@@ -26,10 +26,13 @@
 
 MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
 
+    setWindowTitle(tr("Create a new Machine"));
+
     setPage(Page_Name, new MachineNamePage(this));
+    setPage(Page_Hardware, new MachineHardwarePage(this));
+    setPage(Page_Accelerator, new MachineAcceleratorPage(this));
     setPage(Page_Memory, new MachineMemoryPage(this));
     setPage(Page_Disk, new MachineDiskPage(this));
-    setPage(Page_Hardware, new MachineHardwarePage(this));
     setPage(Page_Conclusion, new MachineConclusionPage(this));
 
     setStartId(Page_Name);
@@ -45,7 +48,7 @@ MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
     setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));
 
-    setWindowTitle(tr("Create a new Machine"));
+    setMinimumSize(600, 400);
 
     qDebug() << "MachineWizard created";
 }
@@ -59,6 +62,7 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     setTitle(tr("Machine name and operating system"));
 
     descriptionNameLabel = new QLabel(tr("Select name and operating system for your new machine."));
+    descriptionNameLabel -> setWordWrap(true);
 
     machineNameLabel = new QLabel(tr("Name") + ":");
     machineNameLineEdit = new QLineEdit();
@@ -77,7 +81,7 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     OSVersionLabel = new QLabel(tr("Version") + ":");
     OSVersion = new QComboBox();
 
-    this -> selectOS(0);
+    selectOS(0);
 
     mainLayout = new QGridLayout();
 
@@ -102,12 +106,124 @@ MachineNamePage::~MachineNamePage() {
     qDebug() << "MachineNamePage destroyed";
 }
 
+MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) {
+
+    setTitle(tr("Machine hardware"));
+
+    qDebug() << "MachineHardwarePage created";
+}
+
+MachineHardwarePage::~MachineHardwarePage() {
+    qDebug() << "MachineHardwarePage destroyed";
+}
+
+MachineAcceleratorPage::MachineAcceleratorPage(QWidget *parent) : QWizardPage(parent) {
+
+    setTitle(tr("Machine accelerator"));
+
+    acceleratorTabWidget = new QTabWidget();
+    acceleratorTabWidget -> addTab(new KVMTab(), tr("KVM"));
+    acceleratorTabWidget -> addTab(new TCGTab(), tr("TCG"));
+    acceleratorTabWidget -> addTab(new HAXMTab(), tr("HAXM"));
+
+    acceleratorLayout = new QVBoxLayout();
+    acceleratorLayout -> setAlignment(Qt::AlignCenter);
+    acceleratorLayout -> addWidget(acceleratorTabWidget);
+
+    setLayout(acceleratorLayout);
+
+    qDebug() << "MachineAcceleratorPage created";
+}
+
+MachineAcceleratorPage::~MachineAcceleratorPage() {
+    qDebug() << "MachineAcceleratorPage destroyed";
+}
+
+KVMTab::KVMTab(QWidget *parent) : QWidget(parent) {
+
+    kvmRadioButton = new QRadioButton("Kernel-based Virtual Machine (KVM)");
+
+    kvmDescriptionLabel = new QLabel("KVM (for Kernel-based Virtual Machine) is a full virtualization solution"
+                                     "for GNU/Linux on x86 hardware containing virtualization extensions (Intel VT or AMD-V).");
+    kvmDescriptionLabel -> setWordWrap(true);
+
+    kvmURLLabel = new QLabel("<a href=\"https://www.linux-kvm.org\">www.linux-kvm.org</a>");
+
+    kvmLayout = new QVBoxLayout();
+    kvmLayout -> addWidget(kvmRadioButton);
+    kvmLayout -> addWidget(kvmDescriptionLabel);
+    kvmLayout -> addWidget(kvmURLLabel, 0, Qt::AlignCenter);
+
+    setLayout(kvmLayout);
+
+    qDebug() << "KVMTab created";
+}
+
+KVMTab::~KVMTab() {
+    qDebug() << "KVMTab destroyed";
+}
+
+TCGTab::TCGTab(QWidget *parent) : QWidget(parent) {
+
+    tcgRadioButton = new QRadioButton("Tiny Code Generator (TCG)");
+
+    tcgDescriptionLabel = new QLabel("The Tiny Code Generator (TCG) exists to transform"
+                                      "target insns (the processor being emulated) via the"
+                                      "TCG frontend to TCG ops which are then transformed"
+                                      "into host insns (the processor executing QEMU itself)"
+                                      "via the TCG backend.");
+    tcgDescriptionLabel -> setWordWrap(true);
+
+    tcgURLLabel = new QLabel("<a href=\"https://https://wiki.qemu.org/Documentation/TCG\">wiki.qemu.org</a>");
+
+    tcgLayout = new QVBoxLayout();
+    tcgLayout -> addWidget(tcgRadioButton);
+    tcgLayout -> addWidget(tcgDescriptionLabel);
+    tcgLayout -> addWidget(tcgURLLabel, 0, Qt::AlignCenter);
+
+    setLayout(tcgLayout);
+
+    qDebug() << "TCGTab created";
+}
+
+TCGTab::~TCGTab() {
+    qDebug() << "TCGTab destroyed";
+}
+
+HAXMTab::HAXMTab(QWidget *parent) : QWidget(parent) {
+
+    haxmRadioButton = new QRadioButton("Hardware Accelerated Execution Manager (HAXM)");
+
+    haxmDescriptionLabel = new QLabel("Intel® Hardware Accelerated Execution Manager"
+                                       "(Intel® HAXM) is a hardware-assisted virtualization"
+                                       "engine (hypervisor) that uses Intel® Virtualization Technology"
+                                       "(Intel® VT) to speed up Android* app emulation on a host machine."
+                                      );
+    haxmDescriptionLabel -> setWordWrap(true);
+
+    haxmURLLabel = new QLabel("<a href=\"https://software.intel.com/en-us/articles/intel-hardware-accelerated-execution-manager-intel-haxm\">software.intel.com</a>");
+
+    haxmLayout = new QVBoxLayout();
+    haxmLayout -> addWidget(haxmRadioButton);
+    haxmLayout -> addWidget(haxmDescriptionLabel);
+    haxmLayout -> addWidget(haxmURLLabel, 0, Qt::AlignCenter);
+
+    setLayout(haxmLayout);
+
+    qDebug() << "HAXMTab created";
+}
+
+HAXMTab::~HAXMTab() {
+    qDebug() << "HAXMTab destroyed";
+}
+
 MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine memory"));
 
     descriptionMemoryLabel = new QLabel(
                 tr("Select the amount of base memory (RAM) in megabytes for virtual machine allocating."));
+    descriptionMemoryLabel -> setWordWrap(true);
 
     int32_t totalRAM = 0;
 
@@ -158,14 +274,6 @@ MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
 
 MachineDiskPage::~MachineDiskPage() {
     qDebug() << "MachineDiskPage destroyed";
-}
-
-MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) {
-
-}
-
-MachineHardwarePage::~MachineHardwarePage() {
-    qDebug() << "MachineHardwarePage destroyed";
 }
 
 MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(parent) {

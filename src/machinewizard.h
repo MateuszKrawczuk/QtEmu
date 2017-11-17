@@ -30,7 +30,11 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QSlider>
+#include <QTextBrowser>
+#include <QRadioButton>
+#include <QTabWidget>
 #include <QGridLayout>
+#include <QVBoxLayout>
 
 #include <QDebug>
 
@@ -44,8 +48,8 @@ class MachineWizard : public QWizard {
         explicit MachineWizard(QWidget *parent = 0);
         ~MachineWizard();
 
-    enum { Page_Name, Page_Memory, Page_Disk,
-               Page_Hardware, Page_Conclusion };
+    enum { Page_Name, Page_Hardware, Page_Accelerator,
+           Page_Memory, Page_Disk, Page_Conclusion };
 
     signals:
 
@@ -85,6 +89,107 @@ class MachineNamePage: public QWizardPage {
         QLineEdit *machineNameLineEdit;
 };
 
+class MachineHardwarePage: public QWizardPage {
+    Q_OBJECT
+
+    public:
+        explicit MachineHardwarePage(QWidget *parent = 0);
+        ~MachineHardwarePage();
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+};
+
+class MachineAcceleratorPage: public QWizardPage {
+    Q_OBJECT
+
+    public:
+        explicit MachineAcceleratorPage(QWidget *parent = 0);
+        ~MachineAcceleratorPage();
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *acceleratorLayout;
+
+        QTabWidget *acceleratorTabWidget;
+
+};
+
+class KVMTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit KVMTab(QWidget *parent = 0);
+        ~KVMTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *kvmLayout;
+
+        QRadioButton *kvmRadioButton;
+
+        QLabel *kvmDescriptionLabel;
+        QLabel *kvmURLLabel;
+
+};
+
+class TCGTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit TCGTab(QWidget *parent = 0);
+        ~TCGTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *tcgLayout;
+
+        QRadioButton *tcgRadioButton;
+
+        QLabel *tcgDescriptionLabel;
+        QLabel *tcgURLLabel;
+
+};
+
+class HAXMTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit HAXMTab(QWidget *parent = 0);
+        ~HAXMTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *haxmLayout;
+
+        QRadioButton *haxmRadioButton;
+
+        QLabel *haxmDescriptionLabel;
+        QLabel *haxmURLLabel;
+};
+
 class MachineMemoryPage: public QWizardPage {
     Q_OBJECT
 
@@ -116,22 +221,6 @@ class MachineDiskPage: public QWizardPage {
     public:
         explicit MachineDiskPage(QWidget *parent = 0);
         ~MachineDiskPage();
-
-    signals:
-
-    public slots:
-
-    protected:
-
-    private:
-};
-
-class MachineHardwarePage: public QWizardPage {
-    Q_OBJECT
-
-    public:
-        explicit MachineHardwarePage(QWidget *parent = 0);
-        ~MachineHardwarePage();
 
     signals:
 
