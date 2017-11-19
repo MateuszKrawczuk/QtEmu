@@ -32,9 +32,14 @@
 #include <QSlider>
 #include <QTextBrowser>
 #include <QRadioButton>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QGroupBox>
 #include <QTabWidget>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QFormLayout>
 
 #include <QDebug>
 
@@ -103,6 +108,122 @@ class MachineHardwarePage: public QWizardPage {
     protected:
 
     private:
+        QVBoxLayout *hardwareLayout;
+
+        QTabWidget *hardwareTabWidget;
+};
+
+class ProcessorTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit ProcessorTab(QWidget *parent = 0);
+        ~ProcessorTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QHBoxLayout *CPUTypeLayout;
+        QHBoxLayout *CPUCountLayout;
+        QHBoxLayout *socketLayout;
+        QHBoxLayout *maxHotCPUsLayout;
+        QVBoxLayout *CPUSettingsLayout;
+        QVBoxLayout *processorLayout;
+
+        QComboBox *CPUType;
+
+        QGroupBox *CPUSettings;
+
+        QLabel *CPUTypeLabel;
+        QLabel *CPUCountLabel;
+        QLabel *coresSocketLabel;
+        QLabel *socketCountLabel;
+        QLabel *threadsCoreLabel;
+        QLabel *maxHotCPULabel;
+
+        QSpinBox *CPUCountSpinBox;
+        QSpinBox *coresSocketSpinBox;
+        QSpinBox *socketCountSpinBox;
+        QSpinBox *threadsCoreSpinBox;
+        QSpinBox *maxHotCPUSpinBox;
+};
+
+class GraphicsTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit GraphicsTab(QWidget *parent = 0);
+        ~GraphicsTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QHBoxLayout *GPUTypeLayout;
+        QHBoxLayout *keyboardLayout;
+        QVBoxLayout *graphicsLayout;
+
+        QComboBox *GPUType;
+        QComboBox *keyboard;
+
+        QLabel *GPUTypeLabel;
+        QLabel *keyboardLabel;
+};
+
+class AudioTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit AudioTab(QWidget *parent = 0);
+        ~AudioTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QGridLayout *audioLayout;
+
+        QLabel *creativeLabel;
+        QLabel *ensoniqLabel;
+        QLabel *intelAC97Label;
+        QLabel *yamahaLabel;
+        QLabel *gravisLabel;
+        QLabel *CS4231ALabel;
+        QLabel *intelHDALabel;
+        QLabel *pcSpeakerLabel;
+
+        QCheckBox *creativeCheck;
+        QCheckBox *ensoniqCheck;
+        QCheckBox *intelAC97Check;
+        QCheckBox *yamahaCheck;
+        QCheckBox *gravisCheck;
+        QCheckBox *CS4231ACheck;
+        QCheckBox *intelHDACheck;
+        QCheckBox *pcSpeakerCheck;
+};
+
+class NetworkTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit NetworkTab(QWidget *parent = 0);
+        ~NetworkTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+
+
 };
 
 class MachineAcceleratorPage: public QWizardPage {
@@ -229,6 +350,20 @@ class MachineDiskPage: public QWizardPage {
     protected:
 
     private:
+        QVBoxLayout *machineDiskLayout;
+        QHBoxLayout *useOldDiskLayout;
+
+        QRadioButton *noDiskRadio;
+        QRadioButton *createDiskRadio;
+        QRadioButton *useExistingDiskRadio;
+
+        QPushButton *pathNewDiskPushButton;
+
+        QLineEdit *hardDiskPathLineEdit;
+
+        QLabel *machineDiskLabel;
+        QLabel *machineDiskInfoLabel;
+        QLabel *machineDiskSizeLabel;
 };
 
 class MachineConclusionPage: public QWizardPage {

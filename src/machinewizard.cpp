@@ -48,7 +48,7 @@ MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
     setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));
 
-    setMinimumSize(600, 400);
+    setMinimumSize(620, 400);
 
     qDebug() << "MachineWizard created";
 }
@@ -70,9 +70,9 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     OSTypeLabel = new QLabel(tr("Type") + ":");
     OSType = new QComboBox();
 
-    OSType -> addItem(tr("GNU/Linux"));
-    OSType -> addItem(tr("Microsoft Windows"));
-    OSType -> addItem(tr("BSD"));
+    OSType -> addItem("GNU/Linux");
+    OSType -> addItem("Microsoft Windows");
+    OSType -> addItem("BSD");
     OSType -> addItem(tr("Other"));
 
     connect(OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -110,7 +110,201 @@ MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) 
 
     setTitle(tr("Machine hardware"));
 
+    hardwareTabWidget = new QTabWidget();
+    hardwareTabWidget -> addTab(new ProcessorTab(), tr("Processor"));
+    hardwareTabWidget -> addTab(new GraphicsTab(), tr("Graphics"));
+    hardwareTabWidget -> addTab(new AudioTab(), tr("Audio"));
+    hardwareTabWidget -> addTab(new NetworkTab(), tr("Network"));
+
+    hardwareLayout = new QVBoxLayout();
+    hardwareLayout -> setAlignment(Qt::AlignCenter);
+    hardwareLayout -> addWidget(hardwareTabWidget);
+
+    setLayout(hardwareLayout);
+
     qDebug() << "MachineHardwarePage created";
+}
+
+ProcessorTab::ProcessorTab(QWidget *parent) : QWidget(parent) {
+
+    CPUTypeLabel = new QLabel(tr("CPU Type") + ":");
+
+    CPUType = new QComboBox();
+    SystemUtils::setCPUTypesx86(CPUType);
+
+    CPUTypeLayout = new QHBoxLayout();
+    CPUTypeLayout -> setAlignment(Qt::AlignVCenter);
+    CPUTypeLayout -> setSpacing(5);
+    CPUTypeLayout -> addWidget(CPUTypeLabel);
+    CPUTypeLayout -> addWidget(CPUType);
+
+    CPUCountLabel = new QLabel(tr("CPU Count") + ":");
+    CPUCountSpinBox = new QSpinBox();
+    CPUCountSpinBox -> setMinimum(1);
+    CPUCountSpinBox -> setMaximum(255);
+
+    coresSocketLabel = new QLabel(tr("Cores per socket") + ":");
+    coresSocketSpinBox = new QSpinBox();
+    coresSocketSpinBox -> setMinimum(0);
+    coresSocketSpinBox -> setMaximum(255);
+
+    CPUCountLayout = new QHBoxLayout();
+    CPUCountLayout -> setAlignment(Qt::AlignVCenter);
+    CPUCountLayout -> setSpacing(5);
+    CPUCountLayout -> addWidget(CPUCountLabel);
+    CPUCountLayout -> addWidget(CPUCountSpinBox);
+    CPUCountLayout -> addWidget(coresSocketLabel);
+    CPUCountLayout -> addWidget(coresSocketSpinBox);
+
+    socketCountLabel = new QLabel(tr("Socket count") + ":");
+    socketCountSpinBox = new QSpinBox();
+    socketCountSpinBox -> setMinimum(0);
+    socketCountSpinBox -> setMaximum(255);
+
+    threadsCoreLabel = new QLabel(tr("Threads per core") + ":");
+    threadsCoreSpinBox = new QSpinBox();
+    threadsCoreSpinBox -> setMinimum(0);
+    threadsCoreSpinBox -> setMaximum(255);
+
+    socketLayout = new QHBoxLayout();
+    socketLayout -> setAlignment(Qt::AlignVCenter);
+    socketLayout -> setSpacing(5);
+    socketLayout -> addWidget(socketCountLabel);
+    socketLayout -> addWidget(socketCountSpinBox);
+    socketLayout -> addWidget(threadsCoreLabel);
+    socketLayout -> addWidget(threadsCoreSpinBox);
+
+    maxHotCPULabel = new QLabel(tr("Maximum number of hotpluggable CPUs") + ":");
+    maxHotCPUSpinBox = new QSpinBox();
+    maxHotCPUSpinBox -> setMinimum(0);
+    maxHotCPUSpinBox -> setMaximum(255);
+
+    maxHotCPUsLayout = new QHBoxLayout();
+    maxHotCPUsLayout -> setAlignment(Qt::AlignVCenter);
+    maxHotCPUsLayout -> setSpacing(5);
+    maxHotCPUsLayout -> addWidget(maxHotCPULabel);
+    maxHotCPUsLayout -> addWidget(maxHotCPUSpinBox);
+
+    CPUSettingsLayout = new QVBoxLayout();
+    CPUSettingsLayout -> setAlignment(Qt::AlignVCenter);
+    CPUSettingsLayout -> addItem(CPUCountLayout);
+    CPUSettingsLayout -> addItem(socketLayout);
+    CPUSettingsLayout -> addItem(maxHotCPUsLayout);
+
+    CPUSettings = new QGroupBox(tr("CPU Settings"));
+    CPUSettings -> setLayout(CPUSettingsLayout);
+
+    processorLayout = new QVBoxLayout();
+    processorLayout -> setAlignment(Qt::AlignVCenter);
+    processorLayout -> addItem(CPUTypeLayout);
+    processorLayout -> addWidget(CPUSettings);
+
+    setLayout(processorLayout);
+
+    qDebug() << "ProcessorTab created";
+}
+
+ProcessorTab::~ProcessorTab() {
+    qDebug() << "ProcessorTab destroyed";
+}
+
+GraphicsTab::GraphicsTab(QWidget *parent) : QWidget(parent) {
+
+    GPUTypeLabel = new QLabel(tr("GPU Type") + ":");
+    GPUType = new QComboBox();
+    SystemUtils::setGPUTypes(GPUType);
+
+    GPUTypeLayout = new QHBoxLayout();
+    GPUTypeLayout -> addWidget(GPUTypeLabel);
+    GPUTypeLayout -> addWidget(GPUType);
+
+    keyboardLabel = new QLabel(tr("Keyboard layout") + ":");
+    keyboard = new QComboBox();
+    SystemUtils::setKeyboardLayout(keyboard);
+
+    keyboardLayout = new QHBoxLayout();
+    keyboardLayout -> addWidget(keyboardLabel);
+    keyboardLayout -> addWidget(keyboard);
+
+    graphicsLayout = new QVBoxLayout();
+    graphicsLayout -> setAlignment(Qt::AlignVCenter);
+    graphicsLayout -> setSpacing(5);
+    graphicsLayout -> addItem(GPUTypeLayout);
+    graphicsLayout -> addItem(keyboardLayout);
+
+    setLayout(graphicsLayout);
+
+    qDebug() << "GraphicsTab created";
+}
+
+GraphicsTab::~GraphicsTab() {
+    qDebug() << "GraphicsTab destroyed";
+}
+
+AudioTab::AudioTab(QWidget *parent) : QWidget(parent) {
+
+    creativeLabel = new QLabel("Creative Sound Blaster 16");
+    creativeCheck = new QCheckBox();
+
+    ensoniqLabel = new QLabel("ENSONIQ AudioPCI ES1370");
+    ensoniqCheck = new QCheckBox();
+
+    intelAC97Label = new QLabel("Intel 82801AA AC97 Audio");
+    intelAC97Check = new QCheckBox();
+
+    yamahaLabel = new QLabel("Yamaha YM3812");
+    yamahaCheck = new QCheckBox();
+
+    gravisLabel = new QLabel("Gravis Ultrasound GF1");
+    gravisCheck = new QCheckBox();
+
+    CS4231ALabel = new QLabel("CS4231A");
+    CS4231ACheck = new QCheckBox();
+
+    intelHDALabel = new QLabel("Intel HD Audio");
+    intelHDACheck = new QCheckBox();
+
+    pcSpeakerLabel = new QLabel(tr("PC Speaker"));
+    pcSpeakerCheck = new QCheckBox();
+
+    audioLayout = new QGridLayout();
+    audioLayout -> addWidget(creativeLabel, 0, 0, 1, 1);
+    audioLayout -> addWidget(creativeCheck, 0, 1, 1, 1);
+    audioLayout -> addWidget(ensoniqLabel, 0, 2, 1, 1);
+    audioLayout -> addWidget(ensoniqCheck, 0, 3, 1, 1);
+
+    audioLayout -> addWidget(intelAC97Label, 1, 0, 1, 1);
+    audioLayout -> addWidget(intelAC97Check, 1, 1, 1, 1);
+    audioLayout -> addWidget(yamahaLabel, 1, 2, 1, 1);
+    audioLayout -> addWidget(yamahaCheck, 1, 3, 1, 1);
+
+    audioLayout -> addWidget(gravisLabel, 2, 0, 1, 1);
+    audioLayout -> addWidget(gravisCheck, 2, 1, 1, 1);
+    audioLayout -> addWidget(CS4231ALabel, 2, 2, 1, 1);
+    audioLayout -> addWidget(CS4231ACheck, 2, 3, 1, 1);
+
+    audioLayout -> addWidget(intelHDALabel, 3, 0, 1, 1);
+    audioLayout -> addWidget(intelHDACheck, 3, 1, 1, 1);
+    audioLayout -> addWidget(pcSpeakerLabel, 3, 2, 1, 1);
+    audioLayout -> addWidget(pcSpeakerCheck, 3, 3, 1, 1);
+
+    setLayout(audioLayout);
+
+    qDebug() << "AudioTab created";
+}
+
+AudioTab::~AudioTab() {
+    qDebug() << "AudioTab destroyed";
+}
+
+NetworkTab::NetworkTab(QWidget *parent) : QWidget(parent) {
+
+
+    qDebug() << "NetworkTab created";
+}
+
+NetworkTab::~NetworkTab() {
+    qDebug() << "NetworkTab destroyed";
 }
 
 MachineHardwarePage::~MachineHardwarePage() {
@@ -269,7 +463,50 @@ MachineMemoryPage::~MachineMemoryPage() {
 
 MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
 
-    setTitle(tr(""));
+    setTitle(tr("Machine virtual hard disk"));
+
+    machineDiskLabel = new QLabel(
+                tr("Select a virtual hard disk to the new machine."
+                   "You can either create a new hard disk or select an existing one."));
+    machineDiskLabel -> setWordWrap(true);
+
+    machineDiskInfoLabel = new QLabel(tr("If you need a more complex storage set-up"
+                                         "you can skip this step and make the changes"
+                                         "to the machine settings once the machine is created."));
+    machineDiskInfoLabel -> setWordWrap(true);
+
+    machineDiskSizeLabel = new QLabel(tr("The recommended size of the hard disk is"));
+    machineDiskSizeLabel -> setWordWrap(true);
+
+    noDiskRadio = new QRadioButton(tr("Do not add a virtual hard disk"));
+    createDiskRadio = new QRadioButton(tr("Create a new virtual hard disk"));
+    createDiskRadio -> setChecked(true);
+    useExistingDiskRadio = new QRadioButton(tr("Use an existing virtual hard disk"));
+
+    hardDiskPathLineEdit = new QLineEdit();
+    hardDiskPathLineEdit -> setEnabled(false);
+
+    pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
+                                                             QIcon(":/icon/32x32/qtemu.png")),
+                                        "",
+                                        this);
+
+    useOldDiskLayout = new QHBoxLayout();
+    useOldDiskLayout -> setAlignment(Qt::AlignVCenter);
+    useOldDiskLayout -> addWidget(hardDiskPathLineEdit);
+    useOldDiskLayout -> addWidget(pathNewDiskPushButton);
+
+    machineDiskLayout = new QVBoxLayout();
+    machineDiskLayout -> setSpacing(5);
+    machineDiskLayout -> addWidget(machineDiskLabel);
+    machineDiskLayout -> addWidget(machineDiskInfoLabel);
+    machineDiskLayout -> addWidget(machineDiskSizeLabel);
+    machineDiskLayout -> addWidget(noDiskRadio);
+    machineDiskLayout -> addWidget(createDiskRadio);
+    machineDiskLayout -> addWidget(useExistingDiskRadio);
+    machineDiskLayout -> addItem(useOldDiskLayout);
+
+    setLayout(machineDiskLayout);
 }
 
 MachineDiskPage::~MachineDiskPage() {
@@ -278,6 +515,9 @@ MachineDiskPage::~MachineDiskPage() {
 
 MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(parent) {
 
+    setTitle(tr("Machine Summary"));
+
+    qDebug() << "MachineConclusionPage created";
 }
 
 MachineConclusionPage::~MachineConclusionPage() {

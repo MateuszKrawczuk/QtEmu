@@ -22,6 +22,8 @@
 #define SYSTEMUTILS_H
 
 // Qt
+#include <QLabel>
+#include <QComboBox>
 
 #include <QDebug>
 
@@ -35,6 +37,9 @@ class SystemUtils {
         ~SystemUtils();
 
         static void getTotalMemory(int32_t &totalRAM);
+        static void setCPUTypesx86(QComboBox *CPUType);
+        static void setGPUTypes(QComboBox *GPUType);
+        static void setKeyboardLayout(QComboBox *keyboardLayout);
 
     private:
 
