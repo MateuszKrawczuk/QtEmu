@@ -190,15 +190,6 @@ class AudioTab: public QWidget {
     private:
         QGridLayout *audioLayout;
 
-        QLabel *creativeLabel;
-        QLabel *ensoniqLabel;
-        QLabel *intelAC97Label;
-        QLabel *yamahaLabel;
-        QLabel *gravisLabel;
-        QLabel *CS4231ALabel;
-        QLabel *intelHDALabel;
-        QLabel *pcSpeakerLabel;
-
         QCheckBox *creativeCheck;
         QCheckBox *ensoniqCheck;
         QCheckBox *intelAC97Check;
@@ -380,6 +371,11 @@ class MachineConclusionPage: public QWizardPage {
     protected:
 
     private:
+        QFormLayout *conclusionLayout;
+
+        QLabel *conclusionCPULabel;
+
+
 };
 
 #endif // MACHINEWIZARD_H

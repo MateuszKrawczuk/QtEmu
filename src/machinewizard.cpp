@@ -243,50 +243,34 @@ GraphicsTab::~GraphicsTab() {
 
 AudioTab::AudioTab(QWidget *parent) : QWidget(parent) {
 
-    creativeLabel = new QLabel("Creative Sound Blaster 16");
-    creativeCheck = new QCheckBox();
+    creativeCheck = new QCheckBox("Creative Sound Blaster 16");
 
-    ensoniqLabel = new QLabel("ENSONIQ AudioPCI ES1370");
-    ensoniqCheck = new QCheckBox();
+    ensoniqCheck = new QCheckBox("ENSONIQ AudioPCI ES1370");
 
-    intelAC97Label = new QLabel("Intel 82801AA AC97 Audio");
-    intelAC97Check = new QCheckBox();
+    intelAC97Check = new QCheckBox("Intel 82801AA AC97 Audio");
 
-    yamahaLabel = new QLabel("Yamaha YM3812");
-    yamahaCheck = new QCheckBox();
+    yamahaCheck = new QCheckBox("Yamaha YM3812");
 
-    gravisLabel = new QLabel("Gravis Ultrasound GF1");
-    gravisCheck = new QCheckBox();
+    gravisCheck = new QCheckBox("Gravis Ultrasound GF1");
 
-    CS4231ALabel = new QLabel("CS4231A");
-    CS4231ACheck = new QCheckBox();
+    CS4231ACheck = new QCheckBox("CS4231A");
 
-    intelHDALabel = new QLabel("Intel HD Audio");
-    intelHDACheck = new QCheckBox();
+    intelHDACheck = new QCheckBox("Intel HD Audio");
 
-    pcSpeakerLabel = new QLabel(tr("PC Speaker"));
-    pcSpeakerCheck = new QCheckBox();
+    pcSpeakerCheck = new QCheckBox(tr("PC Speaker"));
 
     audioLayout = new QGridLayout();
-    audioLayout -> addWidget(creativeLabel, 0, 0, 1, 1);
-    audioLayout -> addWidget(creativeCheck, 0, 1, 1, 1);
-    audioLayout -> addWidget(ensoniqLabel, 0, 2, 1, 1);
-    audioLayout -> addWidget(ensoniqCheck, 0, 3, 1, 1);
+    audioLayout -> addWidget(creativeCheck,  0, 0, 1, 1);
+    audioLayout -> addWidget(ensoniqCheck,   0, 1, 1, 1);
 
-    audioLayout -> addWidget(intelAC97Label, 1, 0, 1, 1);
-    audioLayout -> addWidget(intelAC97Check, 1, 1, 1, 1);
-    audioLayout -> addWidget(yamahaLabel, 1, 2, 1, 1);
-    audioLayout -> addWidget(yamahaCheck, 1, 3, 1, 1);
+    audioLayout -> addWidget(intelAC97Check, 1, 0, 1, 1);
+    audioLayout -> addWidget(yamahaCheck,    1, 1, 1, 1);
 
-    audioLayout -> addWidget(gravisLabel, 2, 0, 1, 1);
-    audioLayout -> addWidget(gravisCheck, 2, 1, 1, 1);
-    audioLayout -> addWidget(CS4231ALabel, 2, 2, 1, 1);
-    audioLayout -> addWidget(CS4231ACheck, 2, 3, 1, 1);
+    audioLayout -> addWidget(gravisCheck,    2, 0, 1, 1);
+    audioLayout -> addWidget(CS4231ACheck,   2, 1, 1, 1);
 
-    audioLayout -> addWidget(intelHDALabel, 3, 0, 1, 1);
-    audioLayout -> addWidget(intelHDACheck, 3, 1, 1, 1);
-    audioLayout -> addWidget(pcSpeakerLabel, 3, 2, 1, 1);
-    audioLayout -> addWidget(pcSpeakerCheck, 3, 3, 1, 1);
+    audioLayout -> addWidget(intelHDACheck,  3, 0, 1, 1);
+    audioLayout -> addWidget(pcSpeakerCheck, 3, 1, 1, 1);
 
     setLayout(audioLayout);
 
@@ -298,6 +282,7 @@ AudioTab::~AudioTab() {
 }
 
 NetworkTab::NetworkTab(QWidget *parent) : QWidget(parent) {
+
 
 
     qDebug() << "NetworkTab created";
@@ -516,6 +501,18 @@ MachineDiskPage::~MachineDiskPage() {
 MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine Summary"));
+
+    conclusionLayout = new QFormLayout();
+    conclusionLayout -> addRow(tr("Name") + ":", new QLabel("MACHINE_NAME"));
+    conclusionLayout -> addRow(tr("Processor") + ":", new QLabel("MACHINE_PROCESSOR"));
+    conclusionLayout -> addRow(tr("Graphics") + ":", new QLabel("MACHINE_GPU"));
+    conclusionLayout -> addRow(tr("Audio") + ":", new QLabel("MACHINE_AUDIO"));
+    conclusionLayout -> addRow(tr("Network") + ":", new QLabel("MACHINE_NET"));
+    conclusionLayout -> addRow(tr("RAM") + ":", new QLabel("MACHINE_RAM"));
+    conclusionLayout -> addRow(tr("Accelerator") + ":", new QLabel("MACHINE_Accelerator"));
+    conclusionLayout -> addRow(tr("Disk") + ":", new QLabel("MACHINE_DISK"));
+
+    setLayout(conclusionLayout);
 
     qDebug() << "MachineConclusionPage created";
 }
