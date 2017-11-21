@@ -83,6 +83,8 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
     selectOS(0);
 
+    registerField("machine.name*", machineNameLineEdit);
+
     mainLayout = new QGridLayout();
 
     mainLayout -> setColumnStretch(1, 10);
@@ -554,3 +556,4 @@ void MachineNamePage::selectOS(int OSSelected){
         this -> OSVersion -> addItem(tr("ReactOS"));
     }
 }
+
