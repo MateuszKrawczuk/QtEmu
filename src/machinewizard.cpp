@@ -48,7 +48,7 @@ MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
     setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));
 
-    setMinimumSize(620, 400);
+    setMinimumSize(700, 400);
 
     qDebug() << "MachineWizard created";
 }
@@ -294,7 +294,14 @@ AudioTab::~AudioTab() {
 
 NetworkTab::NetworkTab(QWidget *parent) : QWidget(parent) {
 
+    withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
+    withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
 
+    networkLayout = new QVBoxLayout();
+    networkLayout -> addWidget(withNetworkRadio);
+    networkLayout -> addWidget(withoutNetworkRadio);
+
+    setLayout(networkLayout);
 
     qDebug() << "NetworkTab created";
 }

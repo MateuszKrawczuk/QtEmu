@@ -211,7 +211,10 @@ class NetworkTab: public QWidget {
     protected:
 
     private:
+        QVBoxLayout *networkLayout;
 
+        QRadioButton *withNetworkRadio;
+        QRadioButton *withoutNetworkRadio;
 
 };
 
