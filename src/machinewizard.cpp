@@ -130,6 +130,7 @@ MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) 
 ProcessorTab::ProcessorTab(QWidget *parent) : QWidget(parent) {
 
     CPUTypeLabel = new QLabel(tr("CPU Type") + ":");
+    CPUTypeLabel -> setWordWrap(true);
 
     CPUType = new QComboBox();
     SystemUtils::setCPUTypesx86(CPUType);
@@ -141,11 +142,13 @@ ProcessorTab::ProcessorTab(QWidget *parent) : QWidget(parent) {
     CPUTypeLayout -> addWidget(CPUType);
 
     CPUCountLabel = new QLabel(tr("CPU Count") + ":");
+    CPUCountLabel -> setWordWrap(true);
     CPUCountSpinBox = new QSpinBox();
     CPUCountSpinBox -> setMinimum(1);
     CPUCountSpinBox -> setMaximum(255);
 
     coresSocketLabel = new QLabel(tr("Cores per socket") + ":");
+    coresSocketLabel -> setWordWrap(true);
     coresSocketSpinBox = new QSpinBox();
     coresSocketSpinBox -> setMinimum(0);
     coresSocketSpinBox -> setMaximum(255);
@@ -159,11 +162,13 @@ ProcessorTab::ProcessorTab(QWidget *parent) : QWidget(parent) {
     CPUCountLayout -> addWidget(coresSocketSpinBox);
 
     socketCountLabel = new QLabel(tr("Socket count") + ":");
+    socketCountLabel -> setWordWrap(true);
     socketCountSpinBox = new QSpinBox();
     socketCountSpinBox -> setMinimum(0);
     socketCountSpinBox -> setMaximum(255);
 
     threadsCoreLabel = new QLabel(tr("Threads per core") + ":");
+    threadsCoreLabel -> setWordWrap(true);
     threadsCoreSpinBox = new QSpinBox();
     threadsCoreSpinBox -> setMinimum(0);
     threadsCoreSpinBox -> setMaximum(255);
@@ -177,6 +182,7 @@ ProcessorTab::ProcessorTab(QWidget *parent) : QWidget(parent) {
     socketLayout -> addWidget(threadsCoreSpinBox);
 
     maxHotCPULabel = new QLabel(tr("Maximum number of hotpluggable CPUs") + ":");
+    maxHotCPULabel -> setWordWrap(false);
     maxHotCPUSpinBox = new QSpinBox();
     maxHotCPUSpinBox -> setMinimum(0);
     maxHotCPUSpinBox -> setMaximum(255);
@@ -213,26 +219,28 @@ ProcessorTab::~ProcessorTab() {
 GraphicsTab::GraphicsTab(QWidget *parent) : QWidget(parent) {
 
     GPUTypeLabel = new QLabel(tr("GPU Type") + ":");
+    GPUTypeLabel -> setWordWrap(true);
     GPUType = new QComboBox();
     SystemUtils::setGPUTypes(GPUType);
 
-    GPUTypeLayout = new QHBoxLayout();
-    GPUTypeLayout -> addWidget(GPUTypeLabel);
-    GPUTypeLayout -> addWidget(GPUType);
+    GPUType -> setCurrentIndex(1);
 
     keyboardLabel = new QLabel(tr("Keyboard layout") + ":");
+    keyboardLabel -> setWordWrap(true);
     keyboard = new QComboBox();
     SystemUtils::setKeyboardLayout(keyboard);
 
-    keyboardLayout = new QHBoxLayout();
-    keyboardLayout -> addWidget(keyboardLabel);
-    keyboardLayout -> addWidget(keyboard);
+    keyboard -> setCurrentIndex(5);
 
-    graphicsLayout = new QVBoxLayout();
-    graphicsLayout -> setAlignment(Qt::AlignVCenter);
-    graphicsLayout -> setSpacing(5);
-    graphicsLayout -> addItem(GPUTypeLayout);
-    graphicsLayout -> addItem(keyboardLayout);
+    graphicsLayout = new QGridLayout();
+
+    graphicsLayout -> setColumnStretch(1, 10);
+    graphicsLayout -> setColumnStretch(2, 10);
+
+    graphicsLayout -> addWidget(GPUTypeLabel,  1, 0, 1, 1);
+    graphicsLayout -> addWidget(GPUType,       1, 1, 1, 3);
+    graphicsLayout -> addWidget(keyboardLabel, 2, 0, 1, 1);
+    graphicsLayout -> addWidget(keyboard,      2, 1, 1, 3);
 
     setLayout(graphicsLayout);
 
@@ -249,7 +257,8 @@ AudioTab::AudioTab(QWidget *parent) : QWidget(parent) {
 
     ensoniqCheck = new QCheckBox("ENSONIQ AudioPCI ES1370");
 
-    intelAC97Check = new QCheckBox("Intel 82801AA AC97 Audio");
+    intelAC97Check = new QCheckBox("Intel AC97(82801AA)");
+    intelAC97Check -> setChecked(true);
 
     yamahaCheck = new QCheckBox("Yamaha YM3812");
 

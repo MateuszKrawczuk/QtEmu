@@ -164,9 +164,7 @@ class GraphicsTab: public QWidget {
     protected:
 
     private:
-        QHBoxLayout *GPUTypeLayout;
-        QHBoxLayout *keyboardLayout;
-        QVBoxLayout *graphicsLayout;
+        QGridLayout *graphicsLayout;
 
         QComboBox *GPUType;
         QComboBox *keyboard;
