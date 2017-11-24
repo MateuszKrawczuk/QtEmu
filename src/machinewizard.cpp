@@ -295,6 +295,8 @@ AudioTab::~AudioTab() {
 NetworkTab::NetworkTab(QWidget *parent) : QWidget(parent) {
 
     withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
+    withNetworkRadio -> setChecked(true);
+
     withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
 
     networkLayout = new QVBoxLayout();
