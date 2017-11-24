@@ -338,6 +338,7 @@ class MachineDiskPage: public QWizardPage {
     signals:
 
     public slots:
+        void useExistingDiskToggle(bool toggled);
 
     protected:
 

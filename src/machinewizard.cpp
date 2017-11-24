@@ -484,9 +484,14 @@ MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
     machineDiskSizeLabel -> setWordWrap(true);
 
     noDiskRadio = new QRadioButton(tr("Do not add a virtual hard disk"));
+
     createDiskRadio = new QRadioButton(tr("Create a new virtual hard disk"));
     createDiskRadio -> setChecked(true);
+
     useExistingDiskRadio = new QRadioButton(tr("Use an existing virtual hard disk"));
+
+    connect(useExistingDiskRadio, &QAbstractButton::toggled,
+            this, &MachineDiskPage::useExistingDiskToggle);
 
     hardDiskPathLineEdit = new QLineEdit();
     hardDiskPathLineEdit -> setEnabled(false);
@@ -495,6 +500,8 @@ MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
                                                              QIcon(":/icon/32x32/qtemu.png")),
                                         "",
                                         this);
+
+    this -> useExistingDiskToggle(false);
 
     useOldDiskLayout = new QHBoxLayout();
     useOldDiskLayout -> setAlignment(Qt::AlignVCenter);
@@ -573,5 +580,10 @@ void MachineNamePage::selectOS(int OSSelected){
         this -> OSVersion -> addItem(tr("Minix"));
         this -> OSVersion -> addItem(tr("ReactOS"));
     }
+}
+
+void MachineDiskPage::useExistingDiskToggle(bool toggled) {
+
+    this -> pathNewDiskPushButton -> setEnabled(toggled);
 }
 
