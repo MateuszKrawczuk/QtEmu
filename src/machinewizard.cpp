@@ -85,6 +85,8 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
     registerField("machine.name*", machineNameLineEdit);
 
+    machineFolderCreated = false;
+
     mainLayout = new QGridLayout();
 
     mainLayout -> setColumnStretch(1, 10);
@@ -109,6 +111,10 @@ MachineNamePage::~MachineNamePage() {
 }
 
 bool MachineNamePage::validatePage() {
+
+    if (machineFolderCreated) {
+        return true;
+    }
 
     QSettings settings;
     settings.beginGroup("Configuration");
@@ -151,6 +157,8 @@ bool MachineNamePage::validatePage() {
 
         return false;
     }
+
+    machineFolderCreated = true;
 
     return true;
 }

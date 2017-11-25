@@ -86,6 +86,8 @@ class MachineNamePage: public QWizardPage {
     private:
         bool validatePage();
 
+        bool machineFolderCreated;
+
         QGridLayout *mainLayout;
 
         QLabel *descriptionNameLabel;
