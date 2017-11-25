@@ -85,7 +85,7 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
     registerField("machine.name*", machineNameLineEdit);
 
-    machineFolderCreated = false;
+    machineFolderCreated = QString();
 
     mainLayout = new QGridLayout();
 
@@ -112,7 +112,7 @@ MachineNamePage::~MachineNamePage() {
 
 bool MachineNamePage::validatePage() {
 
-    if (machineFolderCreated) {
+    if ( ! machineFolderCreated.isEmpty() ) {
         return true;
     }
 
@@ -158,9 +158,17 @@ bool MachineNamePage::validatePage() {
         return false;
     }
 
-    machineFolderCreated = true;
+    machineFolderCreated = strFullMachinePath;
 
     return true;
+}
+
+void MachineNamePage::cleanupPage() {
+
+    if ( ! machineFolderCreated.isEmpty() ) {
+        QDir().rmpath(machineFolderCreated);
+    }
+
 }
 
 MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) {
