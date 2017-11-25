@@ -108,6 +108,53 @@ MachineNamePage::~MachineNamePage() {
     qDebug() << "MachineNamePage destroyed";
 }
 
+bool MachineNamePage::validatePage() {
+
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+    settings.endGroup();
+
+    QString strMachineName = field("machine.name").toString();
+    QString strMachinePathMsg = strMachinePath;
+    QString strFullMachinePath = strMachinePath.append("/").append(strMachineName);
+
+    if ( QDir(strFullMachinePath).exists() ) {
+        qDebug() << "The folder alredy exists" << strFullMachinePath;
+
+        createMachineMessageBox = new QMessageBox();
+        createMachineMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+        createMachineMessageBox -> setIcon(QMessageBox::Critical);
+        createMachineMessageBox -> setText(tr("<p>Cannot create the machine folder <strong>%1</strong> "
+                                              "in the parent folder <strong>%2<strong></p>"
+                                              "<p>This folder alredy exists and possibly belongs to another machine.</p>")
+                        .arg(strMachineName).arg(strMachinePathMsg));
+        createMachineMessageBox -> exec();
+
+        return false;
+    }
+
+    if ( ! QDir().mkpath(strFullMachinePath) ) {
+        qDebug() << "Machine folder created" << strFullMachinePath;
+
+        createMachineMessageBox = new QMessageBox();
+        createMachineMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+        createMachineMessageBox -> setIcon(QMessageBox::Critical);
+        createMachineMessageBox -> setText(tr("<p>Cannot create the machine folder <strong>%1</strong> "
+                                              "in the parent folder <strong>%2<strong></p>"
+                                              "<p>Please check that the parent really exists and that "
+                                              "you have permissions to create the machine folder.</p>")
+                        .arg(strMachineName).arg(strMachinePathMsg));
+        createMachineMessageBox->exec();
+
+        return false;
+    }
+
+    return true;
+}
+
 MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine hardware"));

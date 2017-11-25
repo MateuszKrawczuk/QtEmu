@@ -587,4 +587,6 @@ void ConfigWindow::loadSettings(){
     useAuth -> setChecked(settings.value("auth", false).toBool());
     userProxy -> setText(settings.value("proxyUser", "").toString());
     passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
+
+    settings.endGroup();
 }

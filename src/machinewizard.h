@@ -24,6 +24,8 @@
 
 // Qt
 #include <QWizard>
+#include <QSettings>
+#include <QDir>
 #include <QLabel>
 #include <QString>
 #include <QLineEdit>
@@ -35,6 +37,7 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QGroupBox>
+#include <QMessageBox>
 #include <QTabWidget>
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -81,6 +84,8 @@ class MachineNamePage: public QWizardPage {
     protected:
 
     private:
+        bool validatePage();
+
         QGridLayout *mainLayout;
 
         QLabel *descriptionNameLabel;
@@ -92,6 +97,8 @@ class MachineNamePage: public QWizardPage {
         QComboBox *OSVersion;
 
         QLineEdit *machineNameLineEdit;
+
+        QMessageBox *createMachineMessageBox;
 };
 
 class MachineHardwarePage: public QWizardPage {
