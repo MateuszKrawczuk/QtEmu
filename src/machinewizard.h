@@ -385,15 +385,21 @@ class MachineNewDiskPage: public QWizardPage {
     private:
         QVBoxLayout *newDiskLayout;
         QHBoxLayout *fileLocationLayout;
-        QHBoxLayout *fileSizeLayout;
+        QGridLayout *fileSizeLayout;
         QVBoxLayout *diskTypeLayout;
 
         QGroupBox *fileLocationGroupBox;
         QGroupBox *fileSizeGroupBox;
         QGroupBox *fileTypeGroupBox;
-        QGroupBox *storageTypeGroupBox;
 
         QLineEdit *fileName;
+
+        QSpinBox *diskSpinBox;
+
+        QSlider *diskSlider;
+
+        QLabel *minDiskLabel;
+        QLabel *maxDisklabel;
 
         QPushButton *pathNewDiskPushButton;
 
@@ -402,8 +408,6 @@ class MachineNewDiskPage: public QWizardPage {
         QRadioButton *qcow2RadioButton;
         QRadioButton *qedRadioButton;
         QRadioButton *vmdkRadioButton;
-        QRadioButton *vpcRadioButton;
-        QRadioButton *vdiRadioButton;
         QRadioButton *cloopRadioButton;
 
 };
