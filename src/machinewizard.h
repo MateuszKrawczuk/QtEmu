@@ -57,7 +57,7 @@ class MachineWizard : public QWizard {
         ~MachineWizard();
 
     enum { Page_Name, Page_Hardware, Page_Accelerator,
-           Page_Memory, Page_Disk, Page_Conclusion };
+           Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
 
     signals:
 
@@ -367,6 +367,45 @@ class MachineDiskPage: public QWizardPage {
         QLabel *machineDiskLabel;
         QLabel *machineDiskInfoLabel;
         QLabel *machineDiskSizeLabel;
+};
+
+class MachineNewDiskPage: public QWizardPage {
+    Q_OBJECT
+
+    public:
+        explicit MachineNewDiskPage(QWidget *parent = 0);
+        ~MachineNewDiskPage();
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *newDiskLayout;
+        QHBoxLayout *fileLocationLayout;
+        QHBoxLayout *fileSizeLayout;
+        QVBoxLayout *diskTypeLayout;
+
+        QGroupBox *fileLocationGroupBox;
+        QGroupBox *fileSizeGroupBox;
+        QGroupBox *fileTypeGroupBox;
+        QGroupBox *storageTypeGroupBox;
+
+        QLineEdit *fileName;
+
+        QPushButton *pathNewDiskPushButton;
+
+        QRadioButton *rawRadioButton;
+        QRadioButton *qcowRadioButton;
+        QRadioButton *qcow2RadioButton;
+        QRadioButton *qedRadioButton;
+        QRadioButton *vmdkRadioButton;
+        QRadioButton *vpcRadioButton;
+        QRadioButton *vdiRadioButton;
+        QRadioButton *cloopRadioButton;
+
 };
 
 class MachineConclusionPage: public QWizardPage {

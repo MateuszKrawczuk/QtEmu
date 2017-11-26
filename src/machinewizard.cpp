@@ -33,6 +33,7 @@ MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
     setPage(Page_Accelerator, new MachineAcceleratorPage(this));
     setPage(Page_Memory, new MachineMemoryPage(this));
     setPage(Page_Disk, new MachineDiskPage(this));
+    setPage(Page_New_Disk, new MachineNewDiskPage(this));
     setPage(Page_Conclusion, new MachineConclusionPage(this));
 
     setStartId(Page_Name);
@@ -582,10 +583,83 @@ MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
     machineDiskLayout -> addItem(useOldDiskLayout);
 
     setLayout(machineDiskLayout);
+
+    qDebug() << "MachineDiskPage created";
 }
 
 MachineDiskPage::~MachineDiskPage() {
     qDebug() << "MachineDiskPage destroyed";
+}
+
+MachineNewDiskPage::MachineNewDiskPage(QWidget *parent) : QWizardPage(parent) {
+
+    setTitle(tr("New virtual hard disk"));
+
+    ////////////////////////////   DISK NAME   ///////////////////////////////////
+    fileLocationGroupBox = new QGroupBox(tr("Disk name"));
+
+    fileName = new QLineEdit();
+
+    pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
+                                                             QIcon(":/icon/32x32/qtemu.png")),
+                                        "",
+                                        this);
+
+    fileLocationLayout = new QHBoxLayout();
+    fileLocationLayout -> addWidget(fileName);
+    fileLocationLayout -> addWidget(pathNewDiskPushButton);
+
+    fileLocationGroupBox -> setLayout(fileLocationLayout);
+
+    //////////////////////////   END DISK NAME   /////////////////////////////////
+
+    ////////////////////////////   DISK SIZE   ///////////////////////////////////
+    fileSizeGroupBox = new QGroupBox(tr("Disk size"));
+
+    fileSizeLayout = new QHBoxLayout();
+
+    fileSizeGroupBox -> setLayout(fileSizeLayout);
+
+    //////////////////////////   END DISK SIZE   /////////////////////////////////
+
+    fileTypeGroupBox = new QGroupBox(tr("Disk type"));
+
+    rawRadioButton = new QRadioButton(tr("raw ()"));
+    qcowRadioButton = new QRadioButton(tr("qcow (QEMU Copy-on-write)"));
+    qcow2RadioButton = new QRadioButton(tr("qcow2 (QEMU Copy-on-write 2)"));
+    qedRadioButton = new QRadioButton(tr("qed (QEMU enhanced disk)"));
+    vmdkRadioButton = new QRadioButton(tr("vmdk (Virtual Machine Disk)"));
+    vpcRadioButton = new QRadioButton(tr("vpc ()"));
+    vdiRadioButton = new QRadioButton(tr("vdi (VirtualBox Disk Image)"));
+    cloopRadioButton = new QRadioButton(tr("cloop ()"));
+
+    diskTypeLayout = new QVBoxLayout();
+    diskTypeLayout -> addWidget(rawRadioButton);
+    diskTypeLayout -> addWidget(qcowRadioButton);
+    diskTypeLayout -> addWidget(qcow2RadioButton);
+    diskTypeLayout -> addWidget(qedRadioButton);
+    diskTypeLayout -> addWidget(vmdkRadioButton);
+    diskTypeLayout -> addWidget(vpcRadioButton);
+    diskTypeLayout -> addWidget(vdiRadioButton);
+    diskTypeLayout -> addWidget(cloopRadioButton);
+
+    fileTypeGroupBox -> setLayout(diskTypeLayout);
+
+    storageTypeGroupBox = new QGroupBox(tr("Aditional options"));
+
+    newDiskLayout = new QVBoxLayout();
+    newDiskLayout -> addWidget(fileLocationGroupBox);
+    newDiskLayout -> addWidget(fileSizeGroupBox);
+    newDiskLayout -> addWidget(fileTypeGroupBox);
+    newDiskLayout -> addWidget(storageTypeGroupBox);
+
+    setLayout(newDiskLayout);
+
+    qDebug() << "MachineNewDiskPage created";
+}
+
+MachineNewDiskPage::~MachineNewDiskPage() {
+    qDebug() << "MachineNewDiskPage destroyed";
 }
 
 MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(parent) {
