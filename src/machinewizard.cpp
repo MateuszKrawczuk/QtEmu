@@ -60,7 +60,7 @@ MachineWizard::~MachineWizard() {
 
 MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
-    setTitle(tr("Machine name and operating system"));
+    this -> setTitle(tr("Machine name and operating system"));
 
     descriptionNameLabel = new QLabel(tr("Select name and operating system for your new machine."));
     descriptionNameLabel -> setWordWrap(true);
@@ -82,9 +82,11 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     OSVersionLabel = new QLabel(tr("Version") + ":");
     OSVersion = new QComboBox();
 
-    selectOS(0);
+    this -> selectOS(0);
 
-    registerField("machine.name*", machineNameLineEdit);
+    this -> registerField("machine.name*", machineNameLineEdit);
+    this -> registerField("machine.ostype", OSType);
+    this -> registerField("machie.osversion", OSVersion);
 
     machineFolderCreated = QString();
 
@@ -102,13 +104,47 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     mainLayout -> addWidget(OSVersionLabel,       3, 0, 1, 1);
     mainLayout -> addWidget(OSVersion,            3, 1, 1, 3);
 
-    setLayout(mainLayout);
+    this ->  setLayout(mainLayout);
 
     qDebug() << "MachineNamePage created";
 }
 
 MachineNamePage::~MachineNamePage() {
     qDebug() << "MachineNamePage destroyed";
+}
+
+void MachineNamePage::selectOS(int OSSelected){
+
+    this -> OSVersion -> clear();
+
+    if (OSSelected == 0) {
+        this -> OSVersion -> addItem(tr("Debian"));
+        this -> OSVersion -> addItem(tr("Ubuntu"));
+        this -> OSVersion -> addItem(tr("Fedora"));
+        this -> OSVersion -> addItem(tr("OpenSuse"));
+        this -> OSVersion -> addItem(tr("Mageia"));
+        this -> OSVersion -> addItem(tr("Gentoo"));
+        this -> OSVersion -> addItem(tr("Arch Linux"));
+        this -> OSVersion -> addItem(tr("Linux 4.x"));
+    } else if (OSSelected == 1) {
+        this -> OSVersion -> addItem(tr("Microsoft 95"));
+        this -> OSVersion -> addItem(tr("Microsoft 98"));
+        this -> OSVersion -> addItem(tr("Microsoft 2000"));
+        this -> OSVersion -> addItem(tr("Microsoft XP"));
+        this -> OSVersion -> addItem(tr("Microsoft Vista"));
+        this -> OSVersion -> addItem(tr("Microsoft 7"));
+        this -> OSVersion -> addItem(tr("Microsoft 8"));
+        this -> OSVersion -> addItem(tr("Microsoft 10"));
+    } else if (OSSelected == 2) {
+        this -> OSVersion -> addItem(tr("FreeBSD"));
+        this -> OSVersion -> addItem(tr("OpenBSD"));
+        this -> OSVersion -> addItem(tr("NetBSD"));
+    } else if (OSSelected == 3) {
+        this -> OSVersion -> addItem(tr("Debian GNU Hurd"));
+        this -> OSVersion -> addItem(tr("Arch Hurd"));
+        this -> OSVersion -> addItem(tr("Minix"));
+        this -> OSVersion -> addItem(tr("ReactOS"));
+    }
 }
 
 bool MachineNamePage::validatePage() {
@@ -594,6 +630,11 @@ MachineDiskPage::~MachineDiskPage() {
     qDebug() << "MachineDiskPage destroyed";
 }
 
+void MachineDiskPage::useExistingDiskToggle(bool toggled) {
+
+    this -> pathNewDiskPushButton -> setEnabled(toggled);
+}
+
 MachineNewDiskPage::MachineNewDiskPage(QWidget *parent) : QWizardPage(parent) {
 
     ////////////////////////////   DISK NAME   ///////////////////////////////////
@@ -689,12 +730,22 @@ MachineNewDiskPage::~MachineNewDiskPage() {
     qDebug() << "MachineNewDiskPage destroyed";
 }
 
+void MachineNewDiskPage::initializePage() {
+    fileName -> setText(field("machine.name").toString());
+}
+
 MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine Summary"));
 
+    machineName = new QLabel();
+    OSType = new QLabel();
+    OSVersion = new QLabel();
+
     conclusionLayout = new QFormLayout();
-    conclusionLayout -> addRow(tr("Name") + ":", new QLabel("MACHINE_NAME"));
+    conclusionLayout -> addRow(tr("Name") + ":", machineName);
+    conclusionLayout -> addRow(tr("Operating system") + ":", OSType);
+    conclusionLayout -> addRow(tr("Operating system version") + ":", OSVersion);
     conclusionLayout -> addRow(tr("Processor") + ":", new QLabel("MACHINE_PROCESSOR"));
     conclusionLayout -> addRow(tr("Graphics") + ":", new QLabel("MACHINE_GPU"));
     conclusionLayout -> addRow(tr("Audio") + ":", new QLabel("MACHINE_AUDIO"));
@@ -703,7 +754,7 @@ MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(pare
     conclusionLayout -> addRow(tr("Accelerator") + ":", new QLabel("MACHINE_Accelerator"));
     conclusionLayout -> addRow(tr("Disk") + ":", new QLabel("MACHINE_DISK"));
 
-    setLayout(conclusionLayout);
+    this -> setLayout(conclusionLayout);
 
     qDebug() << "MachineConclusionPage created";
 }
@@ -712,42 +763,8 @@ MachineConclusionPage::~MachineConclusionPage() {
     qDebug() << "MachineConclusionPage destroyed";
 }
 
-void MachineNamePage::selectOS(int OSSelected){
-
-    this -> OSVersion -> clear();
-
-    if (OSSelected == 0) {
-        this -> OSVersion -> addItem(tr("Debian"));
-        this -> OSVersion -> addItem(tr("Ubuntu"));
-        this -> OSVersion -> addItem(tr("Fedora"));
-        this -> OSVersion -> addItem(tr("OpenSuse"));
-        this -> OSVersion -> addItem(tr("Mageia"));
-        this -> OSVersion -> addItem(tr("Gentoo"));
-        this -> OSVersion -> addItem(tr("Arch Linux"));
-        this -> OSVersion -> addItem(tr("Linux 4.x"));
-    } else if (OSSelected == 1) {
-        this -> OSVersion -> addItem(tr("Microsoft 95"));
-        this -> OSVersion -> addItem(tr("Microsoft 98"));
-        this -> OSVersion -> addItem(tr("Microsoft 2000"));
-        this -> OSVersion -> addItem(tr("Microsoft XP"));
-        this -> OSVersion -> addItem(tr("Microsoft Vista"));
-        this -> OSVersion -> addItem(tr("Microsoft 7"));
-        this -> OSVersion -> addItem(tr("Microsoft 8"));
-        this -> OSVersion -> addItem(tr("Microsoft 10"));
-    } else if (OSSelected == 2) {
-        this -> OSVersion -> addItem(tr("FreeBSD"));
-        this -> OSVersion -> addItem(tr("OpenBSD"));
-        this -> OSVersion -> addItem(tr("NetBSD"));
-    } else if (OSSelected == 3) {
-        this -> OSVersion -> addItem(tr("Debian GNU Hurd"));
-        this -> OSVersion -> addItem(tr("Arch Hurd"));
-        this -> OSVersion -> addItem(tr("Minix"));
-        this -> OSVersion -> addItem(tr("ReactOS"));
-    }
+void MachineConclusionPage::initializePage() {
+    this -> machineName -> setText(field("machine.name").toString());
+    this -> OSType -> setText(field("machine.ostype").toString());
+    this -> OSVersion -> setText(field("machie.osversion").toString());
 }
-
-void MachineDiskPage::useExistingDiskToggle(bool toggled) {
-
-    this -> pathNewDiskPushButton -> setEnabled(toggled);
-}
-

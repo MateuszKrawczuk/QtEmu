@@ -384,6 +384,8 @@ class MachineNewDiskPage: public QWizardPage {
     protected:
 
     private:
+        void initializePage();
+
         QVBoxLayout *newDiskLayout;
         QHBoxLayout *fileLocationLayout;
         QGridLayout *fileSizeLayout;
@@ -428,10 +430,14 @@ class MachineConclusionPage: public QWizardPage {
     protected:
 
     private:
+        void initializePage();
+
         QFormLayout *conclusionLayout;
 
         QLabel *conclusionCPULabel;
-
+        QLabel *machineName;
+        QLabel *OSType;
+        QLabel *OSVersion;
 
 };
 
