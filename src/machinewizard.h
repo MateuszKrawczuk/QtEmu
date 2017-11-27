@@ -31,6 +31,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QSlider>
 #include <QTextBrowser>
 #include <QRadioButton>
@@ -386,7 +387,7 @@ class MachineNewDiskPage: public QWizardPage {
         QVBoxLayout *newDiskLayout;
         QHBoxLayout *fileLocationLayout;
         QGridLayout *fileSizeLayout;
-        QVBoxLayout *diskTypeLayout;
+        QGridLayout *diskTypeLayout;
 
         QGroupBox *fileLocationGroupBox;
         QGroupBox *fileSizeGroupBox;
@@ -394,12 +395,13 @@ class MachineNewDiskPage: public QWizardPage {
 
         QLineEdit *fileName;
 
-        QSpinBox *diskSpinBox;
+        QDoubleSpinBox *diskSpinBox;
 
         QSlider *diskSlider;
 
         QLabel *minDiskLabel;
         QLabel *maxDisklabel;
+        QLabel *memoryLabel;
 
         QPushButton *pathNewDiskPushButton;
 
