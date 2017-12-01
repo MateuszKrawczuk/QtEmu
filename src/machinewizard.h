@@ -40,6 +40,7 @@
 #include <QGroupBox>
 #include <QMessageBox>
 #include <QTabWidget>
+#include <QJsonObject>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -58,7 +59,9 @@ class MachineWizard : public QWizard {
         ~MachineWizard();
 
     enum { Page_Name, Page_Hardware, Page_Accelerator,
-           Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
+           Page_Memory, Page_Disk, Page_New_Disk };
+
+        void createMachineJSON(QJsonObject &machineJson) const;
 
     signals:
 
@@ -130,6 +133,7 @@ class ProcessorTab: public QWidget {
     public:
         explicit ProcessorTab(QWidget *parent = 0);
         ~ProcessorTab();
+
     signals:
 
     public slots:
@@ -413,31 +417,6 @@ class MachineNewDiskPage: public QWizardPage {
         QRadioButton *qedRadioButton;
         QRadioButton *vmdkRadioButton;
         QRadioButton *cloopRadioButton;
-
-};
-
-class MachineConclusionPage: public QWizardPage {
-    Q_OBJECT
-
-    public:
-        explicit MachineConclusionPage(QWidget *parent = 0);
-        ~MachineConclusionPage();
-
-    signals:
-
-    public slots:
-
-    protected:
-
-    private:
-        void initializePage();
-
-        QFormLayout *conclusionLayout;
-
-        QLabel *conclusionCPULabel;
-        QLabel *machineName;
-        QLabel *OSType;
-        QLabel *OSVersion;
 
 };
 

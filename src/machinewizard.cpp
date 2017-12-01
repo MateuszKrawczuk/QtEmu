@@ -34,7 +34,6 @@ MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
     setPage(Page_Memory, new MachineMemoryPage(this));
     setPage(Page_Disk, new MachineDiskPage(this));
     setPage(Page_New_Disk, new MachineNewDiskPage(this));
-    setPage(Page_Conclusion, new MachineConclusionPage(this));
 
     setStartId(Page_Name);
 
@@ -57,6 +56,10 @@ MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
 MachineWizard::~MachineWizard() {
     qDebug() << "MachineWizard destroyed";
 }
+
+/*void MachineWizard::createMachineJSON(QJsonObject &machineJson) const {
+
+}*/
 
 MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
 
@@ -85,8 +88,8 @@ MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
     this -> selectOS(0);
 
     this -> registerField("machine.name*", machineNameLineEdit);
-    this -> registerField("machine.ostype", OSType);
-    this -> registerField("machie.osversion", OSVersion);
+    this -> registerField("machine.ostype", OSType, "currentText", "currentTextChanged");
+    this -> registerField("machine.osversion", OSVersion, "currentText", "currentTextChanged");
 
     machineFolderCreated = QString();
 
@@ -220,7 +223,7 @@ MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) 
 
     hardwareLayout = new QVBoxLayout();
     hardwareLayout -> setAlignment(Qt::AlignCenter);
-    hardwareLayout -> addWidget(hardwareTabWidget);
+    hardwareLayout -> addWidget(hardwareTabWidget);      
 
     setLayout(hardwareLayout);
 
@@ -534,6 +537,8 @@ MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
     memorySpinBox -> setMinimum(1);
     memorySpinBox -> setMaximum(totalRAM);
 
+    this -> registerField("machine.ram", memorySpinBox, "value", "valueChanged");
+
     memorySlider = new QSlider(Qt::Horizontal);
     memorySlider -> setTickPosition(QSlider::TicksBelow);
     memorySlider -> setTickInterval(500);
@@ -732,39 +737,4 @@ MachineNewDiskPage::~MachineNewDiskPage() {
 
 void MachineNewDiskPage::initializePage() {
     fileName -> setText(field("machine.name").toString());
-}
-
-MachineConclusionPage::MachineConclusionPage(QWidget *parent) : QWizardPage(parent) {
-
-    setTitle(tr("Machine Summary"));
-
-    machineName = new QLabel();
-    OSType = new QLabel();
-    OSVersion = new QLabel();
-
-    conclusionLayout = new QFormLayout();
-    conclusionLayout -> addRow(tr("Name") + ":", machineName);
-    conclusionLayout -> addRow(tr("Operating system") + ":", OSType);
-    conclusionLayout -> addRow(tr("Operating system version") + ":", OSVersion);
-    conclusionLayout -> addRow(tr("Processor") + ":", new QLabel("MACHINE_PROCESSOR"));
-    conclusionLayout -> addRow(tr("Graphics") + ":", new QLabel("MACHINE_GPU"));
-    conclusionLayout -> addRow(tr("Audio") + ":", new QLabel("MACHINE_AUDIO"));
-    conclusionLayout -> addRow(tr("Network") + ":", new QLabel("MACHINE_NET"));
-    conclusionLayout -> addRow(tr("RAM") + ":", new QLabel("MACHINE_RAM"));
-    conclusionLayout -> addRow(tr("Accelerator") + ":", new QLabel("MACHINE_Accelerator"));
-    conclusionLayout -> addRow(tr("Disk") + ":", new QLabel("MACHINE_DISK"));
-
-    this -> setLayout(conclusionLayout);
-
-    qDebug() << "MachineConclusionPage created";
-}
-
-MachineConclusionPage::~MachineConclusionPage() {
-    qDebug() << "MachineConclusionPage destroyed";
-}
-
-void MachineConclusionPage::initializePage() {
-    this -> machineName -> setText(field("machine.name").toString());
-    this -> OSType -> setText(field("machine.ostype").toString());
-    this -> OSVersion -> setText(field("machie.osversion").toString());
 }

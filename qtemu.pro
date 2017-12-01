@@ -61,14 +61,16 @@ SOURCES += src/main.cpp\
            src/aboutwidget.cpp \
     src/configwindow.cpp \
     src/machinewizard.cpp \
-    src/systemutils.cpp
+    src/systemutils.cpp \
+    src/machine.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
             src/aboutwidget.h \
     src/configwindow.h \
     src/machinewizard.h \
-    src/systemutils.h
+    src/systemutils.h \
+    src/machine.h
 
 OTHER_FILES += \
     CHANGELOG \
