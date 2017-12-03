@@ -39,6 +39,7 @@
 #include <QStackedWidget>
 
 // Local
+#include "machine.h"
 #include "helpwidget.h"
 #include "aboutwidget.h"
 #include "configwindow.h"
@@ -102,6 +103,9 @@ class MainWindow : public QMainWindow {
         // List of OS
         QListWidget *osListWidget;
         QStackedWidget *osDetailsStackedWidget;
+
+        // Machine
+        Machine *machine;
 
 };
 

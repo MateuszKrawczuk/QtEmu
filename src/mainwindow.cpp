@@ -255,8 +255,16 @@ void MainWindow::visitQemuWebsite() {
 }
 
 void MainWindow::createNewMachine() {
-    MachineWizard newMachineWizard(this);
+
+    machine = new Machine(this);
+
+    MachineWizard newMachineWizard(machine, this);
 
     newMachineWizard.show();
     newMachineWizard.exec();
+
+    qDebug() << "In main window" << this -> machine -> getName();
+    qDebug() << "In main window" << this -> machine -> getOSType();
+    qDebug() << "In main window" << this -> machine -> getOSVersion();
+    qDebug() << "In main window" << this -> machine -> getCPUType();
 }

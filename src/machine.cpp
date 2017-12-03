@@ -58,6 +58,14 @@ void Machine::setOSVersion(const QString &value) {
     OSVersion = value;
 }
 
+QString Machine::getCPUType() const {
+    return CPUType;
+}
+
+void Machine::setCPUType(const QString &value) {
+    CPUType = value;
+}
+
 unsigned short Machine::getCPUCount() const {
     return CPUCount;
 }

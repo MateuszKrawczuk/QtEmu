@@ -49,13 +49,15 @@
 #include <QDebug>
 
 // Local
+#include "machine.h"
 #include "systemutils.h"
 
 class MachineWizard : public QWizard {
     Q_OBJECT
 
     public:
-        explicit MachineWizard(QWidget *parent = 0);
+        explicit MachineWizard(Machine *machine,
+                               QWidget *parent = 0);
         ~MachineWizard();
 
     enum { Page_Name, Page_Hardware, Page_Accelerator,
@@ -77,7 +79,8 @@ class MachineNamePage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineNamePage(QWidget *parent = 0);
+        explicit MachineNamePage(Machine *machine,
+                                 QWidget *parent = 0);
         ~MachineNamePage();
 
     signals:
@@ -106,13 +109,16 @@ class MachineNamePage: public QWizardPage {
         QLineEdit *machineNameLineEdit;
 
         QMessageBox *createMachineMessageBox;
+
+        Machine *newMachine;
 };
 
 class MachineHardwarePage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineHardwarePage(QWidget *parent = 0);
+        explicit MachineHardwarePage(Machine *machine,
+                                     QWidget *parent = 0);
         ~MachineHardwarePage();
 
     signals:
@@ -125,18 +131,22 @@ class MachineHardwarePage: public QWizardPage {
         QVBoxLayout *hardwareLayout;
 
         QTabWidget *hardwareTabWidget;
+
+        Machine *newMachine;
 };
 
 class ProcessorTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit ProcessorTab(QWidget *parent = 0);
+        explicit ProcessorTab(Machine *machine,
+                              QWidget *parent = 0);
         ~ProcessorTab();
 
     signals:
 
     public slots:
+        void selectProcessor(const QString &value);
 
     protected:
 
@@ -164,13 +174,16 @@ class ProcessorTab: public QWidget {
         QSpinBox *socketCountSpinBox;
         QSpinBox *threadsCoreSpinBox;
         QSpinBox *maxHotCPUSpinBox;
+
+        Machine *newMachine;
 };
 
 class GraphicsTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit GraphicsTab(QWidget *parent = 0);
+        explicit GraphicsTab(Machine *machine,
+                             QWidget *parent = 0);
         ~GraphicsTab();
     signals:
 
@@ -186,13 +199,16 @@ class GraphicsTab: public QWidget {
 
         QLabel *GPUTypeLabel;
         QLabel *keyboardLabel;
+
+        Machine *newMachine;
 };
 
 class AudioTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit AudioTab(QWidget *parent = 0);
+        explicit AudioTab(Machine *machine,
+                          QWidget *parent = 0);
         ~AudioTab();
     signals:
 
@@ -211,13 +227,16 @@ class AudioTab: public QWidget {
         QCheckBox *CS4231ACheck;
         QCheckBox *intelHDACheck;
         QCheckBox *pcSpeakerCheck;
+
+        Machine *newMachine;
 };
 
 class NetworkTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit NetworkTab(QWidget *parent = 0);
+        explicit NetworkTab(Machine *machine,
+                            QWidget *parent = 0);
         ~NetworkTab();
     signals:
 
@@ -231,13 +250,15 @@ class NetworkTab: public QWidget {
         QRadioButton *withNetworkRadio;
         QRadioButton *withoutNetworkRadio;
 
+        Machine *newMachine;
 };
 
 class MachineAcceleratorPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineAcceleratorPage(QWidget *parent = 0);
+        explicit MachineAcceleratorPage(Machine *machine,
+                                        QWidget *parent = 0);
         ~MachineAcceleratorPage();
 
     signals:
@@ -247,17 +268,21 @@ class MachineAcceleratorPage: public QWizardPage {
     protected:
 
     private:
+        //bool validatePage();
+
         QVBoxLayout *acceleratorLayout;
 
         QTabWidget *acceleratorTabWidget;
 
+        Machine *newMachine;
 };
 
 class KVMTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit KVMTab(QWidget *parent = 0);
+        explicit KVMTab(Machine *machine,
+                        QWidget *parent = 0);
         ~KVMTab();
     signals:
 
@@ -273,13 +298,15 @@ class KVMTab: public QWidget {
         QLabel *kvmDescriptionLabel;
         QLabel *kvmURLLabel;
 
+        Machine *newMachine;
 };
 
 class TCGTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit TCGTab(QWidget *parent = 0);
+        explicit TCGTab(Machine *machine,
+                        QWidget *parent = 0);
         ~TCGTab();
     signals:
 
@@ -295,13 +322,15 @@ class TCGTab: public QWidget {
         QLabel *tcgDescriptionLabel;
         QLabel *tcgURLLabel;
 
+        Machine *newMachine;
 };
 
 class HAXMTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit HAXMTab(QWidget *parent = 0);
+        explicit HAXMTab(Machine *machine,
+                         QWidget *parent = 0);
         ~HAXMTab();
     signals:
 
@@ -316,13 +345,16 @@ class HAXMTab: public QWidget {
 
         QLabel *haxmDescriptionLabel;
         QLabel *haxmURLLabel;
+
+        Machine *newMachine;
 };
 
 class MachineMemoryPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineMemoryPage(QWidget *parent = 0);
+        explicit MachineMemoryPage(Machine *machine,
+                                   QWidget *parent = 0);
         ~MachineMemoryPage();
 
     signals:
@@ -341,13 +373,16 @@ class MachineMemoryPage: public QWizardPage {
         QLabel *spinBoxMemoryLabel;
         QLabel *minMemoryLabel;
         QLabel *maxMemorylabel;
+
+        Machine *newMachine;
 };
 
 class MachineDiskPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineDiskPage(QWidget *parent = 0);
+        explicit MachineDiskPage(Machine *machine,
+                                 QWidget *parent = 0);
         ~MachineDiskPage();
 
     signals:
@@ -372,13 +407,16 @@ class MachineDiskPage: public QWizardPage {
         QLabel *machineDiskLabel;
         QLabel *machineDiskInfoLabel;
         QLabel *machineDiskSizeLabel;
+
+        Machine *newMachine;
 };
 
 class MachineNewDiskPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineNewDiskPage(QWidget *parent = 0);
+        explicit MachineNewDiskPage(Machine *machine,
+                                    QWidget *parent = 0);
         ~MachineNewDiskPage();
 
     signals:
@@ -418,6 +456,7 @@ class MachineNewDiskPage: public QWizardPage {
         QRadioButton *vmdkRadioButton;
         QRadioButton *cloopRadioButton;
 
+        Machine *newMachine;
 };
 
 #endif // MACHINEWIZARD_H

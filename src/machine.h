@@ -49,6 +49,9 @@ class Machine: public QObject {
         QString getOSVersion() const;
         void setOSVersion(const QString &value);
 
+        QString getCPUType() const;
+        void setCPUType(const QString &value);
+
         unsigned short getCPUCount() const;
         void setCPUCount(unsigned short value);
 

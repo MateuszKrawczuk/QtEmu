@@ -24,16 +24,17 @@
 // Local
 #include "machinewizard.h"
 
-MachineWizard::MachineWizard(QWidget *parent) : QWizard(parent) {
+MachineWizard::MachineWizard(Machine *machine,
+                             QWidget *parent) : QWizard(parent) {
 
     setWindowTitle(tr("Create a new Machine"));
 
-    setPage(Page_Name, new MachineNamePage(this));
-    setPage(Page_Hardware, new MachineHardwarePage(this));
-    setPage(Page_Accelerator, new MachineAcceleratorPage(this));
-    setPage(Page_Memory, new MachineMemoryPage(this));
-    setPage(Page_Disk, new MachineDiskPage(this));
-    setPage(Page_New_Disk, new MachineNewDiskPage(this));
+    setPage(Page_Name, new MachineNamePage(machine, this));
+    setPage(Page_Hardware, new MachineHardwarePage(machine, this));
+    setPage(Page_Accelerator, new MachineAcceleratorPage(machine, this));
+    setPage(Page_Memory, new MachineMemoryPage(machine, this));
+    setPage(Page_Disk, new MachineDiskPage(machine, this));
+    setPage(Page_New_Disk, new MachineNewDiskPage(machine ,this));
 
     setStartId(Page_Name);
 
@@ -61,9 +62,12 @@ MachineWizard::~MachineWizard() {
 
 }*/
 
-MachineNamePage::MachineNamePage(QWidget *parent) : QWizardPage(parent) {
+MachineNamePage::MachineNamePage(Machine *machine,
+                                 QWidget *parent) : QWizardPage(parent) {
 
     this -> setTitle(tr("Machine name and operating system"));
+
+    this -> newMachine = machine;
 
     descriptionNameLabel = new QLabel(tr("Select name and operating system for your new machine."));
     descriptionNameLabel -> setWordWrap(true);
@@ -200,6 +204,11 @@ bool MachineNamePage::validatePage() {
 
     machineFolderCreated = strFullMachinePath;
 
+    // Set all the values in the machine object
+    this -> newMachine -> setName(this -> machineNameLineEdit -> text());
+    this -> newMachine -> setOSType(this -> OSType -> currentText());
+    this -> newMachine -> setOSVersion(this -> OSVersion -> currentText());
+
     return true;
 }
 
@@ -211,15 +220,18 @@ void MachineNamePage::cleanupPage() {
 
 }
 
-MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) {
+MachineHardwarePage::MachineHardwarePage(Machine *machine,
+                                         QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine hardware"));
 
+    this -> newMachine = machine;
+
     hardwareTabWidget = new QTabWidget();
-    hardwareTabWidget -> addTab(new ProcessorTab(), tr("Processor"));
-    hardwareTabWidget -> addTab(new GraphicsTab(), tr("Graphics"));
-    hardwareTabWidget -> addTab(new AudioTab(), tr("Audio"));
-    hardwareTabWidget -> addTab(new NetworkTab(), tr("Network"));
+    hardwareTabWidget -> addTab(new ProcessorTab(machine, this), tr("Processor"));
+    hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
+    hardwareTabWidget -> addTab(new AudioTab(machine, this), tr("Audio"));
+    hardwareTabWidget -> addTab(new NetworkTab(machine, this), tr("Network"));
 
     hardwareLayout = new QVBoxLayout();
     hardwareLayout -> setAlignment(Qt::AlignCenter);
@@ -230,13 +242,21 @@ MachineHardwarePage::MachineHardwarePage(QWidget *parent) : QWizardPage(parent) 
     qDebug() << "MachineHardwarePage created";
 }
 
-ProcessorTab::ProcessorTab(QWidget *parent) : QWidget(parent) {
+ProcessorTab::ProcessorTab(Machine *machine,
+                           QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     CPUTypeLabel = new QLabel(tr("CPU Type") + ":");
     CPUTypeLabel -> setWordWrap(true);
 
     CPUType = new QComboBox();
     SystemUtils::setCPUTypesx86(CPUType);
+
+    this -> selectProcessor(this -> CPUType -> itemText(0));
+
+    connect(CPUType, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+            this, &ProcessorTab::selectProcessor);
 
     CPUTypeLayout = new QHBoxLayout();
     CPUTypeLayout -> setAlignment(Qt::AlignVCenter);
@@ -319,7 +339,16 @@ ProcessorTab::~ProcessorTab() {
     qDebug() << "ProcessorTab destroyed";
 }
 
-GraphicsTab::GraphicsTab(QWidget *parent) : QWidget(parent) {
+void ProcessorTab::selectProcessor(const QString &value) {
+
+    qDebug() << "The processor selected" << value;
+    this -> newMachine -> setCPUType(value);
+}
+
+GraphicsTab::GraphicsTab(Machine *machine,
+                         QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     GPUTypeLabel = new QLabel(tr("GPU Type") + ":");
     GPUTypeLabel -> setWordWrap(true);
@@ -354,7 +383,10 @@ GraphicsTab::~GraphicsTab() {
     qDebug() << "GraphicsTab destroyed";
 }
 
-AudioTab::AudioTab(QWidget *parent) : QWidget(parent) {
+AudioTab::AudioTab(Machine *machine,
+                   QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     creativeCheck = new QCheckBox("Creative Sound Blaster 16");
 
@@ -395,7 +427,10 @@ AudioTab::~AudioTab() {
     qDebug() << "AudioTab destroyed";
 }
 
-NetworkTab::NetworkTab(QWidget *parent) : QWidget(parent) {
+NetworkTab::NetworkTab(Machine *machine,
+                       QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
     withNetworkRadio -> setChecked(true);
@@ -419,14 +454,17 @@ MachineHardwarePage::~MachineHardwarePage() {
     qDebug() << "MachineHardwarePage destroyed";
 }
 
-MachineAcceleratorPage::MachineAcceleratorPage(QWidget *parent) : QWizardPage(parent) {
+MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
+                                               QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine accelerator"));
 
+    this -> newMachine = machine;
+
     acceleratorTabWidget = new QTabWidget();
-    acceleratorTabWidget -> addTab(new KVMTab(), tr("KVM"));
-    acceleratorTabWidget -> addTab(new TCGTab(), tr("TCG"));
-    acceleratorTabWidget -> addTab(new HAXMTab(), tr("HAXM"));
+    acceleratorTabWidget -> addTab(new KVMTab(machine, this), tr("KVM"));
+    acceleratorTabWidget -> addTab(new TCGTab(machine, this), tr("TCG"));
+    acceleratorTabWidget -> addTab(new HAXMTab(machine, this), tr("HAXM"));
 
     acceleratorLayout = new QVBoxLayout();
     acceleratorLayout -> setAlignment(Qt::AlignCenter);
@@ -441,7 +479,10 @@ MachineAcceleratorPage::~MachineAcceleratorPage() {
     qDebug() << "MachineAcceleratorPage destroyed";
 }
 
-KVMTab::KVMTab(QWidget *parent) : QWidget(parent) {
+KVMTab::KVMTab(Machine *machine,
+               QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     kvmRadioButton = new QRadioButton("Kernel-based Virtual Machine (KVM)");
 
@@ -465,7 +506,10 @@ KVMTab::~KVMTab() {
     qDebug() << "KVMTab destroyed";
 }
 
-TCGTab::TCGTab(QWidget *parent) : QWidget(parent) {
+TCGTab::TCGTab(Machine *machine,
+               QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     tcgRadioButton = new QRadioButton("Tiny Code Generator (TCG)");
 
@@ -492,7 +536,10 @@ TCGTab::~TCGTab() {
     qDebug() << "TCGTab destroyed";
 }
 
-HAXMTab::HAXMTab(QWidget *parent) : QWidget(parent) {
+HAXMTab::HAXMTab(Machine *machine,
+                 QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
 
     haxmRadioButton = new QRadioButton("Hardware Accelerated Execution Manager (HAXM)");
 
@@ -519,9 +566,12 @@ HAXMTab::~HAXMTab() {
     qDebug() << "HAXMTab destroyed";
 }
 
-MachineMemoryPage::MachineMemoryPage(QWidget *parent) : QWizardPage(parent) {
+MachineMemoryPage::MachineMemoryPage(Machine *machine,
+                                     QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine memory"));
+
+    this -> newMachine = machine;
 
     descriptionMemoryLabel = new QLabel(
                 tr("Select the amount of base memory (RAM) in megabytes for virtual machine allocating."));
@@ -574,9 +624,12 @@ MachineMemoryPage::~MachineMemoryPage() {
     qDebug() << "MachineMemoryPage destroyed";
 }
 
-MachineDiskPage::MachineDiskPage(QWidget *parent) : QWizardPage(parent) {
+MachineDiskPage::MachineDiskPage(Machine *machine,
+                                 QWidget *parent) : QWizardPage(parent) {
 
     setTitle(tr("Machine virtual hard disk"));
+
+    this -> newMachine = machine;
 
     machineDiskLabel = new QLabel(
                 tr("Select a virtual hard disk to the new machine."
@@ -640,7 +693,10 @@ void MachineDiskPage::useExistingDiskToggle(bool toggled) {
     this -> pathNewDiskPushButton -> setEnabled(toggled);
 }
 
-MachineNewDiskPage::MachineNewDiskPage(QWidget *parent) : QWizardPage(parent) {
+MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
+                                       QWidget *parent) : QWizardPage(parent) {
+
+    this -> newMachine = machine;
 
     ////////////////////////////   DISK NAME   ///////////////////////////////////
     fileLocationGroupBox = new QGroupBox(tr("Disk name"));
