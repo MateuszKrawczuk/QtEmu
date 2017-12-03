@@ -95,37 +95,37 @@ class Machine: public QObject {
         protected:
 
         private:
-        // General
-        QString name;
-        QString OSType;
-        QString OSVersion;
+            // General
+            QString name;
+            QString OSType;
+            QString OSVersion;
 
-        // Hardware - CPU
-        QString CPUType;
-        unsigned short int CPUCount;
-        unsigned short int socketCount;
-        unsigned short int coresSocket;
-        unsigned short int threadsCore;
-        unsigned short int maxHotCPU;
+            // Hardware - CPU
+            QString CPUType;
+            unsigned short int CPUCount;
+            unsigned short int socketCount;
+            unsigned short int coresSocket;
+            unsigned short int threadsCore;
+            unsigned short int maxHotCPU;
 
-        // Hardware - GPU
-        QString GPUType;
-        QString keyboard;
+            // Hardware - GPU
+            QString GPUType;
+            QString keyboard;
 
-        // Hardware - RAM
-        unsigned long long int RAM;
+            // Hardware - RAM
+            unsigned long long int RAM;
 
-        // Hardware - Audio
-        QVector<QString> audio;
+            // Hardware - Audio
+            QVector<QString> audio;
 
-        // Hardware - Network
-        bool useNetwork;
+            // Hardware - Network
+            bool useNetwork;
 
-        // Hardware - Disk
-        QString diskPath;
+            // Hardware - Disk
+            QString diskPath;
 
-        // Accelerator
-        QVector<QString> accelerator;
+            // Accelerator
+            QVector<QString> accelerator;
 
 };
 

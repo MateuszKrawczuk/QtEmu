@@ -146,7 +146,12 @@ class ProcessorTab: public QWidget {
     signals:
 
     public slots:
-        void selectProcessor(const QString &value);
+        void selectProcessor(const QString &processor);
+        void selectCPUCount(int CPUCount);
+        void selectSocketCount(int socketCount);
+        void selectCoresSocket(int coresSocket);
+        void selectThreadsCore(int threadsCore);
+        void selectMaxHotCPU(int maxCPU);
 
     protected:
 
@@ -188,6 +193,8 @@ class GraphicsTab: public QWidget {
     signals:
 
     public slots:
+        void selectGraphics(const QString &GPUType);
+        void selectKeyboard(const QString &keyboard);
 
     protected:
 
@@ -268,8 +275,6 @@ class MachineAcceleratorPage: public QWizardPage {
     protected:
 
     private:
-        //bool validatePage();
-
         QVBoxLayout *acceleratorLayout;
 
         QTabWidget *acceleratorTabWidget;

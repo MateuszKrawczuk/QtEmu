@@ -270,11 +270,18 @@ ProcessorTab::ProcessorTab(Machine *machine,
     CPUCountSpinBox -> setMinimum(1);
     CPUCountSpinBox -> setMaximum(255);
 
+    this -> selectCPUCount(1);
+    connect(CPUCountSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &ProcessorTab::selectCPUCount);
+
     coresSocketLabel = new QLabel(tr("Cores per socket") + ":");
     coresSocketLabel -> setWordWrap(true);
     coresSocketSpinBox = new QSpinBox();
     coresSocketSpinBox -> setMinimum(0);
     coresSocketSpinBox -> setMaximum(255);
+
+    connect(coresSocketSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &ProcessorTab::selectCoresSocket);
 
     CPUCountLayout = new QHBoxLayout();
     CPUCountLayout -> setAlignment(Qt::AlignVCenter);
@@ -290,11 +297,17 @@ ProcessorTab::ProcessorTab(Machine *machine,
     socketCountSpinBox -> setMinimum(0);
     socketCountSpinBox -> setMaximum(255);
 
+    connect(socketCountSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &ProcessorTab::selectSocketCount);
+
     threadsCoreLabel = new QLabel(tr("Threads per core") + ":");
     threadsCoreLabel -> setWordWrap(true);
     threadsCoreSpinBox = new QSpinBox();
     threadsCoreSpinBox -> setMinimum(0);
     threadsCoreSpinBox -> setMaximum(255);
+
+    connect(threadsCoreSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &ProcessorTab::selectThreadsCore);
 
     socketLayout = new QHBoxLayout();
     socketLayout -> setAlignment(Qt::AlignVCenter);
@@ -309,6 +322,9 @@ ProcessorTab::ProcessorTab(Machine *machine,
     maxHotCPUSpinBox = new QSpinBox();
     maxHotCPUSpinBox -> setMinimum(0);
     maxHotCPUSpinBox -> setMaximum(255);
+
+    connect(maxHotCPUSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            this, &ProcessorTab::selectMaxHotCPU);
 
     maxHotCPUsLayout = new QHBoxLayout();
     maxHotCPUsLayout -> setAlignment(Qt::AlignVCenter);
@@ -339,10 +355,28 @@ ProcessorTab::~ProcessorTab() {
     qDebug() << "ProcessorTab destroyed";
 }
 
-void ProcessorTab::selectProcessor(const QString &value) {
+void ProcessorTab::selectProcessor(const QString &processor) {
+    this -> newMachine -> setCPUType(processor);
+}
 
-    qDebug() << "The processor selected" << value;
-    this -> newMachine -> setCPUType(value);
+void ProcessorTab::selectCPUCount(int CPUCount) {
+    this -> newMachine -> setCPUCount(CPUCount);
+}
+
+void ProcessorTab::selectSocketCount(int socketCount) {
+    this -> newMachine -> setSocketCount(socketCount);
+}
+
+void ProcessorTab::selectCoresSocket(int coresSocket) {
+    this -> newMachine -> setCoresSocket(coresSocket);
+}
+
+void ProcessorTab::selectThreadsCore(int threadsCore) {
+    this -> newMachine -> setThreadsCore(threadsCore);
+}
+
+void ProcessorTab::selectMaxHotCPU(int maxCPU) {
+    this -> newMachine -> setMaxHotCPU(maxCPU);
 }
 
 GraphicsTab::GraphicsTab(Machine *machine,
@@ -357,12 +391,22 @@ GraphicsTab::GraphicsTab(Machine *machine,
 
     GPUType -> setCurrentIndex(1);
 
+    this -> selectGraphics(this -> GPUType -> itemText(0));
+
+    connect(GPUType, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+            this, &GraphicsTab::selectGraphics);
+
     keyboardLabel = new QLabel(tr("Keyboard layout") + ":");
     keyboardLabel -> setWordWrap(true);
     keyboard = new QComboBox();
     SystemUtils::setKeyboardLayout(keyboard);
 
     keyboard -> setCurrentIndex(5);
+
+    this -> selectKeyboard(this -> keyboard -> itemText(5));
+
+    connect(keyboard, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+            this, &GraphicsTab::selectKeyboard);
 
     graphicsLayout = new QGridLayout();
 
@@ -381,6 +425,14 @@ GraphicsTab::GraphicsTab(Machine *machine,
 
 GraphicsTab::~GraphicsTab() {
     qDebug() << "GraphicsTab destroyed";
+}
+
+void GraphicsTab::selectGraphics(const QString &GPUType) {
+    this -> newMachine -> setGPUType(GPUType);
+}
+
+void GraphicsTab::selectKeyboard(const QString &keyboard) {
+    this -> newMachine -> setKeyboard(keyboard);
 }
 
 AudioTab::AudioTab(Machine *machine,

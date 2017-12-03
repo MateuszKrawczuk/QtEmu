@@ -263,8 +263,17 @@ void MainWindow::createNewMachine() {
     newMachineWizard.show();
     newMachineWizard.exec();
 
-    qDebug() << "In main window" << this -> machine -> getName();
-    qDebug() << "In main window" << this -> machine -> getOSType();
-    qDebug() << "In main window" << this -> machine -> getOSVersion();
-    qDebug() << "In main window" << this -> machine -> getCPUType();
+    qDebug() << "The new Machine";
+    qDebug() << "Name: " << this -> machine -> getName();
+    qDebug() << "Operating System type: " << this -> machine -> getOSType();
+    qDebug() << "Operating System version: " << this -> machine -> getOSVersion();
+    qDebug() << "CPU Type: " << this -> machine -> getCPUType();
+    qDebug() << "CPU Count: " << this -> machine -> getCPUCount();
+    qDebug() << "Cores per socket: " << this -> machine -> getCoresSocket();
+    qDebug() << "Socket count: " << this -> machine -> getSocketCount();
+    qDebug() << "Threads per core: " << this -> machine -> getThreadsCore();
+    qDebug() << "Max hot CPU: " << this -> machine -> getMaxHotCPU();
+    qDebug() << "Graphics: " << this -> machine -> getGPUType();
+    qDebug() << "Keyboard: " << this -> machine -> getKeyboard();
+
 }
