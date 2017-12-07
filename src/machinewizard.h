@@ -75,44 +75,6 @@ class MachineWizard : public QWizard {
 
 };
 
-class MachineNamePage: public QWizardPage {
-    Q_OBJECT
-
-    public:
-        explicit MachineNamePage(Machine *machine,
-                                 QWidget *parent = 0);
-        ~MachineNamePage();
-
-    signals:
-
-    public slots:
-        void selectOS(int OSSelected);
-
-    protected:
-
-    private:
-        bool validatePage();
-        void cleanupPage();
-
-        QString machineFolderCreated;
-
-        QGridLayout *mainLayout;
-
-        QLabel *descriptionNameLabel;
-        QLabel *machineNameLabel;
-        QLabel *OSTypeLabel;
-        QLabel *OSVersionLabel;
-
-        QComboBox *OSType;
-        QComboBox *OSVersion;
-
-        QLineEdit *machineNameLineEdit;
-
-        QMessageBox *createMachineMessageBox;
-
-        Machine *newMachine;
-};
-
 class MachineHardwarePage: public QWizardPage {
     Q_OBJECT
 
