@@ -258,22 +258,16 @@ void MainWindow::createNewMachine() {
 
     machine = new Machine(this);
 
+    // Prevent undefined behaviour
+    machine -> setCPUCount(1);
+    machine -> setSocketCount(0);
+    machine -> setCoresSocket(0);
+    machine -> setThreadsCore(0);
+    machine -> setMaxHotCPU(0);
+    machine -> setRAM(1);
+    machine -> addAudio("ac97", "Intel AC97(82801AA)");
     MachineWizard newMachineWizard(machine, this);
 
     newMachineWizard.show();
     newMachineWizard.exec();
-
-    qDebug() << "The new Machine";
-    qDebug() << "Name: " << this -> machine -> getName();
-    qDebug() << "Operating System type: " << this -> machine -> getOSType();
-    qDebug() << "Operating System version: " << this -> machine -> getOSVersion();
-    qDebug() << "CPU Type: " << this -> machine -> getCPUType();
-    qDebug() << "CPU Count: " << this -> machine -> getCPUCount();
-    qDebug() << "Cores per socket: " << this -> machine -> getCoresSocket();
-    qDebug() << "Socket count: " << this -> machine -> getSocketCount();
-    qDebug() << "Threads per core: " << this -> machine -> getThreadsCore();
-    qDebug() << "Max hot CPU: " << this -> machine -> getMaxHotCPU();
-    qDebug() << "Graphics: " << this -> machine -> getGPUType();
-    qDebug() << "Keyboard: " << this -> machine -> getKeyboard();
-
 }

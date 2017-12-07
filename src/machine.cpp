@@ -24,14 +24,11 @@
 #include "machine.h"
 
 Machine::Machine(QObject *parent) : QObject(parent) {
-
     qDebug() << "Machine object created";
 }
 
 Machine::~Machine() {
-
     qDebug() << "Machine object destroyed";
-
 }
 
 QString Machine::getName() const {
@@ -130,12 +127,8 @@ void Machine::setRAM(unsigned long long value) {
     RAM = value;
 }
 
-QVector<QString> Machine::getAudio() const {
+QHash<QString, QString> Machine::getAudio() const {
     return audio;
-}
-
-void Machine::setAudio(const QVector<QString> &value) {
-    audio = value;
 }
 
 bool Machine::getUseNetwork() const {
@@ -154,10 +147,26 @@ void Machine::setDiskPath(const QString &value) {
     diskPath = value;
 }
 
-QVector<QString> Machine::getAccelerator() const {
+QHash<QString, QString> Machine::getAccelerator() const {
     return accelerator;
 }
 
-void Machine::setAccelerator(const QVector<QString> &value) {
-    accelerator = value;
+void Machine::addAudio(const QString key, const QString value) {
+    this -> audio.insert(key, value);
+}
+
+void Machine::removeAudio(const QString audio) {
+    if(this -> audio.contains(audio)){
+        this -> audio.remove(audio);
+    }
+}
+
+void Machine::addAccelerator(const QString key, const QString value) {
+    this -> accelerator.insert(key, value);
+}
+
+void Machine::removeAccelerator(const QString accelerator) {
+    if(this -> accelerator.contains(accelerator)){
+        this -> accelerator.remove(accelerator);
+    }
 }

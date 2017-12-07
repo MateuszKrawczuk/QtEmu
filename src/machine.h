@@ -23,7 +23,7 @@
 
 // Qt
 #include<QObject>
-#include<QVector>
+#include<QHash>
 
 #include<QDebug>
 
@@ -76,8 +76,7 @@ class Machine: public QObject {
         unsigned long long getRAM() const;
         void setRAM(unsigned long long value);
 
-        QVector<QString> getAudio() const;
-        void setAudio(const QVector<QString> &value);
+        QHash<QString, QString> getAudio() const;
 
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
@@ -85,17 +84,21 @@ class Machine: public QObject {
         QString getDiskPath() const;
         void setDiskPath(const QString &value);
 
-        QVector<QString> getAccelerator() const;
-        void setAccelerator(const QVector<QString> &value);
+        QHash<QString, QString> getAccelerator() const;
 
         signals:
 
         public slots:
+            void addAudio(const QString key, const QString value);
+            void removeAudio(const QString key);
+
+            void addAccelerator(const QString key, const QString value);
+            void removeAccelerator(const QString accelerator);
 
         protected:
 
         private:
-            // General
+        // General
             QString name;
             QString OSType;
             QString OSVersion;
@@ -116,7 +119,7 @@ class Machine: public QObject {
             unsigned long long int RAM;
 
             // Hardware - Audio
-            QVector<QString> audio;
+            QHash<QString, QString> audio;
 
             // Hardware - Network
             bool useNetwork;
@@ -125,7 +128,7 @@ class Machine: public QObject {
             QString diskPath;
 
             // Accelerator
-            QVector<QString> accelerator;
+            QHash<QString, QString> accelerator;
 
 };
 

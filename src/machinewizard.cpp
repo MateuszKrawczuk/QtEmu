@@ -441,21 +441,44 @@ AudioTab::AudioTab(Machine *machine,
     this -> newMachine = machine;
 
     creativeCheck = new QCheckBox("Creative Sound Blaster 16");
+    creativeCheck -> setChecked(true);
+    connect(creativeCheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectCreativeCard);
 
     ensoniqCheck = new QCheckBox("ENSONIQ AudioPCI ES1370");
+    ensoniqCheck -> setChecked(true);
+    connect(ensoniqCheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectEnsoniqCard);
 
     intelAC97Check = new QCheckBox("Intel AC97(82801AA)");
     intelAC97Check -> setChecked(true);
+    connect(intelAC97Check, &QAbstractButton::toggled,
+                this, &AudioTab::selectIntelAC97Card);
 
     yamahaCheck = new QCheckBox("Yamaha YM3812");
+    yamahaCheck -> setChecked(true);
+    connect(yamahaCheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectYamahaCard);
 
     gravisCheck = new QCheckBox("Gravis Ultrasound GF1");
+    gravisCheck -> setChecked(true);
+    connect(gravisCheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectGravisCard);
 
     CS4231ACheck = new QCheckBox("CS4231A");
+    CS4231ACheck -> setChecked(true);
+    connect(CS4231ACheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectCS4231ACard);
 
     intelHDACheck = new QCheckBox("Intel HD Audio");
+    intelHDACheck -> setChecked(true);
+    connect(intelHDACheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectIntelHDCard);
 
     pcSpeakerCheck = new QCheckBox(tr("PC Speaker"));
+    pcSpeakerCheck -> setChecked(true);
+    connect(pcSpeakerCheck, &QAbstractButton::toggled,
+                this, &AudioTab::selectPCSpeakerCard);
 
     audioLayout = new QGridLayout();
     audioLayout -> addWidget(creativeCheck,  0, 0, 1, 1);
@@ -477,6 +500,70 @@ AudioTab::AudioTab(Machine *machine,
 
 AudioTab::~AudioTab() {
     qDebug() << "AudioTab destroyed";
+}
+
+void AudioTab::selectCreativeCard(bool selectCreative) {
+    if (selectCreative) {
+        this -> newMachine -> addAudio("sb16", "Creative Sound Blaster 16");
+    } else {
+        this -> newMachine -> removeAudio("sb16");
+    }
+}
+
+void AudioTab::selectEnsoniqCard(bool selectEnsoniq) {
+    if (selectEnsoniq) {
+        this -> newMachine -> addAudio("es1370", "ENSONIQ AudioPCI ES1370");
+    } else {
+        this -> newMachine -> removeAudio("es1370");
+    }
+}
+
+void AudioTab::selectIntelAC97Card(bool selectIntelAC97) {
+    if (selectIntelAC97) {
+        this -> newMachine -> addAudio("ac97", "Intel AC97(82801AA)");
+    } else {
+        this -> newMachine -> removeAudio("ac97");
+    }
+}
+
+void AudioTab::selectYamahaCard(bool selectYamaha) {
+    if (selectYamaha) {
+        this -> newMachine -> addAudio("adlib", "Yamaha YM3812");
+    } else {
+        this -> newMachine -> removeAudio("adlib");
+    }
+}
+
+void AudioTab::selectGravisCard(bool selectGravis) {
+    if (selectGravis) {
+        this -> newMachine -> addAudio("gus", "Gravis Ultrasound GF1");
+    } else {
+        this -> newMachine -> removeAudio("gus");
+    }
+}
+
+void AudioTab::selectCS4231ACard(bool selectCS4231A) {
+    if (selectCS4231A) {
+        this -> newMachine -> addAudio("cs4231a", "CS4231A");
+    } else {
+        this -> newMachine -> removeAudio("cs4231a");
+    }
+}
+
+void AudioTab::selectIntelHDCard(bool selectIntelHD) {
+    if (selectIntelHD) {
+        this -> newMachine -> addAudio("hda", "Intel HD Audio");
+    } else {
+        this -> newMachine -> removeAudio("hda");
+    }
+}
+
+void AudioTab::selectPCSpeakerCard(bool selectPCSpeaker) {
+    if (selectPCSpeaker) {
+        this -> newMachine -> addAudio("pcspk", "PC Speaker");
+    } else {
+        this -> newMachine -> removeAudio("pcspk");
+    }
 }
 
 NetworkTab::NetworkTab(Machine *machine,

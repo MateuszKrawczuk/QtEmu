@@ -220,6 +220,14 @@ class AudioTab: public QWidget {
     signals:
 
     public slots:
+        void selectCreativeCard(bool selectCreative);
+        void selectEnsoniqCard(bool selectEnsoniq);
+        void selectIntelAC97Card(bool selectIntelAC97);
+        void selectYamahaCard(bool selectYamaha);
+        void selectGravisCard(bool selectGravis);
+        void selectCS4231ACard(bool selectCS4231A);
+        void selectIntelHDCard(bool selectIntelHD);
+        void selectPCSpeakerCard(bool selectPCSpeaker);
 
     protected:
 
