@@ -59,43 +59,34 @@ SOURCES += src/main.cpp\
            src/mainwindow.cpp \
            src/helpwidget.cpp \
            src/aboutwidget.cpp \
-    src/configwindow.cpp \
-    src/machinewizard.cpp \
-    src/systemutils.cpp \
-    src/machine.cpp \
-    src/aboutwidget.cpp \
-    src/configwindow.cpp \
-    src/helpwidget.cpp \
-    src/machine.cpp \
-    src/machinewizard.cpp \
-    src/main.cpp \
-    src/mainwindow.cpp \
-    src/systemutils.cpp \
-    src/newmachine/generalpage.cpp
+           src/configwindow.cpp \
+           src/machinewizard.cpp \
+           src/systemutils.cpp \
+           src/machine.cpp \
+           src/newmachine/generalpage.cpp \
+    src/newmachine/hardwarepage.cpp \
+    src/newmachine/acceleratorpage.cpp \
+    src/newmachine/memorypage.cpp \
+    src/newmachine/diskpage.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
             src/aboutwidget.h \
-    src/configwindow.h \
-    src/machinewizard.h \
-    src/systemutils.h \
-    src/machine.h \
-    src/aboutwidget.h \
-    src/configwindow.h \
-    src/diskwizard.h \
-    src/helpwidget.h \
-    src/machine.h \
-    src/machinewizard.h \
-    src/mainwindow.h \
-    src/systemutils.h \
-    src/newmachine/generalpage.h
+            src/configwindow.h \
+            src/machinewizard.h \
+            src/systemutils.h \
+            src/machine.h \
+            src/newmachine/generalpage.h \
+    src/newmachine/hardwarepage.h \
+    src/newmachine/acceleratorpage.h \
+    src/newmachine/memorypage.h \
+    src/newmachine/diskpage.h
 
 OTHER_FILES += \
     CHANGELOG \
     LICENSE \
     qtemu.desktop \
     README \
-    TODO \
     translations
     
 RESOURCES += qtemu.qrc

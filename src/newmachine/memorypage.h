@@ -19,59 +19,46 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef GENERALPAGE_H
-#define GENERALPAGE_H
+#ifndef MEMORYPAGE_H
+#define MEMORYPAGE_H
 
 // Qt
-#include <QWizardPage>
+#include <QWizard>
+#include <QSpinBox>
+#include <QSlider>
 #include <QLabel>
-#include <QComboBox>
-#include <QMessageBox>
 #include <QGridLayout>
-#include <QSettings>
-#include <QDir>
-#include <QLineEdit>
 
 // Local
 #include "../machine.h"
 #include "../systemutils.h"
 
-class MachineNamePage: public QWizardPage {
+class MachineMemoryPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineNamePage(Machine *machine,
-                                 QWidget *parent = 0);
-        ~MachineNamePage();
+        explicit MachineMemoryPage(Machine *machine,
+                                   QWidget *parent = 0);
+        ~MachineMemoryPage();
 
     signals:
 
     public slots:
-        void selectOS(int OSSelected);
 
     protected:
 
     private:
-        bool validatePage();
-        void cleanupPage();
+        QGridLayout *machineMemoryLayout;
 
-        QString machineFolderCreated;
+        QSpinBox *memorySpinBox;
+        QSlider *memorySlider;
 
-        QGridLayout *mainLayout;
-
-        QLabel *descriptionNameLabel;
-        QLabel *machineNameLabel;
-        QLabel *OSTypeLabel;
-        QLabel *OSVersionLabel;
-
-        QComboBox *OSType;
-        QComboBox *OSVersion;
-
-        QLineEdit *machineNameLineEdit;
-
-        QMessageBox *createMachineMessageBox;
+        QLabel *descriptionMemoryLabel;
+        QLabel *spinBoxMemoryLabel;
+        QLabel *minMemoryLabel;
+        QLabel *maxMemorylabel;
 
         Machine *newMachine;
 };
 
-#endif // GENERALPAGE_H
+#endif // MEMORYPAGE_H
