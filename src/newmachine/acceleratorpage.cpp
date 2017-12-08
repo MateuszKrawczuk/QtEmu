@@ -32,9 +32,17 @@ MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
     this -> newMachine = machine;
 
     acceleratorTabWidget = new QTabWidget();
+
+    #ifdef Q_OS_LINUX
     acceleratorTabWidget -> addTab(new KVMTab(machine, this), tr("KVM"));
+    acceleratorTabWidget -> addTab(new XENTab(machine, this), tr("XEN"));
+    #endif
+
     acceleratorTabWidget -> addTab(new TCGTab(machine, this), tr("TCG"));
+
+    #ifdef Q_OS_WIN
     acceleratorTabWidget -> addTab(new HAXMTab(machine, this), tr("HAXM"));
+    #endif
 
     acceleratorLayout = new QVBoxLayout();
     acceleratorLayout -> setAlignment(Qt::AlignCenter);
@@ -74,6 +82,35 @@ KVMTab::KVMTab(Machine *machine,
 
 KVMTab::~KVMTab() {
     qDebug() << "KVMTab destroyed";
+}
+
+XENTab::XENTab(Machine *machine,
+               QWidget *parent) : QWidget(parent) {
+
+    this -> newMachine = machine;
+
+    xenRadioButton = new QRadioButton("Xen Hypervisor");
+
+    xenDescriptionLabel = new QLabel("The Xen Project hypervisor is an open-source type-1 or "
+                                     "baremetal hypervisor, which makes it possible to run many "
+                                     "instances of an operating system or indeed different operating "
+                                     "systems in parallel on a single machine (or host)");
+    xenDescriptionLabel -> setWordWrap(true);
+
+    xenURLLabel = new QLabel("<a href=\"https://https://www.xenproject.org/\">www.xenproject.org</a>");
+
+    xenLayout = new QVBoxLayout();
+    xenLayout -> addWidget(xenRadioButton);
+    xenLayout -> addWidget(xenDescriptionLabel);
+    xenLayout -> addWidget(xenURLLabel, 0, Qt::AlignCenter);
+
+    setLayout(xenLayout);
+
+    qDebug() << "XENTab created";
+}
+
+XENTab::~XENTab() {
+    qDebug() << "XENTab destroyed";
 }
 
 TCGTab::TCGTab(Machine *machine,

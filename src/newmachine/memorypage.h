@@ -48,6 +48,8 @@ class MachineMemoryPage: public QWizardPage {
     protected:
 
     private:
+        bool validatePage();
+
         QGridLayout *machineMemoryLayout;
 
         QSpinBox *memorySpinBox;

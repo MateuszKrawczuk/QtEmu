@@ -180,6 +180,7 @@ class NetworkTab: public QWidget {
     signals:
 
     public slots:
+        void networkState(bool network);
 
     protected:
 

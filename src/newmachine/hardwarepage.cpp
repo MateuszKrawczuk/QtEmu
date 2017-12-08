@@ -374,6 +374,10 @@ NetworkTab::NetworkTab(Machine *machine,
 
     withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
     withNetworkRadio -> setChecked(true);
+    this -> networkState(true);
+
+    connect(withNetworkRadio, &QAbstractButton::toggled,
+                this, &NetworkTab::networkState);
 
     withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
 
@@ -388,4 +392,8 @@ NetworkTab::NetworkTab(Machine *machine,
 
 NetworkTab::~NetworkTab() {
     qDebug() << "NetworkTab destroyed";
+}
+
+void NetworkTab::networkState(bool network) {
+    this -> newMachine -> setUseNetwork(network);
 }

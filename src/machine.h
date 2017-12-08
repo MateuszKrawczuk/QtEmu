@@ -86,49 +86,49 @@ class Machine: public QObject {
 
         QHash<QString, QString> getAccelerator() const;
 
-        signals:
+    signals:
 
-        public slots:
-            void addAudio(const QString key, const QString value);
-            void removeAudio(const QString key);
+    public slots:
+        void addAudio(const QString key, const QString value);
+        void removeAudio(const QString key);
 
-            void addAccelerator(const QString key, const QString value);
-            void removeAccelerator(const QString accelerator);
+        void addAccelerator(const QString key, const QString value);
+        void removeAccelerator(const QString accelerator);
 
-        protected:
+    protected:
 
-        private:
+    private:
         // General
-            QString name;
-            QString OSType;
-            QString OSVersion;
+        QString name;
+        QString OSType;
+        QString OSVersion;
 
-            // Hardware - CPU
-            QString CPUType;
-            unsigned short int CPUCount;
-            unsigned short int socketCount;
-            unsigned short int coresSocket;
-            unsigned short int threadsCore;
-            unsigned short int maxHotCPU;
+        // Hardware - CPU
+        QString CPUType;
+        unsigned short int CPUCount;
+        unsigned short int socketCount;
+        unsigned short int coresSocket;
+        unsigned short int threadsCore;
+        unsigned short int maxHotCPU;
 
-            // Hardware - GPU
-            QString GPUType;
-            QString keyboard;
+        // Hardware - GPU
+        QString GPUType;
+        QString keyboard;
 
-            // Hardware - RAM
-            unsigned long long int RAM;
+        // Hardware - RAM
+        unsigned long long int RAM;
 
-            // Hardware - Audio
-            QHash<QString, QString> audio;
+        // Hardware - Audio
+        QHash<QString, QString> audio;
 
-            // Hardware - Network
-            bool useNetwork;
+        // Hardware - Network
+        bool useNetwork;
 
-            // Hardware - Disk
-            QString diskPath;
+        // Hardware - Disk
+        QString diskPath;
 
-            // Accelerator
-            QHash<QString, QString> accelerator;
+        // Accelerator
+        QHash<QString, QString> accelerator;
 
 };
 

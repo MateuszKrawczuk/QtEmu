@@ -78,6 +78,30 @@ class KVMTab: public QWidget {
         Machine *newMachine;
 };
 
+class XENTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit XENTab(Machine *machine,
+                        QWidget *parent = 0);
+        ~XENTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *xenLayout;
+
+        QRadioButton *xenRadioButton;
+
+        QLabel *xenDescriptionLabel;
+        QLabel *xenURLLabel;
+
+        Machine *newMachine;
+};
+
 class TCGTab: public QWidget {
     Q_OBJECT
 

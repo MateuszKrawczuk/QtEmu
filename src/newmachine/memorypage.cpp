@@ -81,3 +81,9 @@ MachineMemoryPage::MachineMemoryPage(Machine *machine,
 MachineMemoryPage::~MachineMemoryPage() {
     qDebug() << "MachineMemoryPage destroyed";
 }
+
+bool MachineMemoryPage::validatePage() {
+    this -> newMachine -> setRAM(this -> memorySpinBox -> value());
+
+    return true;
+}
