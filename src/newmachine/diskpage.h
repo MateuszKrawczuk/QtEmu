@@ -33,9 +33,16 @@
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QPushButton>
+#include <QProcess>
+#include <QStringList>
+#include <QMessageBox>
+#include <QSettings>
+#include <QDir>
 
 // Local
 #include "../machine.h"
+#include "../machinewizard.h"
+#include "../systemutils.h"
 
 class MachineDiskPage: public QWizardPage {
     Q_OBJECT
@@ -53,6 +60,8 @@ class MachineDiskPage: public QWizardPage {
     protected:
 
     private:
+        int nextId() const override;
+
         QVBoxLayout *machineDiskLayout;
         QHBoxLayout *useOldDiskLayout;
 
@@ -82,11 +91,21 @@ class MachineNewDiskPage: public QWizardPage {
     signals:
 
     public slots:
+        void selectRawFormat(bool useRaw);
+        void selectQCowFormat(bool useQCow);
+        void selectQCow2Format(bool useQCow2);
+        void selectQedFormat(bool useQed);
+        void selectVmdkFormat(bool useVmdk);
+        void selectCloopFormat(bool useCloop);
 
     protected:
 
     private:
+        bool validatePage();
+        void cleanupPage();
         void initializePage();
+        bool createDisk(const QString &format, const QString &diskName,
+                        const double size, bool useEncryption);
 
         QVBoxLayout *newDiskLayout;
         QHBoxLayout *fileLocationLayout;
@@ -115,6 +134,14 @@ class MachineNewDiskPage: public QWizardPage {
         QRadioButton *qedRadioButton;
         QRadioButton *vmdkRadioButton;
         QRadioButton *cloopRadioButton;
+
+        QProcess *qemuImgProcess;
+
+        QMessageBox *qemuImgNotFoundMessageBox;
+        QMessageBox *qemuImgNotFinishedMessageBox;
+        QMessageBox *qemuImgErrorMessageBox;
+
+        QString diskFormat;
 
         Machine *newMachine;
 };

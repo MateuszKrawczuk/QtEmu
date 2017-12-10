@@ -24,12 +24,10 @@
 #include "systemutils.h"
 
 SystemUtils::SystemUtils() {
-
     qDebug() << "SystemUtils created";
 }
 
 SystemUtils::~SystemUtils() {
-
     qDebug() << "SystemUtils destroyed";
 }
 
@@ -89,7 +87,6 @@ void SystemUtils::setCPUTypesx86(QComboBox *CPUType) {
 }
 
 void SystemUtils::setGPUTypes(QComboBox *GPUType) {
-
     GPUType -> addItem("None");
     GPUType -> addItem("Default");
     GPUType -> addItem("Standard VGA(VESA 2.0)");
@@ -103,7 +100,6 @@ void SystemUtils::setGPUTypes(QComboBox *GPUType) {
 }
 
 void SystemUtils::setKeyboardLayout(QComboBox *keyboardLayout) {
-
     keyboardLayout -> addItem("Arabic (ar)");
     keyboardLayout -> addItem("Danish (da)");
     keyboardLayout -> addItem("German (de)");

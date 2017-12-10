@@ -64,6 +64,7 @@ class KVMTab: public QWidget {
     signals:
 
     public slots:
+        void addKVMAccelerator(bool kvmAccelerator);
 
     protected:
 
@@ -88,6 +89,7 @@ class XENTab: public QWidget {
     signals:
 
     public slots:
+        void addXENAccelerator(bool xenAccelerator);
 
     protected:
 
@@ -112,6 +114,7 @@ class TCGTab: public QWidget {
     signals:
 
     public slots:
+        void addTCGAccelerator(bool tcgAccelerator);
 
     protected:
 
@@ -136,6 +139,7 @@ class HAXMTab: public QWidget {
     signals:
 
     public slots:
+        void addHAXAccelerator(bool haxAccelerator);
 
     protected:
 

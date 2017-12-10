@@ -93,6 +93,14 @@ void MachineDiskPage::useExistingDiskToggle(bool toggled) {
     this -> pathNewDiskPushButton -> setEnabled(toggled);
 }
 
+int MachineDiskPage::nextId() const {
+    if(this -> noDiskRadio -> isChecked() || this -> useExistingDiskRadio -> isChecked()) {
+        return MachineWizard::Page_Conclusion;
+    } else {
+        return MachineWizard::Page_New_Disk;
+    }
+}
+
 MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
                                        QWidget *parent) : QWizardPage(parent) {
 
@@ -160,9 +168,23 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     qcowRadioButton  = new QRadioButton(tr("qcow (QEMU Copy-on-write)"));
     qcow2RadioButton = new QRadioButton(tr("qcow2 (QEMU Copy-on-write 2)"));
     qcow2RadioButton -> setChecked(true);
+    this -> selectQCow2Format(true);
     qedRadioButton   = new QRadioButton(tr("qed (QEMU enhanced disk)"));
     vmdkRadioButton  = new QRadioButton(tr("vmdk (Virtual Machine Disk)"));
     cloopRadioButton = new QRadioButton(tr("cloop (Compressed Loop)"));
+
+    connect(rawRadioButton, &QAbstractButton::toggled,
+                this, &MachineNewDiskPage::selectRawFormat);
+    connect(qcowRadioButton, &QAbstractButton::toggled,
+                this, &MachineNewDiskPage::selectQCowFormat);
+    connect(qcow2RadioButton, &QAbstractButton::toggled,
+                this, &MachineNewDiskPage::selectQCow2Format);
+    connect(qedRadioButton, &QAbstractButton::toggled,
+                this, &MachineNewDiskPage::selectQedFormat);
+    connect(vmdkRadioButton, &QAbstractButton::toggled,
+                this, &MachineNewDiskPage::selectVmdkFormat);
+    connect(cloopRadioButton, &QAbstractButton::toggled,
+                this, &MachineNewDiskPage::selectCloopFormat);
 
     diskTypeLayout = new QGridLayout();
 
@@ -191,6 +213,134 @@ MachineNewDiskPage::~MachineNewDiskPage() {
     qDebug() << "MachineNewDiskPage destroyed";
 }
 
+bool MachineNewDiskPage::validatePage() {
+    return this -> MachineNewDiskPage::createDisk(this -> diskFormat,
+                                                  this -> fileName -> text().replace(" ","_"),
+                                                  this -> diskSpinBox -> value(),
+                                                  false);
+}
+
+void MachineNewDiskPage::cleanupPage() {
+
+}
+
 void MachineNewDiskPage::initializePage() {
     fileName -> setText(field("machine.name").toString());
+}
+
+void MachineNewDiskPage::selectRawFormat(bool useRaw) {
+    if(useRaw) {
+        this -> diskFormat = "raw";
+    }
+}
+
+void MachineNewDiskPage::selectQCowFormat(bool useQCow) {
+    if(useQCow) {
+        this -> diskFormat = "qcow";
+    }
+}
+
+void MachineNewDiskPage::selectQCow2Format(bool useQCow2) {
+    if(useQCow2) {
+        this -> diskFormat = "qcow2";
+    }
+}
+
+void MachineNewDiskPage::selectQedFormat(bool useQed) {
+    if(useQed) {
+        this -> diskFormat = "qed";
+    }
+}
+
+void MachineNewDiskPage::selectVmdkFormat(bool useVmdk) {
+    if(useVmdk) {
+        this -> diskFormat = "vmdk";
+    }
+}
+
+void MachineNewDiskPage::selectCloopFormat(bool useCloop) {
+    if(useCloop) {
+        this -> diskFormat = "cloop";
+    }
+}
+
+bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskName,
+                                    const double size, bool useEncryption) {
+
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+    settings.endGroup();
+
+    strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
+                  .append(diskName).append(".").append(format);
+
+    qemuImgProcess = new QProcess(this);
+
+    QStringList args;
+    args << "create";
+
+    if(useEncryption) {
+        args << "-e";
+    }
+
+    args << "-f";
+    args << format;
+    args << strMachinePath;
+    args << QString::number(size) + "G"; // TODO: Implement other sizes, K, M, T
+
+    QString program;
+
+    #ifdef Q_OS_LINUX
+    program = "qemu-img";
+    #endif
+
+    // TODO: Implement other platforms... :'(
+
+    qemuImgProcess -> start(program, args);
+
+    if( ! qemuImgProcess -> waitForStarted(2000)) {
+        qemuImgNotFoundMessageBox = new QMessageBox(this);
+        qemuImgNotFoundMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+        qemuImgNotFoundMessageBox -> setIcon(QMessageBox::Critical);
+        qemuImgNotFoundMessageBox -> setText(tr("<p>Cannot start qemu-img</p>"
+                                                "<p><strong>Image isn't created</strong></p>"
+                                                "<p>Ensure that you have installed qemu-img in your "
+                                                "system and it's available</p>"));
+        qemuImgNotFoundMessageBox -> exec();
+
+        return false;
+    }
+
+    if( ! qemuImgProcess -> waitForFinished()) {
+        qemuImgNotFinishedMessageBox = new QMessageBox(this);
+        qemuImgNotFinishedMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+        qemuImgNotFinishedMessageBox -> setIcon(QMessageBox::Critical);
+        qemuImgNotFinishedMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
+                                                   "<p><strong>Image isn't created</strong></p>"
+                                                   "<p>There's a problem with qemu-img, the process "
+                                                   "the process has not finished correctly</p>"));
+        qemuImgNotFinishedMessageBox -> exec();
+
+        return false;
+    } else {
+        QByteArray err = qemuImgProcess -> readAllStandardError();
+
+        if(err.count() > 0) {
+            qemuImgErrorMessageBox = new QMessageBox(this);
+            qemuImgErrorMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+            qemuImgErrorMessageBox -> setIcon(QMessageBox::Critical);
+            qemuImgErrorMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
+                                                 "<p><strong>Image isn't created</strong></p>"));
+            qemuImgErrorMessageBox -> exec();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }

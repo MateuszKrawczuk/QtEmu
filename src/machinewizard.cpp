@@ -35,6 +35,7 @@ MachineWizard::MachineWizard(Machine *machine,
     setPage(Page_Memory, new MachineMemoryPage(machine, this));
     setPage(Page_Disk, new MachineDiskPage(machine, this));
     setPage(Page_New_Disk, new MachineNewDiskPage(machine ,this));
+    setPage(Page_Conclusion, new MachineConclusionPage(machine, this));
 
     setStartId(Page_Name);
 

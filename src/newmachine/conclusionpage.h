@@ -19,37 +19,24 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MACHINEWIZARD_H
-#define MACHINEWIZARD_H
+#ifndef CONCLUSIONPAGE_H
+#define CONCLUSIONPAGE_H
 
 // Qt
 #include <QWizard>
-
-#include <QDebug>
+#include <QLabel>
+#include <QFormLayout>
 
 // Local
-#include "machine.h"
-#include "systemutils.h"
+#include "../machine.h"
 
-#include "newmachine/generalpage.h"
-#include "newmachine/hardwarepage.h"
-#include "newmachine/acceleratorpage.h"
-#include "newmachine/memorypage.h"
-#include "newmachine/diskpage.h"
-#include "newmachine/conclusionpage.h"
-
-class MachineWizard : public QWizard {
+class MachineConclusionPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineWizard(Machine *machine,
-                               QWidget *parent = 0);
-        ~MachineWizard();
-
-    enum { Page_Name, Page_Hardware, Page_Accelerator,
-           Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
-
-        void createMachineJSON(QJsonObject &machineJson) const;
+        explicit MachineConclusionPage(Machine *machine,
+                                       QWidget *parent = 0);
+        ~MachineConclusionPage();
 
     signals:
 
@@ -58,7 +45,13 @@ class MachineWizard : public QWizard {
     protected:
 
     private:
+        QFormLayout *conclusionLayout;
+
+        QLabel *conclusionCPULabel;
+
+        Machine *newMachine;
 
 };
 
-#endif // MACHINEWIZARD_H
+
+#endif // CONCLUSIONPAGE_H

@@ -63,6 +63,12 @@ KVMTab::KVMTab(Machine *machine,
     this -> newMachine = machine;
 
     kvmRadioButton = new QRadioButton("Kernel-based Virtual Machine (KVM)");
+    kvmRadioButton -> setChecked(true);
+
+    this -> addKVMAccelerator(true);
+
+    connect(kvmRadioButton, &QAbstractButton::toggled,
+                this, &KVMTab::addKVMAccelerator);
 
     kvmDescriptionLabel = new QLabel("KVM (for Kernel-based Virtual Machine) is a full virtualization solution"
                                      "for GNU/Linux on x86 hardware containing virtualization extensions (Intel VT or AMD-V).");
@@ -84,12 +90,23 @@ KVMTab::~KVMTab() {
     qDebug() << "KVMTab destroyed";
 }
 
+void KVMTab::addKVMAccelerator(bool kvmAccelerator) {
+    if(kvmAccelerator) {
+        this -> newMachine -> addAccelerator("kvm", "kvm");
+    } else {
+        this -> newMachine -> removeAccelerator("kvm");
+    }
+}
+
 XENTab::XENTab(Machine *machine,
                QWidget *parent) : QWidget(parent) {
 
     this -> newMachine = machine;
 
     xenRadioButton = new QRadioButton("Xen Hypervisor");
+
+    connect(xenRadioButton, &QAbstractButton::toggled,
+                this, &XENTab::addXENAccelerator);
 
     xenDescriptionLabel = new QLabel("The Xen Project hypervisor is an open-source type-1 or "
                                      "baremetal hypervisor, which makes it possible to run many "
@@ -113,12 +130,23 @@ XENTab::~XENTab() {
     qDebug() << "XENTab destroyed";
 }
 
+void XENTab::addXENAccelerator(bool xenAccelerator) {
+    if(xenAccelerator) {
+        this -> newMachine -> addAccelerator("xen", "xen");
+    } else {
+        this -> newMachine -> removeAccelerator("xen");
+    }
+}
+
 TCGTab::TCGTab(Machine *machine,
                QWidget *parent) : QWidget(parent) {
 
     this -> newMachine = machine;
 
     tcgRadioButton = new QRadioButton("Tiny Code Generator (TCG)");
+
+    connect(tcgRadioButton, &QAbstractButton::toggled,
+                this, &TCGTab::addTCGAccelerator);
 
     tcgDescriptionLabel = new QLabel("The Tiny Code Generator (TCG) exists to transform"
                                       "target insns (the processor being emulated) via the"
@@ -143,12 +171,23 @@ TCGTab::~TCGTab() {
     qDebug() << "TCGTab destroyed";
 }
 
+void TCGTab::addTCGAccelerator(bool tcgAccelerator) {
+    if(tcgAccelerator) {
+        this -> newMachine -> addAccelerator("tcg", "tcg");
+    } else {
+        this -> newMachine -> removeAccelerator("tcg");
+    }
+}
+
 HAXMTab::HAXMTab(Machine *machine,
                  QWidget *parent) : QWidget(parent) {
 
     this -> newMachine = machine;
 
     haxmRadioButton = new QRadioButton("Hardware Accelerated Execution Manager (HAXM)");
+
+    connect(haxmRadioButton, &QAbstractButton::toggled,
+                this, &HAXMTab::addHAXAccelerator);
 
     haxmDescriptionLabel = new QLabel("Intel® Hardware Accelerated Execution Manager"
                                        "(Intel® HAXM) is a hardware-assisted virtualization"
@@ -171,4 +210,12 @@ HAXMTab::HAXMTab(Machine *machine,
 
 HAXMTab::~HAXMTab() {
     qDebug() << "HAXMTab destroyed";
+}
+
+void HAXMTab::addHAXAccelerator(bool haxAccelerator) {
+    if(haxAccelerator) {
+        this -> newMachine -> addAccelerator("hax", "hax");
+    } else {
+        this -> newMachine -> removeAccelerator("hax");
+    }
 }
