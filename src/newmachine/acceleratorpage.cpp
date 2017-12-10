@@ -38,11 +38,11 @@ MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
     acceleratorTabWidget -> addTab(new XENTab(machine, this), tr("XEN"));
     #endif
 
-    acceleratorTabWidget -> addTab(new TCGTab(machine, this), tr("TCG"));
-
     #ifdef Q_OS_WIN
     acceleratorTabWidget -> addTab(new HAXMTab(machine, this), tr("HAXM"));
     #endif
+
+    acceleratorTabWidget -> addTab(new TCGTab(machine, this), tr("TCG"));
 
     acceleratorLayout = new QVBoxLayout();
     acceleratorLayout -> setAlignment(Qt::AlignCenter);
@@ -185,6 +185,7 @@ HAXMTab::HAXMTab(Machine *machine,
     this -> newMachine = machine;
 
     haxmRadioButton = new QRadioButton("Hardware Accelerated Execution Manager (HAXM)");
+    haxmRadioButton -> setChecked(true);
 
     connect(haxmRadioButton, &QAbstractButton::toggled,
                 this, &HAXMTab::addHAXAccelerator);

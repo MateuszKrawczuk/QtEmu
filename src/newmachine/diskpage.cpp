@@ -62,6 +62,9 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
                                         "",
                                         this);
 
+    connect(pathNewDiskPushButton, &QAbstractButton::clicked,
+            this, &MachineDiskPage::useExistingDiskPath);
+
     this -> useExistingDiskToggle(false);
 
     useOldDiskLayout = new QHBoxLayout();
@@ -91,6 +94,10 @@ MachineDiskPage::~MachineDiskPage() {
 void MachineDiskPage::useExistingDiskToggle(bool toggled) {
 
     this -> pathNewDiskPushButton -> setEnabled(toggled);
+
+    if( ! toggled ) {
+        this -> hardDiskPathLineEdit -> clear();
+    }
 }
 
 int MachineDiskPage::nextId() const {
@@ -98,6 +105,17 @@ int MachineDiskPage::nextId() const {
         return MachineWizard::Page_Conclusion;
     } else {
         return MachineWizard::Page_New_Disk;
+    }
+}
+
+void MachineDiskPage::useExistingDiskPath() {
+    this -> existingDiskPath = QFileDialog::getSaveFileName(this,
+                                                            tr("Select an existing disk"),
+                                                            QDir::homePath(),
+                                                            tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
+
+    if ( !existingDiskPath.isEmpty() ) {
+        this -> hardDiskPathLineEdit -> setText(QDir::toNativeSeparators(existingDiskPath));
     }
 }
 

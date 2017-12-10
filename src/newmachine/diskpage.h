@@ -38,6 +38,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QDir>
+#include <QFileDialog>
 
 // Local
 #include "../machine.h"
@@ -56,6 +57,7 @@ class MachineDiskPage: public QWizardPage {
 
     public slots:
         void useExistingDiskToggle(bool toggled);
+        void useExistingDiskPath();
 
     protected:
 
@@ -76,6 +78,8 @@ class MachineDiskPage: public QWizardPage {
         QLabel *machineDiskLabel;
         QLabel *machineDiskInfoLabel;
         QLabel *machineDiskSizeLabel;
+
+        QString existingDiskPath;
 
         Machine *newMachine;
 };

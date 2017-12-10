@@ -514,7 +514,7 @@ void ConfigWindow::setMachinePath(){
                                                     QFileDialog::DontResolveSymlinks
                                                     );
     if ( !machinePath.isEmpty() ) {
-        machinePathLineEdit -> setText(machinePath);
+        machinePathLineEdit -> setText(QDir::toNativeSeparators(machinePath));
     }
 
 }
