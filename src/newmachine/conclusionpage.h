@@ -25,7 +25,7 @@
 // Qt
 #include <QWizard>
 #include <QLabel>
-#include <QFormLayout>
+#include <QGridLayout>
 
 // Local
 #include "../machine.h"
@@ -45,9 +45,30 @@ class MachineConclusionPage: public QWizardPage {
     protected:
 
     private:
-        QFormLayout *conclusionLayout;
+        void initializePage();
 
-        QLabel *conclusionCPULabel;
+        QGridLayout *conclusionLayout;
+
+        QLabel *machineDescLabel;
+        QLabel *OSTypeDescLabel;
+        QLabel *OSVersionDescLabel;
+        QLabel *processorDescLabel;
+        QLabel *graphicsDescLabel;
+        QLabel *audioDescLabel;
+        QLabel *RAMDescLabel;
+        QLabel *acceleratorDescLabel;
+        QLabel *diskDescLabel;
+
+        QLabel *conclusionLabel;
+        QLabel *machineNameLabel;
+        QLabel *OSTypeLabel;
+        QLabel *OSVersionLabel;
+        QLabel *processorLabel;
+        QLabel *graphicsLabel;
+        QLabel *audioLabel;
+        QLabel *RAMLabel;
+        QLabel *acceleratorLabel;
+        QLabel *diskLabel;
 
         Machine *newMachine;
 

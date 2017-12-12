@@ -270,22 +270,4 @@ void MainWindow::createNewMachine() {
 
     newMachineWizard.show();
     newMachineWizard.exec();
-
-    qDebug() << "Name" << machine -> getName();
-    qDebug() << "OS Type" << machine -> getOSType();
-    qDebug() << "OS Version" << machine -> getOSVersion();
-    qDebug() << "CPU Type" << machine -> getCPUType();
-    qDebug() << "CPU Count" << machine -> getCPUCount();
-    qDebug() << "Socket Count" << machine -> getSocketCount();
-    qDebug() << "Cores Socket" << machine -> getCoresSocket();
-    qDebug() << "Threads Core" << machine -> getThreadsCore();
-    qDebug() << "Max hot CPU" << machine -> getMaxHotCPU();
-    qDebug() << "GPU" << machine -> getGPUType();
-    qDebug() << "Keyboard" << machine -> getKeyboard();
-    qDebug() << "RAM" << machine -> getRAM();
-    qDebug() << "Audio" << machine -> getAudio();
-    qDebug() << "Network" << machine -> getUseNetwork();
-    qDebug() << "Disk path" << machine -> getDiskPath();
-    qDebug() << "Accelerator" << machine -> getAccelerator();
-
 }

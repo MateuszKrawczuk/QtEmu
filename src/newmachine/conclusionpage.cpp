@@ -31,14 +31,56 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
 
     this -> newMachine = machine;
 
-    conclusionLayout = new QFormLayout();
-    conclusionLayout -> addRow(tr("Name") + ":", new QLabel(this -> newMachine -> getName()));
-    conclusionLayout -> addRow(tr("Processor") + ":", new QLabel(this -> newMachine -> getCPUType()));
-    conclusionLayout -> addRow(tr("Graphics") + ":", new QLabel(this -> newMachine -> getGPUType()));
-    //conclusionLayout -> addRow(tr("Audio") + ":", new QLabel(this -> newMachine -> getAudio()));
-    conclusionLayout -> addRow(tr("RAM") + ":", new QLabel(QString::number(this -> newMachine -> getRAM())));
-    //conclusionLayout -> addRow(tr("Accelerator") + ":", new QLabel(this -> newMachine -> getAccelerator()));
-    //conclusionLayout -> addRow(tr("Disk") + ":", );
+    conclusionLabel = new QLabel(tr("Summary of the new machine"));
+
+    machineDescLabel = new QLabel(tr("Name") + ":");
+    OSTypeDescLabel = new QLabel(tr("Operating system") + ":");
+    OSVersionDescLabel = new QLabel(tr("Operating system version") + ":");
+    processorDescLabel = new QLabel(tr("Processor") + ":");
+    graphicsDescLabel = new QLabel(tr("Graphics") + ":");
+    audioDescLabel = new QLabel(tr("Audio") + ":");
+    RAMDescLabel = new QLabel(tr("RAM") + ":");
+    acceleratorDescLabel = new QLabel(tr("Accelerator") + ":");
+    diskDescLabel = new QLabel(tr("Disk") + ":");
+
+    machineNameLabel = new QLabel();
+    machineNameLabel -> setWordWrap(true);
+    OSTypeLabel      = new QLabel();
+    OSVersionLabel   = new QLabel();
+    processorLabel   = new QLabel();
+    graphicsLabel    = new QLabel();
+    audioLabel       = new QLabel();
+    audioLabel -> setWordWrap(true);
+    RAMLabel         = new QLabel();
+    acceleratorLabel = new QLabel();
+    diskLabel        = new QLabel();
+    diskLabel -> setWordWrap(true);
+
+    conclusionLayout = new QGridLayout();
+
+    conclusionLayout -> setColumnStretch(1, 10);
+    conclusionLayout -> setColumnStretch(2, 10);
+    conclusionLayout -> setColumnStretch(3, 10);
+
+    conclusionLayout -> addWidget(conclusionLabel,      0, 0, 1, 4);
+    conclusionLayout -> addWidget(machineDescLabel,     1, 0, 1, 1);
+    conclusionLayout -> addWidget(machineNameLabel,     1, 1, 1, 1);
+    conclusionLayout -> addWidget(OSTypeDescLabel,      2, 0, 1, 1);
+    conclusionLayout -> addWidget(OSTypeLabel,          2, 1, 1, 1);
+    conclusionLayout -> addWidget(OSVersionDescLabel,   3, 0, 1, 1);
+    conclusionLayout -> addWidget(OSVersionLabel,       3, 1, 1, 1);
+    conclusionLayout -> addWidget(processorDescLabel,   4, 0, 1, 1);
+    conclusionLayout -> addWidget(processorLabel,       4, 1, 1, 1);
+    conclusionLayout -> addWidget(graphicsDescLabel,    5, 0, 1, 1);
+    conclusionLayout -> addWidget(graphicsLabel,        5, 1, 1, 1);
+    conclusionLayout -> addWidget(audioDescLabel,       6, 0, 1, 1);
+    conclusionLayout -> addWidget(audioLabel,           6, 1, 1, 3);
+    conclusionLayout -> addWidget(RAMDescLabel,         7, 0, 1, 1);
+    conclusionLayout -> addWidget(RAMLabel,             7, 1, 1, 1);
+    conclusionLayout -> addWidget(acceleratorDescLabel, 8, 0, 1, 1);
+    conclusionLayout -> addWidget(acceleratorLabel,     8, 1, 1, 1);
+    conclusionLayout -> addWidget(diskDescLabel,        9, 0, 1, 1);
+    conclusionLayout -> addWidget(diskLabel,            9, 1, 1, 1);
 
     this -> setLayout(conclusionLayout);
 
@@ -47,4 +89,17 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
 
 MachineConclusionPage::~MachineConclusionPage() {
     qDebug() << "MachineConclusionPage destroyed";
+}
+
+void MachineConclusionPage::initializePage() {
+    this -> machineNameLabel -> setText(this -> newMachine -> getName());
+    this -> OSTypeLabel      -> setText(this -> newMachine -> getOSType());
+    this -> OSVersionLabel   -> setText(this -> newMachine -> getOSVersion());
+    this -> processorLabel   -> setText(this -> newMachine -> getCPUType());
+    this -> graphicsLabel    -> setText(this -> newMachine -> getGPUType());
+    this -> RAMLabel         -> setText(QString::number(this -> newMachine -> getRAM()).append(" MiB"));
+    this -> audioLabel       -> setText(this -> newMachine -> getAudioLabel());
+    this -> acceleratorLabel -> setText(this -> newMachine -> getAcceleratorLabel());
+    this -> diskLabel        -> setText(this -> newMachine -> getDiskPath());
+
 }

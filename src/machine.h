@@ -86,14 +86,19 @@ class Machine: public QObject {
 
         QHash<QString, QString> getAccelerator() const;
 
-    signals:
-
-    public slots:
         void addAudio(const QString key, const QString value);
         void removeAudio(const QString key);
 
         void addAccelerator(const QString key, const QString value);
         void removeAccelerator(const QString accelerator);
+
+        QString getAudioLabel();
+
+        QString getAcceleratorLabel();
+
+    signals:
+
+    public slots:
 
     protected:
 

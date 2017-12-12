@@ -199,7 +199,7 @@ GraphicsTab::GraphicsTab(Machine *machine,
 
     GPUType -> setCurrentIndex(1);
 
-    this -> selectGraphics(this -> GPUType -> itemText(0));
+    this -> selectGraphics(this -> GPUType -> itemText(1));
 
     connect(GPUType, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
             this, &GraphicsTab::selectGraphics);

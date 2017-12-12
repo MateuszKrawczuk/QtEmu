@@ -170,3 +170,42 @@ void Machine::removeAccelerator(const QString accelerator) {
         this -> accelerator.remove(accelerator);
     }
 }
+
+QString Machine::getAudioLabel() {
+    QHash<QString, QString>::const_iterator i = audio.constBegin();
+    QString audioLabel;
+    bool first = true;
+
+    while (i != audio.constEnd()) {
+        if(first){
+            first = false;
+        } else {
+            audioLabel.append(", ");
+        }
+
+        audioLabel.append(i.value());
+        ++i;
+    }
+
+    return audioLabel;
+
+}
+
+QString Machine::getAcceleratorLabel() {
+    QHash<QString, QString>::const_iterator i = accelerator.constBegin();
+    QString acceleratorLabel;
+    bool first = true;
+
+    while (i != accelerator.constEnd()) {
+        if(first){
+            first = false;
+        } else {
+            acceleratorLabel.append(", ");
+        }
+
+        acceleratorLabel.append(i.value().toUpper());
+        ++i;
+    }
+
+    return acceleratorLabel;
+}

@@ -127,15 +127,23 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     ////////////////////////////   DISK NAME   ///////////////////////////////////
     fileLocationGroupBox = new QGroupBox(tr("Disk name"));
 
-    fileName = new QLineEdit();
+    fileNameLineEdit = new QLineEdit();
+    fileNameLineEdit -> setEnabled(false);
+
+    diskName = QString();
+
+    this -> registerField("machine.diskname*", fileNameLineEdit);
 
     pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                              QIcon(":/icon/32x32/qtemu.png")),
-                                        "",
-                                        this);
+                                            "",
+                                            this);
+
+    connect(pathNewDiskPushButton, &QAbstractButton::clicked,
+            this, &MachineNewDiskPage::selectNameNewDisk);
 
     fileLocationLayout = new QHBoxLayout();
-    fileLocationLayout -> addWidget(fileName);
+    fileLocationLayout -> addWidget(fileNameLineEdit);
     fileLocationLayout -> addWidget(pathNewDiskPushButton);
 
     fileLocationGroupBox -> setLayout(fileLocationLayout);
@@ -233,7 +241,7 @@ MachineNewDiskPage::~MachineNewDiskPage() {
 
 bool MachineNewDiskPage::validatePage() {
     return this -> MachineNewDiskPage::createDisk(this -> diskFormat,
-                                                  this -> fileName -> text().replace(" ","_"),
+                                                  this -> fileNameLineEdit -> text().replace(" ","_"),
                                                   this -> diskSpinBox -> value(),
                                                   false);
 }
@@ -243,7 +251,7 @@ void MachineNewDiskPage::cleanupPage() {
 }
 
 void MachineNewDiskPage::initializePage() {
-    fileName -> setText(field("machine.name").toString());
+    fileNameLineEdit -> setText(field("machine.name").toString());
 }
 
 void MachineNewDiskPage::selectRawFormat(bool useRaw) {
@@ -282,18 +290,37 @@ void MachineNewDiskPage::selectCloopFormat(bool useCloop) {
     }
 }
 
+void MachineNewDiskPage::selectNameNewDisk() {
+    this -> diskName = QFileDialog::getSaveFileName(this,
+                                                    tr("Select an existing disk"),
+                                                    QDir::homePath(),
+                                                    tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
+
+    if ( ! diskName.isEmpty() ) {
+        this -> fileNameLineEdit -> setText(QDir::toNativeSeparators(diskName));
+    }
+}
+
 bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskName,
                                     const double size, bool useEncryption) {
 
-    QSettings settings;
-    settings.beginGroup("Configuration");
+    QString strMachinePath;
 
-    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+    if ( ! diskName.isEmpty() ) {
 
-    settings.endGroup();
+        strMachinePath = diskName;
 
-    strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
-                  .append(diskName).append(".").append(format);
+    } else {
+        QSettings settings;
+        settings.beginGroup("Configuration");
+
+        strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+        settings.endGroup();
+
+        strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
+                      .append(diskName).append(".").append(format);
+    }
 
     qemuImgProcess = new QProcess(this);
 
@@ -351,7 +378,8 @@ bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskNa
             qemuImgErrorMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
             qemuImgErrorMessageBox -> setIcon(QMessageBox::Critical);
             qemuImgErrorMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
-                                                 "<p><strong>Image isn't created</strong></p>"));
+                                                 "<p><strong>Image isn't created</strong></p>"
+                                                 "<p>Error: " + err + "</p>"));
             qemuImgErrorMessageBox -> exec();
 
             return false;

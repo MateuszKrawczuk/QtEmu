@@ -101,6 +101,7 @@ class MachineNewDiskPage: public QWizardPage {
         void selectQedFormat(bool useQed);
         void selectVmdkFormat(bool useVmdk);
         void selectCloopFormat(bool useCloop);
+        void selectNameNewDisk();
 
     protected:
 
@@ -120,7 +121,7 @@ class MachineNewDiskPage: public QWizardPage {
         QGroupBox *fileSizeGroupBox;
         QGroupBox *fileTypeGroupBox;
 
-        QLineEdit *fileName;
+        QLineEdit *fileNameLineEdit;
 
         QDoubleSpinBox *diskSpinBox;
 
@@ -146,6 +147,7 @@ class MachineNewDiskPage: public QWizardPage {
         QMessageBox *qemuImgErrorMessageBox;
 
         QString diskFormat;
+        QString diskName;
 
         Machine *newMachine;
 };
