@@ -24,6 +24,7 @@
 
 // Qt
 #include <QWizard>
+#include <QListWidget>
 
 #include <QDebug>
 
@@ -43,6 +44,7 @@ class MachineWizard : public QWizard {
 
     public:
         explicit MachineWizard(Machine *machine,
+                               QListWidget *osListWidget,
                                QWidget *parent = 0);
         ~MachineWizard();
 

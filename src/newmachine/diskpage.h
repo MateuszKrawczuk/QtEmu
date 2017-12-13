@@ -107,9 +107,8 @@ class MachineNewDiskPage: public QWizardPage {
 
     private:
         bool validatePage();
-        void cleanupPage();
         void initializePage();
-        bool createDisk(const QString &format, const QString &diskName,
+        bool createDisk(const QString &format, const QString &name,
                         const double size, bool useEncryption);
 
         QVBoxLayout *newDiskLayout;
@@ -145,6 +144,7 @@ class MachineNewDiskPage: public QWizardPage {
         QMessageBox *qemuImgNotFoundMessageBox;
         QMessageBox *qemuImgNotFinishedMessageBox;
         QMessageBox *qemuImgErrorMessageBox;
+        QMessageBox *qemuImgOkMessageBox;
 
         QString diskFormat;
         QString diskName;

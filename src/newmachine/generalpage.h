@@ -52,6 +52,7 @@ class MachineNamePage: public QWizardPage {
     protected:
 
     private:
+        void initializePage();
         bool validatePage();
         void cleanupPage();
 

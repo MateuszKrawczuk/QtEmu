@@ -57,7 +57,7 @@ MachineNamePage::MachineNamePage(Machine *machine,
     this -> registerField("machine.ostype", OSType, "currentText", "currentTextChanged");
     this -> registerField("machine.osversion", OSVersion, "currentText", "currentTextChanged");
 
-    machineFolderCreated = QString();
+    this -> machineFolderCreated = QString();
 
     mainLayout = new QGridLayout();
 
@@ -118,7 +118,7 @@ void MachineNamePage::selectOS(int OSSelected){
 
 bool MachineNamePage::validatePage() {
 
-    if ( ! machineFolderCreated.isEmpty() ) {
+    if ( ! this -> machineFolderCreated.isEmpty() ) {
         return true;
     }
 
@@ -164,7 +164,7 @@ bool MachineNamePage::validatePage() {
         return false;
     }
 
-    machineFolderCreated = strFullMachinePath;
+    this -> machineFolderCreated = strFullMachinePath;
 
     // Set all the values in the machine object
     this -> newMachine -> setName(this -> machineNameLineEdit -> text());
@@ -176,8 +176,12 @@ bool MachineNamePage::validatePage() {
 
 void MachineNamePage::cleanupPage() {
 
-    if ( ! machineFolderCreated.isEmpty() ) {
-        QDir().rmpath(machineFolderCreated);
+    if ( ! this -> machineFolderCreated.isEmpty() ) {
+        QDir().rmpath(this -> machineFolderCreated);
     }
 
+}
+
+void MachineNamePage::initializePage() {
+    this -> machineFolderCreated = QString();
 }

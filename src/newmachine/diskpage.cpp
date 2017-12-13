@@ -116,6 +116,7 @@ void MachineDiskPage::useExistingDiskPath() {
 
     if ( !existingDiskPath.isEmpty() ) {
         this -> hardDiskPathLineEdit -> setText(QDir::toNativeSeparators(existingDiskPath));
+        this -> newMachine -> setDiskPath(QDir::toNativeSeparators(existingDiskPath));
     }
 }
 
@@ -240,14 +241,17 @@ MachineNewDiskPage::~MachineNewDiskPage() {
 }
 
 bool MachineNewDiskPage::validatePage() {
+
+    if( ! this -> newMachine -> getDiskPath().isEmpty() ) {
+        qDebug() << "Enter 1";
+        return true;
+    }
+
+    qDebug() << "Enter 2";
     return this -> MachineNewDiskPage::createDisk(this -> diskFormat,
                                                   this -> fileNameLineEdit -> text().replace(" ","_"),
                                                   this -> diskSpinBox -> value(),
                                                   false);
-}
-
-void MachineNewDiskPage::cleanupPage() {
-
 }
 
 void MachineNewDiskPage::initializePage() {
@@ -296,19 +300,19 @@ void MachineNewDiskPage::selectNameNewDisk() {
                                                     QDir::homePath(),
                                                     tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
 
-    if ( ! diskName.isEmpty() ) {
+    if ( ! this -> diskName.isEmpty() ) {
         this -> fileNameLineEdit -> setText(QDir::toNativeSeparators(diskName));
     }
 }
 
-bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskName,
+bool MachineNewDiskPage::createDisk(const QString &format, const QString &name,
                                     const double size, bool useEncryption) {
 
     QString strMachinePath;
 
-    if ( ! diskName.isEmpty() ) {
+    if ( ! this -> diskName.isEmpty()) {
 
-        strMachinePath = diskName;
+        strMachinePath = name;
 
     } else {
         QSettings settings;
@@ -319,8 +323,10 @@ bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskNa
         settings.endGroup();
 
         strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
-                      .append(diskName).append(".").append(format);
+                      .append(name).append(".").append(format);
     }
+
+    this -> newMachine -> setDiskPath(strMachinePath);
 
     qemuImgProcess = new QProcess(this);
 
@@ -372,6 +378,7 @@ bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskNa
         return false;
     } else {
         QByteArray err = qemuImgProcess -> readAllStandardError();
+        QByteArray out = qemuImgProcess -> readAllStandardOutput();
 
         if(err.count() > 0) {
             qemuImgErrorMessageBox = new QMessageBox(this);
@@ -383,6 +390,15 @@ bool MachineNewDiskPage::createDisk(const QString &format, const QString &diskNa
             qemuImgErrorMessageBox -> exec();
 
             return false;
+        }
+
+        if(out.count() > 0) {
+            qemuImgOkMessageBox = new QMessageBox(this);
+            qemuImgOkMessageBox -> setWindowTitle(tr("Qtemu - Image created"));
+            qemuImgOkMessageBox -> setIcon(QMessageBox::Information);
+            qemuImgOkMessageBox -> setText(tr("<p><strong>Image created</strong></p>"
+                                              "<p>" + out + "</p>"));
+            qemuImgOkMessageBox -> exec();
         }
 
         return true;

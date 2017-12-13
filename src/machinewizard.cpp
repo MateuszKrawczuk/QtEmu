@@ -24,7 +24,7 @@
 // Local
 #include "machinewizard.h"
 
-MachineWizard::MachineWizard(Machine *machine,
+MachineWizard::MachineWizard(Machine *machine, QListWidget *osListWidget,
                              QWidget *parent) : QWizard(parent) {
 
     setWindowTitle(tr("Create a new Machine"));
