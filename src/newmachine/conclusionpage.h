@@ -26,6 +26,10 @@
 #include <QWizard>
 #include <QLabel>
 #include <QGridLayout>
+#include <QSettings>
+#include <QDir>
+#include <QProcess>
+#include <QMessageBox>
 
 // Local
 #include "../machine.h"
@@ -46,6 +50,8 @@ class MachineConclusionPage: public QWizardPage {
 
     private:
         void initializePage();
+        bool validatePage();
+        bool createDisk(const QString &format, const double size, bool useEncryption);
 
         QGridLayout *conclusionLayout;
 
@@ -70,8 +76,14 @@ class MachineConclusionPage: public QWizardPage {
         QLabel *acceleratorLabel;
         QLabel *diskLabel;
 
-        Machine *newMachine;
+        QMessageBox *qemuImgNotFoundMessageBox;
+        QMessageBox *qemuImgNotFinishedMessageBox;
+        QMessageBox *qemuImgErrorMessageBox;
+        QMessageBox *qemuImgOkMessageBox;
 
+        QProcess *qemuImgProcess;
+
+        Machine *newMachine;
 };
 
 

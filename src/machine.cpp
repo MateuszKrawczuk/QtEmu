@@ -209,3 +209,43 @@ QString Machine::getAcceleratorLabel() {
 
     return acceleratorLabel;
 }
+
+QString Machine::getDiskName() const
+{
+    return diskName;
+}
+
+void Machine::setDiskName(const QString &value)
+{
+    diskName = value;
+}
+
+double Machine::getDiskSize() const
+{
+    return diskSize;
+}
+
+void Machine::setDiskSize(double value)
+{
+    diskSize = value;
+}
+
+QString Machine::getDiskFormat() const
+{
+    return diskFormat;
+}
+
+void Machine::setDiskFormat(const QString &value)
+{
+    diskFormat = value;
+}
+
+bool Machine::getCreateNewDisk() const
+{
+    return createNewDisk;
+}
+
+void Machine::setCreateNewDisk(bool value)
+{
+    createNewDisk = value;
+}

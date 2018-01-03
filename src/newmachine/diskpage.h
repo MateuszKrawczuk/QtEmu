@@ -39,6 +39,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QFileDialog>
+#include <QMessageBox>
 
 // Local
 #include "../machine.h"
@@ -63,6 +64,7 @@ class MachineDiskPage: public QWizardPage {
 
     private:
         int nextId() const override;
+        bool validatePage();
 
         QVBoxLayout *machineDiskLayout;
         QHBoxLayout *useOldDiskLayout;
@@ -78,6 +80,8 @@ class MachineDiskPage: public QWizardPage {
         QLabel *machineDiskLabel;
         QLabel *machineDiskInfoLabel;
         QLabel *machineDiskSizeLabel;
+
+        QMessageBox *notDiskMessageBox;
 
         QString existingDiskPath;
 
@@ -106,10 +110,8 @@ class MachineNewDiskPage: public QWizardPage {
     protected:
 
     private:
-        bool validatePage();
         void initializePage();
-        bool createDisk(const QString &format, const QString &name,
-                        const double size, bool useEncryption);
+        bool validatePage();
 
         QVBoxLayout *newDiskLayout;
         QHBoxLayout *fileLocationLayout;

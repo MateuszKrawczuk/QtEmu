@@ -79,8 +79,6 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
     conclusionLayout -> addWidget(RAMLabel,             7, 1, 1, 1);
     conclusionLayout -> addWidget(acceleratorDescLabel, 8, 0, 1, 1);
     conclusionLayout -> addWidget(acceleratorLabel,     8, 1, 1, 1);
-    conclusionLayout -> addWidget(diskDescLabel,        9, 0, 1, 1);
-    conclusionLayout -> addWidget(diskLabel,            9, 1, 1, 1);
 
     this -> setLayout(conclusionLayout);
 
@@ -100,6 +98,125 @@ void MachineConclusionPage::initializePage() {
     this -> RAMLabel         -> setText(QString::number(this -> newMachine -> getRAM()).append(" MiB"));
     this -> audioLabel       -> setText(this -> newMachine -> getAudioLabel());
     this -> acceleratorLabel -> setText(this -> newMachine -> getAcceleratorLabel());
-    this -> diskLabel        -> setText(this -> newMachine -> getDiskPath());
+    this -> diskLabel        -> setText(this -> newMachine -> getDiskName());
 
+    if( ! this -> newMachine -> getDiskName().isEmpty()){
+        this -> conclusionLayout -> addWidget(this -> diskDescLabel,    9, 0, 1, 1);
+        this -> conclusionLayout -> addWidget(this -> diskLabel,        9, 1, 1, 1);
+    } else {
+        this -> conclusionLayout -> removeWidget(this -> diskDescLabel);
+        this -> conclusionLayout -> removeWidget(this -> diskLabel);
+    }
+}
+
+bool MachineConclusionPage::validatePage() {
+
+    return this -> MachineConclusionPage::createDisk(this -> newMachine -> getDiskFormat(),
+                                                     this -> newMachine -> getDiskSize(),
+                                                     false);
+
+}
+
+bool MachineConclusionPage::createDisk(const QString &format,
+                                       const double size, bool useEncryption) {
+
+    if( ! this -> newMachine -> getCreateNewDisk() ) {
+        return true;
+    }
+
+    QString strMachinePath;
+
+    if ( ! this -> newMachine -> getDiskPath().isEmpty()) {
+
+        strMachinePath = this -> newMachine -> getDiskPath();
+
+    } else {
+        QSettings settings;
+        settings.beginGroup("Configuration");
+
+        strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+        settings.endGroup();
+
+        strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
+                      .append(this -> newMachine -> getDiskName()).append(".").append(format);
+    }
+
+    qemuImgProcess = new QProcess(this);
+
+    QStringList args;
+    args << "create";
+
+    if(useEncryption) {
+        args << "-e";
+    }
+
+    args << "-f";
+    args << format;
+    args << strMachinePath;
+    args << QString::number(size) + "G"; // TODO: Implement other sizes, K, M, T
+
+    QString program;
+
+    #ifdef Q_OS_LINUX
+    program = "qemu-img";
+    #endif
+
+    // TODO: Implement other platforms... :'(
+
+    qemuImgProcess -> start(program, args);
+
+    if( ! qemuImgProcess -> waitForStarted(2000)) {
+        qemuImgNotFoundMessageBox = new QMessageBox(this);
+        qemuImgNotFoundMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+        qemuImgNotFoundMessageBox -> setIcon(QMessageBox::Critical);
+        qemuImgNotFoundMessageBox -> setText(tr("<p>Cannot start qemu-img</p>"
+                                                "<p><strong>Image isn't created</strong></p>"
+                                                "<p>Ensure that you have installed qemu-img in your "
+                                                "system and it's available</p>"));
+        qemuImgNotFoundMessageBox -> exec();
+
+        return false;
+    }
+
+    if( ! qemuImgProcess -> waitForFinished()) {
+        qemuImgNotFinishedMessageBox = new QMessageBox(this);
+        qemuImgNotFinishedMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+        qemuImgNotFinishedMessageBox -> setIcon(QMessageBox::Critical);
+        qemuImgNotFinishedMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
+                                                   "<p><strong>Image isn't created</strong></p>"
+                                                   "<p>There's a problem with qemu-img, the process "
+                                                   "the process has not finished correctly</p>"));
+        qemuImgNotFinishedMessageBox -> exec();
+
+        return false;
+    } else {
+        QByteArray err = qemuImgProcess -> readAllStandardError();
+        QByteArray out = qemuImgProcess -> readAllStandardOutput();
+
+        if(err.count() > 0) {
+            qemuImgErrorMessageBox = new QMessageBox(this);
+            qemuImgErrorMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
+            qemuImgErrorMessageBox -> setIcon(QMessageBox::Critical);
+            qemuImgErrorMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
+                                                 "<p><strong>Image isn't created</strong></p>"
+                                                 "<p>Error: " + err + "</p>"));
+            qemuImgErrorMessageBox -> exec();
+
+            return false;
+        }
+
+        if(out.count() > 0) {
+            qemuImgOkMessageBox = new QMessageBox(this);
+            qemuImgOkMessageBox -> setWindowTitle(tr("Qtemu - Image created"));
+            qemuImgOkMessageBox -> setIcon(QMessageBox::Information);
+            qemuImgOkMessageBox -> setText(tr("<p><strong>Image created</strong></p>"
+                                              "<p>" + out + "</p>"));
+            qemuImgOkMessageBox -> exec();
+        }
+
+        return true;
+    }
+
+    return false;
 }

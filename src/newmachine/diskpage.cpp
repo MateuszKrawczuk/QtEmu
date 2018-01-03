@@ -30,10 +30,11 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
     setTitle(tr("Machine virtual hard disk"));
 
     this -> newMachine = machine;
+    this -> newMachine -> setCreateNewDisk(false);
 
-    machineDiskLabel = new QLabel(
-                tr("Select a virtual hard disk to the new machine."
-                   "You can either create a new hard disk or select an existing one."));
+    machineDiskLabel = new QLabel(tr("Select a virtual hard disk to the new machine."
+                                     "You can either create a new hard disk or select an existing one."
+                                     "Or leave empty"));
     machineDiskLabel -> setWordWrap(true);
 
     machineDiskInfoLabel = new QLabel(tr("If you need a more complex storage set-up"
@@ -59,8 +60,8 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
 
     pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                              QIcon(":/icon/32x32/qtemu.png")),
-                                        "",
-                                        this);
+                                            "",
+                                            this);
 
     connect(pathNewDiskPushButton, &QAbstractButton::clicked,
             this, &MachineDiskPage::useExistingDiskPath);
@@ -97,6 +98,23 @@ void MachineDiskPage::useExistingDiskToggle(bool toggled) {
 
     if( ! toggled ) {
         this -> hardDiskPathLineEdit -> clear();
+        this -> newMachine -> setDiskPath("");
+    }
+}
+
+void MachineDiskPage::useExistingDiskPath() {
+
+    this -> existingDiskPath = QFileDialog::getSaveFileName(this,
+                                                            tr("Select an existing disk"),
+                                                            QDir::homePath(),
+                                                            tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
+
+    if ( !existingDiskPath.isEmpty() ) {
+        this -> hardDiskPathLineEdit -> setText(QDir::toNativeSeparators(existingDiskPath));
+        this -> newMachine -> setDiskPath(QDir::toNativeSeparators(existingDiskPath));
+
+        QFileInfo machineDiskName(QDir::toNativeSeparators(existingDiskPath));
+        this -> newMachine -> setDiskName(machineDiskName.fileName());
     }
 }
 
@@ -108,15 +126,28 @@ int MachineDiskPage::nextId() const {
     }
 }
 
-void MachineDiskPage::useExistingDiskPath() {
-    this -> existingDiskPath = QFileDialog::getSaveFileName(this,
-                                                            tr("Select an existing disk"),
-                                                            QDir::homePath(),
-                                                            tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
+bool MachineDiskPage::validatePage() {
 
-    if ( !existingDiskPath.isEmpty() ) {
-        this -> hardDiskPathLineEdit -> setText(QDir::toNativeSeparators(existingDiskPath));
-        this -> newMachine -> setDiskPath(QDir::toNativeSeparators(existingDiskPath));
+    if(this -> noDiskRadio -> isChecked()) {
+        this -> newMachine -> setDiskName("");
+        this -> newMachine -> setDiskPath("");
+        this -> newMachine -> setDiskSize(0);
+        this -> newMachine -> setDiskFormat("");
+    } else if(this -> useExistingDiskRadio -> isChecked()) {
+        this -> newMachine -> setDiskSize(0);
+        this -> newMachine -> setDiskFormat("");
+    }
+
+    if(this -> useExistingDiskRadio -> isChecked() && this -> hardDiskPathLineEdit -> text().isEmpty()) {
+        notDiskMessageBox = new QMessageBox(this);
+        notDiskMessageBox -> setWindowTitle(tr("Qtemu - Disk not selected"));
+        notDiskMessageBox -> setIcon(QMessageBox::Warning);
+        notDiskMessageBox -> setText(tr("<p>Select a disk or another option</p>"));
+        notDiskMessageBox -> exec();
+
+        return false;
+    } else {
+        return true;
     }
 }
 
@@ -130,8 +161,6 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
 
     fileNameLineEdit = new QLineEdit();
     fileNameLineEdit -> setEnabled(false);
-
-    diskName = QString();
 
     this -> registerField("machine.diskname*", fileNameLineEdit);
 
@@ -240,22 +269,21 @@ MachineNewDiskPage::~MachineNewDiskPage() {
     qDebug() << "MachineNewDiskPage destroyed";
 }
 
-bool MachineNewDiskPage::validatePage() {
-
-    if( ! this -> newMachine -> getDiskPath().isEmpty() ) {
-        qDebug() << "Enter 1";
-        return true;
-    }
-
-    qDebug() << "Enter 2";
-    return this -> MachineNewDiskPage::createDisk(this -> diskFormat,
-                                                  this -> fileNameLineEdit -> text().replace(" ","_"),
-                                                  this -> diskSpinBox -> value(),
-                                                  false);
-}
-
 void MachineNewDiskPage::initializePage() {
     fileNameLineEdit -> setText(field("machine.name").toString());
+    this -> newMachine -> setDiskName(field("machine.name").toString());
+    this -> newMachine -> setDiskPath("");
+
+    this -> qcow2RadioButton -> setChecked(true);
+}
+
+bool MachineNewDiskPage::validatePage() {
+
+    this -> newMachine -> setCreateNewDisk(true);
+    this -> newMachine -> setDiskFormat(this -> diskFormat);
+    this -> newMachine -> setDiskSize(this -> diskSpinBox -> value());
+
+    return true;
 }
 
 void MachineNewDiskPage::selectRawFormat(bool useRaw) {
@@ -295,6 +323,7 @@ void MachineNewDiskPage::selectCloopFormat(bool useCloop) {
 }
 
 void MachineNewDiskPage::selectNameNewDisk() {
+
     this -> diskName = QFileDialog::getSaveFileName(this,
                                                     tr("Select an existing disk"),
                                                     QDir::homePath(),
@@ -302,107 +331,10 @@ void MachineNewDiskPage::selectNameNewDisk() {
 
     if ( ! this -> diskName.isEmpty() ) {
         this -> fileNameLineEdit -> setText(QDir::toNativeSeparators(diskName));
-    }
-}
+        this -> newMachine -> setDiskPath(QDir::toNativeSeparators(diskName));
 
-bool MachineNewDiskPage::createDisk(const QString &format, const QString &name,
-                                    const double size, bool useEncryption) {
-
-    QString strMachinePath;
-
-    if ( ! this -> diskName.isEmpty()) {
-
-        strMachinePath = name;
-
-    } else {
-        QSettings settings;
-        settings.beginGroup("Configuration");
-
-        strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
-
-        settings.endGroup();
-
-        strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
-                      .append(name).append(".").append(format);
+        QFileInfo machineDiskName(QDir::toNativeSeparators(diskName));
+        this -> newMachine -> setDiskName(machineDiskName.fileName());
     }
 
-    this -> newMachine -> setDiskPath(strMachinePath);
-
-    qemuImgProcess = new QProcess(this);
-
-    QStringList args;
-    args << "create";
-
-    if(useEncryption) {
-        args << "-e";
-    }
-
-    args << "-f";
-    args << format;
-    args << strMachinePath;
-    args << QString::number(size) + "G"; // TODO: Implement other sizes, K, M, T
-
-    QString program;
-
-    #ifdef Q_OS_LINUX
-    program = "qemu-img";
-    #endif
-
-    // TODO: Implement other platforms... :'(
-
-    qemuImgProcess -> start(program, args);
-
-    if( ! qemuImgProcess -> waitForStarted(2000)) {
-        qemuImgNotFoundMessageBox = new QMessageBox(this);
-        qemuImgNotFoundMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
-        qemuImgNotFoundMessageBox -> setIcon(QMessageBox::Critical);
-        qemuImgNotFoundMessageBox -> setText(tr("<p>Cannot start qemu-img</p>"
-                                                "<p><strong>Image isn't created</strong></p>"
-                                                "<p>Ensure that you have installed qemu-img in your "
-                                                "system and it's available</p>"));
-        qemuImgNotFoundMessageBox -> exec();
-
-        return false;
-    }
-
-    if( ! qemuImgProcess -> waitForFinished()) {
-        qemuImgNotFinishedMessageBox = new QMessageBox(this);
-        qemuImgNotFinishedMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
-        qemuImgNotFinishedMessageBox -> setIcon(QMessageBox::Critical);
-        qemuImgNotFinishedMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
-                                                   "<p><strong>Image isn't created</strong></p>"
-                                                   "<p>There's a problem with qemu-img, the process "
-                                                   "the process has not finished correctly</p>"));
-        qemuImgNotFinishedMessageBox -> exec();
-
-        return false;
-    } else {
-        QByteArray err = qemuImgProcess -> readAllStandardError();
-        QByteArray out = qemuImgProcess -> readAllStandardOutput();
-
-        if(err.count() > 0) {
-            qemuImgErrorMessageBox = new QMessageBox(this);
-            qemuImgErrorMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
-            qemuImgErrorMessageBox -> setIcon(QMessageBox::Critical);
-            qemuImgErrorMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
-                                                 "<p><strong>Image isn't created</strong></p>"
-                                                 "<p>Error: " + err + "</p>"));
-            qemuImgErrorMessageBox -> exec();
-
-            return false;
-        }
-
-        if(out.count() > 0) {
-            qemuImgOkMessageBox = new QMessageBox(this);
-            qemuImgOkMessageBox -> setWindowTitle(tr("Qtemu - Image created"));
-            qemuImgOkMessageBox -> setIcon(QMessageBox::Information);
-            qemuImgOkMessageBox -> setText(tr("<p><strong>Image created</strong></p>"
-                                              "<p>" + out + "</p>"));
-            qemuImgOkMessageBox -> exec();
-        }
-
-        return true;
-    }
-
-    return false;
 }

@@ -81,8 +81,20 @@ class Machine: public QObject {
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
 
+        QString getDiskName() const;
+        void setDiskName(const QString &value);
+
         QString getDiskPath() const;
         void setDiskPath(const QString &value);
+
+        double getDiskSize() const;
+        void setDiskSize(double value);
+
+        QString getDiskFormat() const;
+        void setDiskFormat(const QString &value);
+
+        bool getCreateNewDisk() const;
+        void setCreateNewDisk(bool value);
 
         QHash<QString, QString> getAccelerator() const;
 
@@ -130,7 +142,11 @@ class Machine: public QObject {
         bool useNetwork;
 
         // Hardware - Disk
+        QString diskName;
         QString diskPath;
+        double diskSize;
+        QString diskFormat;
+        bool createNewDisk;
 
         // Accelerator
         QHash<QString, QString> accelerator;
