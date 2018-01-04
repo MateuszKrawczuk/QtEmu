@@ -122,7 +122,7 @@ class Machine: public QObject {
 
         // Hardware - CPU
         QString CPUType;
-        unsigned short int CPUCount;
+        unsigned short int CPUCount; // TODO: Change all primite types to Qt Types
         unsigned short int socketCount;
         unsigned short int coresSocket;
         unsigned short int threadsCore;

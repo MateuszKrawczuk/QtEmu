@@ -266,8 +266,10 @@ void MainWindow::createNewMachine() {
     machine -> setMaxHotCPU(0);
     machine -> setRAM(1);
     machine -> addAudio("ac97", "Intel AC97(82801AA)");
+
     MachineWizard newMachineWizard(machine, this -> osListWidget, this);
 
     newMachineWizard.show();
     newMachineWizard.exec();
+
 }

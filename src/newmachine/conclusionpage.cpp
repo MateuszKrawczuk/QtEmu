@@ -24,12 +24,13 @@
 // Local
 #include "conclusionpage.h"
 
-MachineConclusionPage::MachineConclusionPage(Machine *machine,
+MachineConclusionPage::MachineConclusionPage(Machine *machine, QListWidget *osListWidget,
                                              QWidget *parent) : QWizardPage(parent) {
 
     this -> setTitle(tr("Machine Summary"));
 
     this -> newMachine = machine;
+    this -> osList = osListWidget;
 
     conclusionLabel = new QLabel(tr("Summary of the new machine"));
 
@@ -111,9 +112,13 @@ void MachineConclusionPage::initializePage() {
 
 bool MachineConclusionPage::validatePage() {
 
-    return this -> MachineConclusionPage::createDisk(this -> newMachine -> getDiskFormat(),
-                                                     this -> newMachine -> getDiskSize(),
-                                                     false);
+    createMachineJSON(this -> newMachine);
+
+    this -> osList -> addItem(this -> newMachine -> getName());
+
+    return this -> createDisk(this -> newMachine -> getDiskFormat(),
+                              this -> newMachine -> getDiskSize(),
+                              false);
 
 }
 
@@ -219,4 +224,50 @@ bool MachineConclusionPage::createDisk(const QString &format,
     }
 
     return false;
+}
+
+void MachineConclusionPage::createMachineJSON(Machine *machine) const {
+
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+    settings.endGroup();
+
+    QString machineFilePath = strMachinePath.append("/")
+                                            .append(machine -> getName())
+                                            .append("/")
+                                            .append(machine -> getName())
+                                            .append(".json");
+
+    QFile machineFile(machineFilePath);
+    machineFile.open(QIODevice::WriteOnly); // TODO: Check if open the file fails
+
+    QJsonObject machineJSONObject;
+    fillMachineJSON(machineJSONObject); // Populate the JSON Object
+
+    QJsonDocument machineJSONDocument(machineJSONObject);
+
+    machineFile.write(machineJSONDocument.toJson());
+}
+
+void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) const{
+
+    machineJSONObject["name"]      = this -> newMachine -> getName();
+    machineJSONObject["OSType"]    = this -> newMachine -> getOSType();
+    machineJSONObject["OSVersion"] = this -> newMachine -> getOSVersion();
+
+    QJsonObject cpu;
+
+    cpu["CPUType"]     = this -> newMachine -> getCPUType();
+    cpu["CPUCount"]    = this -> newMachine -> getCPUCount();
+    cpu["socketCount"] = this -> newMachine -> getSocketCount();
+    cpu["coresSocket"] = this -> newMachine -> getCoresSocket();
+    cpu["threadsCore"] = this -> newMachine -> getThreadsCore();
+    cpu["maxHotCPU"]   = this -> newMachine -> getMaxHotCPU();
+
+    machineJSONObject["cpu"] = cpu;
+
+
 }

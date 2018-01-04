@@ -30,6 +30,9 @@
 #include <QDir>
 #include <QProcess>
 #include <QMessageBox>
+#include <QListWidget>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 // Local
 #include "../machine.h"
@@ -38,7 +41,7 @@ class MachineConclusionPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineConclusionPage(Machine *machine,
+        explicit MachineConclusionPage(Machine *machine, QListWidget *osListWidget,
                                        QWidget *parent = 0);
         ~MachineConclusionPage();
 
@@ -52,6 +55,8 @@ class MachineConclusionPage: public QWizardPage {
         void initializePage();
         bool validatePage();
         bool createDisk(const QString &format, const double size, bool useEncryption);
+        void createMachineJSON(Machine *machine) const;
+        void fillMachineJSON(QJsonObject &machineJSONObject) const;
 
         QGridLayout *conclusionLayout;
 
@@ -82,6 +87,8 @@ class MachineConclusionPage: public QWizardPage {
         QMessageBox *qemuImgOkMessageBox;
 
         QProcess *qemuImgProcess;
+
+        QListWidget *osList;
 
         Machine *newMachine;
 };

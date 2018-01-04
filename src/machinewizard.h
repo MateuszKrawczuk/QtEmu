@@ -25,6 +25,7 @@
 // Qt
 #include <QWizard>
 #include <QListWidget>
+#include <QFile>
 
 #include <QDebug>
 
@@ -43,15 +44,12 @@ class MachineWizard : public QWizard {
     Q_OBJECT
 
     public:
-        explicit MachineWizard(Machine *machine,
-                               QListWidget *osListWidget,
+        explicit MachineWizard(Machine *machine, QListWidget *osListWidget,
                                QWidget *parent = 0);
         ~MachineWizard();
 
-    enum { Page_Name, Page_Hardware, Page_Accelerator,
-           Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
-
-        void createMachineJSON(QJsonObject &machineJson) const;
+        enum { Page_Name, Page_Hardware, Page_Accelerator,
+               Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
 
     signals:
 

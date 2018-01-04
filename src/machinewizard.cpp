@@ -35,7 +35,7 @@ MachineWizard::MachineWizard(Machine *machine, QListWidget *osListWidget,
     setPage(Page_Memory, new MachineMemoryPage(machine, this));
     setPage(Page_Disk, new MachineDiskPage(machine, this));
     setPage(Page_New_Disk, new MachineNewDiskPage(machine ,this));
-    setPage(Page_Conclusion, new MachineConclusionPage(machine, this));
+    setPage(Page_Conclusion, new MachineConclusionPage(machine, osListWidget, this));
 
     setStartId(Page_Name);
 
@@ -58,8 +58,3 @@ MachineWizard::MachineWizard(Machine *machine, QListWidget *osListWidget,
 MachineWizard::~MachineWizard() {
     qDebug() << "MachineWizard destroyed";
 }
-
-/*void MachineWizard::createMachineJSON(QJsonObject &machineJson) const {
-
-}*/
-

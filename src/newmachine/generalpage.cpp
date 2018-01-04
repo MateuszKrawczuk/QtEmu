@@ -159,7 +159,7 @@ bool MachineNamePage::validatePage() {
                                               "<p>Please check that the parent really exists and that "
                                               "you have permissions to create the machine folder.</p>")
                         .arg(strMachineName).arg(strMachinePathMsg));
-        createMachineMessageBox->exec();
+        createMachineMessageBox -> exec();
 
         return false;
     }
