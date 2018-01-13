@@ -52,20 +52,20 @@ class Machine: public QObject {
         QString getCPUType() const;
         void setCPUType(const QString &value);
 
-        unsigned short getCPUCount() const;
-        void setCPUCount(unsigned short value);
+        ushort getCPUCount() const;
+        void setCPUCount(const ushort &value);
 
-        unsigned short getSocketCount() const;
-        void setSocketCount(unsigned short value);
+        ushort getSocketCount() const;
+        void setSocketCount(const ushort &value);
 
-        unsigned short getCoresSocket() const;
-        void setCoresSocket(unsigned short value);
+        ushort getCoresSocket() const;
+        void setCoresSocket(const ushort &value);
 
-        unsigned short getThreadsCore() const;
-        void setThreadsCore(unsigned short value);
+        ushort getThreadsCore() const;
+        void setThreadsCore(const ushort &value);
 
-        unsigned short getMaxHotCPU() const;
-        void setMaxHotCPU(unsigned short value);
+        ushort getMaxHotCPU() const;
+        void setMaxHotCPU(const ushort &value);
 
         QString getGPUType() const;
         void setGPUType(const QString &value);
@@ -73,10 +73,11 @@ class Machine: public QObject {
         QString getKeyboard() const;
         void setKeyboard(const QString &value);
 
-        unsigned long long getRAM() const;
-        void setRAM(unsigned long long value);
+        qlonglong getRAM() const;
+        void setRAM(const qlonglong &value);
 
         QHash<QString, QString> getAudio() const;
+        void setAudio(const QHash<QString, QString> &value);
 
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
@@ -87,8 +88,8 @@ class Machine: public QObject {
         QString getDiskPath() const;
         void setDiskPath(const QString &value);
 
-        double getDiskSize() const;
-        void setDiskSize(double value);
+        qlonglong getDiskSize() const;
+        void setDiskSize(const qlonglong &value);
 
         QString getDiskFormat() const;
         void setDiskFormat(const QString &value);
@@ -97,6 +98,7 @@ class Machine: public QObject {
         void setCreateNewDisk(bool value);
 
         QHash<QString, QString> getAccelerator() const;
+        void setAccelerator(const QHash<QString, QString> &value);
 
         void addAudio(const QString key, const QString value);
         void removeAudio(const QString key);
@@ -122,18 +124,18 @@ class Machine: public QObject {
 
         // Hardware - CPU
         QString CPUType;
-        unsigned short int CPUCount; // TODO: Change all primite types to Qt Types
-        unsigned short int socketCount;
-        unsigned short int coresSocket;
-        unsigned short int threadsCore;
-        unsigned short int maxHotCPU;
+        ushort CPUCount;
+        ushort socketCount;
+        ushort coresSocket;
+        ushort threadsCore;
+        ushort maxHotCPU;
 
         // Hardware - GPU
         QString GPUType;
         QString keyboard;
 
         // Hardware - RAM
-        unsigned long long int RAM;
+        qlonglong RAM;
 
         // Hardware - Audio
         QHash<QString, QString> audio;
@@ -144,7 +146,7 @@ class Machine: public QObject {
         // Hardware - Disk
         QString diskName;
         QString diskPath;
-        double diskSize;
+        qlonglong diskSize;
         QString diskFormat;
         bool createNewDisk;
 

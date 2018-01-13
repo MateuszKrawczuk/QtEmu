@@ -33,6 +33,7 @@
 #include <QListWidget>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonArray>
 
 // Local
 #include "../machine.h"

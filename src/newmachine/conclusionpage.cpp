@@ -108,18 +108,19 @@ void MachineConclusionPage::initializePage() {
         this -> conclusionLayout -> removeWidget(this -> diskDescLabel);
         this -> conclusionLayout -> removeWidget(this -> diskLabel);
     }
+
 }
 
 bool MachineConclusionPage::validatePage() {
 
-    createMachineJSON(this -> newMachine);
-
     this -> osList -> addItem(this -> newMachine -> getName());
 
-    return this -> createDisk(this -> newMachine -> getDiskFormat(),
-                              this -> newMachine -> getDiskSize(),
-                              false);
+    bool createDiskResult = this -> createDisk(this -> newMachine -> getDiskFormat(),
+                                                 this -> newMachine -> getDiskSize(),
+                                                 false);
+    createMachineJSON(this -> newMachine);
 
+    return createDiskResult;
 }
 
 bool MachineConclusionPage::createDisk(const QString &format,
@@ -146,6 +147,8 @@ bool MachineConclusionPage::createDisk(const QString &format,
         strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
                       .append(this -> newMachine -> getDiskName()).append(".").append(format);
     }
+
+    this -> newMachine -> setDiskPath(strMachinePath);
 
     qemuImgProcess = new QProcess(this);
 
@@ -257,9 +260,10 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     machineJSONObject["name"]      = this -> newMachine -> getName();
     machineJSONObject["OSType"]    = this -> newMachine -> getOSType();
     machineJSONObject["OSVersion"] = this -> newMachine -> getOSVersion();
+    machineJSONObject["RAM"]       = this -> newMachine -> getRAM();
+    machineJSONObject["network"]   = this -> newMachine -> getUseNetwork();
 
     QJsonObject cpu;
-
     cpu["CPUType"]     = this -> newMachine -> getCPUType();
     cpu["CPUCount"]    = this -> newMachine -> getCPUCount();
     cpu["socketCount"] = this -> newMachine -> getSocketCount();
@@ -269,5 +273,42 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
 
     machineJSONObject["cpu"] = cpu;
 
+    QJsonObject gpu;
+    gpu["GPUType"]  = this -> newMachine -> getGPUType();
+    gpu["keyboard"] = this -> newMachine -> getKeyboard();
+
+    machineJSONObject["gpu"] = gpu;
+
+    QJsonObject disk;
+    disk["name"] = this -> newMachine -> getDiskName();
+    disk["path"] = this -> newMachine -> getDiskPath();
+
+    machineJSONObject["disk"] = disk;
+
+    QJsonArray accelerator;
+    QStringList acceleratorList = this -> newMachine -> getAcceleratorLabel().split(",");
+
+    for (const auto& i : acceleratorList) {
+        if( ! i.isEmpty() ){
+            accelerator.append(i.trimmed());
+        }
+    }
+
+    if( ! accelerator.isEmpty()) {
+        machineJSONObject["accelerator"] = accelerator;
+    }
+
+    QJsonArray audio;
+    QStringList audioList = this -> newMachine -> getAudioLabel().split(",");
+
+    for (const auto& i : audioList) {
+        if( ! i.isEmpty() ){
+            audio.append(i.trimmed());
+        }
+    }
+
+    if( ! audio.isEmpty()) {
+        machineJSONObject["audio"] = audio;
+    }
 
 }

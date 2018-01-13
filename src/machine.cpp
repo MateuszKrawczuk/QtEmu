@@ -63,43 +63,43 @@ void Machine::setCPUType(const QString &value) {
     CPUType = value;
 }
 
-unsigned short Machine::getCPUCount() const {
+ushort Machine::getCPUCount() const {
     return CPUCount;
 }
 
-void Machine::setCPUCount(unsigned short value) {
+void Machine::setCPUCount(const ushort &value) {
     CPUCount = value;
 }
 
-unsigned short Machine::getSocketCount() const {
+ushort Machine::getSocketCount() const {
     return socketCount;
 }
 
-void Machine::setSocketCount(unsigned short value) {
+void Machine::setSocketCount(const ushort &value) {
     socketCount = value;
 }
 
-unsigned short Machine::getCoresSocket() const {
+ushort Machine::getCoresSocket() const {
     return coresSocket;
 }
 
-void Machine::setCoresSocket(unsigned short value) {
+void Machine::setCoresSocket(const ushort &value) {
     coresSocket = value;
 }
 
-unsigned short Machine::getThreadsCore() const {
+ushort Machine::getThreadsCore() const {
     return threadsCore;
 }
 
-void Machine::setThreadsCore(unsigned short value) {
+void Machine::setThreadsCore(const ushort &value) {
     threadsCore = value;
 }
 
-unsigned short Machine::getMaxHotCPU() const {
+ushort Machine::getMaxHotCPU() const {
     return maxHotCPU;
 }
 
-void Machine::setMaxHotCPU(unsigned short value) {
+void Machine::setMaxHotCPU(const ushort &value) {
     maxHotCPU = value;
 }
 
@@ -119,16 +119,20 @@ void Machine::setKeyboard(const QString &value) {
     keyboard = value;
 }
 
-unsigned long long Machine::getRAM() const {
+qlonglong Machine::getRAM() const {
     return RAM;
 }
 
-void Machine::setRAM(unsigned long long value) {
+void Machine::setRAM(const qlonglong &value) {
     RAM = value;
 }
 
 QHash<QString, QString> Machine::getAudio() const {
     return audio;
+}
+
+void Machine::setAudio(const QHash<QString, QString> &value) {
+    audio = value;
 }
 
 bool Machine::getUseNetwork() const {
@@ -139,6 +143,14 @@ void Machine::setUseNetwork(bool value) {
     useNetwork = value;
 }
 
+QString Machine::getDiskName() const {
+    return diskName;
+}
+
+void Machine::setDiskName(const QString &value) {
+    diskName = value;
+}
+
 QString Machine::getDiskPath() const {
     return diskPath;
 }
@@ -147,8 +159,36 @@ void Machine::setDiskPath(const QString &value) {
     diskPath = value;
 }
 
+qlonglong Machine::getDiskSize() const {
+    return diskSize;
+}
+
+void Machine::setDiskSize(const qlonglong &value) {
+    diskSize = value;
+}
+
+QString Machine::getDiskFormat() const {
+    return diskFormat;
+}
+
+void Machine::setDiskFormat(const QString &value) {
+    diskFormat = value;
+}
+
+bool Machine::getCreateNewDisk() const {
+    return createNewDisk;
+}
+
+void Machine::setCreateNewDisk(bool value) {
+    createNewDisk = value;
+}
+
 QHash<QString, QString> Machine::getAccelerator() const {
     return accelerator;
+}
+
+void Machine::setAccelerator(const QHash<QString, QString> &value) {
+    accelerator = value;
 }
 
 void Machine::addAudio(const QString key, const QString value) {
@@ -208,44 +248,4 @@ QString Machine::getAcceleratorLabel() {
     }
 
     return acceleratorLabel;
-}
-
-QString Machine::getDiskName() const
-{
-    return diskName;
-}
-
-void Machine::setDiskName(const QString &value)
-{
-    diskName = value;
-}
-
-double Machine::getDiskSize() const
-{
-    return diskSize;
-}
-
-void Machine::setDiskSize(double value)
-{
-    diskSize = value;
-}
-
-QString Machine::getDiskFormat() const
-{
-    return diskFormat;
-}
-
-void Machine::setDiskFormat(const QString &value)
-{
-    diskFormat = value;
-}
-
-bool Machine::getCreateNewDisk() const
-{
-    return createNewDisk;
-}
-
-void Machine::setCreateNewDisk(bool value)
-{
-    createNewDisk = value;
 }
