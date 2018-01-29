@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
+#include <QDir>
 
 // C++ standard library
 #include <iostream>
@@ -55,6 +56,27 @@ int main(int argc, char *argv[]) {
                      .arg(__TIME__).toStdString();
     #endif
 
+    QSettings settings;
+
+    // Data folder
+    settings.beginGroup("DataFolder");
+    QDir dataDirectory;
+    QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
+    QString dataDirectoryLogs = QDir::toNativeSeparators(dataDirectoryPath + "/logs");
+
+    if ( ! dataDirectory.exists(dataDirectoryPath) ) {
+        dataDirectory.mkdir(dataDirectoryPath);
+        settings.setValue("QtEmuData", dataDirectoryPath);
+
+        if (! dataDirectory.exists(dataDirectoryLogs) ) {
+            dataDirectory.mkdir(dataDirectoryLogs);
+            settings.setValue("QtEmuLogs", dataDirectoryLogs);
+        }
+    }
+
+    settings.sync();
+    settings.endGroup();
+
     // Translations
     QTranslator translatorQt;
     QTranslator translatorQtEmu;
@@ -62,9 +84,9 @@ int main(int argc, char *argv[]) {
     QString language;
     bool languageLoaded;
 
-    QSettings settings;
     settings.beginGroup("Configuration");
     language = settings.value("language", "en").toString();
+    settings.endGroup();
 
     qDebug() << "The language loaded" << language;
 

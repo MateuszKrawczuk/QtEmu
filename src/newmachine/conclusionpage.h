@@ -34,6 +34,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QStandardPaths>
 
 // Local
 #include "../machine.h"
@@ -58,6 +59,7 @@ class MachineConclusionPage: public QWizardPage {
         bool createDisk(const QString &format, const double size, bool useEncryption);
         void createMachineJSON(Machine *machine) const;
         void fillMachineJSON(QJsonObject &machineJSONObject) const;
+        void populateOSListJSON(Machine *machine, QListWidget *osListWidget);
 
         QGridLayout *conclusionLayout;
 

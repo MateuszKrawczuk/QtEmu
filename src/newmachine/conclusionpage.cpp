@@ -115,6 +115,8 @@ bool MachineConclusionPage::validatePage() {
 
     this -> osList -> addItem(this -> newMachine -> getName());
 
+    this -> populateOSListJSON(this -> newMachine, this -> osList);
+
     bool createDiskResult = this -> createDisk(this -> newMachine -> getDiskFormat(),
                                                  this -> newMachine -> getDiskSize(),
                                                  false);
@@ -227,6 +229,13 @@ bool MachineConclusionPage::createDisk(const QString &format,
     }
 
     return false;
+}
+
+void MachineConclusionPage::populateOSListJSON(Machine *machine, QListWidget *osListWidget){
+
+    QString homePath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+
+    qDebug() << "asdadadasd" << homePath;
 }
 
 void MachineConclusionPage::createMachineJSON(Machine *machine) const {
