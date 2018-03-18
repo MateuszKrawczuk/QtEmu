@@ -193,7 +193,7 @@ HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
     closeAction -> setShortcuts(closeShortcuts);
     connect(closeAction, &QAction::triggered,
             this, &QWidget::hide);
-    this->addAction(closeAction);
+    this -> addAction(closeAction);
 
     mainLayout = new QVBoxLayout();
     mainLayout -> setContentsMargins(2, 2, 2, 2);
