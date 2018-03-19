@@ -115,12 +115,12 @@ bool MachineConclusionPage::validatePage() {
 
     this -> osList -> addItem(this -> newMachine -> getName());
 
-    this -> populateOSListJSON();
-
     bool createDiskResult = this -> createDisk(this -> newMachine -> getDiskFormat(),
                                                this -> newMachine -> getDiskSize(),
                                                false);
     createMachineJSON(this -> newMachine);
+
+    this -> populateOSListJSON();
 
     return createDiskResult;
 }

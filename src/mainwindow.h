@@ -36,7 +36,10 @@
 #include <QHBoxLayout>
 #include <QWidget>
 #include <QListWidget>
+#include <QListWidgetItem>
 #include <QStackedWidget>
+#include <QDir>
+#include <QFile>
 
 // Local
 #include "machine.h"
@@ -54,6 +57,7 @@ class MainWindow : public QMainWindow {
         void createMenus();
         void createMenusActions();
         void createToolBars();
+        void loadMachines();
 
     public slots:
         void visitQtEmuWebsite();

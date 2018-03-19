@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     createMenusActions();
     createMenus();
     createToolBars();
+    loadMachines();
 
 }
 
@@ -224,6 +225,41 @@ void MainWindow::createToolBars() {
     mainToolBar -> addSeparator();
 
     mainToolBar -> setMovable(false);
+
+}
+
+/*!
+ * \brief Load created machines
+ *
+ * Load all the machines stored in the qtemu.json file on config data folder
+ */
+void MainWindow::loadMachines() {
+
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+
+    QString dataDirectoryPath = settings.value("QtEmuData",
+                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
+    settings.endGroup();
+
+    // Open the file with the machines
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all data included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    for (int i = 0; i < machines.size(); ++i) {
+        QJsonObject machineJSON = machines[i].toObject();
+
+        QListWidgetItem *machine = new QListWidgetItem(machineJSON["name"].toString(), this -> osListWidget);
+        machine -> setData(Qt::ItemIsUserTristate, machineJSON["uuid"].toString());
+        //machine -> setIcon();
+    }
 
 }
 
