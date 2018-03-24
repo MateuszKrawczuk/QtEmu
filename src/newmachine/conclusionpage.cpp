@@ -1,7 +1,7 @@
 /*
  * This file is part of QtEmu project.
  * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
- * Copyright (C) 2017 Sergio Carlavilla <carlavilla @ mailbox.org>
+ * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ bool MachineConclusionPage::validatePage() {
                                                false);
     createMachineJSON(this -> newMachine);
 
-    this -> populateOSListJSON();
+    SystemUtils::populateOSListJSON(this -> newMachine);
 
     return createDiskResult;
 }
@@ -229,41 +229,6 @@ bool MachineConclusionPage::createDisk(const QString &format,
     }
 
     return false;
-}
-
-void MachineConclusionPage::populateOSListJSON(){
-
-    // Open the file
-    QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
-
-    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
-
-    QFile machinesFile(qtemuConfig);
-    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
-
-    // Read all data included in the file
-    QByteArray machinesData = machinesFile.readAll();
-    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
-    QJsonObject machinesObject;
-
-    // Read other machines
-    QJsonArray machines = machinesDocument["machines"].toArray();
-
-    // Create the new machine
-    QJsonObject machine;
-    machine["uuid"] = QUuid::createUuid().toString();
-    machine["name"] = this -> newMachine -> getName();
-    machine["path"] = this -> newMachine -> getDiskPath();
-    machine["icon"] = this -> newMachine -> getOSVersion();
-
-    machines.append(machine);
-    machinesObject["machines"] = machines;
-
-    QJsonDocument machinesJSONDocument(machinesObject);
-
-    machinesFile.seek(0);
-    machinesFile.write(machinesJSONDocument.toJson());
-    machinesFile.close();
 }
 
 void MachineConclusionPage::createMachineJSON(Machine *machine) const {

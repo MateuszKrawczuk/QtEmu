@@ -1,7 +1,7 @@
 /*
  * This file is part of QtEmu project.
  * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
- * Copyright (C) 2017 Sergio Carlavilla <carlavilla @ mailbox.org>
+ * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -258,7 +258,8 @@ void MainWindow::loadMachines() {
 
         QListWidgetItem *machine = new QListWidgetItem(machineJSON["name"].toString(), this -> osListWidget);
         machine -> setData(Qt::ItemIsUserTristate, machineJSON["uuid"].toString());
-        //machine -> setIcon();
+        // TODO: Check if the json it's incomplete and the image not exits
+        machine -> setIcon(QIcon(":/images/os/64x64/" + machineJSON["icon"].toString()));
     }
 
 }

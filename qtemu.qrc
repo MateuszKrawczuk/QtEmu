@@ -22,7 +22,7 @@
         <file>icon/64x64/flags/spain.png</file>
         <file>icon/64x64/flags/turkey.png</file>
         <file>images/banner.png</file>
-        <file>images/os/32x32/archlinux.png</file>
+        <file>images/os/32x32/arch_linux.png</file>
         <file>images/os/32x32/debian.png</file>
         <file>images/os/32x32/fedora.png</file>
         <file>images/os/32x32/freebsd.png</file>
@@ -36,7 +36,7 @@
         <file>images/os/32x32/ubuntu.png</file>
         <file>images/os/32x32/windows_old.png</file>
         <file>images/os/32x32/windows.png</file>
-        <file>images/os/64x64/archlinux.png</file>
+        <file>images/os/64x64/arch_linux.png</file>
         <file>images/os/64x64/debian.png</file>
         <file>images/os/64x64/fedora.png</file>
         <file>images/os/64x64/freebsd.png</file>

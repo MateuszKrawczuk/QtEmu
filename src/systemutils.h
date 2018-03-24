@@ -1,6 +1,6 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2017 Sergio Carlavilla <carlavilla @ mailbox.org>
+ * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,17 @@
 // Qt
 #include <QLabel>
 #include <QComboBox>
+#include <QDir>
+#include <QFile>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QUuid>
 
 #include <QDebug>
+
+// Local
+#include "machine.h"
 
 // GNU
 #include <sys/sysinfo.h>
@@ -36,6 +45,7 @@ class SystemUtils {
         SystemUtils();
         ~SystemUtils();
 
+        static void populateOSListJSON(Machine *newMachine);
         static void getTotalMemory(int32_t &totalRAM);
         static void setCPUTypesx86(QComboBox *CPUType);
         static void setGPUTypes(QComboBox *GPUType);
