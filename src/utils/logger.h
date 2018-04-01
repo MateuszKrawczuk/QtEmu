@@ -23,7 +23,9 @@
 
 // Qt
 #include <QDateTime>
+#include <QSettings>
 #include <QFile>
+#include <QTextStream>
 
 #include <QDebug>
 
@@ -32,16 +34,23 @@
 class Logger {
 
     public:
-        Logger();
+        explicit Logger();
         ~Logger();
 
-        static void logMachineCreation(QFile &fileLocation, const QString &message);
-        static void logMachineAction(QFile &fileLocation, const QString &message);
+        void logMachineCreation(const QString &message);
+        void logMachineAction(const QString &message);
 
-        static void logQtemuAction(const QString &message);
-        static void logQtemuError(const QString &message);
+        void logQtemuAction(const QString &message);
+        void logQtemuError(const QString &message);
+
+    signals:
+
+    public slots:
+
+    protected:
 
     private:
+        QFile *logsFile;
 
 };
 

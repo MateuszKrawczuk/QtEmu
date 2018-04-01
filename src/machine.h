@@ -22,10 +22,10 @@
 #define MACHINE_H
 
 // Qt
-#include<QObject>
-#include<QHash>
+#include <QObject>
+#include <QHash>
 
-#include<QDebug>
+#include <QDebug>
 
 // Local
 

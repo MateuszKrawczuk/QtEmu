@@ -30,6 +30,7 @@
 
 // Local
 #include "mainwindow.h"
+#include "utils/logger.h"
 
 int main(int argc, char *argv[]) {
 
@@ -127,6 +128,10 @@ int main(int argc, char *argv[]) {
     } else {
         std::cout << "Language unavailable";
     }
+
+    // Load Logger
+    Logger *log = new Logger();
+    log -> logMachineCreation("QtEmu started\n");
 
     //TODO implement command line arguments
 
