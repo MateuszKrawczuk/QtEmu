@@ -44,7 +44,7 @@
 // Local
 #include "../machine.h"
 #include "../machinewizard.h"
-#include "../systemutils.h"
+#include "../utils/systemutils.h"
 
 class MachineDiskPage: public QWizardPage {
     Q_OBJECT

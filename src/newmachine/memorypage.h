@@ -31,7 +31,7 @@
 
 // Local
 #include "../machine.h"
-#include "../systemutils.h"
+#include "../utils/systemutils.h"
 
 class MachineMemoryPage: public QWizardPage {
     Q_OBJECT

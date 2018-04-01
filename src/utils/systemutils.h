@@ -34,7 +34,7 @@
 #include <QDebug>
 
 // Local
-#include "machine.h"
+#include "../machine.h"
 
 // GNU
 #include <sys/sysinfo.h>

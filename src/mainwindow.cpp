@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     osListWidget -> setMovement(QListView::Static);
     osListWidget -> setMaximumWidth(170);
     osListWidget -> setSpacing(7);
+    osListWidget -> setCurrentRow(0);
+
 
     osDetailsStackedWidget = new QStackedWidget(this);
     osDetailsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,

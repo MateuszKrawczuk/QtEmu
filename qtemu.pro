@@ -61,28 +61,30 @@ SOURCES += src/main.cpp\
            src/aboutwidget.cpp \
            src/configwindow.cpp \
            src/machinewizard.cpp \
-           src/systemutils.cpp \
            src/machine.cpp \
+           src/utils/systemutils.cpp \
            src/newmachine/generalpage.cpp \
            src/newmachine/hardwarepage.cpp \
            src/newmachine/acceleratorpage.cpp \
            src/newmachine/memorypage.cpp \
            src/newmachine/diskpage.cpp \
-           src/newmachine/conclusionpage.cpp
+           src/newmachine/conclusionpage.cpp \
+    src/utils/logger.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
             src/aboutwidget.h \
             src/configwindow.h \
             src/machinewizard.h \
-            src/systemutils.h \
             src/machine.h \
+            src/utils/systemutils.h \
             src/newmachine/generalpage.h \
             src/newmachine/hardwarepage.h \
             src/newmachine/acceleratorpage.h \
             src/newmachine/memorypage.h \
             src/newmachine/diskpage.h \
-            src/newmachine/conclusionpage.h
+            src/newmachine/conclusionpage.h \
+    src/utils/logger.h
 
 OTHER_FILES += \
     CHANGELOG \

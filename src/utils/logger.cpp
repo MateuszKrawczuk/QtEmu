@@ -1,6 +1,5 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
  * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,46 +18,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MACHINEWIZARD_H
-#define MACHINEWIZARD_H
-
 // Qt
-#include <QWizard>
-#include <QListWidget>
-#include <QFile>
-
-#include <QDebug>
 
 // Local
-#include "machine.h"
-#include "utils/systemutils.h"
+#include "logger.h"
 
-#include "newmachine/generalpage.h"
-#include "newmachine/hardwarepage.h"
-#include "newmachine/acceleratorpage.h"
-#include "newmachine/memorypage.h"
-#include "newmachine/diskpage.h"
-#include "newmachine/conclusionpage.h"
+Logger::Logger() {
+    qDebug() << "Logger created";
+}
 
-class MachineWizard : public QWizard {
-    Q_OBJECT
+Logger::~Logger() {
+    qDebug() << "Logger destroyed";
+}
 
-    public:
-        explicit MachineWizard(Machine *machine, QListWidget *osListWidget,
-                               QWidget *parent = 0);
-        ~MachineWizard();
+void Logger::logMachineCreation(QFile &fileLocation, const QString &message) {
 
-        enum { Page_Name, Page_Hardware, Page_Accelerator,
-               Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
 
-    signals:
+}
 
-    public slots:
+void Logger::logMachineAction(QFile &fileLocation, const QString &message) {
 
-    protected:
+}
 
-    private:
+void Logger::logQtemuAction(const QString &message) {
 
-};
 
-#endif // MACHINEWIZARD_H
+}
+
+void Logger::logQtemuError(const QString &message) {
+
+
+}
