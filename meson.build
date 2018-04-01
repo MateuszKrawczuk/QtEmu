@@ -11,21 +11,37 @@ add_global_arguments( ['-DQTONLY'] , language : 'cpp')
 
 QtEmu_headers =   [
                    'src/aboutwidget.h',
-				   'src/configwindow.h',
-				   'src/helpwidget.h',
-				   'src/machinewizard.h',
-				   'src/mainwindow.h',
-				   'src/systemutils.h'
+                   'src/configwindow.h',
+                   'src/helpwidget.h',
+                   'src/machine.h',
+                   'src/machinewizard.h',
+                   'src/mainwindow.h',
+                   'src/utils/logger.h',
+                   'src/utils/systemutils.h',
+                   'src/newmachine/acceleratorpage.h',
+                   'src/newmachine/conclusionpage.h',
+                   'src/newmachine/diskpage.h',
+                   'src/newmachine/generalpage.h',
+                   'src/newmachine/hardwarepage.h',
+                   'src/newmachine/memorypage.h'
 	              ]
 
 QtEmu_sources =   [
                    'src/aboutwidget.cpp',
 				   'src/configwindow.cpp',
 				   'src/helpwidget.cpp',
-				   'src/machinewizard.cpp',
-				   'src/main.cpp',
-				   'src/mainwindow.cpp',
-				   'src/systemutils.cpp'
+                   'src/machine.cpp',
+                   'src/machinewizard.cpp',
+                   'src/main.cpp',
+                   'src/mainwindow.cpp',
+                   'src/utils/logger.cpp',
+                   'src/utils/systemutils.cpp',
+                   'src/newmachine/acceleratorpage.cpp',
+                   'src/newmachine/conclusionpage.cpp',
+                   'src/newmachine/diskpage.cpp',
+                   'src/newmachine/generalpage.cpp',
+                   'src/newmachine/hardwarepage.cpp',
+                   'src/newmachine/memorypage.cpp'
 	              ]
 
 QtEmu_resources = [
