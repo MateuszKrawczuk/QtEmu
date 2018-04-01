@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     settings.beginGroup("DataFolder");
     QDir dataDirectory;
     QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
-    QString dataDirectoryLogs = QDir::toNativeSeparators(dataDirectoryPath + "/logs");
+    QString dataDirectoryLogs = QDir::toNativeSeparators(dataDirectoryPath + "logs");
 
     if ( ! dataDirectory.exists(dataDirectoryPath) ) {
         dataDirectory.mkdir(dataDirectoryPath);
