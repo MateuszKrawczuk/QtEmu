@@ -113,13 +113,20 @@ void MachineConclusionPage::initializePage() {
 
 bool MachineConclusionPage::validatePage() {
 
-    this -> osList -> addItem(this -> newMachine -> getName());
+    QListWidgetItem *machine = new QListWidgetItem(this -> newMachine -> getName(), this -> osList);
+    machine -> setData(Qt::ItemIsUserTristate, this -> newMachine -> getUuid());
+    // TODO: Check if the json it's incomplete and the image not exits
+    machine -> setIcon(QIcon(":/images/os/64x64/" +
+                             SystemUtils::getOsIcon(this -> newMachine -> getOSVersion())));
 
     bool isDiskCreated = this -> createDisk(this -> newMachine -> getDiskFormat(),
                                             this -> newMachine -> getDiskSize(),
                                             false);
 
     if (isDiskCreated) {
+
+        this -> newMachine -> setUuid(QUuid::createUuid().toString());
+
         createMachineJSON(this -> newMachine);
 
         SystemUtils::populateOSList(this -> newMachine);
@@ -153,7 +160,7 @@ bool MachineConclusionPage::createDisk(const QString &format,
         settings.endGroup();
 
         strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
-                      .append(this -> newMachine -> getDiskName()).append(".").append(format);
+                      .append(this -> newMachine -> getDiskName().replace(" ", "_")).append(".").append(format);
     }
 
     this -> newMachine -> setDiskPath(strMachinePath);
@@ -271,6 +278,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     machineJSONObject["RAM"]       = this -> newMachine -> getRAM();
     machineJSONObject["network"]   = this -> newMachine -> getUseNetwork();
     machineJSONObject["path"]      = this -> newMachine -> getPath();
+    machineJSONObject["uuid"]      = this -> newMachine -> getUuid();
 
     QJsonObject cpu;
     cpu["CPUType"]     = this -> newMachine -> getCPUType();

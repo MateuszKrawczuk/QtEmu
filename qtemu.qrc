@@ -23,30 +23,36 @@
         <file>icon/64x64/flags/turkey.png</file>
         <file>images/banner.png</file>
         <file>images/os/32x32/arch_linux.png</file>
+        <file>images/os/32x32/arch_hurd.png</file>
         <file>images/os/32x32/debian.png</file>
         <file>images/os/32x32/fedora.png</file>
         <file>images/os/32x32/freebsd.png</file>
         <file>images/os/32x32/gentoo.png</file>
+        <file>images/os/32x32/mageia.png</file>
         <file>images/os/32x32/gnu.png</file>
         <file>images/os/32x32/linux.png</file>
         <file>images/os/32x32/netbsd.png</file>
         <file>images/os/32x32/openbsd.png</file>
         <file>images/os/32x32/opensuse.png</file>
         <file>images/os/32x32/reactos.png</file>
+        <file>images/os/32x32/redox.png</file>
         <file>images/os/32x32/ubuntu.png</file>
         <file>images/os/32x32/windows_old.png</file>
         <file>images/os/32x32/windows.png</file>
         <file>images/os/64x64/arch_linux.png</file>
+        <file>images/os/64x64/arch_hurd.png</file>
         <file>images/os/64x64/debian.png</file>
         <file>images/os/64x64/fedora.png</file>
         <file>images/os/64x64/freebsd.png</file>
         <file>images/os/64x64/gentoo.png</file>
+        <file>images/os/64x64/mageia.png</file>
         <file>images/os/64x64/gnu.png</file>
         <file>images/os/64x64/linux.png</file>
         <file>images/os/64x64/netbsd.png</file>
         <file>images/os/64x64/openbsd.png</file>
         <file>images/os/64x64/opensuse.png</file>
         <file>images/os/64x64/reactos.png</file>
+        <file>images/os/64x64/redox.png</file>
         <file>images/os/64x64/ubuntu.png</file>
         <file>images/os/64x64/windows_old.png</file>
         <file>images/os/64x64/windows.png</file>

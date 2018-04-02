@@ -29,7 +29,6 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include <QUuid>
 
 #include <QDebug>
 
@@ -50,6 +49,7 @@ class SystemUtils {
         static void setCPUTypesx86(QComboBox *CPUType);
         static void setGPUTypes(QComboBox *GPUType);
         static void setKeyboardLayout(QComboBox *keyboardLayout);
+        static QString getOsIcon(const QString &osVersion);
 
     private:
 

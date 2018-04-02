@@ -34,6 +34,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QUuid>
 
 // Local
 #include "../machine.h"

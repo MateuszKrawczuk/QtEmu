@@ -260,8 +260,9 @@ void MainWindow::loadMachines() {
 
         QListWidgetItem *machine = new QListWidgetItem(machineJSON["name"].toString(), this -> osListWidget);
         machine -> setData(Qt::ItemIsUserTristate, machineJSON["uuid"].toString());
-        // TODO: Check if the json it's incomplete and the image not exits
-        machine -> setIcon(QIcon(":/images/os/64x64/" + machineJSON["icon"].toString()));
+        // TODO: Check if the json it's incomplete and the image not exits    
+        machine -> setIcon(QIcon(":/images/os/64x64/" +
+                                 SystemUtils::getOsIcon(machineJSON["icon"].toString())));
     }
 
 }

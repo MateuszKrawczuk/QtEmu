@@ -250,6 +250,16 @@ QString Machine::getAcceleratorLabel() {
     return acceleratorLabel;
 }
 
+QString Machine::getUuid() const
+{
+    return uuid;
+}
+
+void Machine::setUuid(const QString &value)
+{
+    uuid = value;
+}
+
 QString Machine::getPath() const
 {
     return path;

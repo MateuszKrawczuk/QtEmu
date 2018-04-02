@@ -51,7 +51,7 @@ void SystemUtils::populateOSList(Machine *newMachine){
 
     // Create the new machine
     QJsonObject machine;
-    machine["uuid"] = QUuid::createUuid().toString();
+    machine["uuid"] = newMachine -> getUuid();
     machine["name"] = newMachine -> getName();
     machine["path"] = newMachine -> getDiskPath();
     machine["icon"] = newMachine -> getOSVersion().toLower().replace(" ", "_");
@@ -168,4 +168,21 @@ void SystemUtils::setKeyboardLayout(QComboBox *keyboardLayout) {
     keyboardLayout -> addItem("Swedish (sv)");
     keyboardLayout -> addItem("Thai (th)");
     keyboardLayout -> addItem("Turkish (tr)");
+}
+
+QString SystemUtils::getOsIcon(const QString &osVersion) {
+
+    if (osVersion.contains("Microsoft", Qt::CaseInsensitive)) {
+        if (osVersion.contains("7", Qt::CaseInsensitive) ||
+            osVersion.contains("8", Qt::CaseInsensitive) ||
+            osVersion.contains("10", Qt::CaseInsensitive)) {
+            return "windows";
+        } else {
+            return "windows_old";
+        }
+    } else if (osVersion.contains("GNU", Qt::CaseInsensitive)) {
+        return "gnu";
+    } else {
+        return osVersion.toLower().replace(" ", "_");
+    }
 }

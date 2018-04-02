@@ -94,7 +94,7 @@ void MachineNamePage::selectOS(int OSSelected){
         this -> OSVersion -> addItem(tr("Mageia"));
         this -> OSVersion -> addItem(tr("Gentoo"));
         this -> OSVersion -> addItem(tr("Arch Linux"));
-        this -> OSVersion -> addItem(tr("Linux 4.x"));
+        this -> OSVersion -> addItem(tr("Linux"));
     } else if (OSSelected == 1) {
         this -> OSVersion -> addItem(tr("Microsoft 95"));
         this -> OSVersion -> addItem(tr("Microsoft 98"));
@@ -111,7 +111,7 @@ void MachineNamePage::selectOS(int OSSelected){
     } else if (OSSelected == 3) {
         this -> OSVersion -> addItem(tr("Debian GNU Hurd"));
         this -> OSVersion -> addItem(tr("Arch Hurd"));
-        this -> OSVersion -> addItem(tr("Minix"));
+        this -> OSVersion -> addItem(tr("Redox"));
         this -> OSVersion -> addItem(tr("ReactOS"));
     }
 }
