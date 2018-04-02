@@ -37,11 +37,13 @@ class Logger {
         explicit Logger();
         ~Logger();
 
-        void logMachineCreation(const QString &message);
-        void logMachineAction(const QString &message);
+        static void logMachineCreation(const QString &fileLocation,
+                                       const QString &machineName, const QString &message);
+        static void logMachineAction(const QString &fileLocation,
+                                     const QString &machineName, const QString &message);
 
-        void logQtemuAction(const QString &message);
-        void logQtemuError(const QString &message);
+        static void logQtemuAction(const QString &message);
+        static void logQtemuError(const QString &message);
 
     signals:
 
@@ -50,7 +52,6 @@ class Logger {
     protected:
 
     private:
-        QFile *logsFile;
 
 };
 

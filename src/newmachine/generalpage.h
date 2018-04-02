@@ -56,7 +56,7 @@ class MachineNamePage: public QWizardPage {
         bool validatePage();
         void cleanupPage();
 
-        QString machineFolderCreated;
+        QString machineFolder;
 
         QGridLayout *mainLayout;
 

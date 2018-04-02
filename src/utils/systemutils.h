@@ -45,7 +45,7 @@ class SystemUtils {
         SystemUtils();
         ~SystemUtils();
 
-        static void populateOSListJSON(Machine *newMachine);
+        static void populateOSList(Machine *newMachine);
         static void getTotalMemory(int32_t &totalRAM);
         static void setCPUTypesx86(QComboBox *CPUType);
         static void setGPUTypes(QComboBox *GPUType);

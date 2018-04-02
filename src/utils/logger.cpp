@@ -24,6 +24,40 @@
 #include "logger.h"
 
 Logger::Logger() {
+    qDebug() << "Logger created";
+}
+
+Logger::~Logger() {
+    qDebug() << "Logger destroyed";
+}
+
+void Logger::logMachineCreation(const QString &fileLocation,
+                                const QString &machineName, const QString &message) {
+
+    QString path = fileLocation + "/logs/" + machineName + ".log";
+
+    QFile machineLogsFile(path);
+    machineLogsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
+
+    QTextStream fileStream(&machineLogsFile);
+    fileStream.setCodec("UTF-8");
+
+    if (machineLogsFile.isWritable()) {
+        fileStream << message;
+    }
+
+    if (machineLogsFile.isOpen()) {
+        machineLogsFile.close();
+    }
+
+}
+
+void Logger::logMachineAction(const QString &fileLocation,
+                              const QString &machineName, const QString &message) {
+
+}
+
+void Logger::logQtemuAction(const QString &message) {
 
     QSettings settings;
     settings.beginGroup("DataFolder");
@@ -31,52 +65,46 @@ Logger::Logger() {
     QString logDirectoryPath = settings.value("QtEmuLogs").toString();
     settings.endGroup();
 
-    logsFile = new QFile;
-    logsFile -> setFileName(logDirectoryPath.append("/qtemu.log"));
-    logsFile -> open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
+    QString logMessage = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ").append(message).append("\n");
 
-    qDebug() << "Logger created";
-}
+    QFile logsFile(logDirectoryPath.append("/qtemu.log"));
+    logsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
 
-Logger::~Logger() {
-
-    this -> logsFile -> close();
-
-    qDebug() << "Logger destroyed";
-}
-
-void Logger::logMachineCreation(const QString &message) {
-
-    QString logMessage = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ").append(message);
-
-    QTextStream fileStream(this -> logsFile);
+    QTextStream fileStream(&logsFile);
     fileStream.setCodec("UTF-8");
 
-    if (this -> logsFile -> isWritable()) {
+    if (logsFile.isWritable()) {
         fileStream << logMessage;
     }
 
-}
-
-void Logger::logMachineAction(const QString &message) {
-
-    QString logMessage = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ").append(message);
-
-    QTextStream fileStream(this -> logsFile);
-    fileStream.setCodec("UTF-8");
-
-    if (this -> logsFile -> isWritable()) {
-        fileStream << logMessage;
+    if (logsFile.isOpen()) {
+        logsFile.close();
     }
-
-}
-
-void Logger::logQtemuAction(const QString &message) {
-
 
 }
 
 void Logger::logQtemuError(const QString &message) {
 
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+
+    QString logDirectoryPath = settings.value("QtEmuLogs").toString();
+    settings.endGroup();
+
+    QString logMessage = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ").append(message).append("\n");;
+
+    QFile logsFile(logDirectoryPath.append("/qtemu.err"));
+    logsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
+
+    QTextStream fileStream(&logsFile);
+    fileStream.setCodec("UTF-8");
+
+    if (logsFile.isWritable()) {
+        fileStream << logMessage;
+    }
+
+    if (logsFile.isOpen()) {
+        logsFile.close();
+    }
 
 }

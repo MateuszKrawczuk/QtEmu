@@ -130,8 +130,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Load Logger
-    Logger *log = new Logger();
-    log -> logMachineCreation("QtEmu started\n");
+    Logger::logQtemuAction("QtEmu started");
 
     //TODO implement command line arguments
 

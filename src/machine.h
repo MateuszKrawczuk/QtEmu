@@ -49,6 +49,9 @@ class Machine: public QObject {
         QString getOSVersion() const;
         void setOSVersion(const QString &value);
 
+        QString getPath() const;
+        void setPath(const QString &value);
+
         QString getCPUType() const;
         void setCPUType(const QString &value);
 
@@ -121,6 +124,7 @@ class Machine: public QObject {
         QString name;
         QString OSType;
         QString OSVersion;
+        QString path;
 
         // Hardware - CPU
         QString CPUType;

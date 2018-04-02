@@ -31,7 +31,7 @@ SystemUtils::~SystemUtils() {
     qDebug() << "SystemUtils destroyed";
 }
 
-void SystemUtils::populateOSListJSON(Machine *newMachine){
+void SystemUtils::populateOSList(Machine *newMachine){
 
     // Open the file
     QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");

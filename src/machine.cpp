@@ -249,3 +249,13 @@ QString Machine::getAcceleratorLabel() {
 
     return acceleratorLabel;
 }
+
+QString Machine::getPath() const
+{
+    return path;
+}
+
+void Machine::setPath(const QString &value)
+{
+    path = value;
+}

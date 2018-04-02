@@ -115,14 +115,20 @@ bool MachineConclusionPage::validatePage() {
 
     this -> osList -> addItem(this -> newMachine -> getName());
 
-    bool createDiskResult = this -> createDisk(this -> newMachine -> getDiskFormat(),
-                                               this -> newMachine -> getDiskSize(),
-                                               false);
-    createMachineJSON(this -> newMachine);
+    bool isDiskCreated = this -> createDisk(this -> newMachine -> getDiskFormat(),
+                                            this -> newMachine -> getDiskSize(),
+                                            false);
 
-    SystemUtils::populateOSListJSON(this -> newMachine);
+    if (isDiskCreated) {
+        createMachineJSON(this -> newMachine);
 
-    return createDiskResult;
+        SystemUtils::populateOSList(this -> newMachine);
+
+        Logger::logMachineCreation(this -> newMachine -> getPath(),
+                                   this -> newMachine -> getName(), "Machine created");
+    }
+
+    return isDiskCreated;
 }
 
 bool MachineConclusionPage::createDisk(const QString &format,
@@ -264,6 +270,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     machineJSONObject["OSVersion"] = this -> newMachine -> getOSVersion();
     machineJSONObject["RAM"]       = this -> newMachine -> getRAM();
     machineJSONObject["network"]   = this -> newMachine -> getUseNetwork();
+    machineJSONObject["path"]      = this -> newMachine -> getPath();
 
     QJsonObject cpu;
     cpu["CPUType"]     = this -> newMachine -> getCPUType();

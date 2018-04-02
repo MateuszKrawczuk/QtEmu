@@ -57,7 +57,7 @@ MachineNamePage::MachineNamePage(Machine *machine,
     this -> registerField("machine.ostype", OSType, "currentText", "currentTextChanged");
     this -> registerField("machine.osversion", OSVersion, "currentText", "currentTextChanged");
 
-    this -> machineFolderCreated = QString();
+    this -> machineFolder = QString();
 
     mainLayout = new QGridLayout();
 
@@ -118,7 +118,7 @@ void MachineNamePage::selectOS(int OSSelected){
 
 bool MachineNamePage::validatePage() {
 
-    if ( ! this -> machineFolderCreated.isEmpty() ) {
+    if ( ! this -> machineFolder.isEmpty() ) {
         return true;
     }
 
@@ -132,6 +132,7 @@ bool MachineNamePage::validatePage() {
     QString strMachineName = field("machine.name").toString();
     QString strMachinePathMsg = strMachinePath;
     QString strFullMachinePath = strMachinePath.append("/").append(strMachineName);
+    QString strMachineLogsPath = strMachinePath.append("/").append("logs");
 
     if ( QDir(strFullMachinePath).exists() ) {
         qDebug() << "The folder alredy exists" << strFullMachinePath;
@@ -148,8 +149,8 @@ bool MachineNamePage::validatePage() {
         return false;
     }
 
-    if ( ! QDir().mkpath(strFullMachinePath) ) {
-        qDebug() << "Machine folder created" << strFullMachinePath;
+    if ( ! QDir().mkpath(strFullMachinePath) || ! QDir().mkpath(strMachineLogsPath)) {
+        qDebug() << "Machine folder not created" << strFullMachinePath;
 
         createMachineMessageBox = new QMessageBox();
         createMachineMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
@@ -164,24 +165,25 @@ bool MachineNamePage::validatePage() {
         return false;
     }
 
-    this -> machineFolderCreated = strFullMachinePath;
+    this -> machineFolder = strFullMachinePath;
 
     // Set all the values in the machine object
     this -> newMachine -> setName(this -> machineNameLineEdit -> text());
     this -> newMachine -> setOSType(this -> OSType -> currentText());
     this -> newMachine -> setOSVersion(this -> OSVersion -> currentText());
+    this -> newMachine -> setPath(strFullMachinePath);
 
     return true;
 }
 
 void MachineNamePage::cleanupPage() {
 
-    if ( ! this -> machineFolderCreated.isEmpty() ) {
-        QDir().rmpath(this -> machineFolderCreated);
+    if ( ! this -> machineFolder.isEmpty() ) {
+        QDir().rmpath(this -> machineFolder);
     }
 
 }
 
 void MachineNamePage::initializePage() {
-    this -> machineFolderCreated = QString();
+    this -> machineFolder = QString();
 }
