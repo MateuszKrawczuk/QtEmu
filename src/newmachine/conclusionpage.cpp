@@ -113,33 +113,12 @@ void MachineConclusionPage::initializePage() {
 
 bool MachineConclusionPage::validatePage() {
 
+    // Add the new machine to the list
     QListWidgetItem *machine = new QListWidgetItem(this -> newMachine -> getName(), this -> osList);
     machine -> setData(Qt::ItemIsUserTristate, this -> newMachine -> getUuid());
     // TODO: Check if the json it's incomplete and the image not exits
     machine -> setIcon(QIcon(":/images/os/64x64/" +
                              SystemUtils::getOsIcon(this -> newMachine -> getOSVersion())));
-
-    bool isDiskCreated = this -> createDisk(this -> newMachine -> getDiskFormat(),
-                                            this -> newMachine -> getDiskSize(),
-                                            false);
-
-    if (isDiskCreated) {
-
-        this -> newMachine -> setUuid(QUuid::createUuid().toString());
-
-        createMachineJSON(this -> newMachine);
-
-        SystemUtils::populateOSList(this -> newMachine);
-
-        Logger::logMachineCreation(this -> newMachine -> getPath(),
-                                   this -> newMachine -> getName(), "Machine created");
-    }
-
-    return isDiskCreated;
-}
-
-bool MachineConclusionPage::createDisk(const QString &format,
-                                       const double size, bool useEncryption) {
 
     if( ! this -> newMachine -> getCreateNewDisk() ) {
         return true;
@@ -159,89 +138,35 @@ bool MachineConclusionPage::createDisk(const QString &format,
 
         settings.endGroup();
 
-        strMachinePath.append("/").append(this -> newMachine -> getName()).append("/")
-                      .append(this -> newMachine -> getDiskName().replace(" ", "_")).append(".").append(format);
+        strMachinePath.append("/")
+                      .append(this -> newMachine -> getName())
+                      .append("/")
+                      .append(this -> newMachine -> getDiskName().toLower().replace(" ", "_"))
+                      .append(".")
+                      .append(this -> newMachine -> getDiskFormat());
     }
 
     this -> newMachine -> setDiskPath(strMachinePath);
 
-    qemuImgProcess = new QProcess(this);
+    // Create the disk
+    bool isDiskCreated = SystemUtils::createDisk(strMachinePath,
+                                                 this -> newMachine -> getDiskFormat(),
+                                                 this -> newMachine -> getDiskSize(),
+                                                 false);
 
-    QStringList args;
-    args << "create";
+    if (isDiskCreated) {
 
-    if(useEncryption) {
-        args << "-e";
+        this -> newMachine -> setUuid(QUuid::createUuid().toString());
+
+        createMachineJSON(this -> newMachine);
+
+        SystemUtils::populateOSList(this -> newMachine);
+
+        Logger::logMachineCreation(this -> newMachine -> getPath(),
+                                   this -> newMachine -> getName(), "Machine created");
     }
 
-    args << "-f";
-    args << format;
-    args << strMachinePath;
-    args << QString::number(size) + "G"; // TODO: Implement other sizes, K, M, T
-
-    QString program;
-
-    #ifdef Q_OS_LINUX
-    program = "qemu-img";
-    #endif
-
-    // TODO: Implement other platforms... :'(
-
-    qemuImgProcess -> start(program, args);
-
-    if( ! qemuImgProcess -> waitForStarted(2000)) {
-        qemuImgNotFoundMessageBox = new QMessageBox(this);
-        qemuImgNotFoundMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
-        qemuImgNotFoundMessageBox -> setIcon(QMessageBox::Critical);
-        qemuImgNotFoundMessageBox -> setText(tr("<p>Cannot start qemu-img</p>"
-                                                "<p><strong>Image isn't created</strong></p>"
-                                                "<p>Ensure that you have installed qemu-img in your "
-                                                "system and it's available</p>"));
-        qemuImgNotFoundMessageBox -> exec();
-
-        return false;
-    }
-
-    if( ! qemuImgProcess -> waitForFinished()) {
-        qemuImgNotFinishedMessageBox = new QMessageBox(this);
-        qemuImgNotFinishedMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
-        qemuImgNotFinishedMessageBox -> setIcon(QMessageBox::Critical);
-        qemuImgNotFinishedMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
-                                                   "<p><strong>Image isn't created</strong></p>"
-                                                   "<p>There's a problem with qemu-img, the process "
-                                                   "the process has not finished correctly</p>"));
-        qemuImgNotFinishedMessageBox -> exec();
-
-        return false;
-    } else {
-        QByteArray err = qemuImgProcess -> readAllStandardError();
-        QByteArray out = qemuImgProcess -> readAllStandardOutput();
-
-        if(err.count() > 0) {
-            qemuImgErrorMessageBox = new QMessageBox(this);
-            qemuImgErrorMessageBox -> setWindowTitle(tr("Qtemu - Critical error"));
-            qemuImgErrorMessageBox -> setIcon(QMessageBox::Critical);
-            qemuImgErrorMessageBox -> setText(tr("<p>Cannot finish qemu-img</p>"
-                                                 "<p><strong>Image isn't created</strong></p>"
-                                                 "<p>Error: " + err + "</p>"));
-            qemuImgErrorMessageBox -> exec();
-
-            return false;
-        }
-
-        if(out.count() > 0) {
-            qemuImgOkMessageBox = new QMessageBox(this);
-            qemuImgOkMessageBox -> setWindowTitle(tr("Qtemu - Image created"));
-            qemuImgOkMessageBox -> setIcon(QMessageBox::Information);
-            qemuImgOkMessageBox -> setText(tr("<p><strong>Image created</strong></p>"
-                                              "<p>" + out + "</p>"));
-            qemuImgOkMessageBox -> exec();
-        }
-
-        return true;
-    }
-
-    return false;
+    return isDiskCreated;
 }
 
 void MachineConclusionPage::createMachineJSON(Machine *machine) const {
@@ -256,7 +181,7 @@ void MachineConclusionPage::createMachineJSON(Machine *machine) const {
     QString machineFilePath = strMachinePath.append("/")
                                             .append(machine -> getName())
                                             .append("/")
-                                            .append(machine -> getName())
+                                            .append(machine -> getName().toLower().replace(" ", "_"))
                                             .append(".json");
 
     QFile machineFile(machineFilePath);

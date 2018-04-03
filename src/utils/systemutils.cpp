@@ -186,3 +186,85 @@ QString SystemUtils::getOsIcon(const QString &osVersion) {
         return osVersion.toLower().replace(" ", "_");
     }
 }
+
+bool SystemUtils::createDisk(const QString &diskName, const QString &format,
+                             const double size, bool useEncryption) {
+
+    QProcess *qemuImgProcess = new QProcess();
+
+    QStringList args;
+    args << "create";
+
+    if(useEncryption) {
+        args << "-e";
+    }
+
+    args << "-f";
+    args << format;
+    args << diskName;
+    args << QString::number(size) + "G"; // TODO: Implement other sizes, K, M, T
+
+    QString program;
+
+    #ifdef Q_OS_LINUX
+    program = "qemu-img";
+    #endif
+
+    // TODO: Implement other platforms... :'(
+
+    qemuImgProcess -> start(program, args);
+
+    if( ! qemuImgProcess -> waitForStarted(2000)) {
+        QMessageBox *qemuImgNotFoundMessageBox = new QMessageBox();
+        qemuImgNotFoundMessageBox -> setWindowTitle(QObject::tr("Qtemu - Critical error"));
+        qemuImgNotFoundMessageBox -> setIcon(QMessageBox::Critical);
+        qemuImgNotFoundMessageBox -> setText(QObject::tr("<p>Cannot start qemu-img</p>"
+                                                         "<p><strong>Image isn't created</strong></p>"
+                                                         "<p>Ensure that you have installed qemu-img in your "
+                                                         "system and it's available</p>"));
+        qemuImgNotFoundMessageBox -> exec();
+
+        return false;
+    }
+
+    if( ! qemuImgProcess -> waitForFinished()) {
+        QMessageBox *qemuImgNotFinishedMessageBox = new QMessageBox();
+        qemuImgNotFinishedMessageBox -> setWindowTitle(QObject::tr("Qtemu - Critical error"));
+        qemuImgNotFinishedMessageBox -> setIcon(QMessageBox::Critical);
+        qemuImgNotFinishedMessageBox -> setText(QObject::tr("<p>Cannot finish qemu-img</p>"
+                                                            "<p><strong>Image isn't created</strong></p>"
+                                                            "<p>There's a problem with qemu-img, the process "
+                                                            "the process has not finished correctly</p>"));
+        qemuImgNotFinishedMessageBox -> exec();
+
+        return false;
+    } else {
+        QByteArray err = qemuImgProcess -> readAllStandardError();
+        QByteArray out = qemuImgProcess -> readAllStandardOutput();
+
+        if(err.count() > 0) {
+            QMessageBox *qemuImgErrorMessageBox = new QMessageBox();
+            qemuImgErrorMessageBox -> setWindowTitle(QObject::tr("Qtemu - Critical error"));
+            qemuImgErrorMessageBox -> setIcon(QMessageBox::Critical);
+            qemuImgErrorMessageBox -> setText(QObject::tr("<p>Cannot finish qemu-img</p>"
+                                                          "<p><strong>Image isn't created</strong></p>"
+                                                          "<p>Error: " + err + "</p>"));
+            qemuImgErrorMessageBox -> exec();
+
+            return false;
+        }
+
+        if(out.count() > 0) {
+            QMessageBox *qemuImgOkMessageBox = new QMessageBox();
+            qemuImgOkMessageBox -> setWindowTitle(QObject::tr("Qtemu - Image created"));
+            qemuImgOkMessageBox -> setIcon(QMessageBox::Information);
+            qemuImgOkMessageBox -> setText(QObject::tr("<p><strong>Image created</strong></p>"
+                                                       "<p>" + out + "</p>"));
+            qemuImgOkMessageBox -> exec();
+        }
+
+        return true;
+    }
+
+    return false;
+}

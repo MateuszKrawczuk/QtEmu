@@ -63,43 +63,43 @@ void Machine::setCPUType(const QString &value) {
     CPUType = value;
 }
 
-ushort Machine::getCPUCount() const {
+qint64 Machine::getCPUCount() const {
     return CPUCount;
 }
 
-void Machine::setCPUCount(const ushort &value) {
+void Machine::setCPUCount(const qint64 &value) {
     CPUCount = value;
 }
 
-ushort Machine::getSocketCount() const {
+qint64 Machine::getSocketCount() const {
     return socketCount;
 }
 
-void Machine::setSocketCount(const ushort &value) {
+void Machine::setSocketCount(const qint64 &value) {
     socketCount = value;
 }
 
-ushort Machine::getCoresSocket() const {
+qint64 Machine::getCoresSocket() const {
     return coresSocket;
 }
 
-void Machine::setCoresSocket(const ushort &value) {
+void Machine::setCoresSocket(const qint64 &value) {
     coresSocket = value;
 }
 
-ushort Machine::getThreadsCore() const {
+qint64 Machine::getThreadsCore() const {
     return threadsCore;
 }
 
-void Machine::setThreadsCore(const ushort &value) {
+void Machine::setThreadsCore(const qint64 &value) {
     threadsCore = value;
 }
 
-ushort Machine::getMaxHotCPU() const {
+qint64 Machine::getMaxHotCPU() const {
     return maxHotCPU;
 }
 
-void Machine::setMaxHotCPU(const ushort &value) {
+void Machine::setMaxHotCPU(const qint64 &value) {
     maxHotCPU = value;
 }
 
@@ -191,6 +191,22 @@ void Machine::setAccelerator(const QHash<QString, QString> &value) {
     accelerator = value;
 }
 
+QString Machine::getUuid() const {
+    return uuid;
+}
+
+void Machine::setUuid(const QString &value) {
+    uuid = value;
+}
+
+QString Machine::getPath() const {
+    return path;
+}
+
+void Machine::setPath(const QString &value) {
+    path = value;
+}
+
 void Machine::addAudio(const QString key, const QString value) {
     this -> audio.insert(key, value);
 }
@@ -248,24 +264,4 @@ QString Machine::getAcceleratorLabel() {
     }
 
     return acceleratorLabel;
-}
-
-QString Machine::getUuid() const
-{
-    return uuid;
-}
-
-void Machine::setUuid(const QString &value)
-{
-    uuid = value;
-}
-
-QString Machine::getPath() const
-{
-    return path;
-}
-
-void Machine::setPath(const QString &value)
-{
-    path = value;
 }

@@ -58,20 +58,20 @@ class Machine: public QObject {
         QString getCPUType() const;
         void setCPUType(const QString &value);
 
-        ushort getCPUCount() const;
-        void setCPUCount(const ushort &value);
+        qint64 getCPUCount() const;
+        void setCPUCount(const qint64 &value);
 
-        ushort getSocketCount() const;
-        void setSocketCount(const ushort &value);
+        qint64 getSocketCount() const;
+        void setSocketCount(const qint64 &value);
 
-        ushort getCoresSocket() const;
-        void setCoresSocket(const ushort &value);
+        qint64 getCoresSocket() const;
+        void setCoresSocket(const qint64 &value);
 
-        ushort getThreadsCore() const;
-        void setThreadsCore(const ushort &value);
+        qint64 getThreadsCore() const;
+        void setThreadsCore(const qint64 &value);
 
-        ushort getMaxHotCPU() const;
-        void setMaxHotCPU(const ushort &value);
+        qint64 getMaxHotCPU() const;
+        void setMaxHotCPU(const qint64 &value);
 
         QString getGPUType() const;
         void setGPUType(const QString &value);
@@ -132,11 +132,11 @@ class Machine: public QObject {
 
         // Hardware - CPU
         QString CPUType;
-        ushort CPUCount;
-        ushort socketCount;
-        ushort coresSocket;
-        ushort threadsCore;
-        ushort maxHotCPU;
+        qint64 CPUCount;
+        qint64 socketCount;
+        qint64 coresSocket;
+        qint64 threadsCore;
+        qint64 maxHotCPU;
 
         // Hardware - GPU
         QString GPUType;

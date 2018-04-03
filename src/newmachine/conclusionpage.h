@@ -28,8 +28,6 @@
 #include <QGridLayout>
 #include <QSettings>
 #include <QDir>
-#include <QProcess>
-#include <QMessageBox>
 #include <QListWidget>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -58,7 +56,6 @@ class MachineConclusionPage: public QWizardPage {
     private:
         void initializePage();
         bool validatePage();
-        bool createDisk(const QString &format, const double size, bool useEncryption);
         void createMachineJSON(Machine *machine) const;
         void fillMachineJSON(QJsonObject &machineJSONObject) const;
         void populateOSListJSON();
@@ -85,13 +82,6 @@ class MachineConclusionPage: public QWizardPage {
         QLabel *RAMLabel;
         QLabel *acceleratorLabel;
         QLabel *diskLabel;
-
-        QMessageBox *qemuImgNotFoundMessageBox;
-        QMessageBox *qemuImgNotFinishedMessageBox;
-        QMessageBox *qemuImgErrorMessageBox;
-        QMessageBox *qemuImgOkMessageBox;
-
-        QProcess *qemuImgProcess;
 
         QListWidget *osList;
 

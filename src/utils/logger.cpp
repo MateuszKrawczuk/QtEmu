@@ -34,7 +34,7 @@ Logger::~Logger() {
 void Logger::logMachineCreation(const QString &fileLocation,
                                 const QString &machineName, const QString &message) {
 
-    QString path = fileLocation + "/logs/" + machineName + ".log";
+    QString path = fileLocation + "/logs/" + machineName.toLower().replace(" ", "_") + ".log";
 
     QFile machineLogsFile(path);
     machineLogsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed

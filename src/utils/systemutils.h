@@ -29,6 +29,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QProcess>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -45,11 +47,17 @@ class SystemUtils {
         ~SystemUtils();
 
         static void populateOSList(Machine *newMachine);
+
         static void getTotalMemory(int32_t &totalRAM);
+
         static void setCPUTypesx86(QComboBox *CPUType);
         static void setGPUTypes(QComboBox *GPUType);
         static void setKeyboardLayout(QComboBox *keyboardLayout);
+
         static QString getOsIcon(const QString &osVersion);
+
+        static bool createDisk(const QString &diskName, const QString &format,
+                               const double size, bool useEncryption);
 
     private:
 

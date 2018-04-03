@@ -24,6 +24,7 @@
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QDir>
+#include <QCoreApplication>
 
 // C++ standard library
 #include <iostream>
@@ -130,7 +131,10 @@ int main(int argc, char *argv[]) {
     }
 
     // Load Logger
-    Logger::logQtemuAction("QtEmu started");
+    QString logMessage = "QtEmu started with PID\t";
+    logMessage.append(QString::number(QCoreApplication::applicationPid()));
+
+    Logger::logQtemuAction(logMessage);
 
     //TODO implement command line arguments
 
