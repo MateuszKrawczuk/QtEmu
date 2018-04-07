@@ -64,6 +64,7 @@ class MainWindow : public QMainWindow {
         void visitQtEmuBugTracker();
         void visitQemuWebsite();
         void createNewMachine();
+        void loadUI(const int itemCount);
 
     protected:
 

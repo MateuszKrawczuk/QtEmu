@@ -44,8 +44,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     osListWidget -> setMovement(QListView::Static);
     osListWidget -> setMaximumWidth(170);
     osListWidget -> setSpacing(7);
-    osListWidget -> setCurrentRow(0);
-
 
     osDetailsStackedWidget = new QStackedWidget(this);
     osDetailsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
@@ -72,6 +70,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     createToolBars();
     loadMachines();
 
+    this -> loadUI(osListWidget -> count());
+
+    // Connect
+
 }
 
 MainWindow::~MainWindow() {
@@ -96,11 +98,10 @@ void MainWindow::createMenus() {
     // Machine
     machineMenu = new QMenu(tr("&Machine"), this);
     machineMenu -> addAction(newMachine);
-    machineMenu -> addAction(addMachine);
     machineMenu -> addAction(settingsMachine);
     machineMenu -> addAction(duplicateMachine);
     machineMenu -> addAction(removeMachine);
-    machineMenu -> addAction(groupMachine);
+    //machineMenu -> addAction(groupMachine);
 
     // Help
     helpMenu = new QMenu(tr("&Help"), this);
@@ -153,11 +154,6 @@ void MainWindow::createMenusActions() {
     connect(newMachine, &QAction::triggered,
             this, &MainWindow::createNewMachine);
 
-    addMachine = new QAction(QIcon::fromTheme("project-development",
-                                              QIcon(":/icon/32x32/qtemu.png")),
-                             tr("Add Machine"),
-                             this);
-
     settingsMachine = new QAction(QIcon::fromTheme("settings-configure",
                                                    QIcon(":/icon/32x32/qtemu.png")),
                                   tr("Machine Settings"),
@@ -173,11 +169,11 @@ void MainWindow::createMenusActions() {
                                 tr("Remove Machine"),
                                 this);
 
-    groupMachine = new QAction(QIcon::fromTheme("view-group",
+    /*groupMachine = new QAction(QIcon::fromTheme("view-group",
                                                 QIcon(":/icon/32x32/qtemu.png")),
                                tr("Group Machines"),
                                this);
-
+    */
 
     // Actions for Help menu
     helpQuickHelp = new QAction(QIcon::fromTheme("help-contents",
@@ -259,7 +255,7 @@ void MainWindow::loadMachines() {
         QJsonObject machineJSON = machines[i].toObject();
 
         QListWidgetItem *machine = new QListWidgetItem(machineJSON["name"].toString(), this -> osListWidget);
-        machine -> setData(Qt::ItemIsUserTristate, machineJSON["uuid"].toString());
+        machine -> setData(QMetaType::QUuid, machineJSON["uuid"].toString());
         // TODO: Check if the json it's incomplete and the image not exits    
         machine -> setIcon(QIcon(":/images/os/64x64/" +
                                  SystemUtils::getOsIcon(machineJSON["icon"].toString())));
@@ -294,6 +290,11 @@ void MainWindow::visitQemuWebsite() {
     QDesktopServices::openUrl(QUrl("https://www.qemu.org/"));
 }
 
+/*!
+ * \brief Open the create machine wizard
+ *
+ * Open the machine wizard to create a new machine
+ */
 void MainWindow::createNewMachine() {
 
     machine = new Machine(this);
@@ -304,5 +305,31 @@ void MainWindow::createNewMachine() {
 
     newMachineWizard.show();
     newMachineWizard.exec();
+
+    this -> loadUI(this -> osListWidget -> count());
+
+}
+
+/*!
+ * \brief Enable/Disable buttons
+ *
+ * Enable/Disable the buttons in the menubar and in the main ui
+ * If the osListWidget item doesn't have elements, elements
+ * related to the VM actions are disabled. If the osListWidget have
+ * at least one element, elements are enabled
+ */
+void MainWindow::loadUI(const int itemCount) {
+
+    if (itemCount == 0) {
+        this -> settingsMachine  -> setEnabled(false);
+        this -> duplicateMachine -> setEnabled(false);
+        this -> removeMachine    -> setEnabled(false);
+    } else {
+        this -> osListWidget -> setCurrentRow(0);
+
+        this -> settingsMachine  -> setEnabled(true);
+        this -> duplicateMachine -> setEnabled(true);
+        this -> removeMachine    -> setEnabled(true);
+    }
 
 }
