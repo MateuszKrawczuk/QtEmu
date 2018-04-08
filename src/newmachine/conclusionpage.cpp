@@ -113,9 +113,11 @@ void MachineConclusionPage::initializePage() {
 
 bool MachineConclusionPage::validatePage() {
 
+    this -> newMachine -> setUuid(QUuid::createUuid().toString());
+
     // Add the new machine to the list
     QListWidgetItem *machine = new QListWidgetItem(this -> newMachine -> getName(), this -> osList);
-    machine -> setData(Qt::ItemIsUserTristate, this -> newMachine -> getUuid());
+    machine -> setData(QMetaType::QUuid, this -> newMachine -> getUuid());
     // TODO: Check if the json it's incomplete and the image not exits
     machine -> setIcon(QIcon(":/images/os/64x64/" +
                              SystemUtils::getOsIcon(this -> newMachine -> getOSVersion())));
@@ -155,8 +157,6 @@ bool MachineConclusionPage::validatePage() {
                                                  false);
 
     if (isDiskCreated) {
-
-        this -> newMachine -> setUuid(QUuid::createUuid().toString());
 
         createMachineJSON(this -> newMachine);
 

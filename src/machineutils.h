@@ -1,0 +1,4 @@
+#ifndef MACHINEUTILS_H
+#define MACHINEUTILS_H
+
+#endif // MACHINEUTILS_H
