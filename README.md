@@ -1,25 +1,25 @@
 # QtEmu &ndash; Qt-based front-end for QEMU emulator
 
-Stable version: 1.0.5
-Development version: 2.0-alpha
+Stable version: 1.0.5 <br />
+Development version: 2.0-alpha <br />
 
-Website: https://qtemu.org/
+Website: https://qtemu.org/ <br />
 Source: https://gitlab.com/carlavilla/Qtemu
 
 ## License
 
-This program is licensed under the GNU General Public License version 2. See the [LICENSE]() file for more
-information
+This program is licensed under the GNU General Public License version 2.
+See the [LICENSE](https://gitlab.com/carlavilla/Qtemu/blob/master/LICENSE.md) file for more information
 
 ## Description
 
-QtEmu is a graphical user interface for QEMU written in Qt. It has the ability to run virtual operating
-systems on native systems. This way you can easily test a new operating system or try a Live CD on your
-system without any troubles and dangers.
+QtEmu is a graphical user interface for QEMU written in Qt. <br />
+It has the ability to run virtual operating systems on native systems. <br />
+This way you can easily test a new operating system or try a Live CD on your system without any troubles and dangers.
 
 ## Versions history
 
-See [CHANGELOG]() file.
+See [CHANGELOG](https://gitlab.com/carlavilla/Qtemu/blob/master/CHANGELOG.md) file.
 
 ## Installation
 
@@ -44,6 +44,6 @@ If you want to translate to another language be free to do it :D
 
 ## Developers
 
-* 2017-now, [Sergio Carlavilla](https://www.carlavilla.es) <<carlavilla @ mailbox.org>>
+* 2017-now, [Sergio Carlavilla](https://www.carlavilla.es) <carlavilla @ mailbox.org>
 * 2006-2009, Ben Klopfenstein <benklop gmail com>
-* 2006-2009, Urs Wolfer <uwolfer fwo ch> 
+* 2006-2009, Urs Wolfer <uwolfer fwo ch 
