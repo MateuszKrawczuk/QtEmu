@@ -53,7 +53,7 @@ void SystemUtils::populateOSList(Machine *newMachine){
     QJsonObject machine;
     machine["uuid"] = newMachine -> getUuid();
     machine["name"] = newMachine -> getName();
-    machine["path"] = newMachine -> getDiskPath();
+    machine["path"] = newMachine -> getPath();
     machine["icon"] = newMachine -> getOSVersion().toLower().replace(" ", "_");
 
     machines.append(machine);
