@@ -46,4 +46,15 @@ If you want to translate to another language be free to do it :D
 
 * 2017-now, [Sergio Carlavilla](https://www.carlavilla.es) <carlavilla @ mailbox.org>
 * 2006-2009, Ben Klopfenstein <benklop gmail com>
-* 2006-2009, Urs Wolfer <uwolfer fwo ch 
+* 2006-2009, Urs Wolfer <uwolfer fwo ch> 
+
+## Contributing
+
+If you want to contribute to the project, please see [CONTRIBUTING]() file.
+
+## Extra links
+
+* [QEMU Web Page](https://www.qemu.org/)
+* [QEMU Wiki](https://wiki.qemu.org/Main_Page)
+* [Qt Docs](http://doc.qt.io/qt-5/index.html)
+* [Qt Linguist](https://doc.qt.io/qt-5/qtlinguist-index.html)
