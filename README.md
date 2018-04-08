@@ -50,7 +50,7 @@ If you want to translate to another language be free to do it :D
 
 ## Contributing
 
-If you want to contribute to the project, please see [CONTRIBUTING]() file.
+If you want to contribute to the project, please see [CONTRIBUTING](https://gitlab.com/carlavilla/Qtemu/blob/master/CONTRIBUTING.md) file.
 
 ## Extra links
 
