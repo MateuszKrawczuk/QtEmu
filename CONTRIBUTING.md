@@ -10,13 +10,13 @@
     git clone git@gitlab.com:carlavilla/Qtemu.git
 
 3. Open Qt Creator
-    * Select Open Project
+    Select Open Project
 ![image](https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_1.png)
 
-    * Navigate to the QtEmu folder and open qtemu.pro
+    Navigate to the QtEmu folder and open qtemu.pro
 ![image](https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_2.png)
 
-    * Hack!
+    Hack!
 ![image](https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_3.png)
 
 ### Translations
