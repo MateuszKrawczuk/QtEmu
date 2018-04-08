@@ -1,6 +1,6 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
+ * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
  * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify

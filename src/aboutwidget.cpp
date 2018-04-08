@@ -1,6 +1,6 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
+ * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
  * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -87,7 +87,7 @@ void AboutWidget::hideEvent(QHideEvent *event) {
 
 AboutTab::AboutTab(QWidget *parent) : QWidget(parent) {
     QLabel *about = new QLabel(tr("QtEmu is a graphical user interface for QEMU"), this);
-    QLabel *copyright = new QLabel("Copyright (C) 2006-2009 Urs Wolfer\nCopyright (C) 2017-2018 Sergio Carlavilla Delgado");
+    QLabel *copyright = new QLabel("Copyright (C) 2006-2009 Urs Wolfer and Ben Klopfenstein\nCopyright (C) 2017-2018 Sergio Carlavilla Delgado");
     QLabel *urlSite = new QLabel("<a href=\"https://www.qtemu.org\">www.qtemu.org</a>");
 
     mainLayout = new QVBoxLayout(this);

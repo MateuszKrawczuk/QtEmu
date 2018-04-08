@@ -1,46 +1,7 @@
-Version 1.8.0
-=============
-Features:
-* Suspend support
-* Resume support :)
-* Enable virtualization with a checkbox (kqemu)
-* Add support for kvm virtualization with that same checkbox
-* Add machine name to the window title if your qemu is 0.9.1 or better, or if you use kvm 60 or higher.
-* pause/unpause support (if you need to get all your processor power back for a few minutes
-    but don't want to turn off your virtual machine, pause is great!)
-* Add support for qcow image format and image conversion (needed for suspend/resume)
-* Add powerdown stop button option (powers down the machine gracefully)
-* Add CDROM and Floppy image change support. just press the button and the virtual disc will change
-    to whatever you put in the box!
-* Add the ability to commit changes to a machine started up in snapshot mode by simply unchecking
-    the snapshot box!
-* New network subsystem for bridging support (and other advanced networking features eventually!)
-    see the readme for setting this up!
-* Full machine console in the GUI... (for advanced functionality)
-* Embedded VNC viewer
-* Machine Preview 
-* added option for OSS, ESD, or ALSA sound support
-* restart button now works correctly (powers off the machine gracefully)
-* screenshot button
-* more flexible configuration
-* Use kvm-img instead of qemu-img if qemu-img cannot be found
-* added a guest tools package
-   - supports synchronizing guest/host clipboards
-All these new features listed above thanks to Ben Klopfenstein <benklop at gmail dot com>.
-* Install desktop file on Linux (e.g. to start QtEmu from startmenus)
-* Respect FHS for installation on Linux
-* Use QWizard for machine creation wizard for better look and feel
+## Version 2.0-alpha (UNRELEASED)
 
+## Version 1.0.5
 
-Fixes:
-* Fixed english translations of some strings
-* Only enable options that work with your qemu version
-* CDROM drive selection will select files now (/dev/cdrom is a file)
-All these fixes listed above thanks to Ben Klopfenstein <benklop at gmail dot com>.
-* Code optimization (Mosty detected by KDE Krazy check).
-
-Version 1.0.5
-=============
 Features:
 * Option for custom network settings. Patch by Dawit Alemayehu <adawit at kde dot org>. Thanks!
 * Possibility to set additional options which are not covered by QtEmu (e.g. "--kernel-kqemu"). Patch by Dawit Alemayehu <adawit at kde dot org>. Thanks!
@@ -51,8 +12,8 @@ Fixes:
 * Code optimization (Mosty detected by KDE Krazy check).
 * Initialize all variables in machineprocess.*. Patch by Dawit Alemayehu <adawit at kde dot org>. Thanks!
 
-Version 1.0.4
-=============
+## Version 1.0.4
+
 Features:
 * Manifest file added in order to see everywhere Win styles (e.g. file dialogs) (patch by Cristian Adam)
 * French translation by Fathi Boudra <fboudra at free dot fr>. Thanks!
@@ -65,8 +26,8 @@ Features:
 Fixes:
 * Allow compilation with Qt 4.1 again. Patch by Mandrake.
 
-Version 1.0.3
-=============
+## Version 1.0.3
+
 Features:
 * Floppy Disk support
 * Czech translation by excamo <excamo at gmail dot com>. Thanks!
@@ -76,8 +37,8 @@ Fixes:
   Add a configure check (in cmake) for Qt 4.2 (patch by Gwenole Beauchesne / Laurent Montel).
 * Fix compilation on other systems than Linux and Windows (e.g. BSDs)
 
-Version 1.0.2
-=============
+## Version 1.0.2
+
 Features:
 * Possibility to change the QEMU start command (e.g. for 64 bit executable "qemu-system-x86_64")
 * Possibility to execute before start or after exit of QEMU shell commands (only experimental!)
@@ -87,8 +48,8 @@ Fixes:
 * Save state of network option
 * Respect snapshot setting after start of QtEmu
 
-Version 1.0.1
-=============
+## Version 1.0.1
+
 Features:
 * Support for VMWare hard disk images (*.vmdk)
 * Support for QEMU *.qcow hard disk images
