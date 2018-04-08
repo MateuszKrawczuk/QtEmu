@@ -11,12 +11,12 @@
 
 3. Open Qt Creator
     * Select Open Project
-    (img/)
+    (img/https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_1.png)
 
     * Navigate to the QtEmu folder and open qtemu.pro
-    (img/)
+    (img/https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_2.png)
 
     * Hack!
-    (img/)
+    (img/https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_3.png)
 
 ### Translations
