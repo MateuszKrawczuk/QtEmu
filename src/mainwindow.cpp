@@ -1,6 +1,6 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
+ * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
  * Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -168,6 +168,8 @@ void MainWindow::createMenusActions() {
                                                  QIcon(":/icon/32x32/qtemu.png")),
                                 tr("Remove Machine"),
                                 this);
+    connect(removeMachine, &QAction::triggered,
+            this, &MainWindow::deleteMachine);
 
     /*groupMachine = new QAction(QIcon::fromTheme("view-group",
                                                 QIcon(":/icon/32x32/qtemu.png")),
@@ -307,6 +309,23 @@ void MainWindow::createNewMachine() {
     newMachineWizard.exec();
 
     this -> loadUI(this -> osListWidget -> count());
+
+}
+
+/*!
+  * \brief Delete the selected machine
+  *
+  * Delete the selected machine and its associated files
+  */
+void MainWindow::deleteMachine() {
+    QUuid machineUuid = this -> osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
+
+    bool isMachineDeleted = MachineUtils::deleteMachine(machineUuid);
+
+    if (isMachineDeleted) {
+        this -> osListWidget -> takeItem(this -> osListWidget -> currentRow());
+        this -> loadUI(this -> osListWidget -> count());
+    }
 
 }
 

@@ -24,6 +24,7 @@
 // Qt
 #include <QObject>
 #include <QHash>
+#include <QUuid>
 
 #include <QDebug>
 

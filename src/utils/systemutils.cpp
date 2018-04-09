@@ -33,6 +33,7 @@ SystemUtils::~SystemUtils() {
 
 void SystemUtils::populateOSList(Machine *newMachine){
 
+    // TODO: Get the data directory path from QSettings
     // Open the file
     QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
 
