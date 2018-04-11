@@ -213,8 +213,40 @@ void MainWindow::createMenusActions() {
                             this);
     connect(helpAbout, &QAction::triggered,
             aboutwidget, &QWidget::show);
+
+    // Actions for Machine toolbar
+    startMachine = new QAction(this);
+    startMachine -> setIcon(QIcon::fromTheme("kt-start",
+                                           QIcon(":/icon/32x32/qtemu.png")));
+    startMachine -> setToolTip(tr("Start machine"));
+
+    stopMachine = new QAction(this);
+    stopMachine -> setIcon(QIcon::fromTheme("kt-stop",
+                                          QIcon(":/icon/32x32/qtemu.png")));
+    stopMachine -> setToolTip(tr("Stop machine"));
+
+    resetMachine = new QAction(this);
+    resetMachine -> setIcon(QIcon::fromTheme("chronometer-reset",
+                                           QIcon(":/icon/32x32/qtemu.png")));
+    resetMachine -> setToolTip(tr("Reset machine"));
+
+    pauseMachine = new QAction(this);
+    pauseMachine -> setIcon(QIcon::fromTheme("kt-pause",
+                                             QIcon(":/icon/32x32/qtemu.png")));
+    pauseMachine -> setToolTip(tr("Pause machine"));
+
+    saveMachine = new QAction(this);
+    saveMachine -> setIcon(QIcon::fromTheme("system-save-session",
+                                            QIcon(":/icon/32x32/qtemu.png")));
+    saveMachine -> setToolTip(tr("Save machine"));
+
 }
 
+/**
+ * @brief Create the toolbar
+ *
+ * Create the main toolbar of the app
+ */
 void MainWindow::createToolBars() {
     this -> mainToolBar = addToolBar(tr("Toolbar"));
 
@@ -223,6 +255,11 @@ void MainWindow::createToolBars() {
     mainToolBar -> addAction(this -> newMachine);
     mainToolBar -> addAction(this -> settingsMachine);
     mainToolBar -> addSeparator();
+    mainToolBar -> addAction(this -> startMachine);
+    mainToolBar -> addAction(this -> stopMachine);
+    mainToolBar -> addAction(this -> resetMachine);
+    mainToolBar -> addAction(this -> pauseMachine);
+    mainToolBar -> addAction(this -> saveMachine);
 
     mainToolBar -> setMovable(false);
 
@@ -339,16 +376,25 @@ void MainWindow::deleteMachine() {
  */
 void MainWindow::loadUI(const int itemCount) {
 
+    this -> stopMachine -> setEnabled(false);
+    this -> resetMachine -> setEnabled(false);
+    this -> pauseMachine -> setEnabled(false);
+    this -> saveMachine -> setEnabled(false);
+
     if (itemCount == 0) {
         this -> settingsMachine  -> setEnabled(false);
         this -> duplicateMachine -> setEnabled(false);
         this -> removeMachine    -> setEnabled(false);
+
+        this -> startMachine     -> setEnabled(false);
     } else {
         this -> osListWidget -> setCurrentRow(0);
 
         this -> settingsMachine  -> setEnabled(true);
         this -> duplicateMachine -> setEnabled(true);
         this -> removeMachine    -> setEnabled(true);
+
+        this -> startMachine     -> setEnabled(true);
     }
 
 }

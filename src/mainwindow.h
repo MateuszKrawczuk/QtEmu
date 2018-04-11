@@ -92,6 +92,12 @@ class MainWindow : public QMainWindow {
         QAction *helpQtEmuBugTracker;
         QAction *helpQemuWebsite;
         QAction *helpAbout;
+
+        QAction *startMachine;
+        QAction *stopMachine;
+        QAction *resetMachine;
+        QAction *pauseMachine;
+        QAction *saveMachine;
         // End menus
 
         // Toolbar
