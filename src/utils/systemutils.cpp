@@ -52,10 +52,11 @@ void SystemUtils::populateOSList(Machine *newMachine){
 
     // Create the new machine
     QJsonObject machine;
-    machine["uuid"] = newMachine -> getUuid();
-    machine["name"] = newMachine -> getName();
-    machine["path"] = newMachine -> getPath();
-    machine["icon"] = newMachine -> getOSVersion().toLower().replace(" ", "_");
+    machine["uuid"]       = newMachine -> getUuid();
+    machine["name"]       = newMachine -> getName();
+    machine["path"]       = newMachine -> getPath();
+    machine["configpath"] = newMachine -> getConfigPath();
+    machine["icon"]       = newMachine -> getOSVersion().toLower().replace(" ", "_");
 
     machines.append(machine);
     machinesObject["machines"] = machines;
@@ -268,4 +269,78 @@ bool SystemUtils::createDisk(const QString &diskName, const QString &format,
     }
 
     return false;
+}
+
+QString SystemUtils::getMachinePath(const QUuid machineUuid) {
+
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+
+    QString dataDirectoryPath = settings.value("QtEmuData",
+                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
+    settings.endGroup();
+
+    // Open the file with the machines
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all the machines included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    int machinePos = 0;
+    bool machineExists = false;
+    QString machinePath;
+    while(machinePos < machines.size() && ! machineExists) {
+        QJsonObject machineJSON = machines[machinePos].toObject();
+
+        if (machineUuid == machineJSON["uuid"].toVariant()) {
+            machineExists = true;
+            machinePath = machineJSON["path"].toString();
+        } else {
+            ++machinePos;
+        }
+    }
+
+    return machinePath;
+}
+
+QString SystemUtils::getMachineConfigPath(const QUuid machineUuid) {
+
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+
+    QString dataDirectoryPath = settings.value("QtEmuData",
+                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
+    settings.endGroup();
+
+    // Open the file with the machines
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all the machines included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    int machinePos = 0;
+    bool machineExists = false;
+    QString machinePath;
+    while(machinePos < machines.size() && ! machineExists) {
+        QJsonObject machineJSON = machines[machinePos].toObject();
+
+        if (machineUuid == machineJSON["uuid"].toVariant()) {
+            machineExists = true;
+            machinePath = machineJSON["configpath"].toString();
+        } else {
+            ++machinePos;
+        }
+    }
+
+    return machinePath;
 }

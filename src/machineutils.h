@@ -34,6 +34,7 @@
 #include <QDebug>
 
 // Local
+#include "utils/systemutils.h"
 
 class MachineUtils : public QObject {
     Q_OBJECT
@@ -42,6 +43,7 @@ class MachineUtils : public QObject {
         explicit MachineUtils(QObject *parent = 0);
         ~MachineUtils();
 
+        static QStringList generateMachineCommand(const QUuid machineUuid);
         static bool deleteMachine(const QUuid machineUuid);
 
     public slots:

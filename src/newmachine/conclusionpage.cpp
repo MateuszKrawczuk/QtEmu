@@ -193,6 +193,7 @@ void MachineConclusionPage::createMachineJSON(Machine *machine) const {
     QJsonDocument machineJSONDocument(machineJSONObject);
 
     machineFile.write(machineJSONDocument.toJson());
+    machine -> setConfigPath(machineFilePath);
 }
 
 void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) const{

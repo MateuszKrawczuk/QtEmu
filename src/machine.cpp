@@ -265,3 +265,13 @@ QString Machine::getAcceleratorLabel() {
 
     return acceleratorLabel;
 }
+
+QString Machine::getConfigPath() const
+{
+    return configPath;
+}
+
+void Machine::setConfigPath(const QString &value)
+{
+    configPath = value;
+}

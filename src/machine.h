@@ -53,6 +53,9 @@ class Machine: public QObject {
         QString getPath() const;
         void setPath(const QString &value);
 
+        QString getConfigPath() const;
+        void setConfigPath(const QString &value);
+
         QString getUuid() const;
         void setUuid(const QString &value);
 
@@ -129,6 +132,7 @@ class Machine: public QObject {
         QString OSType;
         QString OSVersion;
         QString path;
+        QString configPath;
         QString uuid;
 
         // Hardware - CPU

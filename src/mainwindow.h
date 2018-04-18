@@ -40,6 +40,7 @@
 #include <QStackedWidget>
 #include <QDir>
 #include <QFile>
+#include <QProcess>
 
 // Local
 #include "machine.h"
@@ -65,6 +66,7 @@ class MainWindow : public QMainWindow {
         void visitQtEmuBugTracker();
         void visitQemuWebsite();
         void createNewMachine();
+        void runMachine();
         void deleteMachine();
         void loadUI(const int itemCount);
 

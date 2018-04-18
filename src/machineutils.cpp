@@ -32,8 +32,34 @@ MachineUtils::~MachineUtils() {
     qDebug() << "MachineUtils object destroyed";
 }
 
+QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
+
+    QString machineConfigPath = SystemUtils::getMachineConfigPath(machineUuid);
+
+    QFile machineFile(machineConfigPath);
+    machineFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all data included in the file
+    QByteArray machineData = machineFile.readAll();
+    QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
+
+    QStringList qemuCommand;
+
+    qemuCommand << "-monitor";
+
+    qemuCommand << "stdio";
+
+    /*qemuCommand << "-m";
+
+    qemuCommand << machineDocument["RAM"].toString();*/
+
+    return qemuCommand;
+
+}
+
 bool MachineUtils::deleteMachine(const QUuid machineUuid) {
 
+    // TODO: Change all of this code to SystemUtils::getMachinePath
     QSettings settings;
     settings.beginGroup("DataFolder");
 

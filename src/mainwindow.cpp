@@ -219,6 +219,8 @@ void MainWindow::createMenusActions() {
     startMachine -> setIcon(QIcon::fromTheme("kt-start",
                                            QIcon(":/icon/32x32/qtemu.png")));
     startMachine -> setToolTip(tr("Start machine"));
+    connect(startMachine, &QAction::triggered,
+            this, &MainWindow::runMachine);
 
     stopMachine = new QAction(this);
     stopMachine -> setIcon(QIcon::fromTheme("kt-stop",
@@ -347,6 +349,30 @@ void MainWindow::createNewMachine() {
 
     this -> loadUI(this -> osListWidget -> count());
 
+}
+
+/*!
+ * \brief Start the selected machine
+ *
+ * Read the machine config file,
+ * make the command and start the selected machine
+ */
+void MainWindow::runMachine() {
+    QUuid machineUuid = this -> osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
+
+    QStringList args = MachineUtils::generateMachineCommand(machineUuid);
+
+    QProcess *machineProcess = new QProcess();
+
+    QString program;
+
+    #ifdef Q_OS_LINUX
+    program = "qemu-system-x86_64";
+    #endif
+
+    machineProcess -> start(program, args);
+
+    // TODO: Control the output of the machineProcess
 }
 
 /*!

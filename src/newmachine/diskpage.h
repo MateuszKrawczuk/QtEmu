@@ -33,7 +33,6 @@
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QPushButton>
-#include <QProcess>
 #include <QStringList>
 #include <QMessageBox>
 #include <QSettings>
@@ -140,8 +139,6 @@ class MachineNewDiskPage: public QWizardPage {
         QRadioButton *qedRadioButton;
         QRadioButton *vmdkRadioButton;
         QRadioButton *cloopRadioButton;
-
-        QProcess *qemuImgProcess;
 
         QMessageBox *qemuImgNotFoundMessageBox;
         QMessageBox *qemuImgNotFinishedMessageBox;

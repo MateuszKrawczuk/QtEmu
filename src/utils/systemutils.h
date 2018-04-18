@@ -31,6 +31,7 @@
 #include <QJsonArray>
 #include <QProcess>
 #include <QMessageBox>
+#include <QSettings>
 
 #include <QDebug>
 
@@ -58,6 +59,9 @@ class SystemUtils {
 
         static bool createDisk(const QString &diskName, const QString &format,
                                const double size, bool useEncryption);
+
+        static QString getMachinePath(const QUuid machineUuid);
+        static QString getMachineConfigPath(const QUuid machineUuid);
 
     private:
 
