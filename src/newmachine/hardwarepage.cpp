@@ -201,9 +201,9 @@ GraphicsTab::GraphicsTab(Machine *machine,
 
     GPUType -> setCurrentIndex(1);
 
-    this -> selectGraphics(this -> GPUType -> itemText(1));
+    this -> selectGraphics(1);
 
-    connect(GPUType, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    connect(GPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GraphicsTab::selectGraphics);
 
     keyboardLabel = new QLabel(tr("Keyboard layout") + ":");
@@ -213,9 +213,9 @@ GraphicsTab::GraphicsTab(Machine *machine,
 
     keyboard -> setCurrentIndex(5);
 
-    this -> selectKeyboard(this -> keyboard -> itemText(5));
+    this -> selectKeyboard(5);
 
-    connect(keyboard, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    connect(keyboard, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GraphicsTab::selectKeyboard);
 
     graphicsLayout = new QGridLayout();
@@ -237,11 +237,15 @@ GraphicsTab::~GraphicsTab() {
     qDebug() << "GraphicsTab destroyed";
 }
 
-void GraphicsTab::selectGraphics(const QString &GPUType) {
-    this -> newMachine -> setGPUType(GPUType);
+void GraphicsTab::selectGraphics(int index) {
+    QString graphics = this -> GPUType -> itemData(index).toString();
+
+    this -> newMachine -> setGPUType(graphics);
 }
 
-void GraphicsTab::selectKeyboard(const QString &keyboard) {
+void GraphicsTab::selectKeyboard(int index) {
+    QString keyboard = this -> keyboard -> itemData(index).toString();
+
     this -> newMachine -> setKeyboard(keyboard);
 }
 

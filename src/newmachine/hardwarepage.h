@@ -117,8 +117,8 @@ class GraphicsTab: public QWidget {
     signals:
 
     public slots:
-        void selectGraphics(const QString &GPUType);
-        void selectKeyboard(const QString &keyboard);
+        void selectGraphics(int index);
+        void selectKeyboard(int index);
 
     protected:
 
