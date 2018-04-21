@@ -61,9 +61,9 @@ ProcessorTab::ProcessorTab(Machine *machine,
     CPUType = new QComboBox();
     SystemUtils::setCPUTypesx86(CPUType);
 
-    this -> selectProcessor(this -> CPUType -> itemText(0));
+    this -> selectProcessor(0);
 
-    connect(CPUType, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+    connect(CPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &ProcessorTab::selectProcessor);
 
     CPUTypeLayout = new QHBoxLayout();
@@ -163,8 +163,10 @@ ProcessorTab::~ProcessorTab() {
     qDebug() << "ProcessorTab destroyed";
 }
 
-void ProcessorTab::selectProcessor(const QString &processor) {
-    this -> newMachine -> setCPUType(processor);
+void ProcessorTab::selectProcessor(int index) {
+    QString cpu = this -> CPUType -> itemData(index).toString();
+
+    this -> newMachine -> setCPUType(cpu);
 }
 
 void ProcessorTab::selectCPUCount(int CPUCount) {

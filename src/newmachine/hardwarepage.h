@@ -70,7 +70,7 @@ class ProcessorTab: public QWidget {
     signals:
 
     public slots:
-        void selectProcessor(const QString &processor);
+        void selectProcessor(int index);
         void selectCPUCount(int CPUCount);
         void selectSocketCount(int socketCount);
         void selectCoresSocket(int coresSocket);

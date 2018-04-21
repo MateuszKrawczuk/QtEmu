@@ -80,96 +80,107 @@ void SystemUtils::getTotalMemory(int32_t &totalRAM) {
 void SystemUtils::setCPUTypesx86(QComboBox *CPUType) {
 
     // Intel among many others...IBM, Texas Instruments, AMD, Cyrix...
-    CPUType -> addItem("486");
+    CPUType -> addItem("486", QString("486"));
 
     // Intel
-    CPUType -> addItem("Pentium");
-    CPUType -> addItem("Pentium 2");
-    CPUType -> addItem("Pentium 3");
-    CPUType -> addItem("Intel Core Duo");
-    CPUType -> addItem("Intel Core 2 Duo");
-    CPUType -> addItem("Intel Atom N270");
-    CPUType -> addItem("Broadwell");
-    CPUType -> addItem("Broadwell no TSX");
-    CPUType -> addItem("Conroe");
-    CPUType -> addItem("Haswell");
-    CPUType -> addItem("Haswell no TSX");
-    CPUType -> addItem("Ivy Bridge");
-    CPUType -> addItem("Nehalem");
-    CPUType -> addItem("Penryn");
-    CPUType -> addItem("Sandy Bridge");
-    CPUType -> addItem("Skylake Client");
-    CPUType -> addItem("Skylake Server");
-    CPUType -> addItem("Westmere");
+    CPUType -> addItem("Pentium",          QString("pentium"));
+    CPUType -> addItem("Pentium 2",        QString("pentium2"));
+    CPUType -> addItem("Pentium 3",        QString("pentium3"));
+    CPUType -> addItem("Intel Core Duo",   QString("coreduo"));
+    CPUType -> addItem("Intel Core 2 Duo", QString("core2duo"));
+    CPUType -> addItem("Intel Core 2 Duo P9xxx (Penryn Class Core 2)", QString("Penryn"));
+    CPUType -> addItem("Intel Atom N270",  QString("n270"));
+    CPUType -> addItem("Broadwell",        QString("Broadwell"));
+    CPUType -> addItem("Broadwell no TSX", QString("Broadwell-noTSX"));
+    CPUType -> addItem("Broadwell, IBRS",  QString("Broadwell-IBRS"));
+    CPUType -> addItem("Broadwell, no TSX, IBRS", QString("Broadwell-noTSX-IBRS"));
+    CPUType -> addItem("Conroe", QString("Conroe"));
+    CPUType -> addItem("Haswell", QString("Haswell"));
+    CPUType -> addItem("Haswell no TSX", QString("Haswell-noTSX"));
+    CPUType -> addItem("Haswell, IBRS", QString("Haswell-IBRS"));
+    CPUType -> addItem("Haswell, no TSX, IBRS", QString("Haswell-noTSX-IBRS"));
+    CPUType -> addItem("Intel Xeon E3-12xx v2 (Ivy Bridge)", QString("IvyBridge"));
+    CPUType -> addItem("Intel Xeon E3-12xx v2 (Ivy Bridge, IBRS)", QString("IvyBridge-IBRS"));
+    CPUType -> addItem("Intel Core i7 9xx (Nehalem Class Core i7)", QString("Nehalem"));
+    CPUType -> addItem("Intel Core i7 9xx (Nehalem Core i7, IBRS update)", QString("Nehalem-IBRS"));
+    CPUType -> addItem("Intel Xeon E312xx (Sandy Bridge)", QString("SandyBridge"));
+    CPUType -> addItem("Intel Xeon E312xx (Sandy Bridge, IBRS update)", QString("SandyBridge-IBRS"));
+    CPUType -> addItem("Intel Core Processor (Skylake)", QString("Skylake-Client"));
+    CPUType -> addItem("Intel Core Processor (Skylake, IBRS)", QString("Skylake-Client-IBRS"));
+    CPUType -> addItem("Intel Xeon Processor (Skylake)", QString("Skylake-Server"));
+    CPUType -> addItem("Intel Xeon Processor (Skylake, IBRS)", QString("Skylake-Server-IBRS"));
+    CPUType -> addItem("Westmere E56xx/L56xx/X56xx (IBRS update)", QString("Westmere-IBRS"));
+    CPUType -> addItem("Westmere E56xx/L56xx/X56xx (Nehalem-C)",   QString("Westmere"));
 
     // AMD
-    CPUType -> addItem("AMD Opteron G1");
-    CPUType -> addItem("AMD Opteron G2");
-    CPUType -> addItem("AMD Opteron G3");
-    CPUType -> addItem("AMD Opteron G4");
-    CPUType -> addItem("AMD Opteron G5");
-    CPUType -> addItem("AMD Phenom");
-    CPUType -> addItem("AMD Athlon");
+    CPUType -> addItem("AMD Opteron G1",       QString("Opteron_G1"));
+    CPUType -> addItem("AMD Opteron G2",       QString("Opteron_G2"));
+    CPUType -> addItem("AMD Opteron G3",       QString("Opteron_G3"));
+    CPUType -> addItem("AMD Opteron G4",       QString("Opteron_G4"));
+    CPUType -> addItem("AMD Opteron G5",       QString("Opteron_G5"));
+    CPUType -> addItem("AMD Phenom 9550",      QString("phenom"));
+    CPUType -> addItem("AMD Athlon",           QString("athlon"));
+    CPUType -> addItem("AMD EPYC",             QString("EPYC"));
+    CPUType -> addItem("AMD EPYC (with IBPB)", QString("EPYC-IBPB"));
 
     // QEMU
-    CPUType -> addItem("qemu32 Virtual CPU version 2.5+");
-    CPUType -> addItem("qemu64 Virtual CPU version 2.5+");
-    CPUType -> addItem("kvm32 Common 32-bit KVM processor");
-    CPUType -> addItem("kvm64 Common KVM processor");
+    CPUType -> addItem("qemu32 Virtual CPU version 2.5+",   QString("qemu32"));
+    CPUType -> addItem("qemu64 Virtual CPU version 2.5+",   QString("qemu64"));
+    CPUType -> addItem("kvm32 Common 32-bit KVM processor", QString("kvm32"));
+    CPUType -> addItem("kvm64 Common KVM processor",        QString("kvm64"));
 
     // Host
-    CPUType -> addItem("Base");
-    CPUType -> addItem("Host");
-    CPUType -> addItem("Max");
+    CPUType -> addItem("Base", QString("base"));
+    CPUType -> addItem("Host", QString("host"));
+    CPUType -> addItem("Max",  QString("max"));
 }
 
 void SystemUtils::setGPUTypes(QComboBox *GPUType) {
-    GPUType -> addItem("None");
-    GPUType -> addItem("Default");
-    GPUType -> addItem("Standard VGA(VESA 2.0)");
-    GPUType -> addItem("Cirrus Logic GD5446");
-    GPUType -> addItem("VMWare SVGA-II");
-    GPUType -> addItem("QXL Paravirtual Graphic Card");
-    GPUType -> addItem("Sun TCX Framebuffer");
-    GPUType -> addItem("Sun Cgthree Framebuffer");
-    GPUType -> addItem("Virtio VGA Card");
-    GPUType -> addItem("Xen Framebuffer");
+    GPUType -> addItem("None",                         QString("none"));
+    GPUType -> addItem("Standard VGA(VESA 2.0)",       QString("std"));
+    GPUType -> addItem("Cirrus Logic GD5446",          QString("cirrus"));
+    GPUType -> addItem("VMWare SVGA-II",               QString("vmware"));
+    GPUType -> addItem("QXL Paravirtual Graphic Card", QString("qxl"));
+    GPUType -> addItem("Sun TCX Framebuffer",          QString("tcx"));
+    GPUType -> addItem("Sun Cgthree Framebuffer",      QString("cg3"));
+    GPUType -> addItem("Virtio VGA Card",              QString("virtio"));
+    GPUType -> addItem("Xen Framebuffer",              QString("xenfb"));
 }
 
 void SystemUtils::setKeyboardLayout(QComboBox *keyboardLayout) {
-    keyboardLayout -> addItem("Arabic (ar)");
-    keyboardLayout -> addItem("Danish (da)");
-    keyboardLayout -> addItem("German (de)");
-    keyboardLayout -> addItem("German (Switzerland) (de-ch)");
-    keyboardLayout -> addItem("English (United Kingdom) (en-gb)");
-    keyboardLayout -> addItem("English (United States) (en-us)");
-    keyboardLayout -> addItem("Spanish (Spain) (es)");
-    keyboardLayout -> addItem("Estonian (et)");
-    keyboardLayout -> addItem("Finnish (fi)");
-    keyboardLayout -> addItem("Faroese (fo)");
-    keyboardLayout -> addItem("French (fr)");
-    keyboardLayout -> addItem("French (Belgium) (fr-be)");
-    keyboardLayout -> addItem("French (Canada) (fr-ca)");
-    keyboardLayout -> addItem("French (Switzerland) (fr-ch)");
-    keyboardLayout -> addItem("Croatian (hr)");
-    keyboardLayout -> addItem("Hungarian (hu)");
-    keyboardLayout -> addItem("Icelandic (is)");
-    keyboardLayout -> addItem("Italian (it)");
-    keyboardLayout -> addItem("Japanese (ja)");
-    keyboardLayout -> addItem("Lithuanian (lt)");
-    keyboardLayout -> addItem("Latvian (lv)");
-    keyboardLayout -> addItem("Macedonian (mk)");
-    keyboardLayout -> addItem("Dutch (nl)");
-    keyboardLayout -> addItem("Dutch (Belgium) (nl-be)");
-    keyboardLayout -> addItem("Norwegian (no)");
-    keyboardLayout -> addItem("Polish (pl)");
-    keyboardLayout -> addItem("Portuguese (pt)");
-    keyboardLayout -> addItem("Portuguese (Brazil) (pt-br)");
-    keyboardLayout -> addItem("Russian (ru)");
-    keyboardLayout -> addItem("Slovenian (sl)");
-    keyboardLayout -> addItem("Swedish (sv)");
-    keyboardLayout -> addItem("Thai (th)");
-    keyboardLayout -> addItem("Turkish (tr)");
+    keyboardLayout -> addItem("Arabic (ar)",                      QString("ar"));
+    keyboardLayout -> addItem("Danish (da)",                      QString("da"));
+    keyboardLayout -> addItem("German (de)",                      QString("de"));
+    keyboardLayout -> addItem("German (Switzerland) (de-ch)",     QString("de-ch"));
+    keyboardLayout -> addItem("English (United Kingdom) (en-gb)", QString("en-gb"));
+    keyboardLayout -> addItem("English (United States) (en-us)",  QString("en-us"));
+    keyboardLayout -> addItem("Spanish (Spain) (es)",             QString("es"));
+    keyboardLayout -> addItem("Estonian (et)",                    QString("et"));
+    keyboardLayout -> addItem("Finnish (fi)",                     QString("fi"));
+    keyboardLayout -> addItem("Faroese (fo)",                     QString("fo"));
+    keyboardLayout -> addItem("French (fr)",                      QString("fr"));
+    keyboardLayout -> addItem("French (Belgium) (fr-be)",         QString("fr-be"));
+    keyboardLayout -> addItem("French (Canada) (fr-ca)",          QString("fr-ca"));
+    keyboardLayout -> addItem("French (Switzerland) (fr-ch)",     QString("fr-ch"));
+    keyboardLayout -> addItem("Croatian (hr)",                    QString("hr"));
+    keyboardLayout -> addItem("Hungarian (hu)",                   QString("hu"));
+    keyboardLayout -> addItem("Icelandic (is)",                   QString("is"));
+    keyboardLayout -> addItem("Italian (it)",                     QString("it"));
+    keyboardLayout -> addItem("Japanese (ja)",                    QString("ja"));
+    keyboardLayout -> addItem("Lithuanian (lt)",                  QString("lt"));
+    keyboardLayout -> addItem("Latvian (lv)",                     QString("lv"));
+    keyboardLayout -> addItem("Macedonian (mk)",                  QString("mk"));
+    keyboardLayout -> addItem("Dutch (nl)",                       QString("nl"));
+    keyboardLayout -> addItem("Dutch (Belgium) (nl-be)",          QString("nl-be"));
+    keyboardLayout -> addItem("Norwegian (no)",                   QString("no"));
+    keyboardLayout -> addItem("Polish (pl)",                      QString("pl"));
+    keyboardLayout -> addItem("Portuguese (pt)",                  QString("pt"));
+    keyboardLayout -> addItem("Portuguese (Brazil) (pt-br)",      QString("pt-br"));
+    keyboardLayout -> addItem("Russian (ru)",                     QString("ru"));
+    keyboardLayout -> addItem("Slovenian (sl)",                   QString("sl"));
+    keyboardLayout -> addItem("Swedish (sv)",                     QString("sv"));
+    keyboardLayout -> addItem("Thai (th)",                        QString("th"));
+    keyboardLayout -> addItem("Turkish (tr)",                     QString("tr"));
 }
 
 QString SystemUtils::getOsIcon(const QString &osVersion) {
