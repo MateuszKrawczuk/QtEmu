@@ -42,6 +42,12 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     // Read all data included in the file
     QByteArray machineData = machineFile.readAll();
     QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
+    QJsonObject machineObject = machineDocument.object();
+    QJsonObject cpuObject = machineObject["cpu"].toObject();
+    QJsonObject gpuObject = machineObject["gpu"].toObject();
+    QJsonObject diskObject = machineObject["disk"].toObject();
+
+    // TODO: Add qemu before commands
 
     QStringList qemuCommand;
 
@@ -49,9 +55,33 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
 
     qemuCommand << "stdio";
 
-    /*qemuCommand << "-m";
+    qemuCommand << "-name";
 
-    qemuCommand << machineDocument["RAM"].toString();*/
+    qemuCommand << machineObject["name"].toString();
+
+    qemuCommand << "-uuid";
+
+    qemuCommand << machineObject["uuid"].toString().remove("{").remove("}");
+
+    qemuCommand << "-m";
+
+    qemuCommand << QString::number(machineObject["RAM"].toDouble());
+
+    qemuCommand << "-k";
+
+    qemuCommand << gpuObject["keyboard"].toString();
+
+    qemuCommand << "-vga";
+
+    qemuCommand << gpuObject["GPUType"].toString();
+
+    // HDD
+    qemuCommand << "-drive";
+
+    qemuCommand << QString("file=").append(diskObject["path"].toString()).append(",index=0,media=disk");
+
+    // CDROM TODO
+
 
     return qemuCommand;
 

@@ -239,7 +239,7 @@ QString Machine::getAudioLabel() {
             audioLabel.append(", ");
         }
 
-        audioLabel.append(i.value());
+        audioLabel.append(i.key());
         ++i;
     }
 
@@ -259,7 +259,7 @@ QString Machine::getAcceleratorLabel() {
             acceleratorLabel.append(", ");
         }
 
-        acceleratorLabel.append(i.value().toUpper());
+        acceleratorLabel.append(i.key());
         ++i;
     }
 
