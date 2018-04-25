@@ -46,42 +46,97 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     QJsonObject cpuObject = machineObject["cpu"].toObject();
     QJsonObject gpuObject = machineObject["gpu"].toObject();
     QJsonObject diskObject = machineObject["disk"].toObject();
+    QJsonArray accelerator = machineObject["accelerator"].toArray();
+    QJsonArray audio = machineObject["audio"].toArray();
 
     // TODO: Add qemu before commands
 
     QStringList qemuCommand;
 
     qemuCommand << "-monitor";
-
     qemuCommand << "stdio";
 
     qemuCommand << "-name";
-
     qemuCommand << machineObject["name"].toString();
 
     qemuCommand << "-uuid";
-
     qemuCommand << machineObject["uuid"].toString().remove("{").remove("}");
 
-    qemuCommand << "-m";
+    QString accelerators;
+    bool firstAccel = true;
+    for(int index = 0; index < accelerator.size(); ++index) {
+        if(firstAccel) {
+            firstAccel = false;
+        } else {
+            accelerators.append(",");
+        }
+        accelerators.append(accelerator[index].toString());
+        ++index;
+    }
 
+    qemuCommand << "-accel";
+    qemuCommand << accelerators;
+
+    QString audioCards;
+    bool firstAudio = true;
+    for(int index = 0; index < audio.size(); ++index) {
+        if(firstAudio) {
+            firstAudio = false;
+        } else {
+            accelerators.append(",");
+        }
+        audioCards.append(audio[index].toString());
+        ++index;
+    }
+
+    qemuCommand << "-soundhw";
+    qemuCommand << audioCards;
+
+    qemuCommand << "-m";
     qemuCommand << QString::number(machineObject["RAM"].toDouble());
 
     qemuCommand << "-k";
-
     qemuCommand << gpuObject["keyboard"].toString();
 
     qemuCommand << "-vga";
-
     qemuCommand << gpuObject["GPUType"].toString();
+
+    qemuCommand << "-cpu";
+    qemuCommand << cpuObject["CPUType"].toString();
+
+    // CPU
+    QString cpuArgs(QString::number(cpuObject["CPUCount"].toInt()));
+
+    if (cpuObject["coresSocket"].toInt() > 0) {
+        cpuArgs.append(",cores=");
+        cpuArgs.append(QString::number(cpuObject["coresSocket"].toInt()));
+    }
+
+    if (cpuObject["threadsCore"].toInt() > 0) {
+        cpuArgs.append(",threads=");
+        cpuArgs.append(QString::number(cpuObject["threadsCore"].toInt()));
+    }
+
+    if (cpuObject["socketCount"].toInt() > 0) {
+        cpuArgs.append(",sockets=");
+        cpuArgs.append(QString::number(cpuObject["socketCount"].toInt()));
+    }
+
+    if (cpuObject["maxHotCPU"].toInt() > 0) {
+        cpuArgs.append(",maxcpus=");
+        cpuArgs.append(QString::number(cpuObject["maxHotCPU"].toInt()));
+    }
+
+    qemuCommand << "-smp";
+    qemuCommand << cpuArgs;
 
     // HDD
     qemuCommand << "-drive";
-
     qemuCommand << QString("file=").append(diskObject["path"].toString()).append(",index=0,media=disk");
 
-    // CDROM TODO
-
+    // CDROM TODO, for test not implemented yet :'(
+    qemuCommand << "-drive";
+    qemuCommand << QString("file=").append("/home/xexio/Downloads/archlinux-2018.03.01-x86_64.iso").append(",if=ide,index=1,media=cdrom");
 
     return qemuCommand;
 
