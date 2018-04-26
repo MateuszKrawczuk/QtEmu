@@ -38,8 +38,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     aboutwidget = new AboutWidget(this);
 
     // Prepare main layout
-    osListWidget = new QListWidget();
+    osListWidget = new QListWidget(this);
     osListWidget -> setViewMode(QListView::ListMode);
+    osListWidget -> setContextMenuPolicy(Qt::CustomContextMenu);
     osListWidget -> setIconSize(QSize(32, 32));
     osListWidget -> setMovement(QListView::Static);
     osListWidget -> setMaximumWidth(170);
@@ -73,7 +74,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> loadUI(osListWidget -> count());
 
     // Connect
+    connect(osListWidget, &QListWidget::itemClicked,
+            this, &MainWindow::changeMachine);
 
+    connect(osListWidget, &QListWidget::customContextMenuRequested,
+            this, &MainWindow::machinesMenu);
 }
 
 MainWindow::~MainWindow() {
@@ -431,4 +436,19 @@ void MainWindow::loadUI(const int itemCount) {
         this -> startMachine     -> setEnabled(true);
     }
 
+}
+
+/**
+ * @brief Enable or disable the machine action items
+ * @param machineItem, machine item of the list
+ *
+ * Enable/Disable the machine action items depending the
+ * state of the machine
+ */
+void MainWindow::changeMachine(QListWidgetItem *machineItem) {
+    qDebug() << "Change machine" << machineItem -> data(QMetaType::QUuid).toUuid();
+}
+
+void MainWindow::machinesMenu(const QPoint &pos) {
+    qDebug() << "Machine menu, pos: " << pos;
 }

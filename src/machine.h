@@ -59,7 +59,7 @@ class Machine: public QObject {
         QString getUuid() const;
         void setUuid(const QString &value);
 
-        States getState() const;
+        Machine::States getState() const;
         void setState(const States &value);
 
         QString getCPUType() const;

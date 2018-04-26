@@ -266,6 +266,14 @@ QString Machine::getAcceleratorLabel() {
     return acceleratorLabel;
 }
 
+Machine::States Machine::getState() const {
+    return state;
+}
+
+void Machine::setState(const States &value) {
+    state = value;
+}
+
 QString Machine::getConfigPath() const {
     return configPath;
 }

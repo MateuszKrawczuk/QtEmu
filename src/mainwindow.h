@@ -69,6 +69,10 @@ class MainWindow : public QMainWindow {
         void runMachine();
         void deleteMachine();
         void loadUI(const int itemCount);
+        void changeMachine(QListWidgetItem *machineItem);
+
+    private slots:
+        void machinesMenu(const QPoint &pos);
 
     protected:
 
