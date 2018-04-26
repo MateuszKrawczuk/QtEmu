@@ -341,6 +341,10 @@ void MainWindow::createNewMachine() {
     machine = new Machine(this);
 
     machine -> addAudio("ac97", "Intel AC97(82801AA)");
+    machine -> setSocketCount(0);
+    machine -> setCoresSocket(0);
+    machine -> setThreadsCore(0);
+    machine -> setMaxHotCPU(0);
 
     MachineWizard newMachineWizard(machine, this -> osListWidget, this);
 
@@ -373,6 +377,10 @@ void MainWindow::runMachine() {
     machineProcess -> start(program, args);
 
     // TODO: Control the output of the machineProcess
+
+    // Connections
+
+
 }
 
 /*!

@@ -101,10 +101,10 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     qemuCommand << "-vga";
     qemuCommand << gpuObject["GPUType"].toString();
 
+    // CPU
     qemuCommand << "-cpu";
     qemuCommand << cpuObject["CPUType"].toString();
 
-    // CPU
     QString cpuArgs(QString::number(cpuObject["CPUCount"].toInt()));
 
     if (cpuObject["coresSocket"].toInt() > 0) {
@@ -129,6 +129,8 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
 
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
+
+    // Network TODO, WIP...
 
     // HDD
     qemuCommand << "-drive";
