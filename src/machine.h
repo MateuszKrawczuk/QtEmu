@@ -23,6 +23,7 @@
 
 // Qt
 #include <QObject>
+#include <QProcess>
 #include <QHash>
 #include <QUuid>
 
@@ -122,6 +123,9 @@ class Machine: public QObject {
         QString getAudioLabel();
 
         QString getAcceleratorLabel();
+
+        QProcess getMachineProcess() const;
+        void setMachineProcess(const QProcess &value);
 
     signals:
 

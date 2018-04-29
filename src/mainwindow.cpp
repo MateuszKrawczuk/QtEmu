@@ -94,29 +94,29 @@ void MainWindow::createMenus() {
 
     // File
     fileMenu = new QMenu(tr("&File"), this);
-    fileMenu -> addAction(preferencesApp);
+    fileMenu -> addAction(preferencesAppAction);
     fileMenu -> addSeparator();
-    fileMenu -> addAction(checkUpdateApp);
+    fileMenu -> addAction(checkUpdateAppAction);
     fileMenu -> addSeparator();
-    fileMenu -> addAction(exitApp);
+    fileMenu -> addAction(exitAppAction);
 
     // Machine
     machineMenu = new QMenu(tr("&Machine"), this);
-    machineMenu -> addAction(newMachine);
-    machineMenu -> addAction(settingsMachine);
-    machineMenu -> addAction(duplicateMachine);
-    machineMenu -> addAction(removeMachine);
+    machineMenu -> addAction(newMachineAction);
+    machineMenu -> addAction(settingsMachineAction);
+    machineMenu -> addAction(duplicateMachineAction);
+    machineMenu -> addAction(removeMachineAction);
     //machineMenu -> addAction(groupMachine);
 
     // Help
     helpMenu = new QMenu(tr("&Help"), this);
-    helpMenu -> addAction(helpQuickHelp);
+    helpMenu -> addAction(helpQuickHelpAction);
     helpMenu -> addSeparator();
-    helpMenu -> addAction(helpQtEmuWebsite);
-    helpMenu -> addAction(helpQtEmuBugTracker);
-    helpMenu -> addAction(helpQemuWebsite);
+    helpMenu -> addAction(helpQtEmuWebsiteAction);
+    helpMenu -> addAction(helpQtEmuBugTrackerAction);
+    helpMenu -> addAction(helpQemuWebsiteAction);
     helpMenu -> addSeparator();
-    helpMenu -> addAction(helpAbout);
+    helpMenu -> addAction(helpAboutAction);
 
     // Add the menus to the main menu bar
     this->menuBar() -> addMenu(fileMenu);
@@ -132,48 +132,48 @@ void MainWindow::createMenus() {
 void MainWindow::createMenusActions() {
 
     // Actions for File menu
-    preferencesApp = new QAction(QIcon::fromTheme("configure",
-                                                  QIcon(":/icon/32x32/qtemu.png")),
-                                 tr("Preferences"),
-                                 this);
+    preferencesAppAction = new QAction(QIcon::fromTheme("configure",
+                                                        QIcon(":/icon/32x32/qtemu.png")),
+                                       tr("Preferences"),
+                                       this);
     //preferencesApp -> setShortcut(Qt::Key_F1);
-    connect(preferencesApp, &QAction::triggered,
+    connect(preferencesAppAction, &QAction::triggered,
             configWindow, &QWidget::show);
 
-    checkUpdateApp = new QAction(QIcon::fromTheme("update-none",
-                                                  QIcon(":/icon/32x32/qtemu.png")),
-                                 tr("Check for updates"),
-                                 this);
+    checkUpdateAppAction = new QAction(QIcon::fromTheme("update-none",
+                                                        QIcon(":/icon/32x32/qtemu.png")),
+                                       tr("Check for updates"),
+                                       this);
 
-    exitApp = new QAction(QIcon::fromTheme("application-exit",
-                                           QIcon(":/icon/32x32/qtemu.png")),
-                          tr("Exit"),
-                          this);
+    exitAppAction = new QAction(QIcon::fromTheme("application-exit",
+                                                 QIcon(":/icon/32x32/qtemu.png")),
+                                tr("Exit"),
+                                this);
 
     // Actions for Machine menu
 
-    newMachine = new QAction(QIcon::fromTheme("project-development-new-template",
+    newMachineAction = new QAction(QIcon::fromTheme("project-development-new-template",
                                               QIcon(":/icon/32x32/qtemu.png")),
-                             tr("New Machine"),
-                             this);
-    connect(newMachine, &QAction::triggered,
+                                   tr("New Machine"),
+                                   this);
+    connect(newMachineAction, &QAction::triggered,
             this, &MainWindow::createNewMachine);
 
-    settingsMachine = new QAction(QIcon::fromTheme("settings-configure",
-                                                   QIcon(":/icon/32x32/qtemu.png")),
-                                  tr("Machine Settings"),
-                                  this);
+    settingsMachineAction = new QAction(QIcon::fromTheme("settings-configure",
+                                                         QIcon(":/icon/32x32/qtemu.png")),
+                                        tr("Machine Settings"),
+                                        this);
 
-    duplicateMachine = new QAction(QIcon::fromTheme("edit-duplicate",
-                                                    QIcon(":/icon/32x32/qtemu.png")),
-                                   tr("Duplicate Machine"),
-                                   this);
+    duplicateMachineAction = new QAction(QIcon::fromTheme("edit-duplicate",
+                                                          QIcon(":/icon/32x32/qtemu.png")),
+                                         tr("Duplicate Machine"),
+                                         this);
 
-    removeMachine = new QAction(QIcon::fromTheme("project-development-close",
-                                                 QIcon(":/icon/32x32/qtemu.png")),
-                                tr("Remove Machine"),
-                                this);
-    connect(removeMachine, &QAction::triggered,
+    removeMachineAction = new QAction(QIcon::fromTheme("project-development-close",
+                                                       QIcon(":/icon/32x32/qtemu.png")),
+                                      tr("Remove Machine"),
+                                      this);
+    connect(removeMachineAction, &QAction::triggered,
             this, &MainWindow::deleteMachine);
 
     /*groupMachine = new QAction(QIcon::fromTheme("view-group",
@@ -183,69 +183,69 @@ void MainWindow::createMenusActions() {
     */
 
     // Actions for Help menu
-    helpQuickHelp = new QAction(QIcon::fromTheme("help-contents",
-                                                 QIcon(":/icon/32x32/qtemu.png")),
-                                tr("QtEmu &Quick Help"),
-                                this);
-    helpQuickHelp -> setShortcut(Qt::Key_F1);
-    connect(helpQuickHelp, &QAction::triggered,
+    helpQuickHelpAction = new QAction(QIcon::fromTheme("help-contents",
+                                                       QIcon(":/icon/32x32/qtemu.png")),
+                                      tr("QtEmu &Quick Help"),
+                                      this);
+    helpQuickHelpAction -> setShortcut(Qt::Key_F1);
+    connect(helpQuickHelpAction, &QAction::triggered,
             helpwidget, &QWidget::show);
 
-    helpQtEmuWebsite = new QAction(QIcon::fromTheme("internet-web-browser",
-                                                    QIcon(":/icon/32x32/qtemu.png")),
-                                   tr("QtEmu &Website"),
-                                   this);
-    connect(helpQtEmuWebsite, &QAction::triggered,
+    helpQtEmuWebsiteAction = new QAction(QIcon::fromTheme("internet-web-browser",
+                                                          QIcon(":/icon/32x32/qtemu.png")),
+                                         tr("QtEmu &Website"),
+                                         this);
+    connect(helpQtEmuWebsiteAction, &QAction::triggered,
             this, &MainWindow::visitQtEmuWebsite);
 
-    helpQtEmuBugTracker = new QAction(QIcon::fromTheme("tools-report-bug",
-                                                       QIcon(":/icon/32x32/qtemu.png")),
-                                      tr("QtEmu Bug Tracker"),
-                                      this);
-    connect(helpQtEmuBugTracker, &QAction::triggered,
+    helpQtEmuBugTrackerAction = new QAction(QIcon::fromTheme("tools-report-bug",
+                                                             QIcon(":/icon/32x32/qtemu.png")),
+                                            tr("QtEmu Bug Tracker"),
+                                            this);
+    connect(helpQtEmuBugTrackerAction, &QAction::triggered,
             this, &MainWindow::visitQtEmuBugTracker);
 
-    helpQemuWebsite = new QAction(QIcon::fromTheme("internet-web-browser",
-                                                   QIcon(":/icon/32x32/qtemu.png")),
-                                  tr("Qemu &Website"),
-                                  this);
-    connect(helpQemuWebsite, &QAction::triggered,
+    helpQemuWebsiteAction = new QAction(QIcon::fromTheme("internet-web-browser",
+                                                         QIcon(":/icon/32x32/qtemu.png")),
+                                        tr("Qemu &Website"),
+                                        this);
+    connect(helpQemuWebsiteAction, &QAction::triggered,
             this, &MainWindow::visitQemuWebsite);
 
-    helpAbout = new QAction(QIcon::fromTheme("qtemu",
-                                             QIcon(":/icon/32x32/qtemu.png")),
-                            tr("&About QtEmu"),
-                            this);
-    connect(helpAbout, &QAction::triggered,
+    helpAboutAction = new QAction(QIcon::fromTheme("qtemu",
+                                                   QIcon(":/icon/32x32/qtemu.png")),
+                                  tr("&About QtEmu"),
+                                  this);
+    connect(helpAboutAction, &QAction::triggered,
             aboutwidget, &QWidget::show);
 
     // Actions for Machine toolbar
-    startMachine = new QAction(this);
-    startMachine -> setIcon(QIcon::fromTheme("kt-start",
-                                           QIcon(":/icon/32x32/qtemu.png")));
-    startMachine -> setToolTip(tr("Start machine"));
-    connect(startMachine, &QAction::triggered,
+    startMachineAction = new QAction(this);
+    startMachineAction -> setIcon(QIcon::fromTheme("kt-start",
+                                                   QIcon(":/icon/32x32/qtemu.png")));
+    startMachineAction -> setToolTip(tr("Start machine"));
+    connect(startMachineAction, &QAction::triggered,
             this, &MainWindow::runMachine);
 
-    stopMachine = new QAction(this);
-    stopMachine -> setIcon(QIcon::fromTheme("kt-stop",
-                                          QIcon(":/icon/32x32/qtemu.png")));
-    stopMachine -> setToolTip(tr("Stop machine"));
+    stopMachineAction = new QAction(this);
+    stopMachineAction -> setIcon(QIcon::fromTheme("kt-stop",
+                                                  QIcon(":/icon/32x32/qtemu.png")));
+    stopMachineAction -> setToolTip(tr("Stop machine"));
 
-    resetMachine = new QAction(this);
-    resetMachine -> setIcon(QIcon::fromTheme("chronometer-reset",
-                                           QIcon(":/icon/32x32/qtemu.png")));
-    resetMachine -> setToolTip(tr("Reset machine"));
+    resetMachineAction = new QAction(this);
+    resetMachineAction -> setIcon(QIcon::fromTheme("chronometer-reset",
+                                                   QIcon(":/icon/32x32/qtemu.png")));
+    resetMachineAction -> setToolTip(tr("Reset machine"));
 
-    pauseMachine = new QAction(this);
-    pauseMachine -> setIcon(QIcon::fromTheme("kt-pause",
-                                             QIcon(":/icon/32x32/qtemu.png")));
-    pauseMachine -> setToolTip(tr("Pause machine"));
+    pauseMachineAction = new QAction(this);
+    pauseMachineAction -> setIcon(QIcon::fromTheme("kt-pause",
+                                                   QIcon(":/icon/32x32/qtemu.png")));
+    pauseMachineAction -> setToolTip(tr("Pause machine"));
 
-    saveMachine = new QAction(this);
-    saveMachine -> setIcon(QIcon::fromTheme("system-save-session",
-                                            QIcon(":/icon/32x32/qtemu.png")));
-    saveMachine -> setToolTip(tr("Save machine"));
+    saveMachineAction = new QAction(this);
+    saveMachineAction -> setIcon(QIcon::fromTheme("system-save-session",
+                                                  QIcon(":/icon/32x32/qtemu.png")));
+    saveMachineAction -> setToolTip(tr("Save machine"));
 
 }
 
@@ -259,14 +259,14 @@ void MainWindow::createToolBars() {
 
     mainToolBar -> setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
-    mainToolBar -> addAction(this -> newMachine);
-    mainToolBar -> addAction(this -> settingsMachine);
+    mainToolBar -> addAction(this -> newMachineAction);
+    mainToolBar -> addAction(this -> settingsMachineAction);
     mainToolBar -> addSeparator();
-    mainToolBar -> addAction(this -> startMachine);
-    mainToolBar -> addAction(this -> stopMachine);
-    mainToolBar -> addAction(this -> resetMachine);
-    mainToolBar -> addAction(this -> pauseMachine);
-    mainToolBar -> addAction(this -> saveMachine);
+    mainToolBar -> addAction(this -> startMachineAction);
+    mainToolBar -> addAction(this -> stopMachineAction);
+    mainToolBar -> addAction(this -> resetMachineAction);
+    mainToolBar -> addAction(this -> pauseMachineAction);
+    mainToolBar -> addAction(this -> saveMachineAction);
 
     mainToolBar -> setMovable(false);
 
@@ -302,10 +302,11 @@ void MainWindow::loadMachines() {
 
         QListWidgetItem *machine = new QListWidgetItem(machineJSON["name"].toString(), this -> osListWidget);
         machine -> setData(QMetaType::QUuid, machineJSON["uuid"].toString());
-        // TODO: Check if the json it's incomplete and the image not exits    
+        // TODO: Check if the json it's incomplete and the image not exits
         machine -> setIcon(QIcon(":/images/os/64x64/" +
                                  SystemUtils::getOsIcon(machineJSON["icon"].toString())));
     }
+
 
 }
 
@@ -415,25 +416,25 @@ void MainWindow::deleteMachine() {
  */
 void MainWindow::loadUI(const int itemCount) {
 
-    this -> stopMachine -> setEnabled(false);
-    this -> resetMachine -> setEnabled(false);
-    this -> pauseMachine -> setEnabled(false);
-    this -> saveMachine -> setEnabled(false);
+    this -> stopMachineAction -> setEnabled(false);
+    this -> resetMachineAction -> setEnabled(false);
+    this -> pauseMachineAction -> setEnabled(false);
+    this -> saveMachineAction -> setEnabled(false);
 
     if (itemCount == 0) {
-        this -> settingsMachine  -> setEnabled(false);
-        this -> duplicateMachine -> setEnabled(false);
-        this -> removeMachine    -> setEnabled(false);
+        this -> settingsMachineAction  -> setEnabled(false);
+        this -> duplicateMachineAction -> setEnabled(false);
+        this -> removeMachineAction    -> setEnabled(false);
 
-        this -> startMachine     -> setEnabled(false);
+        this -> startMachineAction     -> setEnabled(false);
     } else {
         this -> osListWidget -> setCurrentRow(0);
 
-        this -> settingsMachine  -> setEnabled(true);
-        this -> duplicateMachine -> setEnabled(true);
-        this -> removeMachine    -> setEnabled(true);
+        this -> settingsMachineAction  -> setEnabled(true);
+        this -> duplicateMachineAction -> setEnabled(true);
+        this -> removeMachineAction    -> setEnabled(true);
 
-        this -> startMachine     -> setEnabled(true);
+        this -> startMachineAction     -> setEnabled(true);
     }
 
 }

@@ -82,28 +82,28 @@ class MainWindow : public QMainWindow {
         QMenu *machineMenu;
         QMenu *helpMenu;
 
-        QAction *exitApp;
-        QAction *checkUpdateApp;
-        QAction *preferencesApp;
+        QAction *exitAppAction;
+        QAction *checkUpdateAppAction;
+        QAction *preferencesAppAction;
 
-        QAction *newMachine;
-        QAction *addMachine;
-        QAction *settingsMachine;
-        QAction *duplicateMachine;
-        QAction *removeMachine;
-        QAction *groupMachine;
+        QAction *newMachineAction;
+        QAction *addMachineAction;
+        QAction *settingsMachineAction;
+        QAction *duplicateMachineAction;
+        QAction *removeMachineAction;
+        QAction *groupMachineAction;
 
-        QAction *helpQuickHelp;
-        QAction *helpQtEmuWebsite;
-        QAction *helpQtEmuBugTracker;
-        QAction *helpQemuWebsite;
-        QAction *helpAbout;
+        QAction *helpQuickHelpAction;
+        QAction *helpQtEmuWebsiteAction;
+        QAction *helpQtEmuBugTrackerAction;
+        QAction *helpQemuWebsiteAction;
+        QAction *helpAboutAction;
 
-        QAction *startMachine;
-        QAction *stopMachine;
-        QAction *resetMachine;
-        QAction *pauseMachine;
-        QAction *saveMachine;
+        QAction *startMachineAction;
+        QAction *stopMachineAction;
+        QAction *resetMachineAction;
+        QAction *pauseMachineAction;
+        QAction *saveMachineAction;
         // End menus
 
         // Toolbar
