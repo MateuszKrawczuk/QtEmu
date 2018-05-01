@@ -52,10 +52,10 @@ class AboutTab : public QWidget {
     protected:
 
     private:
-        QVBoxLayout *mainLayout;
-        QLabel *about;
-        QLabel *copyright;
-        QLabel *urlSite;
+        QVBoxLayout *m_mainLayout;
+        QLabel *m_about;
+        QLabel *m_copyright;
+        QLabel *m_urlSite;
 };
 
 class AuthorsTab : public QWidget {
@@ -72,8 +72,8 @@ class AuthorsTab : public QWidget {
     protected:
 
     private:
-        QVBoxLayout *mainLayout;
-        QTextBrowser *authorsBrowser;
+        QVBoxLayout *m_mainLayout;
+        QTextBrowser *m_authorsBrowser;
 };
 
 class LicenseTab : public QWidget {
@@ -90,8 +90,8 @@ class LicenseTab : public QWidget {
     protected:
 
     private:
-        QVBoxLayout *mainLayout;
-        QTextBrowser *licenseBrowser;
+        QVBoxLayout *m_mainLayout;
+        QTextBrowser *m_licenseBrowser;
 };
 
 class AboutWidget : public QWidget {
@@ -110,13 +110,13 @@ class AboutWidget : public QWidget {
         virtual void hideEvent(QHideEvent *event);
 
     private:
-        QVBoxLayout *mainLayout;
-        QHBoxLayout *iconLayout;
-        QPushButton *closeButton;
-        QAction *closeAction;
-        QTabWidget *tabWidget;
-        QLabel *qtemuIcon;
-        QLabel *qtemuAppInfo;
+        QVBoxLayout *m_mainLayout;
+        QHBoxLayout *m_iconLayout;
+        QPushButton *m_closeButton;
+        QAction *m_closeAction;
+        QTabWidget *m_tabWidget;
+        QLabel *m_qtemuIcon;
+        QLabel *m_qtemuAppInfo;
 };
 
 #endif // ABOUTWIDGET_H

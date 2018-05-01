@@ -29,59 +29,59 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine, QListWidget *osLi
 
     this -> setTitle(tr("Machine Summary"));
 
-    this -> newMachine = machine;
-    this -> osList = osListWidget;
+    this -> m_newMachine = machine;
+    this -> m_osList = osListWidget;
 
-    conclusionLabel = new QLabel(tr("Summary of the new machine"));
+    m_conclusionLabel = new QLabel(tr("Summary of the new machine"));
 
-    machineDescLabel = new QLabel(tr("Name") + ":");
-    OSTypeDescLabel = new QLabel(tr("Operating system") + ":");
-    OSVersionDescLabel = new QLabel(tr("Operating system version") + ":");
-    processorDescLabel = new QLabel(tr("Processor") + ":");
-    graphicsDescLabel = new QLabel(tr("Graphics") + ":");
-    audioDescLabel = new QLabel(tr("Audio") + ":");
-    RAMDescLabel = new QLabel(tr("RAM") + ":");
-    acceleratorDescLabel = new QLabel(tr("Accelerator") + ":");
-    diskDescLabel = new QLabel(tr("Disk") + ":");
+    m_machineDescLabel = new QLabel(tr("Name") + ":");
+    m_OSTypeDescLabel = new QLabel(tr("Operating system") + ":");
+    m_OSVersionDescLabel = new QLabel(tr("Operating system version") + ":");
+    m_processorDescLabel = new QLabel(tr("Processor") + ":");
+    m_graphicsDescLabel = new QLabel(tr("Graphics") + ":");
+    m_audioDescLabel = new QLabel(tr("Audio") + ":");
+    m_RAMDescLabel = new QLabel(tr("RAM") + ":");
+    m_acceleratorDescLabel = new QLabel(tr("Accelerator") + ":");
+    m_diskDescLabel = new QLabel(tr("Disk") + ":");
 
-    machineNameLabel = new QLabel();
-    machineNameLabel -> setWordWrap(true);
-    OSTypeLabel      = new QLabel();
-    OSVersionLabel   = new QLabel();
-    processorLabel   = new QLabel();
-    graphicsLabel    = new QLabel();
-    audioLabel       = new QLabel();
-    audioLabel -> setWordWrap(true);
-    RAMLabel         = new QLabel();
-    acceleratorLabel = new QLabel();
-    diskLabel        = new QLabel();
-    diskLabel -> setWordWrap(true);
+    m_machineNameLabel = new QLabel();
+    m_machineNameLabel -> setWordWrap(true);
+    m_OSTypeLabel      = new QLabel();
+    m_OSVersionLabel   = new QLabel();
+    m_processorLabel   = new QLabel();
+    m_graphicsLabel    = new QLabel();
+    m_audioLabel       = new QLabel();
+    m_audioLabel -> setWordWrap(true);
+    m_RAMLabel         = new QLabel();
+    m_acceleratorLabel = new QLabel();
+    m_diskLabel        = new QLabel();
+    m_diskLabel -> setWordWrap(true);
 
-    conclusionLayout = new QGridLayout();
+    m_conclusionLayout = new QGridLayout();
 
-    conclusionLayout -> setColumnStretch(1, 10);
-    conclusionLayout -> setColumnStretch(2, 10);
-    conclusionLayout -> setColumnStretch(3, 10);
+    m_conclusionLayout -> setColumnStretch(1, 10);
+    m_conclusionLayout -> setColumnStretch(2, 10);
+    m_conclusionLayout -> setColumnStretch(3, 10);
 
-    conclusionLayout -> addWidget(conclusionLabel,      0, 0, 1, 4);
-    conclusionLayout -> addWidget(machineDescLabel,     1, 0, 1, 1);
-    conclusionLayout -> addWidget(machineNameLabel,     1, 1, 1, 1);
-    conclusionLayout -> addWidget(OSTypeDescLabel,      2, 0, 1, 1);
-    conclusionLayout -> addWidget(OSTypeLabel,          2, 1, 1, 1);
-    conclusionLayout -> addWidget(OSVersionDescLabel,   3, 0, 1, 1);
-    conclusionLayout -> addWidget(OSVersionLabel,       3, 1, 1, 1);
-    conclusionLayout -> addWidget(processorDescLabel,   4, 0, 1, 1);
-    conclusionLayout -> addWidget(processorLabel,       4, 1, 1, 1);
-    conclusionLayout -> addWidget(graphicsDescLabel,    5, 0, 1, 1);
-    conclusionLayout -> addWidget(graphicsLabel,        5, 1, 1, 1);
-    conclusionLayout -> addWidget(audioDescLabel,       6, 0, 1, 1);
-    conclusionLayout -> addWidget(audioLabel,           6, 1, 1, 3);
-    conclusionLayout -> addWidget(RAMDescLabel,         7, 0, 1, 1);
-    conclusionLayout -> addWidget(RAMLabel,             7, 1, 1, 1);
-    conclusionLayout -> addWidget(acceleratorDescLabel, 8, 0, 1, 1);
-    conclusionLayout -> addWidget(acceleratorLabel,     8, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_conclusionLabel,      0, 0, 1, 4);
+    m_conclusionLayout -> addWidget(m_machineDescLabel,     1, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_machineNameLabel,     1, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_OSTypeDescLabel,      2, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_OSTypeLabel,          2, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_OSVersionDescLabel,   3, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_OSVersionLabel,       3, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_processorDescLabel,   4, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_processorLabel,       4, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_graphicsDescLabel,    5, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_graphicsLabel,        5, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_audioDescLabel,       6, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_audioLabel,           6, 1, 1, 3);
+    m_conclusionLayout -> addWidget(m_RAMDescLabel,         7, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_RAMLabel,             7, 1, 1, 1);
+    m_conclusionLayout -> addWidget(m_acceleratorDescLabel, 8, 0, 1, 1);
+    m_conclusionLayout -> addWidget(m_acceleratorLabel,     8, 1, 1, 1);
 
-    this -> setLayout(conclusionLayout);
+    this -> setLayout(m_conclusionLayout);
 
     qDebug() << "MachineConclusionPage created";
 }
@@ -91,46 +91,46 @@ MachineConclusionPage::~MachineConclusionPage() {
 }
 
 void MachineConclusionPage::initializePage() {
-    this -> machineNameLabel -> setText(this -> newMachine -> getName());
-    this -> OSTypeLabel      -> setText(this -> newMachine -> getOSType());
-    this -> OSVersionLabel   -> setText(this -> newMachine -> getOSVersion());
-    this -> processorLabel   -> setText(this -> newMachine -> getCPUType());
-    this -> graphicsLabel    -> setText(this -> newMachine -> getGPUType());
-    this -> RAMLabel         -> setText(QString::number(this -> newMachine -> getRAM()).append(" MiB"));
-    this -> audioLabel       -> setText(this -> newMachine -> getAudioLabel());
-    this -> acceleratorLabel -> setText(this -> newMachine -> getAcceleratorLabel());
-    this -> diskLabel        -> setText(this -> newMachine -> getDiskName());
+    this -> m_machineNameLabel -> setText(this -> m_newMachine -> getName());
+    this -> m_OSTypeLabel      -> setText(this -> m_newMachine -> getOSType());
+    this -> m_OSVersionLabel   -> setText(this -> m_newMachine -> getOSVersion());
+    this -> m_processorLabel   -> setText(this -> m_newMachine -> getCPUType());
+    this -> m_graphicsLabel    -> setText(this -> m_newMachine -> getGPUType());
+    this -> m_RAMLabel         -> setText(QString::number(this -> m_newMachine -> getRAM()).append(" MiB"));
+    this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel());
+    this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel());
+    this -> m_diskLabel        -> setText(this -> m_newMachine -> getDiskName());
 
-    if( ! this -> newMachine -> getDiskName().isEmpty()){
-        this -> conclusionLayout -> addWidget(this -> diskDescLabel,    9, 0, 1, 1);
-        this -> conclusionLayout -> addWidget(this -> diskLabel,        9, 1, 1, 1);
+    if( ! this -> m_newMachine -> getDiskName().isEmpty()){
+        this -> m_conclusionLayout -> addWidget(this -> m_diskDescLabel,    9, 0, 1, 1);
+        this -> m_conclusionLayout -> addWidget(this -> m_diskLabel,        9, 1, 1, 1);
     } else {
-        this -> conclusionLayout -> removeWidget(this -> diskDescLabel);
-        this -> conclusionLayout -> removeWidget(this -> diskLabel);
+        this -> m_conclusionLayout -> removeWidget(this -> m_diskDescLabel);
+        this -> m_conclusionLayout -> removeWidget(this -> m_diskLabel);
     }
 
 }
 
 bool MachineConclusionPage::validatePage() {
 
-    this -> newMachine -> setUuid(QUuid::createUuid().toString());
+    this -> m_newMachine -> setUuid(QUuid::createUuid().toString());
 
     // Add the new machine to the list
-    QListWidgetItem *machine = new QListWidgetItem(this -> newMachine -> getName(), this -> osList);
-    machine -> setData(QMetaType::QUuid, this -> newMachine -> getUuid());
+    QListWidgetItem *machine = new QListWidgetItem(this -> m_newMachine -> getName(), this -> m_osList);
+    machine -> setData(QMetaType::QUuid, this -> m_newMachine -> getUuid());
     // TODO: Check if the json it's incomplete and the image not exits
     machine -> setIcon(QIcon(":/images/os/64x64/" +
-                             SystemUtils::getOsIcon(this -> newMachine -> getOSVersion())));
+                             SystemUtils::getOsIcon(this -> m_newMachine -> getOSVersion())));
 
-    if( ! this -> newMachine -> getCreateNewDisk() ) {
+    if( ! this -> m_newMachine -> getCreateNewDisk() ) {
         return true;
     }
 
     QString strMachinePath;
 
-    if ( ! this -> newMachine -> getDiskPath().isEmpty()) {
+    if ( ! this -> m_newMachine -> getDiskPath().isEmpty()) {
 
-        strMachinePath = this -> newMachine -> getDiskPath();
+        strMachinePath = this -> m_newMachine -> getDiskPath();
 
     } else {
         QSettings settings;
@@ -141,29 +141,29 @@ bool MachineConclusionPage::validatePage() {
         settings.endGroup();
 
         strMachinePath.append("/")
-                      .append(this -> newMachine -> getName())
+                      .append(this -> m_newMachine -> getName())
                       .append("/")
-                      .append(this -> newMachine -> getDiskName().toLower().replace(" ", "_"))
+                      .append(this -> m_newMachine -> getDiskName().toLower().replace(" ", "_"))
                       .append(".")
-                      .append(this -> newMachine -> getDiskFormat());
+                      .append(this -> m_newMachine -> getDiskFormat());
     }
 
-    this -> newMachine -> setDiskPath(strMachinePath);
+    this -> m_newMachine -> setDiskPath(strMachinePath);
 
     // Create the disk
     bool isDiskCreated = SystemUtils::createDisk(strMachinePath,
-                                                 this -> newMachine -> getDiskFormat(),
-                                                 this -> newMachine -> getDiskSize(),
+                                                 this -> m_newMachine -> getDiskFormat(),
+                                                 this -> m_newMachine -> getDiskSize(),
                                                  false);
 
     if (isDiskCreated) {
 
-        createMachineJSON(this -> newMachine);
+        createMachineJSON(this -> m_newMachine);
 
-        SystemUtils::populateOSList(this -> newMachine);
+        SystemUtils::populateOSList(this -> m_newMachine);
 
-        Logger::logMachineCreation(this -> newMachine -> getPath(),
-                                   this -> newMachine -> getName(), "Machine created");
+        Logger::logMachineCreation(this -> m_newMachine -> getPath(),
+                                   this -> m_newMachine -> getName(), "Machine created");
     }
 
     return isDiskCreated;
@@ -198,38 +198,38 @@ void MachineConclusionPage::createMachineJSON(Machine *machine) const {
 
 void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) const{
 
-    machineJSONObject["name"]      = this -> newMachine -> getName();
-    machineJSONObject["OSType"]    = this -> newMachine -> getOSType();
-    machineJSONObject["OSVersion"] = this -> newMachine -> getOSVersion();
-    machineJSONObject["RAM"]       = this -> newMachine -> getRAM();
-    machineJSONObject["network"]   = this -> newMachine -> getUseNetwork();
-    machineJSONObject["path"]      = this -> newMachine -> getPath();
-    machineJSONObject["uuid"]      = this -> newMachine -> getUuid();
+    machineJSONObject["name"]      = this -> m_newMachine -> getName();
+    machineJSONObject["OSType"]    = this -> m_newMachine -> getOSType();
+    machineJSONObject["OSVersion"] = this -> m_newMachine -> getOSVersion();
+    machineJSONObject["RAM"]       = this -> m_newMachine -> getRAM();
+    machineJSONObject["network"]   = this -> m_newMachine -> getUseNetwork();
+    machineJSONObject["path"]      = this -> m_newMachine -> getPath();
+    machineJSONObject["uuid"]      = this -> m_newMachine -> getUuid();
 
     QJsonObject cpu;
-    cpu["CPUType"]     = this -> newMachine -> getCPUType();
-    cpu["CPUCount"]    = this -> newMachine -> getCPUCount();
-    cpu["socketCount"] = this -> newMachine -> getSocketCount();
-    cpu["coresSocket"] = this -> newMachine -> getCoresSocket();
-    cpu["threadsCore"] = this -> newMachine -> getThreadsCore();
-    cpu["maxHotCPU"]   = this -> newMachine -> getMaxHotCPU();
+    cpu["CPUType"]     = this -> m_newMachine -> getCPUType();
+    cpu["CPUCount"]    = this -> m_newMachine -> getCPUCount();
+    cpu["socketCount"] = this -> m_newMachine -> getSocketCount();
+    cpu["coresSocket"] = this -> m_newMachine -> getCoresSocket();
+    cpu["threadsCore"] = this -> m_newMachine -> getThreadsCore();
+    cpu["maxHotCPU"]   = this -> m_newMachine -> getMaxHotCPU();
 
     machineJSONObject["cpu"] = cpu;
 
     QJsonObject gpu;
-    gpu["GPUType"]  = this -> newMachine -> getGPUType();
-    gpu["keyboard"] = this -> newMachine -> getKeyboard();
+    gpu["GPUType"]  = this -> m_newMachine -> getGPUType();
+    gpu["keyboard"] = this -> m_newMachine -> getKeyboard();
 
     machineJSONObject["gpu"] = gpu;
 
     QJsonObject disk;
-    disk["name"] = this -> newMachine -> getDiskName();
-    disk["path"] = this -> newMachine -> getDiskPath();
+    disk["name"] = this -> m_newMachine -> getDiskName();
+    disk["path"] = this -> m_newMachine -> getDiskPath();
 
     machineJSONObject["disk"] = disk;
 
     QJsonArray accelerator;
-    QStringList acceleratorList = this -> newMachine -> getAcceleratorLabel().split(",");
+    QStringList acceleratorList = this -> m_newMachine -> getAcceleratorLabel().split(",");
 
     for (const auto& i : acceleratorList) {
         if( ! i.isEmpty() ){
@@ -242,7 +242,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     }
 
     QJsonArray audio;
-    QStringList audioList = this -> newMachine -> getAudioLabel().split(",");
+    QStringList audioList = this -> m_newMachine -> getAudioLabel().split(",");
 
     for (const auto& i : audioList) {
         if( ! i.isEmpty() ){

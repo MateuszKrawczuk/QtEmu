@@ -50,17 +50,17 @@ class MachineMemoryPage: public QWizardPage {
     private:
         bool validatePage();
 
-        QGridLayout *machineMemoryLayout;
+        QGridLayout *m_machineMemoryLayout;
 
-        QSpinBox *memorySpinBox;
-        QSlider *memorySlider;
+        QSpinBox *m_memorySpinBox;
+        QSlider *m_memorySlider;
 
-        QLabel *descriptionMemoryLabel;
-        QLabel *spinBoxMemoryLabel;
-        QLabel *minMemoryLabel;
-        QLabel *maxMemorylabel;
+        QLabel *m_descriptionMemoryLabel;
+        QLabel *m_spinBoxMemoryLabel;
+        QLabel *m_minMemoryLabel;
+        QLabel *m_maxMemorylabel;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 #endif // MEMORYPAGE_H

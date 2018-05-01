@@ -28,9 +28,9 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
                                            QIcon(":/icon/32x32/qtemu.png")));
-    this->setWindowFlags(Qt::Dialog);
-    this->setWindowModality(Qt::ApplicationModal);
-    this->setMinimumSize(640, 520);
+    this -> setWindowFlags(Qt::Dialog);
+    this -> setWindowModality(Qt::ApplicationModal);
+    this -> setMinimumSize(640, 520);
 
     QSettings settings;
 
@@ -51,93 +51,93 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     settings.endGroup();
 
-    optionsListWidget = new QListWidget(this);
-    optionsListWidget -> setViewMode(QListView::ListMode);
-    optionsListWidget -> setIconSize(QSize(32, 32));
-    optionsListWidget -> setMovement(QListView::Static);
-    optionsListWidget -> setMaximumWidth(170);
-    optionsListWidget -> setSpacing(7);
-    optionsListWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_optionsListWidget = new QListWidget(this);
+    m_optionsListWidget -> setViewMode(QListView::ListMode);
+    m_optionsListWidget -> setIconSize(QSize(32, 32));
+    m_optionsListWidget -> setMovement(QListView::Static);
+    m_optionsListWidget -> setMaximumWidth(170);
+    m_optionsListWidget -> setSpacing(7);
+    m_optionsListWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // Add options
-    optionsListWidget -> addItem(tr("General Options"));
-    optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
-                                                              QIcon(":/icon/32x32/qtemu.png")));
+    m_optionsListWidget -> addItem(tr("General Options"));
+    m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
+                                                               QIcon(":/icon/32x32/qtemu.png")));
 
-    //optionsListWidget -> addItem(tr("Input"));
-    //optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",
+    //m_optionsListWidget -> addItem(tr("Input"));
+    //m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",
     //                                                          QIcon(":/icon/32x32/qtemu.png")));
 
-    optionsListWidget -> addItem(tr("Update QtEmu"));
-    optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
+    m_optionsListWidget -> addItem(tr("Update QtEmu"));
+    m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
+                                                               QIcon(":/icon/32x32/qtemu.png")));
+
+    m_optionsListWidget -> addItem(tr("Language"));
+    m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
+                                                               QIcon(":/icon/32x32/qtemu.png")));
+
+    m_optionsListWidget -> addItem(tr("Start"));
+    m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
                                                               QIcon(":/icon/32x32/qtemu.png")));
 
-    optionsListWidget -> addItem(tr("Language"));
-    optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
-                                                              QIcon(":/icon/32x32/qtemu.png")));
-
-    optionsListWidget -> addItem(tr("Start"));
-    optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
-                                                              QIcon(":/icon/32x32/qtemu.png")));
-
-    optionsListWidget -> addItem(tr("Proxy"));
-    optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
-                                                              QIcon(":/icon/32x32/qtemu.png")));
+    m_optionsListWidget -> addItem(tr("Proxy"));
+    m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
+                                                               QIcon(":/icon/32x32/qtemu.png")));
 
     // Prepare window
-    categoriesStackedWidget = new QStackedWidget(this);
-    categoriesStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
+    m_categoriesStackedWidget = new QStackedWidget(this);
+    m_categoriesStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
                                              QSizePolicy::MinimumExpanding);
 
-    categoriesStackedWidget -> addWidget(generalPageWidget);
-    //categoriesStackedWidget -> addWidget(inputPageWidget);
-    categoriesStackedWidget -> addWidget(updatePageWidget);
-    categoriesStackedWidget -> addWidget(languagePageWidget);
-    categoriesStackedWidget -> addWidget(startPageWidget);
-    categoriesStackedWidget -> addWidget(proxyPageWidget);
+    m_categoriesStackedWidget -> addWidget(m_generalPageWidget);
+    //m_categoriesStackedWidget -> addWidget(m_inputPageWidget);
+    m_categoriesStackedWidget -> addWidget(m_updatePageWidget);
+    m_categoriesStackedWidget -> addWidget(m_languagePageWidget);
+    m_categoriesStackedWidget -> addWidget(m_startPageWidget);
+    m_categoriesStackedWidget -> addWidget(m_proxyPageWidget);
 
-    connect(optionsListWidget, &QListWidget::currentRowChanged,
-            categoriesStackedWidget, &QStackedWidget::setCurrentIndex);
+    connect(m_optionsListWidget, &QListWidget::currentRowChanged,
+            m_categoriesStackedWidget, &QStackedWidget::setCurrentIndex);
 
-    topLayout = new QHBoxLayout();
-    topLayout -> addWidget(optionsListWidget);
-    topLayout -> addWidget(categoriesStackedWidget);
+    m_topLayout = new QHBoxLayout();
+    m_topLayout -> addWidget(m_optionsListWidget);
+    m_topLayout -> addWidget(m_categoriesStackedWidget);
 
     // Buttons
-    saveButton = new QPushButton(QIcon::fromTheme("document-save",
-                                                  QIcon(":/icon/32x32/qtemu.png")),
-                                 tr("Save"),
-                                 this);
-    connect(saveButton, &QAbstractButton::clicked,
+    m_saveButton = new QPushButton(QIcon::fromTheme("document-save",
+                                                    QIcon(":/icon/32x32/qtemu.png")),
+                                   tr("Save"),
+                                   this);
+    connect(m_saveButton, &QAbstractButton::clicked,
             this, &ConfigWindow::saveSettings);
 
-    closeButton = new QPushButton(QIcon::fromTheme("dialog-cancel",
-                                                   QIcon(":/icon/32x32/qtemu.png")),
-                                  tr("Cancel"),
-                                  this);
-    connect(closeButton, &QAbstractButton::clicked,
+    m_closeButton = new QPushButton(QIcon::fromTheme("dialog-cancel",
+                                                     QIcon(":/icon/32x32/qtemu.png")),
+                                    tr("Cancel"),
+                                    this);
+    connect(m_closeButton, &QAbstractButton::clicked,
             this, &QWidget::hide);
 
-    this -> buttonsLayout = new QHBoxLayout();
-    buttonsLayout -> setAlignment(Qt::AlignRight);
-    buttonsLayout -> addWidget(saveButton);
-    buttonsLayout -> addWidget(closeButton);
+    this -> m_buttonsLayout = new QHBoxLayout();
+    m_buttonsLayout -> setAlignment(Qt::AlignRight);
+    m_buttonsLayout -> addWidget(m_saveButton);
+    m_buttonsLayout -> addWidget(m_closeButton);
 
-    closeAction = new QAction(this);
-    closeAction -> setShortcut(QKeySequence(Qt::Key_Escape));
-    connect(closeAction, &QAction::triggered, this, &QWidget::hide);
-    this -> addAction(closeAction);
+    m_closeAction = new QAction(this);
+    m_closeAction -> setShortcut(QKeySequence(Qt::Key_Escape));
+    connect(m_closeAction, &QAction::triggered, this, &QWidget::hide);
+    this -> addAction(m_closeAction);
 
-    mainLayout = new QVBoxLayout();
-    mainLayout -> addLayout(topLayout, 20);
-    mainLayout -> addSpacing(8);
-    mainLayout -> addStretch(1);
-    mainLayout -> addLayout(buttonsLayout);
+    m_mainLayout = new QVBoxLayout();
+    m_mainLayout -> addLayout(m_topLayout, 20);
+    m_mainLayout -> addSpacing(8);
+    m_mainLayout -> addStretch(1);
+    m_mainLayout -> addLayout(m_buttonsLayout);
 
-    this -> setLayout(mainLayout);
+    this -> setLayout(m_mainLayout);
 
-    this -> optionsListWidget -> setCurrentRow(0);
-    this -> optionsListWidget -> setFocus();
+    this -> m_optionsListWidget -> setCurrentRow(0);
+    this -> m_optionsListWidget -> setFocus();
 
     // Load settings
     loadSettings();
@@ -152,245 +152,245 @@ ConfigWindow::~ConfigWindow() {
 
 void ConfigWindow::createGeneralPage() {
 
-    machinePathGroup = new QGroupBox(tr("Machine Path"));
+    m_machinePathGroup = new QGroupBox(tr("Machine Path"));
 
-    machinePathLabel  = new QLabel(tr("Default machine path") + ":");
+    m_machinePathLabel  = new QLabel(tr("Default machine path") + ":");
 
-    machinePathLineEdit = new QLineEdit();
-    machinePathLineEdit -> setEnabled(false);
+    m_machinePathLineEdit = new QLineEdit();
+    m_machinePathLineEdit -> setEnabled(false);
 
-    machinePathButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
-                                                         QIcon(":/icon/32x32/qtemu.png")),
-                                        "",
-                                        this);
+    m_machinePathButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
+                                                           QIcon(":/icon/32x32/qtemu.png")),
+                                          "",
+                                          this);
 
-    connect(machinePathButton, &QAbstractButton::clicked,
+    connect(m_machinePathButton, &QAbstractButton::clicked,
             this, &ConfigWindow::setMachinePath);
 
-    machinePathLayout = new QHBoxLayout();
-    machinePathLayout -> setAlignment(Qt::AlignVCenter);
-    machinePathLayout -> addWidget(machinePathLabel);
-    machinePathLayout -> addWidget(machinePathLineEdit);
-    machinePathLayout -> addWidget(machinePathButton);
+    m_machinePathLayout = new QHBoxLayout();
+    m_machinePathLayout -> setAlignment(Qt::AlignVCenter);
+    m_machinePathLayout -> addWidget(m_machinePathLabel);
+    m_machinePathLayout -> addWidget(m_machinePathLineEdit);
+    m_machinePathLayout -> addWidget(m_machinePathButton);
 
-    machinePathGroup -> setLayout(machinePathLayout);
+    m_machinePathGroup -> setLayout(m_machinePathLayout);
 
-    startCommandGroup = new QGroupBox(tr("QEMU Command"));
+    m_startCommandGroup = new QGroupBox(tr("QEMU Command"));
 
-    startCommandLabel = new QLabel(tr("QEMU start command") + ":");
+    m_startCommandLabel = new QLabel(tr("QEMU start command") + ":");
 
-    startCommandLineEdit = new QLineEdit();
-    startCommandLineEdit -> setText("qemu"); // TODO: add support for MacOS and Windows
+    m_startCommandLineEdit = new QLineEdit();
+    m_startCommandLineEdit -> setText("qemu"); // TODO: add support for MacOS and Windows
 
-    startCommandLayout = new QHBoxLayout();
-    startCommandLayout -> setAlignment(Qt::AlignVCenter);
-    startCommandLayout -> addWidget(startCommandLabel);
-    startCommandLayout -> addWidget(startCommandLineEdit);
+    m_startCommandLayout = new QHBoxLayout();
+    m_startCommandLayout -> setAlignment(Qt::AlignVCenter);
+    m_startCommandLayout -> addWidget(m_startCommandLabel);
+    m_startCommandLayout -> addWidget(m_startCommandLineEdit);
 
-    startCommandGroup -> setLayout(startCommandLayout);
+    m_startCommandGroup -> setLayout(m_startCommandLayout);
 
-    generalPageLayout = new QVBoxLayout();
-    generalPageLayout -> addWidget(machinePathGroup);
-    generalPageLayout -> addWidget(startCommandGroup);
+    m_generalPageLayout = new QVBoxLayout();
+    m_generalPageLayout -> addWidget(m_machinePathGroup);
+    m_generalPageLayout -> addWidget(m_startCommandGroup);
 
-    generalPageWidget = new QWidget(this);
-    generalPageWidget -> setLayout(generalPageLayout);
+    m_generalPageWidget = new QWidget(this);
+    m_generalPageWidget -> setLayout(m_generalPageLayout);
 }
 
 void ConfigWindow::createInputPage(){
 
-    inputPageLayout = new QVBoxLayout();
+    m_inputPageLayout = new QVBoxLayout();
 
-    inputPageWidget = new QWidget(this);
-    inputPageWidget -> setLayout(inputPageLayout);
+    m_inputPageWidget = new QWidget(this);
+    m_inputPageWidget -> setLayout(m_inputPageLayout);
 }
 
 void ConfigWindow::createUpdatePage(){
 
-    updateCheckBox = new QCheckBox();
-    updateCheckBox -> setChecked(true);
+    m_updateCheckBox = new QCheckBox();
+    m_updateCheckBox -> setChecked(true);
 
-    connect(updateCheckBox, &QAbstractButton::toggled,
+    connect(m_updateCheckBox, &QAbstractButton::toggled,
                 this, &ConfigWindow::toggleUpdate);
 
-    updatesGroup = new QGroupBox();
+    m_updatesGroup = new QGroupBox();
 
-    stableReleaseRadio = new QRadioButton(tr("Stable version"));
-    betaReleaseRadio = new QRadioButton(tr("Beta version"));
-    developmentRelaseRadio = new QRadioButton(tr("Development version"));
+    m_stableReleaseRadio = new QRadioButton(tr("Stable version"));
+    m_betaReleaseRadio = new QRadioButton(tr("Beta version"));
+    m_developmentRelaseRadio = new QRadioButton(tr("Development version"));
 
-    stableReleaseRadio -> setChecked(true);
+    m_stableReleaseRadio -> setChecked(true);
 
-    connect(stableReleaseRadio, &QAbstractButton::toggled,
+    connect(m_stableReleaseRadio, &QAbstractButton::toggled,
                 this, &ConfigWindow::pushStableVersion);
 
-    updateRadiosLayout = new QVBoxLayout();
-    updateRadiosLayout -> setAlignment(Qt::AlignVCenter);
-    updateRadiosLayout -> addWidget(stableReleaseRadio);
-    updateRadiosLayout -> addWidget(betaReleaseRadio);
-    updateRadiosLayout -> addWidget(developmentRelaseRadio);
+    m_updateRadiosLayout = new QVBoxLayout();
+    m_updateRadiosLayout -> setAlignment(Qt::AlignVCenter);
+    m_updateRadiosLayout -> addWidget(m_stableReleaseRadio);
+    m_updateRadiosLayout -> addWidget(m_betaReleaseRadio);
+    m_updateRadiosLayout -> addWidget(m_developmentRelaseRadio);
 
-    updatesGroup -> setLayout(updateRadiosLayout);
+    m_updatesGroup -> setLayout(m_updateRadiosLayout);
 
-    updatePageLayout = new QFormLayout();
-    updatePageLayout -> addRow(tr("Check for updates"), updateCheckBox);
-    updatePageLayout -> addRow(updatesGroup);
+    m_updatePageLayout = new QFormLayout();
+    m_updatePageLayout -> addRow(tr("Check for updates"), m_updateCheckBox);
+    m_updatePageLayout -> addRow(m_updatesGroup);
 
-    updatePageWidget = new QWidget(this);
-    updatePageWidget -> setLayout(updatePageLayout);
+    m_updatePageWidget = new QWidget(this);
+    m_updatePageWidget -> setLayout(m_updatePageLayout);
 }
 
 void ConfigWindow::createLanguagePage(){
-    languageLabel = new QLabel(tr("Interface language"));
+    m_languageLabel = new QLabel(tr("Interface language"));
 
-    languagesListView = new QListWidget();
+    m_languagesListView = new QListWidget();
 
-    languagesListView -> setViewMode(QListView::ListMode);
-    languagesListView -> setIconSize(QSize(32, 32));
-    languagesListView -> setMovement(QListView::Static);
-    languagesListView -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_languagesListView -> setViewMode(QListView::ListMode);
+    m_languagesListView -> setIconSize(QSize(32, 32));
+    m_languagesListView -> setMovement(QListView::Static);
+    m_languagesListView -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    languagesListView -> addItem("English");
-    languagesListView -> item(0) -> setIcon(QIcon::fromTheme("eeuu-flag",
-                                                              QIcon(":/icon/32x32/flags/eeuu.png")));
+    m_languagesListView -> addItem("English");
+    m_languagesListView -> item(0) -> setIcon(QIcon::fromTheme("eeuu-flag",
+                                                               QIcon(":/icon/32x32/flags/eeuu.png")));
 
-    languagesListView -> addItem("Deutsch");
-    languagesListView -> item(1) -> setIcon(QIcon::fromTheme("germany-flag",
-                                                              QIcon(":/icon/32x32/flags/germany.png")));
+    m_languagesListView -> addItem("Deutsch");
+    m_languagesListView -> item(1) -> setIcon(QIcon::fromTheme("germany-flag",
+                                                               QIcon(":/icon/32x32/flags/germany.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Türkçe"));
-    languagesListView -> item(2) -> setIcon(QIcon::fromTheme("turkey-flag",
-                                                              QIcon(":/icon/32x32/flags/turkey.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Türkçe"));
+    m_languagesListView -> item(2) -> setIcon(QIcon::fromTheme("turkey-flag",
+                                                               QIcon(":/icon/32x32/flags/turkey.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Русский"));
-    languagesListView -> item(3) -> setIcon(QIcon::fromTheme("russia-flag",
-                                                              QIcon(":/icon/32x32/flags/russia.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Русский"));
+    m_languagesListView -> item(3) -> setIcon(QIcon::fromTheme("russia-flag",
+                                                               QIcon(":/icon/32x32/flags/russia.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Česky"));
-    languagesListView -> item(4) -> setIcon(QIcon::fromTheme("czech-flag",
-                                                              QIcon(":/icon/32x32/flags/czech.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Česky"));
+    m_languagesListView -> item(4) -> setIcon(QIcon::fromTheme("czech-flag",
+                                                               QIcon(":/icon/32x32/flags/czech.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Español"));
-    languagesListView -> item(5) -> setIcon(QIcon::fromTheme("spain-flag",
-                                                              QIcon(":/icon/32x32/flags/spain.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Español"));
+    m_languagesListView -> item(5) -> setIcon(QIcon::fromTheme("spain-flag",
+                                                               QIcon(":/icon/32x32/flags/spain.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Français"));
-    languagesListView -> item(6) -> setIcon(QIcon::fromTheme("france-flag",
-                                                              QIcon(":/icon/32x32/flags/france.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Français"));
+    m_languagesListView -> item(6) -> setIcon(QIcon::fromTheme("france-flag",
+                                                               QIcon(":/icon/32x32/flags/france.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Italiano"));
-    languagesListView -> item(7) -> setIcon(QIcon::fromTheme("italy-flag",
-                                                              QIcon(":/icon/32x32/flags/italy.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Italiano"));
+    m_languagesListView -> item(7) -> setIcon(QIcon::fromTheme("italy-flag",
+                                                               QIcon(":/icon/32x32/flags/italy.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Português do Brasil"));
-    languagesListView -> item(8) -> setIcon(QIcon::fromTheme("brazil-flag",
-                                                              QIcon(":/icon/32x32/flags/brazil.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Português do Brasil"));
+    m_languagesListView -> item(8) -> setIcon(QIcon::fromTheme("brazil-flag",
+                                                               QIcon(":/icon/32x32/flags/brazil.png")));
 
-    languagesListView -> addItem(QString::fromUtf8("Polski"));
-    languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
-                                                              QIcon(":/icon/32x32/flags/poland.png")));
+    m_languagesListView -> addItem(QString::fromUtf8("Polski"));
+    m_languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
+                                                               QIcon(":/icon/32x32/flags/poland.png")));
 
-    languageDescription = new QLabel();
-    languageAuthors = new QLabel();
+    m_languageDescription = new QLabel();
+    m_languageAuthors = new QLabel();
 
-    connect(languagesListView, &QListWidget::currentTextChanged,
+    connect(m_languagesListView, &QListWidget::currentTextChanged,
             this, &ConfigWindow::setLanguageLabel);
 
-    connect(languagesListView, &QListWidget::currentRowChanged,
+    connect(m_languagesListView, &QListWidget::currentRowChanged,
             this, &ConfigWindow::setAuthorsLabel);
 
-    languagePageLayout = new QVBoxLayout();
-    languagePageLayout -> addWidget(languageLabel);
-    languagePageLayout -> addWidget(languagesListView);
+    m_languagePageLayout = new QVBoxLayout();
+    m_languagePageLayout -> addWidget(m_languageLabel);
+    m_languagePageLayout -> addWidget(m_languagesListView);
 
-    languageHLayout = new QHBoxLayout();
-    languageHLayout -> addWidget(languageDescription);
-    languageHLayout -> addWidget(languageAuthors);
+    m_languageHLayout = new QHBoxLayout();
+    m_languageHLayout -> addWidget(m_languageDescription);
+    m_languageHLayout -> addWidget(m_languageAuthors);
 
-    languagePageLayout -> addItem(languageHLayout);
+    m_languagePageLayout -> addItem(m_languageHLayout);
 
-    languagePageWidget = new QWidget(this);
-    languagePageWidget -> setLayout(languagePageLayout);
+    m_languagePageWidget = new QWidget(this);
+    m_languagePageWidget -> setLayout(m_languagePageLayout);
 }
 
 void ConfigWindow::createStartPage(){
 
-    beforeStartLabel = new QLabel(tr("Execute before start") + ":");
-    afterExitLabel = new QLabel(tr("Execute after exit") + ":");
+    m_beforeStartLabel = new QLabel(tr("Execute before start") + ":");
+    m_afterExitLabel = new QLabel(tr("Execute after exit") + ":");
 
-    beforeStart = new QPlainTextEdit();
-    afterExit = new QPlainTextEdit();
+    m_beforeStart = new QPlainTextEdit();
+    m_afterExit = new QPlainTextEdit();
 
-    startPageLayout = new QVBoxLayout();
+    m_startPageLayout = new QVBoxLayout();
 
-    startPageLayout -> addWidget(beforeStartLabel);
-    startPageLayout -> addWidget(beforeStart);
-    startPageLayout -> addWidget(afterExitLabel);
-    startPageLayout -> addWidget(afterExit);
+    m_startPageLayout -> addWidget(m_beforeStartLabel);
+    m_startPageLayout -> addWidget(m_beforeStart);
+    m_startPageLayout -> addWidget(m_afterExitLabel);
+    m_startPageLayout -> addWidget(m_afterExit);
 
-    startPageWidget = new QWidget(this);
-    startPageWidget -> setLayout(startPageLayout);
+    m_startPageWidget = new QWidget(this);
+    m_startPageWidget -> setLayout(m_startPageLayout);
 }
 
 void ConfigWindow::createProxyPage(){
 
-    proxyOptions = new QComboBox();
-    proxyOptions -> addItem(tr("Do not use a proxy"));
-    proxyOptions -> addItem("SOCKS 5");
-    proxyOptions -> addItem("HTTP");
-    proxyOptions -> setCurrentIndex(0);
+    m_proxyOptions = new QComboBox();
+    m_proxyOptions -> addItem(tr("Do not use a proxy"));
+    m_proxyOptions -> addItem("SOCKS 5");
+    m_proxyOptions -> addItem("HTTP");
+    m_proxyOptions -> setCurrentIndex(0);
 
-    serverNameProxy = new QLineEdit();
-    serverNameProxy -> setPlaceholderText("example.org");
+    m_serverNameProxy = new QLineEdit();
+    m_serverNameProxy -> setPlaceholderText("example.org");
 
-    portProxy = new QLineEdit();
-    portProxy -> setPlaceholderText("1080, 8080, etc...");
+    m_portProxy = new QLineEdit();
+    m_portProxy -> setPlaceholderText("1080, 8080, etc...");
 
-    connect(proxyOptions, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(m_proxyOptions, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &ConfigWindow::toggleUserPassword);
 
-    useAuth = new QCheckBox();
-    useAuth -> setChecked(false);
+    m_useAuth = new QCheckBox();
+    m_useAuth -> setChecked(false);
 
-    connect(useAuth, &QAbstractButton::toggled,
+    connect(m_useAuth, &QAbstractButton::toggled,
                 this, &ConfigWindow::toggleAuth);
 
-    userProxy = new QLineEdit();
-    userProxy -> setPlaceholderText(tr("Proxy username"));
+    m_userProxy = new QLineEdit();
+    m_userProxy -> setPlaceholderText(tr("Proxy username"));
 
-    passwordProxy = new QLineEdit();
-    passwordProxy -> setEchoMode(QLineEdit::Password);
+    m_passwordProxy = new QLineEdit();
+    m_passwordProxy -> setEchoMode(QLineEdit::Password);
 
     // TODO: read the user settings
     this -> toggleUserPassword(0);
     this -> toggleAuth(false);
 
-    proxyPageLayout = new QFormLayout();
+    m_proxyPageLayout = new QFormLayout();
 
-    proxyPageLayout -> addRow(tr("Proxy type"), proxyOptions);
-    proxyPageLayout -> addRow(tr("Hostname"), serverNameProxy);
-    proxyPageLayout -> addRow(tr("Port"), portProxy);
-    proxyPageLayout -> addRow(tr("Use Authentication"), useAuth);
-    proxyPageLayout -> addRow(tr("User"), userProxy);
-    proxyPageLayout -> addRow(tr("Password"), passwordProxy);
+    m_proxyPageLayout -> addRow(tr("Proxy type"), m_proxyOptions);
+    m_proxyPageLayout -> addRow(tr("Hostname"), m_serverNameProxy);
+    m_proxyPageLayout -> addRow(tr("Port"), m_portProxy);
+    m_proxyPageLayout -> addRow(tr("Use Authentication"), m_useAuth);
+    m_proxyPageLayout -> addRow(tr("User"), m_userProxy);
+    m_proxyPageLayout -> addRow(tr("Password"), m_passwordProxy);
 
-    proxyPageWidget = new QWidget(this);
-    proxyPageWidget -> setLayout(proxyPageLayout);
+    m_proxyPageWidget = new QWidget(this);
+    m_proxyPageWidget -> setLayout(m_proxyPageLayout);
 }
 
 void ConfigWindow::toggleUpdate(bool updateState){
 
-    this -> updatesGroup -> setEnabled(updateState);
-    this -> stableReleaseRadio -> setEnabled(updateState);
-    this -> betaReleaseRadio -> setEnabled(updateState);
-    this -> developmentRelaseRadio -> setEnabled(updateState);
+    this -> m_updatesGroup -> setEnabled(updateState);
+    this -> m_stableReleaseRadio -> setEnabled(updateState);
+    this -> m_betaReleaseRadio -> setEnabled(updateState);
+    this -> m_developmentRelaseRadio -> setEnabled(updateState);
 
 }
 
 void ConfigWindow::pushStableVersion(bool release){
 
     if (release) {
-        releaseString = "stable";
+        m_releaseString = "stable";
     }
 
 }
@@ -398,7 +398,7 @@ void ConfigWindow::pushStableVersion(bool release){
 void ConfigWindow::pushBetaVersion(bool release){
 
     if (release) {
-        releaseString = "beta";
+        m_releaseString = "beta";
     }
 
 }
@@ -406,7 +406,7 @@ void ConfigWindow::pushBetaVersion(bool release){
 void ConfigWindow::pushDevelopmentVersion(bool release){
 
     if (release) {
-        releaseString = "alpha";
+        m_releaseString = "alpha";
     }
 
 }
@@ -415,7 +415,7 @@ void ConfigWindow::setLanguageLabel(QString language){
     QString description = tr("Language") + ": ";
     description.append(language);
 
-    this -> languageDescription -> setText(description);
+    this -> m_languageDescription -> setText(description);
 }
 
 void ConfigWindow::setAuthorsLabel(int languagePosition){
@@ -424,72 +424,72 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
     switch (languagePosition) {
         case 0:
             authors.append(tr("QtEmu Developers"));
-            languageISOCode = "en";
-            languagePos = 0;
+            m_languageISOCode = "en";
+            m_languagePos = 0;
             break;
         case 1:
             authors.append(tr("QtEmu Developers"));
-            languageISOCode = "de";
-            languagePos = 1;
+            m_languageISOCode = "de";
+            m_languagePos = 1;
             break;
         case 2:
             authors.append(QString::fromUtf8("Necmettin Begiter"));
-            languageISOCode = "tr";
-            languagePos = 2;
+            m_languageISOCode = "tr";
+            m_languagePos = 2;
             break;
         case 3:
             authors.append(QString::fromUtf8("Vasily Cheremisinov"));
-            languageISOCode = "ru";
-            languagePos = 3;
+            m_languageISOCode = "ru";
+            m_languagePos = 3;
             break;
         case 4:
             authors.append(QString::fromUtf8("excamo"));
-            languageISOCode = "cz";
-            languagePos = 4;
+            m_languageISOCode = "cz";
+            m_languagePos = 4;
             break;
         case 5:
             authors.append(QString::fromUtf8("Manolo Valdes"));
-            languageISOCode = "es";
-            languagePos = 5;
+            m_languageISOCode = "es";
+            m_languagePos = 5;
             break;
         case 6:
             authors.append(QString::fromUtf8("Fathi Boudra"));
-            languageISOCode = "fr";
-            languagePos = 6;
+            m_languageISOCode = "fr";
+            m_languagePos = 6;
             break;
         case 7:
             authors.append(QString::fromUtf8("Gianluca Cecchi"));
-            languageISOCode = "it";
-            languagePos = 7;
+            m_languageISOCode = "it";
+            m_languagePos = 7;
             break;
         case 8:
             authors.append(QString::fromUtf8("Jackson Miliszewski"));
-            languageISOCode = "pt-BR";
-            languagePos = 8;
+            m_languageISOCode = "pt-BR";
+            m_languagePos = 8;
             break;
         case 9:
             authors.append(QString::fromUtf8("Milosz Galazka"));
-            languageISOCode = "pl";
-            languagePos = 9;
+            m_languageISOCode = "pl";
+            m_languagePos = 9;
             break;
         default:
             authors.append(tr("Unknown author"));
-            languageISOCode = "en";
-            languagePos = 0;
+            m_languageISOCode = "en";
+            m_languagePos = 0;
             break;
     }
 
-    this -> languageAuthors -> setText(authors);
+    this -> m_languageAuthors -> setText(authors);
 }
 
 void ConfigWindow::toggleUserPassword(int proxyOption){
 
     if (proxyOption == 0) {
-        this -> serverNameProxy -> setEnabled(false);
-        this -> portProxy -> setEnabled(false);
+        this -> m_serverNameProxy -> setEnabled(false);
+        this -> m_portProxy -> setEnabled(false);
     } else {
-        this -> serverNameProxy -> setEnabled(true);
-        this -> portProxy -> setEnabled(true);
+        this -> m_serverNameProxy -> setEnabled(true);
+        this -> m_portProxy -> setEnabled(true);
     }
 
 }
@@ -497,24 +497,24 @@ void ConfigWindow::toggleUserPassword(int proxyOption){
 void ConfigWindow::toggleAuth(bool authState){
 
     if (!authState) {
-        this -> userProxy -> setText("");
-        this -> passwordProxy -> setText("");
+        this -> m_userProxy -> setText("");
+        this -> m_passwordProxy -> setText("");
     }
 
-    this -> userProxy -> setEnabled(authState);
-    this -> passwordProxy -> setEnabled(authState);
+    this -> m_userProxy -> setEnabled(authState);
+    this -> m_passwordProxy -> setEnabled(authState);
 
 }
 
 void ConfigWindow::setMachinePath(){
 
-    machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
-                                                    QDir::homePath(),
-                                                    QFileDialog::ShowDirsOnly |
-                                                    QFileDialog::DontResolveSymlinks
-                                                    );
-    if ( !machinePath.isEmpty() ) {
-        machinePathLineEdit -> setText(QDir::toNativeSeparators(machinePath));
+    m_machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
+                                                      QDir::homePath(),
+                                                      QFileDialog::ShowDirsOnly |
+                                                      QFileDialog::DontResolveSymlinks
+                                                      );
+    if ( !m_machinePath.isEmpty() ) {
+        m_machinePathLineEdit -> setText(QDir::toNativeSeparators(m_machinePath));
     }
 
 }
@@ -529,28 +529,28 @@ void ConfigWindow::saveSettings(){
     settings.beginGroup("Configuration");
 
     // General
-    settings.setValue("machinePath", this -> machinePathLineEdit -> text());
-    settings.setValue("qemu", this -> startCommandLineEdit -> text());
+    settings.setValue("machinePath", this -> m_machinePathLineEdit -> text());
+    settings.setValue("qemu", this -> m_startCommandLineEdit -> text());
 
     // Update
-    settings.setValue("update", this -> updateCheckBox -> isChecked());
-    settings.setValue("release", this -> releaseString);
+    settings.setValue("update", this -> m_updateCheckBox -> isChecked());
+    settings.setValue("release", this -> m_releaseString);
 
     // Language
-    settings.setValue("language", this -> languageISOCode);
-    settings.setValue("languagePos", this -> languagePos);
+    settings.setValue("language", this -> m_languageISOCode);
+    settings.setValue("languagePos", this -> m_languagePos);
 
     // Start page
-    settings.setValue("startCommand", this -> beforeStart -> toPlainText());
-    settings.setValue("afterCommand", this -> afterExit -> toPlainText());
+    settings.setValue("startCommand", this -> m_beforeStart -> toPlainText());
+    settings.setValue("afterCommand", this -> m_afterExit -> toPlainText());
 
     // Proxy
-    settings.setValue("proxyType", this -> proxyOptions -> currentIndex());
-    settings.setValue("proxyHostname", this -> serverNameProxy -> text());
-    settings.setValue("proxyPort", this -> portProxy -> text());
-    settings.setValue("auth", this -> useAuth -> isChecked());
-    settings.setValue("proxyUser", this -> userProxy -> text());
-    settings.setValue("proxyPassword", this -> passwordProxy -> text().toUtf8().toBase64());
+    settings.setValue("proxyType", this -> m_proxyOptions -> currentIndex());
+    settings.setValue("proxyHostname", this -> m_serverNameProxy -> text());
+    settings.setValue("proxyPort", this -> m_portProxy -> text());
+    settings.setValue("auth", this -> m_useAuth -> isChecked());
+    settings.setValue("proxyUser", this -> m_userProxy -> text());
+    settings.setValue("proxyPassword", this -> m_passwordProxy -> text().toUtf8().toBase64());
 
     settings.endGroup();
     settings.sync();
@@ -566,27 +566,27 @@ void ConfigWindow::loadSettings(){
     settings.beginGroup("Configuration");
 
     // General
-    machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
-    startCommandLineEdit -> setText(settings.value("qemu", "qemu").toString());
+    m_machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
+    m_startCommandLineEdit -> setText(settings.value("qemu", "qemu").toString());
 
     // Update
-    updateCheckBox -> setChecked(settings.value("update", true).toBool());
-    releaseString = settings.value("release", "stable").toString();
+    m_updateCheckBox -> setChecked(settings.value("update", true).toBool());
+    m_releaseString = settings.value("release", "stable").toString();
 
     // Language
-    languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
+    m_languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
 
     // Start page
-    beforeStart -> setPlainText(settings.value("startCommand", "").toString());
-    afterExit -> setPlainText(settings.value("afterCommand", "").toString());
+    m_beforeStart -> setPlainText(settings.value("startCommand", "").toString());
+    m_afterExit -> setPlainText(settings.value("afterCommand", "").toString());
 
     // Proxy
-    proxyOptions -> setCurrentIndex(settings.value("proxyType", 0).toInt());
-    serverNameProxy -> setText(settings.value("proxyHostname", "").toString());
-    portProxy -> setText(settings.value("proxyPort", "").toString());
-    useAuth -> setChecked(settings.value("auth", false).toBool());
-    userProxy -> setText(settings.value("proxyUser", "").toString());
-    passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
+    m_proxyOptions -> setCurrentIndex(settings.value("proxyType", 0).toInt());
+    m_serverNameProxy -> setText(settings.value("proxyHostname", "").toString());
+    m_portProxy -> setText(settings.value("proxyPort", "").toString());
+    m_useAuth -> setChecked(settings.value("auth", false).toBool());
+    m_userProxy -> setText(settings.value("proxyUser", "").toString());
+    m_passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
 
     settings.endGroup();
 }

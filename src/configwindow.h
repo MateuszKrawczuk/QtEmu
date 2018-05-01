@@ -82,95 +82,95 @@ class ConfigWindow : public QWidget {
 
     private:
         // Main layout
-        QVBoxLayout *mainLayout;
-        QHBoxLayout *topLayout;
-        QHBoxLayout *buttonsLayout;
+        QVBoxLayout *m_mainLayout;
+        QHBoxLayout *m_topLayout;
+        QHBoxLayout *m_buttonsLayout;
 
-        QListWidget *optionsListWidget;
-        QStackedWidget *categoriesStackedWidget;
+        QListWidget *m_optionsListWidget;
+        QStackedWidget *m_categoriesStackedWidget;
 
-        QPushButton *saveButton;
-        QPushButton *closeButton;
+        QPushButton *m_saveButton;
+        QPushButton *m_closeButton;
 
-        QAction *closeAction;
+        QAction *m_closeAction;
 
         // General page
-        QGroupBox *machinePathGroup;
-        QGroupBox *startCommandGroup;
-        QHBoxLayout *machinePathLayout;
-        QHBoxLayout *startCommandLayout;
-        QVBoxLayout *generalPageLayout;
-        QWidget *generalPageWidget;
+        QGroupBox *m_machinePathGroup;
+        QGroupBox *m_startCommandGroup;
+        QHBoxLayout *m_machinePathLayout;
+        QHBoxLayout *m_startCommandLayout;
+        QVBoxLayout *m_generalPageLayout;
+        QWidget *m_generalPageWidget;
 
-        QLabel *machinePathLabel;
-        QLabel *startCommandLabel;
+        QLabel *m_machinePathLabel;
+        QLabel *m_startCommandLabel;
 
-        QLineEdit *machinePathLineEdit;
-        QLineEdit *startCommandLineEdit;
+        QLineEdit *m_machinePathLineEdit;
+        QLineEdit *m_startCommandLineEdit;
 
-        QPushButton *machinePathButton;
+        QPushButton *m_machinePathButton;
 
-        QString machinePath;
-        QString startCommand;
+        QString m_machinePath;
+        QString sm_tartCommand;
 
-        QFileDialog *machinePathDialog;
-        QFileDialog *startCommandDialog;
+        QFileDialog *m_machinePathDialog;
+        QFileDialog *m_startCommandDialog;
 
         // Input page
-        QVBoxLayout *inputPageLayout;
-        QWidget *inputPageWidget;
+        QVBoxLayout *m_inputPageLayout;
+        QWidget *m_inputPageWidget;
 
         // Update QtEmu page
-        QFormLayout *updatePageLayout;
-        QVBoxLayout *updateRadiosLayout;
-        QWidget *updatePageWidget;
+        QFormLayout *m_updatePageLayout;
+        QVBoxLayout *m_updateRadiosLayout;
+        QWidget *m_updatePageWidget;
 
-        QCheckBox *updateCheckBox;
+        QCheckBox *m_updateCheckBox;
 
-        QGroupBox *updatesGroup;
+        QGroupBox *m_updatesGroup;
 
-        QRadioButton *stableReleaseRadio;
-        QRadioButton *betaReleaseRadio;
-        QRadioButton *developmentRelaseRadio;
+        QRadioButton *m_stableReleaseRadio;
+        QRadioButton *m_betaReleaseRadio;
+        QRadioButton *m_developmentRelaseRadio;
 
-        QString releaseString;
+        QString m_releaseString;
 
         // Language
-        QVBoxLayout *languagePageLayout;
-        QHBoxLayout *languageHLayout;
-        QListWidget *languagesListView;
+        QVBoxLayout *m_languagePageLayout;
+        QHBoxLayout *m_languageHLayout;
+        QListWidget *m_languagesListView;
 
-        QLabel *languageLabel;
-        QLabel *languageDescription;
-        QLabel *languageAuthors;
+        QLabel *m_languageLabel;
+        QLabel *m_languageDescription;
+        QLabel *m_languageAuthors;
 
-        QString languageISOCode;
-        int languagePos;
+        QString m_languageISOCode;
+        int m_languagePos;
 
-        QWidget *languagePageWidget;
+        QWidget *m_languagePageWidget;
 
         // Start
-        QVBoxLayout *startPageLayout;
-        QWidget *startPageWidget;
+        QVBoxLayout *m_startPageLayout;
+        QWidget *m_startPageWidget;
 
-        QPlainTextEdit *beforeStart;
-        QPlainTextEdit *afterExit;
+        QPlainTextEdit *m_beforeStart;
+        QPlainTextEdit *m_afterExit;
 
-        QLabel *beforeStartLabel;
-        QLabel *afterExitLabel;
+        QLabel *m_beforeStartLabel;
+        QLabel *m_afterExitLabel;
 
         // Proxy
-        QFormLayout *proxyPageLayout;
-        QWidget *proxyPageWidget;
+        QFormLayout *m_proxyPageLayout;
+        QWidget *m_proxyPageWidget;
 
-        QComboBox *proxyOptions;
+        QComboBox *m_proxyOptions;
 
-        QLineEdit *serverNameProxy;
-        QLineEdit *portProxy;
-        QLineEdit *userProxy;
-        QLineEdit *passwordProxy;
+        QLineEdit *m_serverNameProxy;
+        QLineEdit *m_portProxy;
+        QLineEdit *m_userProxy;
+        QLineEdit *m_passwordProxy;
 
-        QCheckBox *useAuth;
+        QCheckBox *m_useAuth;
 
 };
 

@@ -47,11 +47,11 @@ class MachineAcceleratorPage: public QWizardPage {
     protected:
 
     private:
-        QVBoxLayout *acceleratorLayout;
+        QVBoxLayout *m_acceleratorLayout;
 
-        QTabWidget *acceleratorTabWidget;
+        QTabWidget *m_acceleratorTabWidget;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class KVMTab: public QWidget {
@@ -69,14 +69,14 @@ class KVMTab: public QWidget {
     protected:
 
     private:
-        QVBoxLayout *kvmLayout;
+        QVBoxLayout *m_kvmLayout;
 
-        QRadioButton *kvmRadioButton;
+        QRadioButton *m_kvmRadioButton;
 
-        QLabel *kvmDescriptionLabel;
-        QLabel *kvmURLLabel;
+        QLabel *m_kvmDescriptionLabel;
+        QLabel *m_kvmURLLabel;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class XENTab: public QWidget {
@@ -94,14 +94,14 @@ class XENTab: public QWidget {
     protected:
 
     private:
-        QVBoxLayout *xenLayout;
+        QVBoxLayout *m_xenLayout;
 
-        QRadioButton *xenRadioButton;
+        QRadioButton *m_xenRadioButton;
 
-        QLabel *xenDescriptionLabel;
-        QLabel *xenURLLabel;
+        QLabel *m_xenDescriptionLabel;
+        QLabel *m_xenURLLabel;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class TCGTab: public QWidget {
@@ -119,14 +119,14 @@ class TCGTab: public QWidget {
     protected:
 
     private:
-        QVBoxLayout *tcgLayout;
+        QVBoxLayout *m_tcgLayout;
 
-        QRadioButton *tcgRadioButton;
+        QRadioButton *m_tcgRadioButton;
 
-        QLabel *tcgDescriptionLabel;
-        QLabel *tcgURLLabel;
+        QLabel *m_tcgDescriptionLabel;
+        QLabel *m_tcgURLLabel;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class HAXMTab: public QWidget {
@@ -144,14 +144,14 @@ class HAXMTab: public QWidget {
     protected:
 
     private:
-        QVBoxLayout *haxmLayout;
+        QVBoxLayout *m_haxmLayout;
 
-        QRadioButton *haxmRadioButton;
+        QRadioButton *m_haxmRadioButton;
 
-        QLabel *haxmDescriptionLabel;
-        QLabel *haxmURLLabel;
+        QLabel *m_haxmDescriptionLabel;
+        QLabel *m_haxmURLLabel;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 #endif // ACCELERATORPAGE_H

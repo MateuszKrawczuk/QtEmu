@@ -174,32 +174,32 @@ HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
                     "</ul>");
     helpText.append("<br />");
 
-    helpTextBrowser = new QTextBrowser(this);
-    helpTextBrowser -> setReadOnly(true);
-    helpTextBrowser -> setOpenExternalLinks(false);
-    helpTextBrowser -> setHtml(helpText);
+    m_helpTextBrowser = new QTextBrowser(this);
+    m_helpTextBrowser -> setReadOnly(true);
+    m_helpTextBrowser -> setOpenExternalLinks(false);
+    m_helpTextBrowser -> setHtml(helpText);
 
-    closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
+    m_closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
                                   tr("&Close"),
                                   this);
 
-    connect(closeButton, &QAbstractButton::clicked,
+    connect(m_closeButton, &QAbstractButton::clicked,
             this, &QWidget::hide);
 
     QList<QKeySequence> closeShortcuts;
     closeShortcuts << QKeySequence(Qt::Key_Escape);
     closeShortcuts << QKeySequence(Qt::Key_F1);
-    closeAction = new QAction(this);
-    closeAction -> setShortcuts(closeShortcuts);
-    connect(closeAction, &QAction::triggered,
+    m_closeAction = new QAction(this);
+    m_closeAction -> setShortcuts(closeShortcuts);
+    connect(m_closeAction, &QAction::triggered,
             this, &QWidget::hide);
-    this -> addAction(closeAction);
+    this -> addAction(m_closeAction);
 
-    mainLayout = new QVBoxLayout();
-    mainLayout -> setContentsMargins(2, 2, 2, 2);
-    mainLayout -> addWidget(helpTextBrowser);
-    mainLayout -> addWidget(closeButton, 0, Qt::AlignRight);
-    this -> setLayout(mainLayout);
+    m_mainLayout = new QVBoxLayout();
+    m_mainLayout -> setContentsMargins(2, 2, 2, 2);
+    m_mainLayout -> addWidget(m_helpTextBrowser);
+    m_mainLayout -> addWidget(m_closeButton, 0, Qt::AlignRight);
+    this -> setLayout(m_mainLayout);
 
     qDebug() << "HelpWidget created";
 }

@@ -109,10 +109,20 @@ void Machine::setPath(const QString &value) {
     path = value;
 }
 
+/**
+ * @brief Get the configuration path
+ *
+ * Get the configuration path
+ */
 QString Machine::getConfigPath() const {
     return configPath;
 }
 
+/**
+ * @brief Set the configuration path
+ *
+ * Set the configuration path
+ */
 void Machine::setConfigPath(const QString &value) {
     configPath = value;
 }
@@ -496,22 +506,48 @@ void Machine::addAudio(const QString key, const QString value) {
     this -> audio.insert(key, value);
 }
 
+/**
+ * @brief Remove the audio card from the list
+ * @param audio, audio card to be removed
+ *
+ * Remove the audio card from the list
+ */
 void Machine::removeAudio(const QString audio) {
     if(this -> audio.contains(audio)){
         this -> audio.remove(audio);
     }
 }
 
+/**
+ * @brief Add an accelerator to the map
+ * @param key code of the accelerator
+ * @param value description of the accelerator
+ *
+ * Add an accelerator to the map
+ */
 void Machine::addAccelerator(const QString key, const QString value) {
     this -> accelerator.insert(key, value);
 }
 
+/**
+ * @brief Remove an accelerator from the map
+ * @param key code of the accelerator
+ *
+ * Remove an accelerator from the map if exists
+ */
 void Machine::removeAccelerator(const QString accelerator) {
     if(this -> accelerator.contains(accelerator)){
         this -> accelerator.remove(accelerator);
     }
 }
 
+/**
+ * @brief Get all the audio cards separated by commas
+ * @return Audio cards separated by commas
+ *
+ * Get all the audio cards separated by commas
+ * Ex: ac97, es1370, hda
+ */
 QString Machine::getAudioLabel() {
     QHash<QString, QString>::const_iterator i = audio.constBegin();
     QString audioLabel;
@@ -532,6 +568,13 @@ QString Machine::getAudioLabel() {
 
 }
 
+/**
+ * @brief Get all the accelerators separated by commas
+ * @return Accelerators separated by commas
+ *
+ * Get all the accelerators separated by commas
+ * Ex: kvm,tcg
+ */
 QString Machine::getAcceleratorLabel() {
     QHash<QString, QString>::const_iterator i = accelerator.constBegin();
     QString acceleratorLabel;

@@ -56,23 +56,23 @@ class MachineNamePage: public QWizardPage {
         bool validatePage();
         void cleanupPage();
 
-        QString machineFolder;
+        QString m_machineFolder;
 
-        QGridLayout *mainLayout;
+        QGridLayout *m_mainLayout;
 
-        QLabel *descriptionNameLabel;
-        QLabel *machineNameLabel;
-        QLabel *OSTypeLabel;
-        QLabel *OSVersionLabel;
+        QLabel *m_descriptionNameLabel;
+        QLabel *m_machineNameLabel;
+        QLabel *m_OSTypeLabel;
+        QLabel *m_OSVersionLabel;
 
-        QComboBox *OSType;
-        QComboBox *OSVersion;
+        QComboBox *m_OSType;
+        QComboBox *m_OSVersion;
 
-        QLineEdit *machineNameLineEdit;
+        QLineEdit *m_machineNameLineEdit;
 
-        QMessageBox *createMachineMessageBox;
+        QMessageBox *m_createMachineMessageBox;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 #endif // GENERALPAGE_H

@@ -78,53 +78,53 @@ class MainWindow : public QMainWindow {
 
     private:
         // Start menus
-        QMenu *fileMenu;
-        QMenu *machineMenu;
-        QMenu *helpMenu;
+        QMenu *m_fileMenu;
+        QMenu *m_machineMenu;
+        QMenu *m_helpMenu;
 
-        QAction *exitAppAction;
-        QAction *checkUpdateAppAction;
-        QAction *preferencesAppAction;
+        QAction *m_exitAppAction;
+        QAction *m_checkUpdateAppAction;
+        QAction *m_preferencesAppAction;
 
-        QAction *newMachineAction;
-        QAction *addMachineAction;
-        QAction *settingsMachineAction;
-        QAction *duplicateMachineAction;
-        QAction *removeMachineAction;
-        QAction *groupMachineAction;
+        QAction *m_newMachineAction;
+        QAction *m_addMachineAction;
+        QAction *m_settingsMachineAction;
+        QAction *m_duplicateMachineAction;
+        QAction *m_removeMachineAction;
+        QAction *m_groupMachineAction;
 
-        QAction *helpQuickHelpAction;
-        QAction *helpQtEmuWebsiteAction;
-        QAction *helpQtEmuBugTrackerAction;
-        QAction *helpQemuWebsiteAction;
-        QAction *helpAboutAction;
+        QAction *m_helpQuickHelpAction;
+        QAction *m_helpQtEmuWebsiteAction;
+        QAction *m_helpQtEmuBugTrackerAction;
+        QAction *m_helpQemuWebsiteAction;
+        QAction *m_helpAboutAction;
 
-        QAction *startMachineAction;
-        QAction *stopMachineAction;
-        QAction *resetMachineAction;
-        QAction *pauseMachineAction;
-        QAction *saveMachineAction;
+        QAction *m_startMachineAction;
+        QAction *m_stopMachineAction;
+        QAction *m_resetMachineAction;
+        QAction *m_pauseMachineAction;
+        QAction *m_saveMachineAction;
         // End menus
 
         // Toolbar
-        QToolBar *mainToolBar;
+        QToolBar *m_mainToolBar;
 
         // Widgets
-        QWidget *mainWidget;
-        ConfigWindow *configWindow;
-        HelpWidget *helpwidget;
-        AboutWidget *aboutwidget;
+        QWidget *m_mainWidget;
+        ConfigWindow *m_configWindow;
+        HelpWidget *m_helpwidget;
+        AboutWidget *m_aboutwidget;
 
         // Layouts
-        QVBoxLayout *mainLayout;
-        QHBoxLayout *containerLayout;
+        QVBoxLayout *m_mainLayout;
+        QHBoxLayout *m_containerLayout;
 
         // List of OS
-        QListWidget *osListWidget;
-        QStackedWidget *osDetailsStackedWidget;
+        QListWidget *m_osListWidget;
+        QStackedWidget *m_osDetailsStackedWidget;
 
         // Machine
-        Machine *machine;
+        Machine *m_machine;
 
 };
 

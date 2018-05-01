@@ -51,11 +51,11 @@ class HelpWidget : public QWidget {
         virtual void hideEvent(QHideEvent *event);
 
     private:
-        QVBoxLayout *mainLayout;
-        QTextBrowser *helpTextBrowser;
+        QVBoxLayout *m_mainLayout;
+        QTextBrowser *m_helpTextBrowser;
 
-        QPushButton *closeButton;
-        QAction *closeAction;
+        QPushButton *m_closeButton;
+        QAction *m_closeAction;
 
 };
 

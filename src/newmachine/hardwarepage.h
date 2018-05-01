@@ -52,11 +52,11 @@ class MachineHardwarePage: public QWizardPage {
     protected:
 
     private:
-        QVBoxLayout *hardwareLayout;
+        QVBoxLayout *m_hardwareLayout;
 
-        QTabWidget *hardwareTabWidget;
+        QTabWidget *m_hardwareTabWidget;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class ProcessorTab: public QWidget {
@@ -80,31 +80,31 @@ class ProcessorTab: public QWidget {
     protected:
 
     private:
-        QHBoxLayout *CPUTypeLayout;
-        QHBoxLayout *CPUCountLayout;
-        QHBoxLayout *socketLayout;
-        QHBoxLayout *maxHotCPUsLayout;
-        QVBoxLayout *CPUSettingsLayout;
-        QVBoxLayout *processorLayout;
+        QHBoxLayout *m_CPUTypeLayout;
+        QHBoxLayout *m_CPUCountLayout;
+        QHBoxLayout *m_socketLayout;
+        QHBoxLayout *m_maxHotCPUsLayout;
+        QVBoxLayout *m_CPUSettingsLayout;
+        QVBoxLayout *m_processorLayout;
 
-        QComboBox *CPUType;
+        QComboBox *m_CPUType;
 
-        QGroupBox *CPUSettings;
+        QGroupBox *m_CPUSettings;
 
-        QLabel *CPUTypeLabel;
-        QLabel *CPUCountLabel;
-        QLabel *coresSocketLabel;
-        QLabel *socketCountLabel;
-        QLabel *threadsCoreLabel;
-        QLabel *maxHotCPULabel;
+        QLabel *m_CPUTypeLabel;
+        QLabel *m_CPUCountLabel;
+        QLabel *m_coresSocketLabel;
+        QLabel *m_socketCountLabel;
+        QLabel *m_threadsCoreLabel;
+        QLabel *m_maxHotCPULabel;
 
-        QSpinBox *CPUCountSpinBox;
-        QSpinBox *coresSocketSpinBox;
-        QSpinBox *socketCountSpinBox;
-        QSpinBox *threadsCoreSpinBox;
-        QSpinBox *maxHotCPUSpinBox;
+        QSpinBox *m_CPUCountSpinBox;
+        QSpinBox *m_coresSocketSpinBox;
+        QSpinBox *m_socketCountSpinBox;
+        QSpinBox *m_threadsCoreSpinBox;
+        QSpinBox *m_maxHotCPUSpinBox;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class GraphicsTab: public QWidget {
@@ -123,15 +123,15 @@ class GraphicsTab: public QWidget {
     protected:
 
     private:
-        QGridLayout *graphicsLayout;
+        QGridLayout *m_graphicsLayout;
 
-        QComboBox *GPUType;
-        QComboBox *keyboard;
+        QComboBox *m_GPUType;
+        QComboBox *m_keyboard;
 
-        QLabel *GPUTypeLabel;
-        QLabel *keyboardLabel;
+        QLabel *m_GPUTypeLabel;
+        QLabel *m_keyboardLabel;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class AudioTab: public QWidget {
@@ -156,18 +156,18 @@ class AudioTab: public QWidget {
     protected:
 
     private:
-        QGridLayout *audioLayout;
+        QGridLayout *m_audioLayout;
 
-        QCheckBox *creativeCheck;
-        QCheckBox *ensoniqCheck;
-        QCheckBox *intelAC97Check;
-        QCheckBox *yamahaCheck;
-        QCheckBox *gravisCheck;
-        QCheckBox *CS4231ACheck;
-        QCheckBox *intelHDACheck;
-        QCheckBox *pcSpeakerCheck;
+        QCheckBox *m_creativeCheck;
+        QCheckBox *m_ensoniqCheck;
+        QCheckBox *m_intelAC97Check;
+        QCheckBox *m_yamahaCheck;
+        QCheckBox *m_gravisCheck;
+        QCheckBox *m_CS4231ACheck;
+        QCheckBox *m_intelHDACheck;
+        QCheckBox *m_pcSpeakerCheck;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class NetworkTab: public QWidget {
@@ -185,12 +185,12 @@ class NetworkTab: public QWidget {
     protected:
 
     private:
-        QVBoxLayout *networkLayout;
+        QVBoxLayout *m_networkLayout;
 
-        QRadioButton *withNetworkRadio;
-        QRadioButton *withoutNetworkRadio;
+        QRadioButton *m_withNetworkRadio;
+        QRadioButton *m_withoutNetworkRadio;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 #endif // HARDWAREPAGE_H

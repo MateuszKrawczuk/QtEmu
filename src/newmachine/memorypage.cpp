@@ -29,51 +29,51 @@ MachineMemoryPage::MachineMemoryPage(Machine *machine,
 
     setTitle(tr("Machine memory"));
 
-    this -> newMachine = machine;
+    this -> m_newMachine = machine;
 
-    descriptionMemoryLabel = new QLabel(
+    m_descriptionMemoryLabel = new QLabel(
                 tr("Select the amount of base memory (RAM) in megabytes for virtual machine allocating."));
-    descriptionMemoryLabel -> setWordWrap(true);
+    m_descriptionMemoryLabel -> setWordWrap(true);
 
     int32_t totalRAM = 0;
 
     SystemUtils::getTotalMemory(totalRAM);
 
-    spinBoxMemoryLabel = new QLabel("MiB");
+    m_spinBoxMemoryLabel = new QLabel("MiB");
 
-    memorySpinBox = new QSpinBox();
-    memorySpinBox -> setMinimum(1);
-    memorySpinBox -> setMaximum(totalRAM);
+    m_memorySpinBox = new QSpinBox();
+    m_memorySpinBox -> setMinimum(1);
+    m_memorySpinBox -> setMaximum(totalRAM);
 
-    this -> registerField("machine.ram", memorySpinBox, "value", "valueChanged");
+    this -> registerField("machine.ram", m_memorySpinBox, "value", "valueChanged");
 
-    memorySlider = new QSlider(Qt::Horizontal);
-    memorySlider -> setTickPosition(QSlider::TicksBelow);
-    memorySlider -> setTickInterval(500);
-    memorySlider -> setMinimum(1);
-    memorySlider -> setMaximum(totalRAM);
+    m_memorySlider = new QSlider(Qt::Horizontal);
+    m_memorySlider -> setTickPosition(QSlider::TicksBelow);
+    m_memorySlider -> setTickInterval(500);
+    m_memorySlider -> setMinimum(1);
+    m_memorySlider -> setMaximum(totalRAM);
 
-    connect(memorySpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            memorySlider, &QSlider::setValue);
+    connect(m_memorySpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            m_memorySlider, &QSlider::setValue);
 
-    connect(memorySlider, &QSlider::valueChanged,
-            memorySpinBox, &QSpinBox::setValue);
+    connect(m_memorySlider, &QSlider::valueChanged,
+            m_memorySpinBox, &QSpinBox::setValue);
 
-    minMemoryLabel = new QLabel("1 MiB");
-    maxMemorylabel = new QLabel(QString("%1 MiB").arg(totalRAM));
+    m_minMemoryLabel = new QLabel("1 MiB");
+    m_maxMemorylabel = new QLabel(QString("%1 MiB").arg(totalRAM));
 
-    machineMemoryLayout = new QGridLayout();
+    m_machineMemoryLayout = new QGridLayout();
 
-    machineMemoryLayout -> setColumnStretch(1, 50);
+    m_machineMemoryLayout -> setColumnStretch(1, 50);
 
-    machineMemoryLayout -> addWidget(descriptionMemoryLabel, 0, 0, 1, 5);
-    machineMemoryLayout -> addWidget(memorySlider,           1, 0, 1, 3);
-    machineMemoryLayout -> addWidget(memorySpinBox,          1, 3, 1, 1);
-    machineMemoryLayout -> addWidget(spinBoxMemoryLabel,     1, 4, 1, 1);
-    machineMemoryLayout -> addWidget(minMemoryLabel,         2, 0, 1, 1);
-    machineMemoryLayout -> addWidget(maxMemorylabel,         2, 2, 1, 1);
+    m_machineMemoryLayout -> addWidget(m_descriptionMemoryLabel, 0, 0, 1, 5);
+    m_machineMemoryLayout -> addWidget(m_memorySlider,           1, 0, 1, 3);
+    m_machineMemoryLayout -> addWidget(m_memorySpinBox,          1, 3, 1, 1);
+    m_machineMemoryLayout -> addWidget(m_spinBoxMemoryLabel,     1, 4, 1, 1);
+    m_machineMemoryLayout -> addWidget(m_minMemoryLabel,         2, 0, 1, 1);
+    m_machineMemoryLayout -> addWidget(m_maxMemorylabel,         2, 2, 1, 1);
 
-    setLayout(machineMemoryLayout);
+    setLayout(m_machineMemoryLayout);
 
     qDebug() << "MachineMemoryPage created";
 }
@@ -83,7 +83,7 @@ MachineMemoryPage::~MachineMemoryPage() {
 }
 
 bool MachineMemoryPage::validatePage() {
-    this -> newMachine -> setRAM(this -> memorySpinBox -> value());
+    this -> m_newMachine -> setRAM(this -> m_memorySpinBox -> value());
 
     return true;
 }

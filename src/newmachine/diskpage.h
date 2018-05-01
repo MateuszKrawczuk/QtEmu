@@ -65,26 +65,26 @@ class MachineDiskPage: public QWizardPage {
         int nextId() const override;
         bool validatePage();
 
-        QVBoxLayout *machineDiskLayout;
-        QHBoxLayout *useOldDiskLayout;
+        QVBoxLayout *m_machineDiskLayout;
+        QHBoxLayout *m_useOldDiskLayout;
 
-        QRadioButton *noDiskRadio;
-        QRadioButton *createDiskRadio;
-        QRadioButton *useExistingDiskRadio;
+        QRadioButton *m_noDiskRadio;
+        QRadioButton *m_createDiskRadio;
+        QRadioButton *m_useExistingDiskRadio;
 
-        QPushButton *pathNewDiskPushButton;
+        QPushButton *m_pathNewDiskPushButton;
 
-        QLineEdit *hardDiskPathLineEdit;
+        QLineEdit *m_hardDiskPathLineEdit;
 
-        QLabel *machineDiskLabel;
-        QLabel *machineDiskInfoLabel;
-        QLabel *machineDiskSizeLabel;
+        QLabel *m_machineDiskLabel;
+        QLabel *m_machineDiskInfoLabel;
+        QLabel *m_machineDiskSizeLabel;
 
-        QMessageBox *notDiskMessageBox;
+        QMessageBox *m_notDiskMessageBox;
 
-        QString existingDiskPath;
+        QString m_existingDiskPath;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 class MachineNewDiskPage: public QWizardPage {
@@ -112,43 +112,43 @@ class MachineNewDiskPage: public QWizardPage {
         void initializePage();
         bool validatePage();
 
-        QVBoxLayout *newDiskLayout;
-        QHBoxLayout *fileLocationLayout;
-        QGridLayout *fileSizeLayout;
-        QGridLayout *diskTypeLayout;
+        QVBoxLayout *m_newDiskLayout;
+        QHBoxLayout *m_fileLocationLayout;
+        QGridLayout *m_fileSizeLayout;
+        QGridLayout *m_diskTypeLayout;
 
-        QGroupBox *fileLocationGroupBox;
-        QGroupBox *fileSizeGroupBox;
-        QGroupBox *fileTypeGroupBox;
+        QGroupBox *m_fileLocationGroupBox;
+        QGroupBox *m_fileSizeGroupBox;
+        QGroupBox *m_fileTypeGroupBox;
 
-        QLineEdit *fileNameLineEdit;
+        QLineEdit *m_fileNameLineEdit;
 
-        QDoubleSpinBox *diskSpinBox;
+        QDoubleSpinBox *m_diskSpinBox;
 
-        QSlider *diskSlider;
+        QSlider *m_diskSlider;
 
-        QLabel *minDiskLabel;
-        QLabel *maxDisklabel;
-        QLabel *memoryLabel;
+        QLabel *m_minDiskLabel;
+        QLabel *m_maxDisklabel;
+        QLabel *m_memoryLabel;
 
-        QPushButton *pathNewDiskPushButton;
+        QPushButton *m_pathNewDiskPushButton;
 
-        QRadioButton *rawRadioButton;
-        QRadioButton *qcowRadioButton;
-        QRadioButton *qcow2RadioButton;
-        QRadioButton *qedRadioButton;
-        QRadioButton *vmdkRadioButton;
-        QRadioButton *cloopRadioButton;
+        QRadioButton *m_rawRadioButton;
+        QRadioButton *m_qcowRadioButton;
+        QRadioButton *m_qcow2RadioButton;
+        QRadioButton *m_qedRadioButton;
+        QRadioButton *m_vmdkRadioButton;
+        QRadioButton *m_cloopRadioButton;
 
-        QMessageBox *qemuImgNotFoundMessageBox;
-        QMessageBox *qemuImgNotFinishedMessageBox;
-        QMessageBox *qemuImgErrorMessageBox;
-        QMessageBox *qemuImgOkMessageBox;
+        QMessageBox *m_qemuImgNotFoundMessageBox;
+        QMessageBox *m_qemuImgNotFinishedMessageBox;
+        QMessageBox *m_qemuImgErrorMessageBox;
+        QMessageBox *m_qemuImgOkMessageBox;
 
-        QString diskFormat;
-        QString diskName;
+        QString m_diskFormat;
+        QString m_diskName;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
 
 #endif // DISKPAGE_H

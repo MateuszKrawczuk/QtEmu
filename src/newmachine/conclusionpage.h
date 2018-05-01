@@ -60,33 +60,32 @@ class MachineConclusionPage: public QWizardPage {
         void fillMachineJSON(QJsonObject &machineJSONObject) const;
         void populateOSListJSON();
 
-        QGridLayout *conclusionLayout;
+        QGridLayout *m_conclusionLayout;
 
-        QLabel *machineDescLabel;
-        QLabel *OSTypeDescLabel;
-        QLabel *OSVersionDescLabel;
-        QLabel *processorDescLabel;
-        QLabel *graphicsDescLabel;
-        QLabel *audioDescLabel;
-        QLabel *RAMDescLabel;
-        QLabel *acceleratorDescLabel;
-        QLabel *diskDescLabel;
+        QLabel *m_machineDescLabel;
+        QLabel *m_OSTypeDescLabel;
+        QLabel *m_OSVersionDescLabel;
+        QLabel *m_processorDescLabel;
+        QLabel *m_graphicsDescLabel;
+        QLabel *m_audioDescLabel;
+        QLabel *m_RAMDescLabel;
+        QLabel *m_acceleratorDescLabel;
+        QLabel *m_diskDescLabel;
 
-        QLabel *conclusionLabel;
-        QLabel *machineNameLabel;
-        QLabel *OSTypeLabel;
-        QLabel *OSVersionLabel;
-        QLabel *processorLabel;
-        QLabel *graphicsLabel;
-        QLabel *audioLabel;
-        QLabel *RAMLabel;
-        QLabel *acceleratorLabel;
-        QLabel *diskLabel;
+        QLabel *m_conclusionLabel;
+        QLabel *m_machineNameLabel;
+        QLabel *m_OSTypeLabel;
+        QLabel *m_OSVersionLabel;
+        QLabel *m_processorLabel;
+        QLabel *m_graphicsLabel;
+        QLabel *m_audioLabel;
+        QLabel *m_RAMLabel;
+        QLabel *m_acceleratorLabel;
+        QLabel *m_diskLabel;
 
-        QListWidget *osList;
+        QListWidget *m_osList;
 
-        Machine *newMachine;
+        Machine *m_newMachine;
 };
-
 
 #endif // CONCLUSIONPAGE_H

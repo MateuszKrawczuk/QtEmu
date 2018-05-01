@@ -29,19 +29,19 @@ MachineHardwarePage::MachineHardwarePage(Machine *machine,
 
     setTitle(tr("Machine hardware"));
 
-    this -> newMachine = machine;
+    this -> m_newMachine = machine;
 
-    hardwareTabWidget = new QTabWidget();
-    hardwareTabWidget -> addTab(new ProcessorTab(machine, this), tr("Processor"));
-    hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
-    hardwareTabWidget -> addTab(new AudioTab(machine, this), tr("Audio"));
-    hardwareTabWidget -> addTab(new NetworkTab(machine, this), tr("Network"));
+    m_hardwareTabWidget = new QTabWidget();
+    m_hardwareTabWidget -> addTab(new ProcessorTab(machine, this), tr("Processor"));
+    m_hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
+    m_hardwareTabWidget -> addTab(new AudioTab(machine, this), tr("Audio"));
+    m_hardwareTabWidget -> addTab(new NetworkTab(machine, this), tr("Network"));
 
-    hardwareLayout = new QVBoxLayout();
-    hardwareLayout -> setAlignment(Qt::AlignCenter);
-    hardwareLayout -> addWidget(hardwareTabWidget);
+    m_hardwareLayout = new QVBoxLayout();
+    m_hardwareLayout -> setAlignment(Qt::AlignCenter);
+    m_hardwareLayout -> addWidget(m_hardwareTabWidget);
 
-    setLayout(hardwareLayout);
+    setLayout(m_hardwareLayout);
 
     qDebug() << "MachineHardwarePage created";
 }
@@ -53,108 +53,108 @@ MachineHardwarePage::~MachineHardwarePage() {
 ProcessorTab::ProcessorTab(Machine *machine,
                            QWidget *parent) : QWidget(parent) {
 
-    this -> newMachine = machine;
+    this -> m_newMachine = machine;
 
-    CPUTypeLabel = new QLabel(tr("CPU Type") + ":");
-    CPUTypeLabel -> setWordWrap(true);
+    m_CPUTypeLabel = new QLabel(tr("CPU Type") + ":");
+    m_CPUTypeLabel -> setWordWrap(true);
 
-    CPUType = new QComboBox();
-    SystemUtils::setCPUTypesx86(CPUType);
+    m_CPUType = new QComboBox();
+    SystemUtils::setCPUTypesx86(m_CPUType);
 
     this -> selectProcessor(0);
 
-    connect(CPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+    connect(m_CPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &ProcessorTab::selectProcessor);
 
-    CPUTypeLayout = new QHBoxLayout();
-    CPUTypeLayout -> setAlignment(Qt::AlignVCenter);
-    CPUTypeLayout -> setSpacing(5);
-    CPUTypeLayout -> addWidget(CPUTypeLabel);
-    CPUTypeLayout -> addWidget(CPUType);
+    m_CPUTypeLayout = new QHBoxLayout();
+    m_CPUTypeLayout -> setAlignment(Qt::AlignVCenter);
+    m_CPUTypeLayout -> setSpacing(5);
+    m_CPUTypeLayout -> addWidget(m_CPUTypeLabel);
+    m_CPUTypeLayout -> addWidget(m_CPUType);
 
-    CPUCountLabel = new QLabel(tr("CPU Count") + ":");
-    CPUCountLabel -> setWordWrap(true);
-    CPUCountSpinBox = new QSpinBox();
-    CPUCountSpinBox -> setMinimum(1);
-    CPUCountSpinBox -> setMaximum(255);
+    m_CPUCountLabel = new QLabel(tr("CPU Count") + ":");
+    m_CPUCountLabel -> setWordWrap(true);
+    m_CPUCountSpinBox = new QSpinBox();
+    m_CPUCountSpinBox -> setMinimum(1);
+    m_CPUCountSpinBox -> setMaximum(255);
 
     this -> selectCPUCount(1);
-    connect(CPUCountSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(m_CPUCountSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ProcessorTab::selectCPUCount);
 
-    coresSocketLabel = new QLabel(tr("Cores per socket") + ":");
-    coresSocketLabel -> setWordWrap(true);
-    coresSocketSpinBox = new QSpinBox();
-    coresSocketSpinBox -> setMinimum(0);
-    coresSocketSpinBox -> setMaximum(255);
+    m_coresSocketLabel = new QLabel(tr("Cores per socket") + ":");
+    m_coresSocketLabel -> setWordWrap(true);
+    m_coresSocketSpinBox = new QSpinBox();
+    m_coresSocketSpinBox -> setMinimum(0);
+    m_coresSocketSpinBox -> setMaximum(255);
 
-    connect(coresSocketSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(m_coresSocketSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ProcessorTab::selectCoresSocket);
 
-    CPUCountLayout = new QHBoxLayout();
-    CPUCountLayout -> setAlignment(Qt::AlignVCenter);
-    CPUCountLayout -> setSpacing(5);
-    CPUCountLayout -> addWidget(CPUCountLabel);
-    CPUCountLayout -> addWidget(CPUCountSpinBox);
-    CPUCountLayout -> addWidget(coresSocketLabel);
-    CPUCountLayout -> addWidget(coresSocketSpinBox);
+    m_CPUCountLayout = new QHBoxLayout();
+    m_CPUCountLayout -> setAlignment(Qt::AlignVCenter);
+    m_CPUCountLayout -> setSpacing(5);
+    m_CPUCountLayout -> addWidget(m_CPUCountLabel);
+    m_CPUCountLayout -> addWidget(m_CPUCountSpinBox);
+    m_CPUCountLayout -> addWidget(m_coresSocketLabel);
+    m_CPUCountLayout -> addWidget(m_coresSocketSpinBox);
 
-    socketCountLabel = new QLabel(tr("Socket count") + ":");
-    socketCountLabel -> setWordWrap(true);
-    socketCountSpinBox = new QSpinBox();
-    socketCountSpinBox -> setMinimum(0);
-    socketCountSpinBox -> setMaximum(255);
+    m_socketCountLabel = new QLabel(tr("Socket count") + ":");
+    m_socketCountLabel -> setWordWrap(true);
+    m_socketCountSpinBox = new QSpinBox();
+    m_socketCountSpinBox -> setMinimum(0);
+    m_socketCountSpinBox -> setMaximum(255);
 
-    connect(socketCountSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(m_socketCountSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ProcessorTab::selectSocketCount);
 
-    threadsCoreLabel = new QLabel(tr("Threads per core") + ":");
-    threadsCoreLabel -> setWordWrap(true);
-    threadsCoreSpinBox = new QSpinBox();
-    threadsCoreSpinBox -> setMinimum(0);
-    threadsCoreSpinBox -> setMaximum(255);
+    m_threadsCoreLabel = new QLabel(tr("Threads per core") + ":");
+    m_threadsCoreLabel -> setWordWrap(true);
+    m_threadsCoreSpinBox = new QSpinBox();
+    m_threadsCoreSpinBox -> setMinimum(0);
+    m_threadsCoreSpinBox -> setMaximum(255);
 
-    connect(threadsCoreSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(m_threadsCoreSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ProcessorTab::selectThreadsCore);
 
-    socketLayout = new QHBoxLayout();
-    socketLayout -> setAlignment(Qt::AlignVCenter);
-    socketLayout -> setSpacing(5);
-    socketLayout -> addWidget(socketCountLabel);
-    socketLayout -> addWidget(socketCountSpinBox);
-    socketLayout -> addWidget(threadsCoreLabel);
-    socketLayout -> addWidget(threadsCoreSpinBox);
+    m_socketLayout = new QHBoxLayout();
+    m_socketLayout -> setAlignment(Qt::AlignVCenter);
+    m_socketLayout -> setSpacing(5);
+    m_socketLayout -> addWidget(m_socketCountLabel);
+    m_socketLayout -> addWidget(m_socketCountSpinBox);
+    m_socketLayout -> addWidget(m_threadsCoreLabel);
+    m_socketLayout -> addWidget(m_threadsCoreSpinBox);
 
-    maxHotCPULabel = new QLabel(tr("Maximum number of hotpluggable CPUs") + ":");
-    maxHotCPULabel -> setWordWrap(false);
-    maxHotCPUSpinBox = new QSpinBox();
-    maxHotCPUSpinBox -> setMinimum(0);
-    maxHotCPUSpinBox -> setMaximum(255);
+    m_maxHotCPULabel = new QLabel(tr("Maximum number of hotpluggable CPUs") + ":");
+    m_maxHotCPULabel -> setWordWrap(false);
+    m_maxHotCPUSpinBox = new QSpinBox();
+    m_maxHotCPUSpinBox -> setMinimum(0);
+    m_maxHotCPUSpinBox -> setMaximum(255);
 
-    connect(maxHotCPUSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(m_maxHotCPUSpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ProcessorTab::selectMaxHotCPU);
 
-    maxHotCPUsLayout = new QHBoxLayout();
-    maxHotCPUsLayout -> setAlignment(Qt::AlignVCenter);
-    maxHotCPUsLayout -> setSpacing(5);
-    maxHotCPUsLayout -> addWidget(maxHotCPULabel);
-    maxHotCPUsLayout -> addWidget(maxHotCPUSpinBox);
+    m_maxHotCPUsLayout = new QHBoxLayout();
+    m_maxHotCPUsLayout -> setAlignment(Qt::AlignVCenter);
+    m_maxHotCPUsLayout -> setSpacing(5);
+    m_maxHotCPUsLayout -> addWidget(m_maxHotCPULabel);
+    m_maxHotCPUsLayout -> addWidget(m_maxHotCPUSpinBox);
 
-    CPUSettingsLayout = new QVBoxLayout();
-    CPUSettingsLayout -> setAlignment(Qt::AlignVCenter);
-    CPUSettingsLayout -> addItem(CPUCountLayout);
-    CPUSettingsLayout -> addItem(socketLayout);
-    CPUSettingsLayout -> addItem(maxHotCPUsLayout);
+    m_CPUSettingsLayout = new QVBoxLayout();
+    m_CPUSettingsLayout -> setAlignment(Qt::AlignVCenter);
+    m_CPUSettingsLayout -> addItem(m_CPUCountLayout);
+    m_CPUSettingsLayout -> addItem(m_socketLayout);
+    m_CPUSettingsLayout -> addItem(m_maxHotCPUsLayout);
 
-    CPUSettings = new QGroupBox(tr("CPU Settings"));
-    CPUSettings -> setLayout(CPUSettingsLayout);
+    m_CPUSettings = new QGroupBox(tr("CPU Settings"));
+    m_CPUSettings -> setLayout(m_CPUSettingsLayout);
 
-    processorLayout = new QVBoxLayout();
-    processorLayout -> setAlignment(Qt::AlignVCenter);
-    processorLayout -> addItem(CPUTypeLayout);
-    processorLayout -> addWidget(CPUSettings);
+    m_processorLayout = new QVBoxLayout();
+    m_processorLayout -> setAlignment(Qt::AlignVCenter);
+    m_processorLayout -> addItem(m_CPUTypeLayout);
+    m_processorLayout -> addWidget(m_CPUSettings);
 
-    setLayout(processorLayout);
+    setLayout(m_processorLayout);
 
     qDebug() << "ProcessorTab created";
 }
@@ -164,71 +164,71 @@ ProcessorTab::~ProcessorTab() {
 }
 
 void ProcessorTab::selectProcessor(int index) {
-    QString cpu = this -> CPUType -> itemData(index).toString();
+    QString cpu = this -> m_CPUType -> itemData(index).toString();
 
-    this -> newMachine -> setCPUType(cpu);
+    this -> m_newMachine -> setCPUType(cpu);
 }
 
 void ProcessorTab::selectCPUCount(int CPUCount) {
-    this -> newMachine -> setCPUCount(CPUCount);
+    this -> m_newMachine -> setCPUCount(CPUCount);
 }
 
 void ProcessorTab::selectSocketCount(int socketCount) {
-    this -> newMachine -> setSocketCount(socketCount);
+    this -> m_newMachine -> setSocketCount(socketCount);
 }
 
 void ProcessorTab::selectCoresSocket(int coresSocket) {
-    this -> newMachine -> setCoresSocket(coresSocket);
+    this -> m_newMachine -> setCoresSocket(coresSocket);
 }
 
 void ProcessorTab::selectThreadsCore(int threadsCore) {
-    this -> newMachine -> setThreadsCore(threadsCore);
+    this -> m_newMachine -> setThreadsCore(threadsCore);
 }
 
 void ProcessorTab::selectMaxHotCPU(int maxCPU) {
-    this -> newMachine -> setMaxHotCPU(maxCPU);
+    this -> m_newMachine -> setMaxHotCPU(maxCPU);
 }
 
 GraphicsTab::GraphicsTab(Machine *machine,
                          QWidget *parent) : QWidget(parent) {
 
-    this -> newMachine = machine;
+    this -> m_newMachine = machine;
 
-    GPUTypeLabel = new QLabel(tr("GPU Type") + ":");
-    GPUTypeLabel -> setWordWrap(true);
-    GPUType = new QComboBox();
-    SystemUtils::setGPUTypes(GPUType);
+    m_GPUTypeLabel = new QLabel(tr("GPU Type") + ":");
+    m_GPUTypeLabel -> setWordWrap(true);
+    m_GPUType = new QComboBox();
+    SystemUtils::setGPUTypes(m_GPUType);
 
-    GPUType -> setCurrentIndex(1);
+    m_GPUType -> setCurrentIndex(1);
 
     this -> selectGraphics(1);
 
-    connect(GPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
+    connect(m_GPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GraphicsTab::selectGraphics);
 
-    keyboardLabel = new QLabel(tr("Keyboard layout") + ":");
-    keyboardLabel -> setWordWrap(true);
-    keyboard = new QComboBox();
-    SystemUtils::setKeyboardLayout(keyboard);
+    m_keyboardLabel = new QLabel(tr("Keyboard layout") + ":");
+    m_keyboardLabel -> setWordWrap(true);
+    m_keyboard = new QComboBox();
+    SystemUtils::setKeyboardLayout(m_keyboard);
 
-    keyboard -> setCurrentIndex(5);
+    m_keyboard -> setCurrentIndex(5);
 
     this -> selectKeyboard(5);
 
-    connect(keyboard, QOverload<int>::of(&QComboBox::currentIndexChanged),
+    connect(m_keyboard, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GraphicsTab::selectKeyboard);
 
-    graphicsLayout = new QGridLayout();
+    m_graphicsLayout = new QGridLayout();
 
-    graphicsLayout -> setColumnStretch(1, 10);
-    graphicsLayout -> setColumnStretch(2, 10);
+    m_graphicsLayout -> setColumnStretch(1, 10);
+    m_graphicsLayout -> setColumnStretch(2, 10);
 
-    graphicsLayout -> addWidget(GPUTypeLabel,  1, 0, 1, 1);
-    graphicsLayout -> addWidget(GPUType,       1, 1, 1, 3);
-    graphicsLayout -> addWidget(keyboardLabel, 2, 0, 1, 1);
-    graphicsLayout -> addWidget(keyboard,      2, 1, 1, 3);
+    m_graphicsLayout -> addWidget(m_GPUTypeLabel,  1, 0, 1, 1);
+    m_graphicsLayout -> addWidget(m_GPUType,       1, 1, 1, 3);
+    m_graphicsLayout -> addWidget(m_keyboardLabel, 2, 0, 1, 1);
+    m_graphicsLayout -> addWidget(m_keyboard,      2, 1, 1, 3);
 
-    setLayout(graphicsLayout);
+    setLayout(m_graphicsLayout);
 
     qDebug() << "GraphicsTab created";
 }
@@ -238,69 +238,69 @@ GraphicsTab::~GraphicsTab() {
 }
 
 void GraphicsTab::selectGraphics(int index) {
-    QString graphics = this -> GPUType -> itemData(index).toString();
+    QString graphics = this -> m_GPUType -> itemData(index).toString();
 
-    this -> newMachine -> setGPUType(graphics);
+    this -> m_newMachine -> setGPUType(graphics);
 }
 
 void GraphicsTab::selectKeyboard(int index) {
-    QString keyboard = this -> keyboard -> itemData(index).toString();
+    QString keyboard = this -> m_keyboard -> itemData(index).toString();
 
-    this -> newMachine -> setKeyboard(keyboard);
+    this -> m_newMachine -> setKeyboard(keyboard);
 }
 
 AudioTab::AudioTab(Machine *machine,
                    QWidget *parent) : QWidget(parent) {
 
-    this -> newMachine = machine;
+    this -> m_newMachine = machine;
 
-    creativeCheck = new QCheckBox("Creative Sound Blaster 16");
-    connect(creativeCheck, &QAbstractButton::toggled,
+    m_creativeCheck = new QCheckBox("Creative Sound Blaster 16");
+    connect(m_creativeCheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectCreativeCard);
 
-    ensoniqCheck = new QCheckBox("ENSONIQ AudioPCI ES1370");
-    connect(ensoniqCheck, &QAbstractButton::toggled,
+    m_ensoniqCheck = new QCheckBox("ENSONIQ AudioPCI ES1370");
+    connect(m_ensoniqCheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectEnsoniqCard);
 
-    intelAC97Check = new QCheckBox("Intel AC97(82801AA)");
-    intelAC97Check -> setChecked(true);
-    connect(intelAC97Check, &QAbstractButton::toggled,
+    m_intelAC97Check = new QCheckBox("Intel AC97(82801AA)");
+    m_intelAC97Check -> setChecked(true);
+    connect(m_intelAC97Check, &QAbstractButton::toggled,
                 this, &AudioTab::selectIntelAC97Card);
 
-    yamahaCheck = new QCheckBox("Yamaha YM3812");
-    connect(yamahaCheck, &QAbstractButton::toggled,
+    m_yamahaCheck = new QCheckBox("Yamaha YM3812");
+    connect(m_yamahaCheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectYamahaCard);
 
-    gravisCheck = new QCheckBox("Gravis Ultrasound GF1");
-    connect(gravisCheck, &QAbstractButton::toggled,
+    m_gravisCheck = new QCheckBox("Gravis Ultrasound GF1");
+    connect(m_gravisCheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectGravisCard);
 
-    CS4231ACheck = new QCheckBox("CS4231A");
-    connect(CS4231ACheck, &QAbstractButton::toggled,
+    m_CS4231ACheck = new QCheckBox("CS4231A");
+    connect(m_CS4231ACheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectCS4231ACard);
 
-    intelHDACheck = new QCheckBox("Intel HD Audio");
-    connect(intelHDACheck, &QAbstractButton::toggled,
+    m_intelHDACheck = new QCheckBox("Intel HD Audio");
+    connect(m_intelHDACheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectIntelHDCard);
 
-    pcSpeakerCheck = new QCheckBox(tr("PC Speaker"));
-    connect(pcSpeakerCheck, &QAbstractButton::toggled,
+    m_pcSpeakerCheck = new QCheckBox(tr("PC Speaker"));
+    connect(m_pcSpeakerCheck, &QAbstractButton::toggled,
                 this, &AudioTab::selectPCSpeakerCard);
 
-    audioLayout = new QGridLayout();
-    audioLayout -> addWidget(creativeCheck,  0, 0, 1, 1);
-    audioLayout -> addWidget(ensoniqCheck,   0, 1, 1, 1);
+    m_audioLayout = new QGridLayout();
+    m_audioLayout -> addWidget(m_creativeCheck,  0, 0, 1, 1);
+    m_audioLayout -> addWidget(m_ensoniqCheck,   0, 1, 1, 1);
 
-    audioLayout -> addWidget(intelAC97Check, 1, 0, 1, 1);
-    audioLayout -> addWidget(yamahaCheck,    1, 1, 1, 1);
+    m_audioLayout -> addWidget(m_intelAC97Check, 1, 0, 1, 1);
+    m_audioLayout -> addWidget(m_yamahaCheck,    1, 1, 1, 1);
 
-    audioLayout -> addWidget(gravisCheck,    2, 0, 1, 1);
-    audioLayout -> addWidget(CS4231ACheck,   2, 1, 1, 1);
+    m_audioLayout -> addWidget(m_gravisCheck,    2, 0, 1, 1);
+    m_audioLayout -> addWidget(m_CS4231ACheck,   2, 1, 1, 1);
 
-    audioLayout -> addWidget(intelHDACheck,  3, 0, 1, 1);
-    audioLayout -> addWidget(pcSpeakerCheck, 3, 1, 1, 1);
+    m_audioLayout -> addWidget(m_intelHDACheck,  3, 0, 1, 1);
+    m_audioLayout -> addWidget(m_pcSpeakerCheck, 3, 1, 1, 1);
 
-    setLayout(audioLayout);
+    setLayout(m_audioLayout);
 
     qDebug() << "AudioTab created";
 }
@@ -311,87 +311,87 @@ AudioTab::~AudioTab() {
 
 void AudioTab::selectCreativeCard(bool selectCreative) {
     if (selectCreative) {
-        this -> newMachine -> addAudio("sb16", "Creative Sound Blaster 16");
+        this -> m_newMachine -> addAudio("sb16", "Creative Sound Blaster 16");
     } else {
-        this -> newMachine -> removeAudio("sb16");
+        this -> m_newMachine -> removeAudio("sb16");
     }
 }
 
 void AudioTab::selectEnsoniqCard(bool selectEnsoniq) {
     if (selectEnsoniq) {
-        this -> newMachine -> addAudio("es1370", "ENSONIQ AudioPCI ES1370");
+        this -> m_newMachine -> addAudio("es1370", "ENSONIQ AudioPCI ES1370");
     } else {
-        this -> newMachine -> removeAudio("es1370");
+        this -> m_newMachine -> removeAudio("es1370");
     }
 }
 
 void AudioTab::selectIntelAC97Card(bool selectIntelAC97) {
     if (selectIntelAC97) {
-        this -> newMachine -> addAudio("ac97", "Intel AC97(82801AA)");
+        this -> m_newMachine -> addAudio("ac97", "Intel AC97(82801AA)");
     } else {
-        this -> newMachine -> removeAudio("ac97");
+        this -> m_newMachine -> removeAudio("ac97");
     }
 }
 
 void AudioTab::selectYamahaCard(bool selectYamaha) {
     if (selectYamaha) {
-        this -> newMachine -> addAudio("adlib", "Yamaha YM3812");
+        this -> m_newMachine -> addAudio("adlib", "Yamaha YM3812");
     } else {
-        this -> newMachine -> removeAudio("adlib");
+        this -> m_newMachine -> removeAudio("adlib");
     }
 }
 
 void AudioTab::selectGravisCard(bool selectGravis) {
     if (selectGravis) {
-        this -> newMachine -> addAudio("gus", "Gravis Ultrasound GF1");
+        this -> m_newMachine -> addAudio("gus", "Gravis Ultrasound GF1");
     } else {
-        this -> newMachine -> removeAudio("gus");
+        this -> m_newMachine -> removeAudio("gus");
     }
 }
 
 void AudioTab::selectCS4231ACard(bool selectCS4231A) {
     if (selectCS4231A) {
-        this -> newMachine -> addAudio("cs4231a", "CS4231A");
+        this -> m_newMachine -> addAudio("cs4231a", "CS4231A");
     } else {
-        this -> newMachine -> removeAudio("cs4231a");
+        this -> m_newMachine -> removeAudio("cs4231a");
     }
 }
 
 void AudioTab::selectIntelHDCard(bool selectIntelHD) {
     if (selectIntelHD) {
-        this -> newMachine -> addAudio("hda", "Intel HD Audio");
+        this -> m_newMachine -> addAudio("hda", "Intel HD Audio");
     } else {
-        this -> newMachine -> removeAudio("hda");
+        this -> m_newMachine -> removeAudio("hda");
     }
 }
 
 void AudioTab::selectPCSpeakerCard(bool selectPCSpeaker) {
     if (selectPCSpeaker) {
-        this -> newMachine -> addAudio("pcspk", "PC Speaker");
+        this -> m_newMachine -> addAudio("pcspk", "PC Speaker");
     } else {
-        this -> newMachine -> removeAudio("pcspk");
+        this -> m_newMachine -> removeAudio("pcspk");
     }
 }
 
 NetworkTab::NetworkTab(Machine *machine,
                        QWidget *parent) : QWidget(parent) {
 
-    this -> newMachine = machine;
+    this -> m_newMachine = machine;
 
-    withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
-    withNetworkRadio -> setChecked(true);
+    m_withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
+    m_withNetworkRadio -> setChecked(true);
     this -> networkState(true);
 
-    connect(withNetworkRadio, &QAbstractButton::toggled,
+    connect(m_withNetworkRadio, &QAbstractButton::toggled,
                 this, &NetworkTab::networkState);
 
-    withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
+    m_withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
 
-    networkLayout = new QVBoxLayout();
-    networkLayout -> addWidget(withNetworkRadio);
-    networkLayout -> addWidget(withoutNetworkRadio);
+    m_networkLayout = new QVBoxLayout();
+    m_networkLayout -> addWidget(m_withNetworkRadio);
+    m_networkLayout -> addWidget(m_withoutNetworkRadio);
 
-    setLayout(networkLayout);
+    setLayout(m_networkLayout);
 
     qDebug() << "NetworkTab created";
 }
@@ -401,5 +401,5 @@ NetworkTab::~NetworkTab() {
 }
 
 void NetworkTab::networkState(bool network) {
-    this -> newMachine -> setUseNetwork(network);
+    this -> m_newMachine -> setUseNetwork(network);
 }

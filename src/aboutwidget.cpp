@@ -24,6 +24,12 @@
 // Local
 #include "aboutwidget.h"
 
+/**
+ * @brief About window
+ * @param parent, widget parent
+ *
+ * About window with the about, authors and license information
+ */
 AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("About") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
@@ -31,43 +37,44 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     this -> setWindowFlag(Qt::Window);
     this -> setFixedSize(625, 320);
 
-    closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
-                                  tr("&Close"),
-                                  this);
-    connect(closeButton, &QAbstractButton::clicked,
+    m_closeButton = new QPushButton(QIcon::fromTheme("window-close",
+                                                     QIcon(":/images/close.png")),
+                                    tr("&Close"),
+                                    this);
+    connect(m_closeButton, &QAbstractButton::clicked,
             this, &QWidget::hide);
 
     QList<QKeySequence> closeShortcuts;
     closeShortcuts << QKeySequence(Qt::Key_Escape);
-    closeAction = new QAction(this);
-    closeAction -> setShortcuts(closeShortcuts);
-    connect(closeAction, &QAction::triggered,
+    m_closeAction = new QAction(this);
+    m_closeAction -> setShortcuts(closeShortcuts);
+    connect(m_closeAction, &QAction::triggered,
             this, &QWidget::hide);
-    this -> addAction(closeAction);
+    this -> addAction(m_closeAction);
 
-    tabWidget = new QTabWidget(this);
-    tabWidget -> addTab(new AboutTab(), tr("About"));
-    tabWidget -> addTab(new AuthorsTab(), tr("Authors"));
-    tabWidget -> addTab(new LicenseTab(), tr("License"));
+    m_tabWidget = new QTabWidget(this);
+    m_tabWidget -> addTab(new AboutTab(), tr("About"));
+    m_tabWidget -> addTab(new AuthorsTab(), tr("Authors"));
+    m_tabWidget -> addTab(new LicenseTab(), tr("License"));
 
-    mainLayout = new QVBoxLayout(this);
+    m_mainLayout = new QVBoxLayout(this);
 
-    iconLayout = new QHBoxLayout();
-    iconLayout -> setContentsMargins(0, 12, 0, 0);
+    m_iconLayout = new QHBoxLayout();
+    m_iconLayout -> setContentsMargins(0, 12, 0, 0);
 
-    qtemuIcon = new QLabel(this);
-    qtemuIcon -> setPixmap(QPixmap(":/icon/32x32/qtemu.png"));
-    iconLayout -> addWidget(qtemuIcon, 0, Qt::AlignTop);
+    m_qtemuIcon = new QLabel(this);
+    m_qtemuIcon -> setPixmap(QPixmap(":/icon/32x32/qtemu.png"));
+    m_iconLayout -> addWidget(m_qtemuIcon, 0, Qt::AlignTop);
 
-    qtemuAppInfo = new QLabel(QString("<h3><strong>%1 v%2</strong></h3>")
-                              .arg(qApp -> applicationName())
-                              .arg(qApp -> applicationVersion()), this);
-    qtemuAppInfo->setContentsMargins(10, 0, 0, 0);
+    m_qtemuAppInfo = new QLabel(QString("<h3><strong>%1 v%2</strong></h3>")
+                                .arg(qApp -> applicationName())
+                                .arg(qApp -> applicationVersion()), this);
+    m_qtemuAppInfo -> setContentsMargins(10, 0, 0, 0);
 
-    iconLayout -> addWidget(qtemuAppInfo, 1, Qt::AlignTop);
-    mainLayout -> addItem(iconLayout);
-    mainLayout -> addWidget(tabWidget, 0);
-    mainLayout -> addWidget(closeButton, 1, Qt::AlignRight);
+    m_iconLayout -> addWidget(m_qtemuAppInfo, 1, Qt::AlignTop);
+    m_mainLayout -> addItem(m_iconLayout);
+    m_mainLayout -> addWidget(m_tabWidget, 0);
+    m_mainLayout -> addWidget(m_closeButton, 1, Qt::AlignRight);
 
     qDebug() << "AboutWidget created";
 }
@@ -90,10 +97,10 @@ AboutTab::AboutTab(QWidget *parent) : QWidget(parent) {
     QLabel *copyright = new QLabel("Copyright (C) 2006-2009 Urs Wolfer and Ben Klopfenstein\nCopyright (C) 2017-2018 Sergio Carlavilla Delgado");
     QLabel *urlSite = new QLabel("<a href=\"https://www.qtemu.org\">www.qtemu.org</a>");
 
-    mainLayout = new QVBoxLayout(this);
-    mainLayout -> addWidget(about);
-    mainLayout -> addWidget(copyright);
-    mainLayout -> addWidget(urlSite, 0, Qt::AlignCenter);
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout -> addWidget(about);
+    m_mainLayout -> addWidget(copyright);
+    m_mainLayout -> addWidget(urlSite, 0, Qt::AlignCenter);
 
 }
 
@@ -123,15 +130,15 @@ AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent) {
                    "</p>"
                    );
 
-    mainLayout = new QVBoxLayout(this);
-    mainLayout -> setContentsMargins(2, 2, 2, 2);
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout -> setContentsMargins(2, 2, 2, 2);
 
-    authorsBrowser = new QTextBrowser();
-    authorsBrowser -> setReadOnly(true);
-    authorsBrowser -> setOpenExternalLinks(false);
-    authorsBrowser -> setHtml(authors);
+    m_authorsBrowser = new QTextBrowser();
+    m_authorsBrowser -> setReadOnly(true);
+    m_authorsBrowser -> setOpenExternalLinks(false);
+    m_authorsBrowser -> setHtml(authors);
 
-    mainLayout -> addWidget(authorsBrowser, 0);
+    m_mainLayout -> addWidget(m_authorsBrowser, 0);
 
 }
 
@@ -403,15 +410,15 @@ LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent) {
                     );
 
 
-    mainLayout = new QVBoxLayout(this);
-    mainLayout -> setContentsMargins(2, 2, 2, 2);
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout -> setContentsMargins(2, 2, 2, 2);
 
-    licenseBrowser = new QTextBrowser();
-    licenseBrowser -> setReadOnly(true);
-    licenseBrowser -> setOpenExternalLinks(false);
-    licenseBrowser -> setHtml(license);
+    m_licenseBrowser = new QTextBrowser();
+    m_licenseBrowser -> setReadOnly(true);
+    m_licenseBrowser -> setOpenExternalLinks(false);
+    m_licenseBrowser -> setHtml(license);
 
-    mainLayout -> addWidget(licenseBrowser, 0);
+    m_mainLayout -> addWidget(m_licenseBrowser, 0);
 }
 
 LicenseTab::~LicenseTab() {
