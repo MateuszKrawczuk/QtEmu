@@ -35,6 +35,7 @@
 
 // Local
 #include "utils/systemutils.h"
+#include "machine.h"
 
 class MachineUtils : public QObject {
     Q_OBJECT
@@ -45,6 +46,7 @@ class MachineUtils : public QObject {
 
         static QStringList generateMachineCommand(const QUuid machineUuid);
         static bool deleteMachine(const QUuid machineUuid);
+        static QJsonObject getMachineJsonObject(const QUuid machineUuid);
 
     public slots:
 

@@ -198,3 +198,18 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid) {
 
     return removedDirectory;
 }
+
+QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid) {
+
+    QString machineConfigPath = SystemUtils::getMachineConfigPath(machineUuid);
+
+    QFile machineFile(machineConfigPath);
+    machineFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all data included in the file
+    QByteArray machineData = machineFile.readAll();
+    QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
+    QJsonObject machineObject = machineDocument.object();
+
+    return machineObject;
+}

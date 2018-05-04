@@ -24,6 +24,8 @@
 #include "machine.h"
 
 Machine::Machine(QObject *parent) : QObject(parent) {
+    this -> machineProcess = new QProcess(this);
+
     qDebug() << "Machine object created";
 }
 

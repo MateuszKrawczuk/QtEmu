@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     connect(m_osListWidget, &QListWidget::customContextMenuRequested,
             this, &MainWindow::machinesMenu);
+
 }
 
 MainWindow::~MainWindow() {
@@ -305,8 +306,10 @@ void MainWindow::loadMachines() {
         // TODO: Check if the json it's incomplete and the image not exits
         machine -> setIcon(QIcon(":/images/os/64x64/" +
                                  SystemUtils::getOsIcon(machineJSON["icon"].toString())));
-    }
 
+        QUuid machineUuid = machine -> data(QMetaType::QUuid).toUuid();
+        m_machinesList.append(generateMachineObject(machineUuid));
+    }
 
 }
 
@@ -437,6 +440,30 @@ void MainWindow::loadUI(const int itemCount) {
         this -> m_startMachineAction     -> setEnabled(true);
     }
 
+}
+
+/**
+ * @brief Generate the machine object for the list
+ * @param machineJSON, JSON with the machine params
+ * @return machine object
+ *
+ * Generate the machine object for the list
+ */
+Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
+
+    QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
+
+    Machine *machine = new Machine(this);
+
+    machine -> setName(machineJSON["name"].toString());
+    machine -> setOSType(machineJSON["OSType"].toString());
+    machine -> setOSVersion(machineJSON["OSVersion"].toString());
+    machine -> setRAM(machineJSON["RAM"].toDouble());
+    machine -> setUseNetwork(machineJSON["network"].toBool());
+    machine -> setPath(machineJSON["path"].toString());
+    machine -> setUuid(machineJSON["uuid"].toString());
+
+    return machine;
 }
 
 /**

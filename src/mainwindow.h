@@ -59,7 +59,6 @@ class MainWindow : public QMainWindow {
         void createMenus();
         void createMenusActions();
         void createToolBars();
-        void loadMachines();
 
     public slots:
         void visitQtEmuWebsite();
@@ -77,6 +76,9 @@ class MainWindow : public QMainWindow {
     protected:
 
     private:
+        Machine* generateMachineObject(const QUuid machineUuid);
+        void loadMachines();
+
         // Start menus
         QMenu *m_fileMenu;
         QMenu *m_machineMenu;
@@ -122,6 +124,7 @@ class MainWindow : public QMainWindow {
         // List of OS
         QListWidget *m_osListWidget;
         QStackedWidget *m_osDetailsStackedWidget;
+        QList<Machine *> m_machinesList;
 
         // Machine
         Machine *m_machine;

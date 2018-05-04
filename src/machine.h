@@ -174,6 +174,9 @@ class Machine: public QObject {
         // Accelerator
         QHash<QString, QString> accelerator;
 
+        // Process
+        QProcess *machineProcess;
+
 };
 
 #endif // MACHINE_H
