@@ -595,3 +595,19 @@ QString Machine::getAcceleratorLabel() {
 
     return acceleratorLabel;
 }
+
+void Machine::runMachine(const QUuid machineUuid) {
+
+    QStringList args = MachineUtils::generateMachineCommand(machineUuid);
+
+    QString program;
+
+    #ifdef Q_OS_LINUX
+    program = "qemu-system-x86_64";
+    #endif
+
+    machineProcess -> start(program, args);
+
+    // TODO: Control the output of the machineProcess
+
+}

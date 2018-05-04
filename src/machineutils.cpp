@@ -34,7 +34,7 @@ MachineUtils::~MachineUtils() {
 
 QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
 
-    QString machineConfigPath = SystemUtils::getMachineConfigPath(machineUuid);
+    QString machineConfigPath = getMachineConfigPath(machineUuid);
 
     QFile machineFile(machineConfigPath);
     machineFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
@@ -138,7 +138,7 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
 
     // CDROM TODO, for test not implemented yet :'(
     qemuCommand << "-drive";
-    qemuCommand << QString("file=").append("/home/xexio/Downloads/archlinux-2018.03.01-x86_64.iso").append(",if=ide,index=1,media=cdrom");
+    qemuCommand << QString("file=").append("/home/xexio/Downloads/archlinux-2018.05.01-x86_64.iso").append(",if=ide,index=1,media=cdrom");
 
     return qemuCommand;
 
@@ -201,7 +201,7 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid) {
 
 QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid) {
 
-    QString machineConfigPath = SystemUtils::getMachineConfigPath(machineUuid);
+    QString machineConfigPath = getMachineConfigPath(machineUuid);
 
     QFile machineFile(machineConfigPath);
     machineFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
@@ -212,4 +212,78 @@ QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid) {
     QJsonObject machineObject = machineDocument.object();
 
     return machineObject;
+}
+
+QString MachineUtils::getMachinePath(const QUuid machineUuid) {
+
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+
+    QString dataDirectoryPath = settings.value("QtEmuData",
+                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
+    settings.endGroup();
+
+    // Open the file with the machines
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all the machines included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    int machinePos = 0;
+    bool machineExists = false;
+    QString machinePath;
+    while(machinePos < machines.size() && ! machineExists) {
+        QJsonObject machineJSON = machines[machinePos].toObject();
+
+        if (machineUuid == machineJSON["uuid"].toVariant()) {
+            machineExists = true;
+            machinePath = machineJSON["path"].toString();
+        } else {
+            ++machinePos;
+        }
+    }
+
+    return machinePath;
+}
+
+QString MachineUtils::getMachineConfigPath(const QUuid machineUuid) {
+
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+
+    QString dataDirectoryPath = settings.value("QtEmuData",
+                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
+    settings.endGroup();
+
+    // Open the file with the machines
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all the machines included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    int machinePos = 0;
+    bool machineExists = false;
+    QString machinePath;
+    while(machinePos < machines.size() && ! machineExists) {
+        QJsonObject machineJSON = machines[machinePos].toObject();
+
+        if (machineUuid == machineJSON["uuid"].toVariant()) {
+            machineExists = true;
+            machinePath = machineJSON["configpath"].toString();
+        } else {
+            ++machinePos;
+        }
+    }
+
+    return machinePath;
 }

@@ -30,6 +30,7 @@
 #include <QDebug>
 
 // Local
+#include "machineutils.h"
 
 class Machine: public QObject {
     Q_OBJECT
@@ -124,12 +125,13 @@ class Machine: public QObject {
 
         QString getAcceleratorLabel();
 
-        QProcess getMachineProcess() const;
-        void setMachineProcess(const QProcess &value);
+        void runMachine(const QUuid machineUuid);
 
     signals:
 
     public slots:
+
+    private slots:
 
     protected:
 

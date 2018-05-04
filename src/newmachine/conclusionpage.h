@@ -58,7 +58,7 @@ class MachineConclusionPage: public QWizardPage {
         bool validatePage();
         void createMachineJSON(Machine *machine) const;
         void fillMachineJSON(QJsonObject &machineJSONObject) const;
-        void populateOSListJSON();
+        void insertOSInFile(Machine *newMachine);
 
         QGridLayout *m_conclusionLayout;
 

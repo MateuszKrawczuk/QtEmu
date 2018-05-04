@@ -160,7 +160,7 @@ bool MachineConclusionPage::validatePage() {
 
         createMachineJSON(this -> m_newMachine);
 
-        SystemUtils::populateOSList(this -> m_newMachine);
+        insertOSInFile(this -> m_newMachine);
 
         Logger::logMachineCreation(this -> m_newMachine -> getPath(),
                                    this -> m_newMachine -> getName(), "Machine created");
@@ -254,5 +254,49 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
         machineJSONObject["audio"] = audio;
     }
 
+}
+
+/**
+ * @brief Insert the new machine in the machines file
+ * @param newMachine, machine to be inserted
+ *
+ * Insert the new machine in the machines file.
+ * At the bottom of the file.
+ */
+void MachineConclusionPage::insertOSInFile(Machine *newMachine){
+
+    // TODO: Get the data directory path from QSettings
+    // Open the file
+    QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
+
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all data included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonObject machinesObject;
+
+    // Read other machines
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    // Create the new machine
+    QJsonObject machine;
+    machine["uuid"]       = newMachine -> getUuid();
+    machine["name"]       = newMachine -> getName();
+    machine["path"]       = newMachine -> getPath();
+    machine["configpath"] = newMachine -> getConfigPath();
+    machine["icon"]       = newMachine -> getOSVersion().toLower().replace(" ", "_");
+
+    machines.append(machine);
+    machinesObject["machines"] = machines;
+
+    QJsonDocument machinesJSONDocument(machinesObject);
+
+    machinesFile.seek(0);
+    machinesFile.write(machinesJSONDocument.toJson());
+    machinesFile.close();
 }
 

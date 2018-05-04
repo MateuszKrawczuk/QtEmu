@@ -373,21 +373,12 @@ void MainWindow::createNewMachine() {
 void MainWindow::runMachine() {
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
 
-    QStringList args = MachineUtils::generateMachineCommand(machineUuid);
-
-    QProcess *machineProcess = new QProcess();
-
-    QString program;
-
-    #ifdef Q_OS_LINUX
-    program = "qemu-system-x86_64";
-    #endif
-
-    machineProcess -> start(program, args);
-
-    // TODO: Control the output of the machineProcess
-
-    // Connections
+    foreach (Machine *machine, m_machinesList) {
+        if (machine -> getUuid() == machineUuid.toString()){
+            qDebug() << "ENTER" << machine -> getName();
+            machine -> runMachine(machineUuid);
+        }
+    }
 
 
 }

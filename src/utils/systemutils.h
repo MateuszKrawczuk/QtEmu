@@ -36,7 +36,6 @@
 #include <QDebug>
 
 // Local
-#include "../machine.h"
 
 // GNU
 #include <sys/sysinfo.h>
@@ -46,8 +45,6 @@ class SystemUtils {
     public:
         SystemUtils();
         ~SystemUtils();
-
-        static void populateOSList(Machine *newMachine);
 
         static void getTotalMemory(int32_t &totalRAM);
 
@@ -59,9 +56,6 @@ class SystemUtils {
 
         static bool createDisk(const QString &diskName, const QString &format,
                                const double size, bool useEncryption);
-
-        static QString getMachinePath(const QUuid machineUuid);
-        static QString getMachineConfigPath(const QUuid machineUuid);
 
     private:
 
