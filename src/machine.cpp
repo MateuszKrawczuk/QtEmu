@@ -24,7 +24,13 @@
 #include "machine.h"
 
 Machine::Machine(QObject *parent) : QObject(parent) {
-    this -> machineProcess = new QProcess(this);
+    this -> m_machineProcess = new QProcess(this);
+
+    connect(m_machineProcess, &QProcess::readyReadStandardError,
+            this, &Machine::readMachineErrorOut);
+
+    connect(m_machineProcess, &QProcess::stateChanged,
+            this, &Machine::machineStateChanged);
 
     qDebug() << "Machine object created";
 }
@@ -606,8 +612,16 @@ void Machine::runMachine(const QUuid machineUuid) {
     program = "qemu-system-x86_64";
     #endif
 
-    machineProcess -> start(program, args);
+    m_machineProcess -> start(program, args);
 
     // TODO: Control the output of the machineProcess
 
+}
+
+void Machine::readMachineErrorOut() {
+    qDebug() << m_machineProcess -> readAllStandardError();
+}
+
+void Machine::machineStateChanged() {
+    qDebug() << m_machineProcess -> state();
 }

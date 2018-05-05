@@ -132,6 +132,8 @@ class Machine: public QObject {
     public slots:
 
     private slots:
+        void readMachineErrorOut();
+        void machineStateChanged();
 
     protected:
 
@@ -177,7 +179,7 @@ class Machine: public QObject {
         QHash<QString, QString> accelerator;
 
         // Process
-        QProcess *machineProcess;
+        QProcess *m_machineProcess;
 
 };
 

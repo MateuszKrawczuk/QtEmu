@@ -373,14 +373,11 @@ void MainWindow::createNewMachine() {
 void MainWindow::runMachine() {
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
 
-    foreach (Machine *machine, m_machinesList) {
+    foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
-            qDebug() << "ENTER" << machine -> getName();
             machine -> runMachine(machineUuid);
         }
     }
-
-
 }
 
 /*!
@@ -446,6 +443,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
 
     Machine *machine = new Machine(this);
 
+    machine -> setState(Machine::Stopped);
     machine -> setName(machineJSON["name"].toString());
     machine -> setOSType(machineJSON["OSType"].toString());
     machine -> setOSVersion(machineJSON["OSVersion"].toString());
@@ -465,7 +463,28 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
  * state of the machine
  */
 void MainWindow::changeMachine(QListWidgetItem *machineItem) {
-    qDebug() << "Change machine" << machineItem -> data(QMetaType::QUuid).toUuid();
+    QUuid machineUuid = machineItem -> data(QMetaType::QUuid).toUuid();
+
+    foreach (Machine *machine, this -> m_machinesList) {
+        if (machine -> getUuid() == machineUuid.toString()) {
+
+            if (machine -> getState() == Machine::Stopped) {
+                this -> m_startMachineAction -> setEnabled(true);
+                this -> m_stopMachineAction  -> setEnabled(false);
+                this -> m_resetMachineAction -> setEnabled(false);
+                this -> m_pauseMachineAction -> setEnabled(false);
+                this -> m_saveMachineAction  -> setEnabled(false);
+            } else if (machine -> getState() == Machine::Started) {
+                this -> m_startMachineAction -> setEnabled(false);
+                this -> m_stopMachineAction  -> setEnabled(true);
+                this -> m_resetMachineAction -> setEnabled(true);
+                this -> m_pauseMachineAction -> setEnabled(true);
+                this -> m_saveMachineAction  -> setEnabled(true);
+            }
+
+        }
+    }
+
 }
 
 void MainWindow::machinesMenu(const QPoint &pos) {

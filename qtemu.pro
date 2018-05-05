@@ -70,7 +70,8 @@ SOURCES += src/main.cpp\
            src/newmachine/diskpage.cpp \
            src/newmachine/conclusionpage.cpp \
            src/utils/logger.cpp \
-           src/machineutils.cpp
+           src/machineutils.cpp \
+    src/machineconfigwindow.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -86,7 +87,8 @@ HEADERS  += src/mainwindow.h \
             src/newmachine/diskpage.h \
             src/newmachine/conclusionpage.h \
             src/utils/logger.h \
-            src/machineutils.h
+            src/machineutils.h \
+    src/machineconfigwindow.h
 
 OTHER_FILES += \
     CHANGELOG \
