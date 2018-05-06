@@ -130,6 +130,9 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
+    qemuCommand << "-pidfile";
+    qemuCommand << machineObject["path"].toString().append("/").append(machineObject["name"].toString()).append(".pid");
+
     // Network TODO, WIP...
 
     // HDD
