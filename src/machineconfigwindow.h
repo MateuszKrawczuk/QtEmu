@@ -24,6 +24,7 @@
 
 // Qt
 #include <QWidget>
+#include <QIcon>
 
 #include <QDebug>
 

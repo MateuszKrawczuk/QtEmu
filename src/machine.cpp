@@ -29,8 +29,11 @@ Machine::Machine(QObject *parent) : QObject(parent) {
     connect(m_machineProcess, &QProcess::readyReadStandardError,
             this, &Machine::readMachineErrorOut);
 
-    connect(m_machineProcess, &QProcess::stateChanged,
-            this, &Machine::machineStateChanged);
+    connect(m_machineProcess, &QProcess::started,
+            this, &Machine::machineStarted);
+
+    connect(m_machineProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this, &Machine::machineFinished);
 
     qDebug() << "Machine object created";
 }
@@ -611,17 +614,57 @@ void Machine::runMachine(const QUuid machineUuid) {
     #ifdef Q_OS_LINUX
     program = "qemu-system-x86_64";
     #endif
+    #ifdef Q_OS_WIN
+    // TODO: Control windows execution
+    #endif
+    #ifdef Q_OS_MACOS
+    // TODO: Control MacOS execution
+    #endif
+
+    // TODO
+    //m_machineProcess -> setProcessEnvironment(buildEnvironment());
 
     m_machineProcess -> start(program, args);
+}
 
-    // TODO: Control the output of the machineProcess
+void Machine::stopMachine() {
+
+}
+
+void Machine::resetMachine() {
+
+}
+
+void Machine::pauseMachine() {
+
+}
+
+void Machine::saveMachine() {
 
 }
 
 void Machine::readMachineErrorOut() {
+    // TODO: Show in a window
     qDebug() << m_machineProcess -> readAllStandardError();
 }
 
-void Machine::machineStateChanged() {
-    qDebug() << m_machineProcess -> state();
+void Machine::machineStarted() {
+    this -> state = Machine::Started;
+    emit(machineStateChangedSignal(Machine::Started));
+}
+
+void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus) {
+    qDebug() << "exitCode: " << exitCode << " exitStatus " << exitStatus;
+
+    this -> state = Machine::Stopped;
+    emit(machineStateChangedSignal(Machine::Stopped));
+}
+
+QProcessEnvironment Machine::buildEnvironment() {
+
+    // TODO: Implement Windows and MacOS
+    QProcessEnvironment env = m_machineProcess -> processEnvironment();
+    env.insert("QEMU_AUDIO_DRV", "alsa");
+
+    return env;
 }

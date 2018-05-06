@@ -40,7 +40,7 @@ class Machine: public QObject {
         ~Machine();
 
         enum States {
-            Started, Stopped, Rebooted
+            Started, Stopped, Saved, Paused
         };
 
         QString getName() const;
@@ -126,14 +126,20 @@ class Machine: public QObject {
         QString getAcceleratorLabel();
 
         void runMachine(const QUuid machineUuid);
+        void stopMachine();
+        void resetMachine();
+        void pauseMachine();
+        void saveMachine();
 
     signals:
+        void machineStateChangedSignal(States newState);
 
     public slots:
 
     private slots:
         void readMachineErrorOut();
-        void machineStateChanged();
+        void machineStarted();
+        void machineFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
     protected:
 
@@ -180,6 +186,9 @@ class Machine: public QObject {
 
         // Process
         QProcess *m_machineProcess;
+
+        // Methods
+        QProcessEnvironment buildEnvironment();
 
 };
 

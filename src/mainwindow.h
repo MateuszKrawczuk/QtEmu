@@ -69,6 +69,7 @@ class MainWindow : public QMainWindow {
         void deleteMachine();
         void loadUI(const int itemCount);
         void changeMachine(QListWidgetItem *machineItem);
+        void machineStateChanged(Machine::States newState);
 
     private slots:
         void machinesMenu(const QPoint &pos);
@@ -78,6 +79,7 @@ class MainWindow : public QMainWindow {
     private:
         Machine* generateMachineObject(const QUuid machineUuid);
         void loadMachines();
+        void controlMachineActions(Machine::States state);
 
         // Start menus
         QMenu *m_fileMenu;
@@ -105,7 +107,7 @@ class MainWindow : public QMainWindow {
         QAction *m_stopMachineAction;
         QAction *m_resetMachineAction;
         QAction *m_pauseMachineAction;
-        QAction *m_saveMachineAction;
+        //QAction *m_saveMachineAction;
         // End menus
 
         // Toolbar

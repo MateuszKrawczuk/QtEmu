@@ -243,10 +243,10 @@ void MainWindow::createMenusActions() {
                                                      QIcon(":/icon/32x32/qtemu.png")));
     m_pauseMachineAction -> setToolTip(tr("Pause machine"));
 
-    m_saveMachineAction = new QAction(this);
+    /*m_saveMachineAction = new QAction(this);
     m_saveMachineAction -> setIcon(QIcon::fromTheme("system-save-session",
                                                     QIcon(":/icon/32x32/qtemu.png")));
-    m_saveMachineAction -> setToolTip(tr("Save machine"));
+    m_saveMachineAction -> setToolTip(tr("Save machine"));*/
 
 }
 
@@ -267,7 +267,7 @@ void MainWindow::createToolBars() {
     m_mainToolBar -> addAction(this -> m_stopMachineAction);
     m_mainToolBar -> addAction(this -> m_resetMachineAction);
     m_mainToolBar -> addAction(this -> m_pauseMachineAction);
-    m_mainToolBar -> addAction(this -> m_saveMachineAction);
+    //m_mainToolBar -> addAction(this -> m_saveMachineAction);
 
     m_mainToolBar -> setMovable(false);
 
@@ -410,7 +410,7 @@ void MainWindow::loadUI(const int itemCount) {
     this -> m_stopMachineAction  -> setEnabled(false);
     this -> m_resetMachineAction -> setEnabled(false);
     this -> m_pauseMachineAction -> setEnabled(false);
-    this -> m_saveMachineAction  -> setEnabled(false);
+    //this -> m_saveMachineAction  -> setEnabled(false);
 
     if (itemCount == 0) {
         this -> m_settingsMachineAction  -> setEnabled(false);
@@ -452,6 +452,9 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     machine -> setPath(machineJSON["path"].toString());
     machine -> setUuid(machineJSON["uuid"].toString());
 
+    connect(machine, &Machine::machineStateChangedSignal,
+            this, &MainWindow::machineStateChanged);
+
     return machine;
 }
 
@@ -467,21 +470,7 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem) {
 
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()) {
-
-            if (machine -> getState() == Machine::Stopped) {
-                this -> m_startMachineAction -> setEnabled(true);
-                this -> m_stopMachineAction  -> setEnabled(false);
-                this -> m_resetMachineAction -> setEnabled(false);
-                this -> m_pauseMachineAction -> setEnabled(false);
-                this -> m_saveMachineAction  -> setEnabled(false);
-            } else if (machine -> getState() == Machine::Started) {
-                this -> m_startMachineAction -> setEnabled(false);
-                this -> m_stopMachineAction  -> setEnabled(true);
-                this -> m_resetMachineAction -> setEnabled(true);
-                this -> m_pauseMachineAction -> setEnabled(true);
-                this -> m_saveMachineAction  -> setEnabled(true);
-            }
-
+            controlMachineActions(machine -> getState());
         }
     }
 
@@ -489,4 +478,44 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem) {
 
 void MainWindow::machinesMenu(const QPoint &pos) {
     qDebug() << "Machine menu, pos: " << pos;
+}
+
+/**
+ * @brief Control when the state of a VM changes
+ * @param newState, new state of the VM
+ *
+ * Control when the state of a VM changes
+ */
+void MainWindow::machineStateChanged(Machine::States newState) {
+    controlMachineActions(newState);
+}
+
+/**
+ * @brief Control if the state of the actions of the VM
+ * @param state, state of the VM
+ *
+ * Control if the actions of the machines are enabled or disabled
+ * based on the state of the VM
+ */
+void MainWindow::controlMachineActions(Machine::States state) {
+
+    if (state == Machine::Started) {
+        this -> m_startMachineAction -> setEnabled(false);
+        this -> m_stopMachineAction  -> setEnabled(true);
+        this -> m_resetMachineAction -> setEnabled(true);
+        this -> m_pauseMachineAction -> setEnabled(true);
+        //this -> m_saveMachineAction  -> setEnabled(true);
+    } else if(state == Machine::Stopped) {
+        this -> m_startMachineAction -> setEnabled(true);
+        this -> m_stopMachineAction  -> setEnabled(false);
+        this -> m_resetMachineAction -> setEnabled(false);
+        this -> m_pauseMachineAction -> setEnabled(false);
+        //this -> m_saveMachineAction  -> setEnabled(false);
+    } else if(state == Machine::Paused) {
+        this -> m_startMachineAction -> setEnabled(false);
+        this -> m_stopMachineAction  -> setEnabled(false);
+        this -> m_resetMachineAction -> setEnabled(false);
+        this -> m_pauseMachineAction -> setEnabled(true);
+        //this -> m_saveMachineAction  -> setEnabled(false);
+    }
 }
