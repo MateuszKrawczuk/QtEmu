@@ -66,6 +66,8 @@ class MainWindow : public QMainWindow {
         void visitQemuWebsite();
         void createNewMachine();
         void runMachine();
+        void resetMachine();
+        void pauseMachine();
         void deleteMachine();
         void loadUI(const int itemCount);
         void changeMachine(QListWidgetItem *machineItem);

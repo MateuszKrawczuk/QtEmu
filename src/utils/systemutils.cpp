@@ -32,12 +32,13 @@ SystemUtils::~SystemUtils() {
 }
 
 void SystemUtils::getTotalMemory(int32_t &totalRAM) {
+    #ifdef Q_OS_LINUX
+        struct sysinfo sys_info;
 
-    struct sysinfo sys_info;
-
-    if (sysinfo(&sys_info) != -1) {
-        totalRAM = (((uint64_t)sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024;
-    }
+        if (sysinfo(&sys_info) != -1) {
+            totalRAM = (((uint64_t)sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024;
+        }
+    #endif
 }
 
 void SystemUtils::setCPUTypesx86(QComboBox *CPUType) {

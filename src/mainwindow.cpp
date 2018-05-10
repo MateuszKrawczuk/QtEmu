@@ -237,11 +237,15 @@ void MainWindow::createMenusActions() {
     m_resetMachineAction -> setIcon(QIcon::fromTheme("chronometer-reset",
                                                      QIcon(":/icon/32x32/qtemu.png")));
     m_resetMachineAction -> setToolTip(tr("Reset machine"));
+    connect(m_resetMachineAction, &QAction::triggered,
+            this, &MainWindow::resetMachine);
 
     m_pauseMachineAction = new QAction(this);
     m_pauseMachineAction -> setIcon(QIcon::fromTheme("kt-pause",
                                                      QIcon(":/icon/32x32/qtemu.png")));
     m_pauseMachineAction -> setToolTip(tr("Pause machine"));
+    connect(m_pauseMachineAction, &QAction::triggered,
+            this, &MainWindow::pauseMachine);
 
     /*m_saveMachineAction = new QAction(this);
     m_saveMachineAction -> setIcon(QIcon::fromTheme("system-save-session",
@@ -378,6 +382,27 @@ void MainWindow::runMachine() {
             machine -> runMachine(machineUuid);
         }
     }
+}
+
+void MainWindow::resetMachine() {
+    QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
+
+    foreach (Machine *machine, this -> m_machinesList) {
+        if (machine -> getUuid() == machineUuid.toString()){
+            machine -> resetMachine();
+        }
+    }
+}
+
+void MainWindow::pauseMachine() {
+    QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
+
+    foreach (Machine *machine, this -> m_machinesList) {
+        if (machine -> getUuid() == machineUuid.toString()){
+            machine -> pauseMachine();
+        }
+    }
+
 }
 
 /*!

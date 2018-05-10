@@ -53,8 +53,7 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
 
     QStringList qemuCommand;
 
-    qemuCommand << "-monitor";
-    qemuCommand << "stdio";
+    qemuCommand << "-monitor" << "stdio";
 
     qemuCommand << "-name";
     qemuCommand << machineObject["name"].toString();
@@ -130,8 +129,10 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
+    QString pipe = machineObject["path"].toString().append("/").append(machineObject["name"].toString());
+
     qemuCommand << "-pidfile";
-    qemuCommand << machineObject["path"].toString().append("/").append(machineObject["name"].toString()).append(".pid");
+    qemuCommand << pipe.append(".pid");
 
     // Network TODO, WIP...
 
@@ -142,6 +143,8 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     // CDROM TODO, for test not implemented yet :'(
     qemuCommand << "-drive";
     qemuCommand << QString("file=").append("/home/xexio/Downloads/archlinux-2018.05.01-x86_64.iso").append(",if=ide,index=1,media=cdrom");
+
+    qDebug() << "Command " <<qemuCommand;
 
     return qemuCommand;
 

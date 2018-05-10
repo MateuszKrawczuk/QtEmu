@@ -38,7 +38,9 @@
 // Local
 
 // GNU
+#ifdef Q_OS_LINUX
 #include <sys/sysinfo.h>
+#endif
 
 class SystemUtils {
 

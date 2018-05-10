@@ -129,7 +129,6 @@ class Machine: public QObject {
         void stopMachine();
         void resetMachine();
         void pauseMachine();
-        void saveMachine();
 
     signals:
         void machineStateChangedSignal(States newState);
@@ -137,6 +136,7 @@ class Machine: public QObject {
     public slots:
 
     private slots:
+        void readMachineStandardOut();
         void readMachineErrorOut();
         void machineStarted();
         void machineFinished(int exitCode, QProcess::ExitStatus exitStatus);

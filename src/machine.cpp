@@ -26,6 +26,9 @@
 Machine::Machine(QObject *parent) : QObject(parent) {
     this -> m_machineProcess = new QProcess(this);
 
+    connect(m_machineProcess, &QProcess::readyReadStandardOutput,
+            this, &Machine::readMachineStandardOut);
+
     connect(m_machineProcess, &QProcess::readyReadStandardError,
             this, &Machine::readMachineErrorOut);
 
@@ -628,34 +631,50 @@ void Machine::runMachine(const QUuid machineUuid) {
 }
 
 void Machine::stopMachine() {
+    this -> m_machineProcess -> write(qPrintable("system_powerdown\n"));
+    this -> state = Machine::Stopped;
 
+    emit(machineStateChangedSignal(Machine::Stopped));
 }
 
 void Machine::resetMachine() {
-
+    this -> m_machineProcess -> write(qPrintable("system_reset\n"));
 }
 
 void Machine::pauseMachine() {
 
+    if (state == Machine::Started) {
+        this -> m_machineProcess -> write(qPrintable("stop\n"));
+        this -> state = Machine::Paused;
+
+        emit(machineStateChangedSignal(Machine::Paused));
+
+    } else if (state == Machine::Paused) {
+        this -> m_machineProcess -> write(qPrintable("cont\n"));
+        this -> state = Machine::Started;
+
+        emit(machineStateChangedSignal(Machine::Started));
+    }
 }
 
-void Machine::saveMachine() {
-
+void Machine::readMachineStandardOut() {
+    // TODO: Show in a window
+    qDebug() << "Standard Out: " << m_machineProcess -> readAllStandardOutput();
 }
 
 void Machine::readMachineErrorOut() {
     // TODO: Show in a window
-    qDebug() << m_machineProcess -> readAllStandardError();
+    qDebug() << "Error Out: " <<  m_machineProcess -> readAllStandardError();
 }
 
 void Machine::machineStarted() {
     this -> state = Machine::Started;
+
     emit(machineStateChangedSignal(Machine::Started));
 }
 
 void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus) {
-    qDebug() << "exitCode: " << exitCode << " exitStatus " << exitStatus;
-
+    qDebug() << "Exit code: " << exitCode << " exit status: " << exitStatus;
     this -> state = Machine::Stopped;
     emit(machineStateChangedSignal(Machine::Stopped));
 }
