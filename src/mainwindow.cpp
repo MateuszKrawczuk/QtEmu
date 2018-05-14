@@ -25,7 +25,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> setWindowTitle("QtEmu");
-    this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")));
+    this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     this -> setMinimumSize(700, 500);
 
     // Close the application when all windows are closed
@@ -46,9 +46,28 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_osListWidget -> setMaximumWidth(170);
     m_osListWidget -> setSpacing(7);
 
+    m_machineDetailsLayout = new QFormLayout();
+    m_machineDetailsLayout -> setSpacing(7);
+    m_machineDetailsLayout -> setHorizontalSpacing(50);
+    m_machineDetailsLayout -> setLabelAlignment(Qt::AlignLeft);
+    m_machineDetailsLayout -> setContentsMargins(10, 20, 0, 0);
+    m_machineDetailsLayout -> addRow(tr("Name") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Operating System") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("RAM") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Graphics") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Audio") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Accelerator") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Disk") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Network") + ":", new QLabel());
+
+    m_machineDetailsGroup = new QGroupBox(tr("Machine details"));
+    m_machineDetailsGroup -> setAlignment(Qt::AlignHCenter);
+    m_machineDetailsGroup -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_machineDetailsGroup -> setLayout(m_machineDetailsLayout);
+
     m_osDetailsStackedWidget = new QStackedWidget(this);
-    m_osDetailsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
-                                             QSizePolicy::MinimumExpanding);
+    m_osDetailsStackedWidget -> setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+    m_osDetailsStackedWidget -> addWidget(m_machineDetailsGroup);
 
     m_containerLayout = new QHBoxLayout();
     m_containerLayout -> addWidget(m_osListWidget);

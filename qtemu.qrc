@@ -1,27 +1,27 @@
 <RCC>
     <qresource prefix="/">
-        <file>icon/32x32/qtemu.png</file>
-        <file>icon/32x32/flags/brazil.png</file>
-        <file>icon/32x32/flags/czech.png</file>
-        <file>icon/32x32/flags/eeuu.png</file>
-        <file>icon/32x32/flags/france.png</file>
-        <file>icon/32x32/flags/germany.png</file>
-        <file>icon/32x32/flags/italy.png</file>
-        <file>icon/32x32/flags/poland.png</file>
-        <file>icon/32x32/flags/russia.png</file>
-        <file>icon/32x32/flags/spain.png</file>
-        <file>icon/32x32/flags/turkey.png</file>
-        <file>icon/64x64/flags/brazil.png</file>
-        <file>icon/64x64/flags/czech.png</file>
-        <file>icon/64x64/flags/eeuu.png</file>
-        <file>icon/64x64/flags/france.png</file>
-        <file>icon/64x64/flags/germany.png</file>
-        <file>icon/64x64/flags/italy.png</file>
-        <file>icon/64x64/flags/poland.png</file>
-        <file>icon/64x64/flags/russia.png</file>
-        <file>icon/64x64/flags/spain.png</file>
-        <file>icon/64x64/flags/turkey.png</file>
         <file>images/banner.png</file>
+        <file>images/qtemu.png</file>
+        <file>images/flags/32x32/brazil.png</file>
+        <file>images/flags/32x32/czech.png</file>
+        <file>images/flags/32x32/eeuu.png</file>
+        <file>images/flags/32x32/france.png</file>
+        <file>images/flags/32x32/germany.png</file>
+        <file>images/flags/32x32/italy.png</file>
+        <file>images/flags/32x32/poland.png</file>
+        <file>images/flags/32x32/russia.png</file>
+        <file>images/flags/32x32/spain.png</file>
+        <file>images/flags/32x32/turkey.png</file>
+        <file>images/flags/64x64/brazil.png</file>
+        <file>images/flags/64x64/czech.png</file>
+        <file>images/flags/64x64/eeuu.png</file>
+        <file>images/flags/64x64/france.png</file>
+        <file>images/flags/64x64/germany.png</file>
+        <file>images/flags/64x64/italy.png</file>
+        <file>images/flags/64x64/poland.png</file>
+        <file>images/flags/64x64/russia.png</file>
+        <file>images/flags/64x64/spain.png</file>
+        <file>images/flags/64x64/turkey.png</file>
         <file>images/os/32x32/arch_linux.png</file>
         <file>images/os/32x32/arch_hurd.png</file>
         <file>images/os/32x32/debian.png</file>

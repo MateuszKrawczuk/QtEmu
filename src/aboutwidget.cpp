@@ -33,7 +33,7 @@
 AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("About") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
-                                           QIcon(":/icon/32x32/qtemu.png")));
+                                           QIcon(":/images/qtemu.png")));
     this -> setWindowFlag(Qt::Window);
     this -> setFixedSize(625, 320);
 
@@ -63,7 +63,7 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     m_iconLayout -> setContentsMargins(0, 12, 0, 0);
 
     m_qtemuIcon = new QLabel(this);
-    m_qtemuIcon -> setPixmap(QPixmap(":/icon/32x32/qtemu.png"));
+    m_qtemuIcon -> setPixmap(QPixmap(":/images/qtemu.png"));
     m_iconLayout -> addWidget(m_qtemuIcon, 0, Qt::AlignTop);
 
     m_qtemuAppInfo = new QLabel(QString("<h3><strong>%1 v%2</strong></h3>")

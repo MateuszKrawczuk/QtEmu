@@ -26,7 +26,7 @@
 
 HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("Quick Help") + " - QtEmu");
-    this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/icon/32x32/qtemu.png")));
+    this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     this -> setWindowFlag(Qt::Window);
     this -> setMinimumSize(100, 500);
 

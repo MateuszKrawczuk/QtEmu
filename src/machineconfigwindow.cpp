@@ -27,7 +27,7 @@
 MachineConfigWindow::MachineConfigWindow(QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("Machine Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
-                                           QIcon(":/icon/32x32/qtemu.png")));
+                                           QIcon(":/images/qtemu.png")));
     this -> setWindowFlags(Qt::Dialog);
     this -> setWindowModality(Qt::ApplicationModal);
     this -> setMinimumSize(640, 520);

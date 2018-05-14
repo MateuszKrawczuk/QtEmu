@@ -124,6 +124,13 @@ class MainWindow : public QMainWindow {
         // Layouts
         QVBoxLayout *m_mainLayout;
         QHBoxLayout *m_containerLayout;
+        QVBoxLayout *m_groupContainerLayout;
+        QFormLayout *m_machineDetailsLayout;
+
+        QGroupBox *m_machineDetailsGroup;
+        QGroupBox *m_hardwareGroup;
+        QGroupBox *m_devicesGroup;
+        QGroupBox *m_networkGroup;
 
         // List of OS
         QListWidget *m_osListWidget;
@@ -133,7 +140,12 @@ class MainWindow : public QMainWindow {
         // Machine
         Machine *m_machine;
 
+        // Labels
+        QLabel *m_machineNameLabel;
+        QLabel *m_machineOsLabel;
+        QLabel *m_machineCPULabel;
+        QLabel *m_machineGraphicsLabel;
+        QLabel *m_machineAccelLabel;
+        QLabel *m_machineRAMLabel;
 };
-
-
 #endif // MAINWINDOW_H

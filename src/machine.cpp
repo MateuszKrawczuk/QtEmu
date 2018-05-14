@@ -659,7 +659,7 @@ void Machine::pauseMachine() {
 
 void Machine::readMachineStandardOut() {
     // TODO: Show in a window
-    qDebug() << "Standard Out: " << m_machineProcess -> readAllStandardOutput();
+    qDebug() << "Standard Out: " << this -> m_machineProcess -> readAllStandardOutput();
 }
 
 void Machine::readMachineErrorOut() {
