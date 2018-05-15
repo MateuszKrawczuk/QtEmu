@@ -62,7 +62,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     // Add options
     m_optionsListWidget -> addItem(tr("General Options"));
     m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
-                                                               QIcon(":/images/icons/breeze/32x32/preferences-other.png")));
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
 
     //m_optionsListWidget -> addItem(tr("Input"));
     //m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",

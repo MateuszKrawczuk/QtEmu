@@ -56,5 +56,6 @@
         <file>images/os/64x64/ubuntu.png</file>
         <file>images/os/64x64/windows_old.png</file>
         <file>images/os/64x64/windows.png</file>
+        <file>images/icons/breeze/32x32/preferences-other.svg</file>
     </qresource>
 </RCC>
