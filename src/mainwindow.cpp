@@ -46,19 +46,30 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_osListWidget -> setMaximumWidth(170);
     m_osListWidget -> setSpacing(7);
 
+    m_machineNameLabel     = new QLabel();
+    m_machineOsLabel       = new QLabel();
+    m_machineCPULabel      = new QLabel();
+    m_machineRAMLabel      = new QLabel();
+    m_machineGraphicsLabel = new QLabel();
+    m_machineAudioLabel    = new QLabel();
+    m_machineAccelLabel    = new QLabel();
+    m_machineDiskLabel     = new QLabel();
+    m_machineNetworkLabel  = new QLabel();
+
     m_machineDetailsLayout = new QFormLayout();
     m_machineDetailsLayout -> setSpacing(7);
     m_machineDetailsLayout -> setHorizontalSpacing(50);
     m_machineDetailsLayout -> setLabelAlignment(Qt::AlignLeft);
     m_machineDetailsLayout -> setContentsMargins(10, 20, 0, 0);
-    m_machineDetailsLayout -> addRow(tr("Name") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("Operating System") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("RAM") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("Graphics") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("Audio") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("Accelerator") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("Disk") + ":", new QLabel());
-    m_machineDetailsLayout -> addRow(tr("Network") + ":", new QLabel());
+    m_machineDetailsLayout -> addRow(tr("Name") + ":", m_machineNameLabel);
+    m_machineDetailsLayout -> addRow(tr("Operating System") + ":", m_machineOsLabel);
+    m_machineDetailsLayout -> addRow(tr("CPU") + ":", m_machineCPULabel);
+    m_machineDetailsLayout -> addRow(tr("RAM") + ":", m_machineRAMLabel);
+    m_machineDetailsLayout -> addRow(tr("Graphics") + ":", m_machineGraphicsLabel);
+    m_machineDetailsLayout -> addRow(tr("Audio") + ":", m_machineAudioLabel);
+    m_machineDetailsLayout -> addRow(tr("Accelerator") + ":", m_machineAccelLabel);
+    m_machineDetailsLayout -> addRow(tr("Disk") + ":", m_machineDiskLabel);
+    m_machineDetailsLayout -> addRow(tr("Network") + ":", m_machineNetworkLabel);
 
     m_machineDetailsGroup = new QGroupBox(tr("Machine details"));
     m_machineDetailsGroup -> setAlignment(Qt::AlignHCenter);
@@ -233,7 +244,7 @@ void MainWindow::createMenusActions() {
             this, &MainWindow::visitQemuWebsite);
 
     m_helpAboutAction = new QAction(QIcon::fromTheme("qtemu",
-                                                     QIcon(":/icon/32x32/qtemu.png")),
+                                                     QIcon(":/images/qtemu.png")),
                                     tr("&About QtEmu"),
                                     this);
     connect(m_helpAboutAction, &QAction::triggered,
@@ -331,7 +342,7 @@ void MainWindow::loadMachines() {
                                  SystemUtils::getOsIcon(machineJSON["icon"].toString())));
 
         QUuid machineUuid = machine -> data(QMetaType::QUuid).toUuid();
-        m_machinesList.append(generateMachineObject(machineUuid));
+        this -> m_machinesList.append(generateMachineObject(machineUuid));
     }
 
 }
@@ -390,8 +401,7 @@ void MainWindow::createNewMachine() {
 /*!
  * \brief Start the selected machine
  *
- * Read the machine config file,
- * make the command and start the selected machine
+ * Start the selected machine
  */
 void MainWindow::runMachine() {
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
@@ -403,6 +413,11 @@ void MainWindow::runMachine() {
     }
 }
 
+/*!
+ * \brief Reset the selected machine
+ *
+ * Reset the selected machine
+ */
 void MainWindow::resetMachine() {
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
 
@@ -413,6 +428,14 @@ void MainWindow::resetMachine() {
     }
 }
 
+/*!
+ * \brief Pause or continue the selected machine
+ *
+ * If the State of the machine is Started, then
+ * pause the machine.
+ * If the State of the machine is Paused, then
+ * continue the execution of the machine
+ */
 void MainWindow::pauseMachine() {
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
 
@@ -472,6 +495,11 @@ void MainWindow::loadUI(const int itemCount) {
         this -> m_startMachineAction     -> setEnabled(true);
     }
 
+    // Show the machine data in the labels
+    if (this -> m_machinesList.size() > 0) {
+        fillMachineDetailsSection(this -> m_machinesList[0]);
+    }
+
 }
 
 /**
@@ -515,11 +543,33 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem) {
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()) {
             controlMachineActions(machine -> getState());
+            fillMachineDetailsSection(machine);
         }
     }
 
 }
 
+/**
+ * @brief Fill the machine details section of the main UI
+ * @param machine, machine with all the data
+ *
+ * Fill the machine details section of the main UI
+ * with the machine selected in the m_osListWidget
+ */
+void MainWindow::fillMachineDetailsSection(Machine *machine){
+    this -> m_machineNameLabel -> setText(machine -> getName());
+    this -> m_machineOsLabel   -> setText(machine -> getOSType() + " - " + machine -> getOSVersion());
+
+    this -> m_machineRAMLabel  -> setText(QString::number(machine -> getRAM()) + " MiB");
+}
+
+/**
+ * @brief Show a machine's menu
+ * @param pos, position
+ *
+ * Show a machine's menu when the user press
+ * the second button of the mouse or touchpad
+ */
 void MainWindow::machinesMenu(const QPoint &pos) {
     qDebug() << "Machine menu, pos: " << pos;
 }

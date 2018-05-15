@@ -62,7 +62,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     // Add options
     m_optionsListWidget -> addItem(tr("General Options"));
     m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
-                                                               QIcon(":/icon/32x32/qtemu.png")));
+                                                               QIcon(":/images/icons/breeze/32x32/preferences-other.png")));
 
     //m_optionsListWidget -> addItem(tr("Input"));
     //m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",
@@ -70,11 +70,11 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     m_optionsListWidget -> addItem(tr("Update QtEmu"));
     m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
-                                                               QIcon(":/icon/32x32/qtemu.png")));
+                                                               QIcon(":/images/icons/breeze/32x32/update-none.png")));
 
     m_optionsListWidget -> addItem(tr("Language"));
     m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
-                                                               QIcon(":/icon/32x32/qtemu.png")));
+                                                               QIcon(":/images/icons/breeze/32x32/applications-education-language.png")));
 
     m_optionsListWidget -> addItem(tr("Start"));
     m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",

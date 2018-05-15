@@ -42,6 +42,11 @@
 #include <sys/sysinfo.h>
 #endif
 
+// Windows
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 class SystemUtils {
 
     public:

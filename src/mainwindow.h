@@ -82,6 +82,7 @@ class MainWindow : public QMainWindow {
         Machine* generateMachineObject(const QUuid machineUuid);
         void loadMachines();
         void controlMachineActions(Machine::States state);
+        void fillMachineDetailsSection(Machine *machine);
 
         // Start menus
         QMenu *m_fileMenu;
@@ -144,8 +145,12 @@ class MainWindow : public QMainWindow {
         QLabel *m_machineNameLabel;
         QLabel *m_machineOsLabel;
         QLabel *m_machineCPULabel;
-        QLabel *m_machineGraphicsLabel;
-        QLabel *m_machineAccelLabel;
         QLabel *m_machineRAMLabel;
+        QLabel *m_machineGraphicsLabel;
+        QLabel *m_machineAudioLabel;
+        QLabel *m_machineAccelLabel;
+        QLabel *m_machineDiskLabel;
+        QLabel *m_machineNetworkLabel;
+
 };
 #endif // MAINWINDOW_H

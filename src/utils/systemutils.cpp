@@ -39,6 +39,15 @@ void SystemUtils::getTotalMemory(int32_t &totalRAM) {
             totalRAM = (((uint64_t)sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024;
         }
     #endif
+    #ifdef Q_OS_WIN
+        MEMORYSTATUSEX statex;
+
+        statex.dwLength = sizeof (statex);
+
+        GlobalMemoryStatusEx (&statex);
+
+        qDebug() << "Physical RAM => " << (int)statex.ullTotalPhys / (1024*1024*1024);
+    #endif
 }
 
 void SystemUtils::setCPUTypesx86(QComboBox *CPUType) {
