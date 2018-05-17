@@ -179,7 +179,7 @@ HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
     m_helpTextBrowser -> setOpenExternalLinks(false);
     m_helpTextBrowser -> setHtml(helpText);
 
-    m_closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(":/images/close.png")),
+    m_closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))),
                                   tr("&Close"),
                                   this);
 

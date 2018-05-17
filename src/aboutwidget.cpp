@@ -38,7 +38,7 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     this -> setFixedSize(625, 320);
 
     m_closeButton = new QPushButton(QIcon::fromTheme("window-close",
-                                                     QIcon(":/images/icons/breeze/32x32/window-close.png")),
+                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))),
                                     tr("&Close"),
                                     this);
     connect(m_closeButton, &QAbstractButton::clicked,

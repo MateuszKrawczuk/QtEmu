@@ -164,7 +164,7 @@ void MainWindow::createMenusActions() {
 
     // Actions for File menu
     m_preferencesAppAction = new QAction(QIcon::fromTheme("configure",
-                                                          QIcon(":/icon/32x32/qtemu.png")),
+                                                          QIcon(QPixmap(":/images/icons/breeze/32x32/configure.svg"))),
                                          tr("Preferences"),
                                          this);
     //preferencesApp -> setShortcut(Qt::Key_F1);
@@ -172,36 +172,36 @@ void MainWindow::createMenusActions() {
             m_configWindow, &QWidget::show);
 
     m_checkUpdateAppAction = new QAction(QIcon::fromTheme("update-none",
-                                                          QIcon(":/icon/32x32/qtemu.png")),
+                                                          QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))),
                                          tr("Check for updates"),
                                          this);
 
     m_exitAppAction = new QAction(QIcon::fromTheme("application-exit",
-                                                   QIcon(":/icon/32x32/qtemu.png")),
+                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/applcation-exit.svg"))),
                                   tr("Exit"),
                                   this);
 
     // Actions for Machine menu
 
     m_newMachineAction = new QAction(QIcon::fromTheme("project-development-new-template",
-                                                      QIcon(":/icon/32x32/qtemu.png")),
+                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/project-development-new-template.svg"))),
                                      tr("New Machine"),
                                      this);
     connect(m_newMachineAction, &QAction::triggered,
             this, &MainWindow::createNewMachine);
 
     m_settingsMachineAction = new QAction(QIcon::fromTheme("settings-configure",
-                                                           QIcon(":/icon/32x32/qtemu.png")),
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/settings-configure.svg"))),
                                           tr("Machine Settings"),
                                           this);
 
     m_duplicateMachineAction = new QAction(QIcon::fromTheme("edit-duplicate",
-                                                            QIcon(":/icon/32x32/qtemu.png")),
+                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/edit-duplicate.svg"))),
                                            tr("Duplicate Machine"),
                                            this);
 
     m_removeMachineAction = new QAction(QIcon::fromTheme("project-development-close",
-                                                         QIcon(":/icon/32x32/qtemu.png")),
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/project-development-close.svg"))),
                                         tr("Remove Machine"),
                                         this);
     connect(m_removeMachineAction, &QAction::triggered,
@@ -215,7 +215,7 @@ void MainWindow::createMenusActions() {
 
     // Actions for Help menu
     m_helpQuickHelpAction = new QAction(QIcon::fromTheme("help-contents",
-                                                         QIcon(":/icon/32x32/qtemu.png")),
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/help-contents.svg"))),
                                         tr("QtEmu &Quick Help"),
                                         this);
     m_helpQuickHelpAction -> setShortcut(Qt::Key_F1);
@@ -223,21 +223,21 @@ void MainWindow::createMenusActions() {
             m_helpwidget, &QWidget::show);
 
     m_helpQtEmuWebsiteAction = new QAction(QIcon::fromTheme("internet-web-browser",
-                                                            QIcon(":/icon/32x32/qtemu.png")),
+                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))),
                                            tr("QtEmu &Website"),
                                            this);
     connect(m_helpQtEmuWebsiteAction, &QAction::triggered,
             this, &MainWindow::visitQtEmuWebsite);
 
     m_helpQtEmuBugTrackerAction = new QAction(QIcon::fromTheme("tools-report-bug",
-                                                               QIcon(":/icon/32x32/qtemu.png")),
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/tools-report-bug.svg"))),
                                               tr("QtEmu Bug Tracker"),
                                               this);
     connect(m_helpQtEmuBugTrackerAction, &QAction::triggered,
             this, &MainWindow::visitQtEmuBugTracker);
 
     m_helpQemuWebsiteAction = new QAction(QIcon::fromTheme("internet-web-browser",
-                                                           QIcon(":/icon/32x32/qtemu.png")),
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))),
                                           tr("Qemu &Website"),
                                           this);
     connect(m_helpQemuWebsiteAction, &QAction::triggered,
@@ -265,7 +265,7 @@ void MainWindow::createMenusActions() {
 
     m_resetMachineAction = new QAction(this);
     m_resetMachineAction -> setIcon(QIcon::fromTheme("chronometer-reset",
-                                                     QIcon(":/icon/32x32/qtemu.png")));
+                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/chronometer-reset.svg"))));
     m_resetMachineAction -> setToolTip(tr("Reset machine"));
     connect(m_resetMachineAction, &QAction::triggered,
             this, &MainWindow::resetMachine);

@@ -70,19 +70,19 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     m_optionsListWidget -> addItem(tr("Update QtEmu"));
     m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
-                                                               QIcon(":/images/icons/breeze/32x32/update-none.png")));
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
 
     m_optionsListWidget -> addItem(tr("Language"));
     m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
-                                                               QIcon(":/images/icons/breeze/32x32/applications-education-language.png")));
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
 
     m_optionsListWidget -> addItem(tr("Start"));
     m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
-                                                              QIcon(":/icon/32x32/qtemu.png")));
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
 
     m_optionsListWidget -> addItem(tr("Proxy"));
     m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
-                                                               QIcon(":/icon/32x32/qtemu.png")));
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     // Prepare window
     m_categoriesStackedWidget = new QStackedWidget(this);
@@ -105,14 +105,14 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     // Buttons
     m_saveButton = new QPushButton(QIcon::fromTheme("document-save",
-                                                    QIcon(":/icon/32x32/qtemu.png")),
+                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/document-save.svg"))),
                                    tr("Save"),
                                    this);
     connect(m_saveButton, &QAbstractButton::clicked,
             this, &ConfigWindow::saveSettings);
 
     m_closeButton = new QPushButton(QIcon::fromTheme("dialog-cancel",
-                                                     QIcon(":/icon/32x32/qtemu.png")),
+                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/dialog-cancel.svg"))),
                                     tr("Cancel"),
                                     this);
     connect(m_closeButton, &QAbstractButton::clicked,
@@ -160,7 +160,7 @@ void ConfigWindow::createGeneralPage() {
     m_machinePathLineEdit -> setEnabled(false);
 
     m_machinePathButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
-                                                           QIcon(":/icon/32x32/qtemu.png")),
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
                                           "",
                                           this);
 
@@ -252,43 +252,43 @@ void ConfigWindow::createLanguagePage(){
 
     m_languagesListView -> addItem("English");
     m_languagesListView -> item(0) -> setIcon(QIcon::fromTheme("eeuu-flag",
-                                                               QIcon(":/icon/32x32/flags/eeuu.png")));
+                                                               QIcon(":/images/flags/32x32/flags/eeuu.png")));
 
     m_languagesListView -> addItem("Deutsch");
     m_languagesListView -> item(1) -> setIcon(QIcon::fromTheme("germany-flag",
-                                                               QIcon(":/icon/32x32/flags/germany.png")));
+                                                               QIcon(":/images/flags/32x32/flags/germany.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Türkçe"));
     m_languagesListView -> item(2) -> setIcon(QIcon::fromTheme("turkey-flag",
-                                                               QIcon(":/icon/32x32/flags/turkey.png")));
+                                                               QIcon(":/images/flags/32x32/flags/turkey.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Русский"));
     m_languagesListView -> item(3) -> setIcon(QIcon::fromTheme("russia-flag",
-                                                               QIcon(":/icon/32x32/flags/russia.png")));
+                                                               QIcon(":/images/flags/32x32/flags/russia.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Česky"));
     m_languagesListView -> item(4) -> setIcon(QIcon::fromTheme("czech-flag",
-                                                               QIcon(":/icon/32x32/flags/czech.png")));
+                                                               QIcon(":/images/flags/32x32/flags/czech.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Español"));
     m_languagesListView -> item(5) -> setIcon(QIcon::fromTheme("spain-flag",
-                                                               QIcon(":/icon/32x32/flags/spain.png")));
+                                                               QIcon(":/images/flags/32x32/flags/spain.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Français"));
     m_languagesListView -> item(6) -> setIcon(QIcon::fromTheme("france-flag",
-                                                               QIcon(":/icon/32x32/flags/france.png")));
+                                                               QIcon(":/images/flags/32x32/flags/france.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Italiano"));
     m_languagesListView -> item(7) -> setIcon(QIcon::fromTheme("italy-flag",
-                                                               QIcon(":/icon/32x32/flags/italy.png")));
+                                                               QIcon(":/images/flags/32x32/flags/italy.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Português do Brasil"));
     m_languagesListView -> item(8) -> setIcon(QIcon::fromTheme("brazil-flag",
-                                                               QIcon(":/icon/32x32/flags/brazil.png")));
+                                                               QIcon(":/images/flags/32x32/flags/brazil.png")));
 
     m_languagesListView -> addItem(QString::fromUtf8("Polski"));
     m_languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
-                                                               QIcon(":/icon/32x32/flags/poland.png")));
+                                                               QIcon(":/images/flags/32x32/flags/poland.png")));
 
     m_languageDescription = new QLabel();
     m_languageAuthors = new QLabel();

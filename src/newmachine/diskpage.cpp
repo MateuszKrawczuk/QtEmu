@@ -59,7 +59,7 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
     m_hardDiskPathLineEdit -> setEnabled(false);
 
     m_pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
-                                                               QIcon(":/icon/32x32/qtemu.png")),
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
                                               "",
                                               this);
 
@@ -165,7 +165,7 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     this -> registerField("machine.diskname*", m_fileNameLineEdit);
 
     m_pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
-                                                               QIcon(":/icon/32x32/qtemu.png")),
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
                                               "",
                                               this);
 

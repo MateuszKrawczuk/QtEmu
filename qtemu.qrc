@@ -57,5 +57,23 @@
         <file>images/os/64x64/windows_old.png</file>
         <file>images/os/64x64/windows.png</file>
         <file>images/icons/breeze/32x32/preferences-other.svg</file>
+        <file>images/icons/breeze/32x32/applications-education-language.svg</file>
+        <file>images/icons/breeze/32x32/update-none.svg</file>
+        <file>images/icons/breeze/32x32/window-close.svg</file>
+        <file>images/icons/breeze/32x32/practice-start.svg</file>
+        <file>images/icons/breeze/32x32/network-manager.svg</file>
+        <file>images/icons/breeze/32x32/folder-symbolic.svg</file>
+        <file>images/icons/breeze/32x32/application-exit.svg</file>
+        <file>images/icons/breeze/32x32/configure.svg</file>
+        <file>images/icons/breeze/32x32/project-development-new-template.svg</file>
+        <file>images/icons/breeze/32x32/dialog-cancel.svg</file>
+        <file>images/icons/breeze/32x32/document-save.svg</file>
+        <file>images/icons/breeze/32x32/document-properties.svg</file>
+        <file>images/icons/breeze/32x32/edit-duplicate.svg</file>
+        <file>images/icons/breeze/32x32/help-contents.svg</file>
+        <file>images/icons/breeze/32x32/project-development-close.svg</file>
+        <file>images/icons/breeze/32x32/settings-configure.svg</file>
+        <file>images/icons/breeze/32x32/tools-report-bug.svg</file>
+        <file>images/icons/breeze/32x32/chronometer-reset.svg</file>
     </qresource>
 </RCC>
