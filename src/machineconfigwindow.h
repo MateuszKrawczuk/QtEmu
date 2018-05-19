@@ -25,25 +25,48 @@
 // Qt
 #include <QWidget>
 #include <QIcon>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QAction>
+#include <QStackedWidget>
+#include <QListWidget>
 
 #include <QDebug>
 
 // Local
+#include "machine.h"
 
 class MachineConfigWindow : public QWidget {
     Q_OBJECT
 
     public:
-        explicit MachineConfigWindow(QWidget *parent = 0);
+        explicit MachineConfigWindow(QWidget *parent = 0,
+                                     Machine::States machineState = Machine::Stopped);
         ~MachineConfigWindow();
 
     signals:
 
     public slots:
 
+    private slots:
+        void saveMachineSettings();
+
     protected:
 
     private:
+        // Main layout
+        QVBoxLayout *m_mainLayout;
+        QHBoxLayout *m_topLayout;
+        QHBoxLayout *m_buttonsLayout;
+
+        QListWidget *m_optionsListWidget;
+        QStackedWidget *m_optionsStackedWidget;
+
+        QPushButton *m_saveButton;
+        QPushButton *m_closeButton;
+
+        QAction *m_closeAction;
 
 };
 

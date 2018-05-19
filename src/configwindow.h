@@ -32,7 +32,6 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QWidget>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QAction>
@@ -56,16 +55,11 @@ class ConfigWindow : public QWidget {
         explicit ConfigWindow(QWidget *parent = 0);
         ~ConfigWindow();
 
-        void createGeneralPage();
-        void createInputPage();
-        void createUpdatePage();
-        void createLanguagePage();
-        void createStartPage();
-        void createProxyPage();
-
     signals:
 
     public slots:
+
+    private slots:
         void toggleUpdate(bool updateState);
         void pushStableVersion(bool release);
         void pushBetaVersion(bool release);
@@ -171,6 +165,14 @@ class ConfigWindow : public QWidget {
         QLineEdit *m_passwordProxy;
 
         QCheckBox *m_useAuth;
+
+        // Methods
+        void createGeneralPage();
+        void createInputPage();
+        void createUpdatePage();
+        void createLanguagePage();
+        void createStartPage();
+        void createProxyPage();
 
 };
 

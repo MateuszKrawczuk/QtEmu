@@ -24,7 +24,9 @@
 // Local
 #include "machineconfigwindow.h"
 
-MachineConfigWindow::MachineConfigWindow(QWidget *parent) : QWidget(parent) {
+MachineConfigWindow::MachineConfigWindow(QWidget *parent,
+                                         Machine::States machineState) : QWidget(parent) {
+
     this -> setWindowTitle(tr("Machine Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
                                            QIcon(":/images/qtemu.png")));
@@ -32,10 +34,99 @@ MachineConfigWindow::MachineConfigWindow(QWidget *parent) : QWidget(parent) {
     this -> setWindowModality(Qt::ApplicationModal);
     this -> setMinimumSize(640, 520);
 
+    m_optionsListWidget = new QListWidget(this);
+    m_optionsListWidget -> setViewMode(QListView::ListMode);
+    m_optionsListWidget -> setIconSize(QSize(32, 32));
+    m_optionsListWidget -> setMovement(QListView::Static);
+    m_optionsListWidget -> setMaximumWidth(170);
+    m_optionsListWidget -> setSpacing(7);
+    m_optionsListWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // Add options
+    m_optionsListWidget -> addItem(tr("General"));
+    m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+
+    m_optionsListWidget -> addItem(tr("Hardware"));
+    m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
+
+    m_optionsListWidget -> addItem(tr("Boot options"));
+    m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
+
+    m_optionsListWidget -> addItem(tr("Media"));
+    m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
+
+    m_optionsListWidget -> addItem(tr("Network"));
+    m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
+
+    m_optionsListWidget -> addItem(tr("Accelerator"));
+    m_optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("network-manager",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
+
+    m_optionsListWidget -> addItem(tr("Display"));
+    m_optionsListWidget -> item(6) -> setIcon(QIcon::fromTheme("network-manager",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
+
+    // Prepare window
+    m_optionsStackedWidget = new QStackedWidget(this);
+    m_optionsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
+                                            QSizePolicy::MinimumExpanding);
+
+    connect(m_optionsListWidget, &QListWidget::currentRowChanged,
+            m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
+
+    m_topLayout = new QHBoxLayout();
+    m_topLayout -> addWidget(m_optionsListWidget);
+    m_topLayout -> addWidget(m_optionsStackedWidget);
+
+    // Buttons
+    m_saveButton = new QPushButton(QIcon::fromTheme("document-save",
+                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/document-save.svg"))),
+                                   tr("Save"),
+                                   this);
+    connect(m_saveButton, &QAbstractButton::clicked,
+            this, &MachineConfigWindow::saveMachineSettings);
+
+    m_closeButton = new QPushButton(QIcon::fromTheme("dialog-cancel",
+                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/dialog-cancel.svg"))),
+                                    tr("Cancel"),
+                                    this);
+    connect(m_closeButton, &QAbstractButton::clicked,
+            this, &QWidget::hide);
+
+    this -> m_buttonsLayout = new QHBoxLayout();
+    m_buttonsLayout -> setAlignment(Qt::AlignRight);
+    m_buttonsLayout -> addWidget(m_saveButton);
+    m_buttonsLayout -> addWidget(m_closeButton);
+
+    m_closeAction = new QAction(this);
+    m_closeAction -> setShortcut(QKeySequence(Qt::Key_Escape));
+    connect(m_closeAction, &QAction::triggered, this, &QWidget::hide);
+    this -> addAction(m_closeAction);
+
+    m_mainLayout = new QVBoxLayout();
+    m_mainLayout -> addLayout(m_topLayout, 20);
+    m_mainLayout -> addSpacing(8);
+    m_mainLayout -> addStretch(1);
+    m_mainLayout -> addLayout(m_buttonsLayout);
+
+    this -> setLayout(m_mainLayout);
+
+    this -> m_optionsListWidget -> setCurrentRow(0);
+    this -> m_optionsListWidget -> setFocus();
+
     qDebug() << "MachineConfigWindow created";
 
 }
 
 MachineConfigWindow::~MachineConfigWindow() {
     qDebug() << "MachineConfigWindow destroyed";
+}
+
+void MachineConfigWindow::saveMachineSettings() {
+
 }
