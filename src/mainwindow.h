@@ -45,6 +45,7 @@
 // Local
 #include "machine.h"
 #include "machineutils.h"
+#include "machineconfigwindow.h"
 #include "helpwidget.h"
 #include "aboutwidget.h"
 #include "configwindow.h"
@@ -61,10 +62,13 @@ class MainWindow : public QMainWindow {
         void createToolBars();
 
     public slots:
+
+    private slots:
         void visitQtEmuWebsite();
         void visitQtEmuBugTracker();
         void visitQemuWebsite();
         void createNewMachine();
+        void machineOptions();
         void runMachine();
         void resetMachine();
         void pauseMachine();
@@ -72,18 +76,11 @@ class MainWindow : public QMainWindow {
         void loadUI(const int itemCount);
         void changeMachine(QListWidgetItem *machineItem);
         void machineStateChanged(Machine::States newState);
-
-    private slots:
         void machinesMenu(const QPoint &pos);
 
     protected:
 
     private:
-        Machine* generateMachineObject(const QUuid machineUuid);
-        void loadMachines();
-        void controlMachineActions(Machine::States state);
-        void fillMachineDetailsSection(Machine *machine);
-
         // Start menus
         QMenu *m_fileMenu;
         QMenu *m_machineMenu;
@@ -151,6 +148,12 @@ class MainWindow : public QMainWindow {
         QLabel *m_machineAccelLabel;
         QLabel *m_machineDiskLabel;
         QLabel *m_machineNetworkLabel;
+
+        // Methods
+        Machine* generateMachineObject(const QUuid machineUuid);
+        void loadMachines();
+        void controlMachineActions(Machine::States state);
+        void fillMachineDetailsSection(Machine *machine);
 
 };
 #endif // MAINWINDOW_H

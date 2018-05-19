@@ -24,8 +24,9 @@
 // Local
 #include "machineconfigwindow.h"
 
-MachineConfigWindow::MachineConfigWindow(QWidget *parent,
-                                         Machine::States machineState) : QWidget(parent) {
+MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
+                                         Machine::States machineState,
+                                         QWidget *parent) : QWidget(parent) {
 
     this -> setWindowTitle(tr("Machine Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
@@ -44,31 +45,31 @@ MachineConfigWindow::MachineConfigWindow(QWidget *parent,
 
     // Add options
     m_optionsListWidget -> addItem(tr("General"));
-    m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
+    m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-plugin",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
 
     m_optionsListWidget -> addItem(tr("Hardware"));
-    m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
+    m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("cpu",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
 
     m_optionsListWidget -> addItem(tr("Boot options"));
-    m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
+    m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("checkmark",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
 
     m_optionsListWidget -> addItem(tr("Media"));
-    m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
+    m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("ntfs-config",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
 
     m_optionsListWidget -> addItem(tr("Network"));
-    m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
+    m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-card",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     m_optionsListWidget -> addItem(tr("Accelerator"));
-    m_optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("network-manager",
+    m_optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("mathematica",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     m_optionsListWidget -> addItem(tr("Display"));
-    m_optionsListWidget -> item(6) -> setIcon(QIcon::fromTheme("network-manager",
+    m_optionsListWidget -> item(6) -> setIcon(QIcon::fromTheme("applications-multimedia",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     // Prepare window
@@ -126,7 +127,6 @@ MachineConfigWindow::MachineConfigWindow(QWidget *parent,
 MachineConfigWindow::~MachineConfigWindow() {
     qDebug() << "MachineConfigWindow destroyed";
 }
-
 void MachineConfigWindow::saveMachineSettings() {
 
 }

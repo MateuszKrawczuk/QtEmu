@@ -194,6 +194,8 @@ void MainWindow::createMenusActions() {
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/settings-configure.svg"))),
                                           tr("Machine Settings"),
                                           this);
+    connect(m_settingsMachineAction, &QAction::triggered,
+            this, &MainWindow::machineOptions);
 
     m_duplicateMachineAction = new QAction(QIcon::fromTheme("edit-duplicate",
                                                             QIcon(QPixmap(":/images/icons/breeze/32x32/edit-duplicate.svg"))),
@@ -396,6 +398,27 @@ void MainWindow::createNewMachine() {
 
     this -> loadUI(this -> m_osListWidget -> count());
 
+}
+
+/*!
+ * \brief Open the machine options window
+ *
+ * Open the selected machine options window
+ */
+void MainWindow::machineOptions() {
+
+    QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
+    Machine::States machineState;
+
+    foreach (Machine *machine, this -> m_machinesList) {
+        if (machine -> getUuid() == machineUuid.toString()){
+            machineState = machine -> getState();
+        }
+    }
+
+    MachineConfigWindow *machineConfigWindow = new MachineConfigWindow(machineUuid, machineState, this);
+
+    machineConfigWindow -> show();
 }
 
 /*!

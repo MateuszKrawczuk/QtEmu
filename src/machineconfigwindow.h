@@ -41,8 +41,9 @@ class MachineConfigWindow : public QWidget {
     Q_OBJECT
 
     public:
-        explicit MachineConfigWindow(QWidget *parent = 0,
-                                     Machine::States machineState = Machine::Stopped);
+        explicit MachineConfigWindow(QUuid machineUuid,
+                                     Machine::States machineState,
+                                     QWidget *parent = 0);
         ~MachineConfigWindow();
 
     signals:
@@ -67,6 +68,13 @@ class MachineConfigWindow : public QWidget {
         QPushButton *m_closeButton;
 
         QAction *m_closeAction;
+
+        // General page
+        QVBoxLayout *m_generalPageLayout;
+        QWidget *m_generalPageWidget;
+
+        // Methods
+        void createGeneralPage();
 
 };
 
