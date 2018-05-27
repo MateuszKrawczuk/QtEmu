@@ -47,6 +47,8 @@ class MachineNamePage: public QWizardPage {
     signals:
 
     public slots:
+
+    private slots:
         void selectOS(int OSSelected);
 
     protected:

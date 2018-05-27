@@ -31,6 +31,11 @@
 #include <QAction>
 #include <QStackedWidget>
 #include <QListWidget>
+#include <QGroupBox>
+#include <QFormLayout>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QComboBox>
 
 #include <QDebug>
 
@@ -52,6 +57,7 @@ class MachineConfigWindow : public QWidget {
 
     private slots:
         void saveMachineSettings();
+        void selectOS(int OSSelected);
 
     protected:
 
@@ -71,7 +77,19 @@ class MachineConfigWindow : public QWidget {
 
         // General page
         QVBoxLayout *m_generalPageLayout;
+        QFormLayout *m_machineDataLayout;
         QWidget *m_generalPageWidget;
+
+        QGroupBox *m_machineGeneralGrpBox;
+
+        QLineEdit *m_machineNameLineEdit;
+        QLabel *m_machineUuidLabel;
+        QLabel *m_machineStatusLabel;
+
+        QComboBox *m_OSType;
+        QComboBox *m_OSVersion;
+
+        QPlainTextEdit *m_machineDescTextEdit;
 
         // Methods
         void createGeneralPage();

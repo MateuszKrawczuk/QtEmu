@@ -35,6 +35,8 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     this -> setWindowModality(Qt::ApplicationModal);
     this -> setMinimumSize(640, 520);
 
+    this -> createGeneralPage();
+
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
     m_optionsListWidget -> setIconSize(QSize(32, 32));
@@ -77,6 +79,8 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     m_optionsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
                                             QSizePolicy::MinimumExpanding);
 
+    m_optionsStackedWidget -> addWidget(this -> m_generalPageWidget);
+
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
 
@@ -111,8 +115,6 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
 
     m_mainLayout = new QVBoxLayout();
     m_mainLayout -> addLayout(m_topLayout, 20);
-    m_mainLayout -> addSpacing(8);
-    m_mainLayout -> addStretch(1);
     m_mainLayout -> addLayout(m_buttonsLayout);
 
     this -> setLayout(m_mainLayout);
@@ -127,6 +129,90 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
 MachineConfigWindow::~MachineConfigWindow() {
     qDebug() << "MachineConfigWindow destroyed";
 }
+
+void MachineConfigWindow::createGeneralPage() {
+
+    m_machineGeneralGrpBox = new QGroupBox(tr("General data"));
+
+    m_OSType = new QComboBox();
+    m_OSType -> setSizePolicy(QSizePolicy::Expanding,
+                              QSizePolicy::MinimumExpanding);
+
+    m_OSType -> addItem("GNU/Linux");
+    m_OSType -> addItem("Microsoft Windows");
+    m_OSType -> addItem("BSD");
+    m_OSType -> addItem(tr("Other"));
+
+    connect(m_OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MachineConfigWindow::selectOS);
+
+    m_OSVersion = new QComboBox();
+    m_OSVersion -> setSizePolicy(QSizePolicy::Expanding,
+                                 QSizePolicy::MinimumExpanding);
+
+    this -> selectOS(0);
+
+    m_machineNameLineEdit = new QLineEdit();
+    m_machineUuidLabel = new QLabel();
+    m_machineStatusLabel = new QLabel();
+
+    m_machineDescTextEdit = new QPlainTextEdit();
+
+    m_machineDataLayout = new QFormLayout();
+    m_machineDataLayout -> setAlignment(Qt::AlignLeft);
+    m_machineDataLayout -> setLabelAlignment(Qt::AlignLeft);
+    m_machineDataLayout -> setHorizontalSpacing(20);
+    m_machineDataLayout -> setVerticalSpacing(20);
+    m_machineDataLayout -> addRow(tr("Name") + ":", m_machineNameLineEdit);
+    m_machineDataLayout -> addRow(tr("Type") + ":", m_OSType);
+    m_machineDataLayout -> addRow(tr("Version") + ":", m_OSVersion);
+    m_machineDataLayout -> addRow(tr("UUID") + ":", m_machineUuidLabel);
+    m_machineDataLayout -> addRow(tr("Status") + ":", m_machineStatusLabel);
+    m_machineDataLayout -> addRow(tr("Description") + ":", m_machineDescTextEdit);
+
+    m_machineGeneralGrpBox -> setLayout(m_machineDataLayout);
+
+    m_generalPageLayout = new QVBoxLayout();
+    m_generalPageLayout -> addWidget(m_machineGeneralGrpBox);
+
+    m_generalPageWidget = new QWidget(this);
+    m_generalPageWidget -> setLayout(m_generalPageLayout);
+}
+
+void MachineConfigWindow::selectOS(int OSSelected){
+
+    this -> m_OSVersion -> clear();
+
+    if (OSSelected == 0) {
+        this -> m_OSVersion -> addItem(tr("Debian"));
+        this -> m_OSVersion -> addItem(tr("Ubuntu"));
+        this -> m_OSVersion -> addItem(tr("Fedora"));
+        this -> m_OSVersion -> addItem(tr("OpenSuse"));
+        this -> m_OSVersion -> addItem(tr("Mageia"));
+        this -> m_OSVersion -> addItem(tr("Gentoo"));
+        this -> m_OSVersion -> addItem(tr("Arch Linux"));
+        this -> m_OSVersion -> addItem(tr("Linux"));
+    } else if (OSSelected == 1) {
+        this -> m_OSVersion -> addItem(tr("Microsoft 95"));
+        this -> m_OSVersion -> addItem(tr("Microsoft 98"));
+        this -> m_OSVersion -> addItem(tr("Microsoft 2000"));
+        this -> m_OSVersion -> addItem(tr("Microsoft XP"));
+        this -> m_OSVersion -> addItem(tr("Microsoft Vista"));
+        this -> m_OSVersion -> addItem(tr("Microsoft 7"));
+        this -> m_OSVersion -> addItem(tr("Microsoft 8"));
+        this -> m_OSVersion -> addItem(tr("Microsoft 10"));
+    } else if (OSSelected == 2) {
+        this -> m_OSVersion -> addItem(tr("FreeBSD"));
+        this -> m_OSVersion -> addItem(tr("OpenBSD"));
+        this -> m_OSVersion -> addItem(tr("NetBSD"));
+    } else if (OSSelected == 3) {
+        this -> m_OSVersion -> addItem(tr("Debian GNU Hurd"));
+        this -> m_OSVersion -> addItem(tr("Arch Hurd"));
+        this -> m_OSVersion -> addItem(tr("Redox"));
+        this -> m_OSVersion -> addItem(tr("ReactOS"));
+    }
+}
+
 void MachineConfigWindow::saveMachineSettings() {
 
 }
