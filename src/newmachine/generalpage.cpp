@@ -73,7 +73,7 @@ MachineNamePage::MachineNamePage(Machine *machine,
     m_mainLayout -> addWidget(m_OSVersionLabel,       3, 0, 1, 1);
     m_mainLayout -> addWidget(m_OSVersion,            3, 1, 1, 3);
 
-    this ->  setLayout(m_mainLayout);
+    this -> setLayout(m_mainLayout);
 
     qDebug() << "MachineNamePage created";
 }

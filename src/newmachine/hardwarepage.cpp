@@ -32,7 +32,7 @@ MachineHardwarePage::MachineHardwarePage(Machine *machine,
     this -> m_newMachine = machine;
 
     m_hardwareTabWidget = new QTabWidget();
-    m_hardwareTabWidget -> addTab(new ProcessorTab(machine, this), tr("Processor"));
+    m_hardwareTabWidget -> addTab(new ProcessorTab(machine, Qt::AlignVCenter, this), tr("Processor"));
     m_hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
     m_hardwareTabWidget -> addTab(new AudioTab(machine, this), tr("Audio"));
     m_hardwareTabWidget -> addTab(new NetworkTab(machine, this), tr("Network"));
@@ -50,7 +50,7 @@ MachineHardwarePage::~MachineHardwarePage() {
     qDebug() << "MachineHardwarePage destroyed";
 }
 
-ProcessorTab::ProcessorTab(Machine *machine,
+ProcessorTab::ProcessorTab(Machine *machine, Qt::Alignment layoutAlignment,
                            QWidget *parent) : QWidget(parent) {
 
     this -> m_newMachine = machine;
@@ -150,7 +150,7 @@ ProcessorTab::ProcessorTab(Machine *machine,
     m_CPUSettings -> setLayout(m_CPUSettingsLayout);
 
     m_processorLayout = new QVBoxLayout();
-    m_processorLayout -> setAlignment(Qt::AlignVCenter);
+    m_processorLayout -> setAlignment(layoutAlignment);
     m_processorLayout -> addItem(m_CPUTypeLayout);
     m_processorLayout -> addWidget(m_CPUSettings);
 

@@ -63,7 +63,7 @@ class ProcessorTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit ProcessorTab(Machine *machine,
+        explicit ProcessorTab(Machine *machine, Qt::Alignment layoutAlignment,
                               QWidget *parent = 0);
         ~ProcessorTab();
 

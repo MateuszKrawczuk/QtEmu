@@ -33,9 +33,10 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
                                            QIcon(":/images/qtemu.png")));
     this -> setWindowFlags(Qt::Dialog);
     this -> setWindowModality(Qt::ApplicationModal);
-    this -> setMinimumSize(640, 520);
+    this -> setMinimumSize(640, 500);
 
     this -> createGeneralPage();
+    this -> createHardwarePage();
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
@@ -76,10 +77,10 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
 
     // Prepare window
     m_optionsStackedWidget = new QStackedWidget(this);
-    m_optionsStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
-                                            QSizePolicy::MinimumExpanding);
-
+    m_optionsStackedWidget -> setSizePolicy(QSizePolicy::Expanding,
+                                            QSizePolicy::Expanding);
     m_optionsStackedWidget -> addWidget(this -> m_generalPageWidget);
+    m_optionsStackedWidget -> addWidget(this -> m_hardwarePageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -132,7 +133,26 @@ MachineConfigWindow::~MachineConfigWindow() {
 
 void MachineConfigWindow::createGeneralPage() {
 
-    m_machineGeneralGrpBox = new QGroupBox(tr("General data"));
+    Machine *machine = new Machine();
+
+    m_generalTabWidget = new QTabWidget();
+    m_generalTabWidget -> setSizePolicy(QSizePolicy::MinimumExpanding,
+                                        QSizePolicy::MinimumExpanding);
+    m_generalTabWidget -> addTab(new BasicTab(machine, this), tr("Basic Details"));
+    m_generalTabWidget -> addTab(new DescriptionTab(machine, this), tr("Description"));
+
+    m_generalPageLayout = new QVBoxLayout();
+    m_generalPageLayout -> setAlignment(Qt::AlignCenter);
+    m_generalPageLayout -> addWidget(m_generalTabWidget);
+
+    m_generalPageWidget = new QWidget(this);
+    m_generalPageWidget -> setLayout(m_generalPageLayout);
+}
+
+BasicTab::BasicTab(Machine *machine,
+                   QWidget *parent) : QWidget(parent) {
+
+    m_machineNameLineEdit = new QLineEdit();
 
     m_OSType = new QComboBox();
     m_OSType -> setSizePolicy(QSizePolicy::Expanding,
@@ -144,7 +164,7 @@ void MachineConfigWindow::createGeneralPage() {
     m_OSType -> addItem(tr("Other"));
 
     connect(m_OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this, &MachineConfigWindow::selectOS);
+           this, &BasicTab::selectOS);
 
     m_OSVersion = new QComboBox();
     m_OSVersion -> setSizePolicy(QSizePolicy::Expanding,
@@ -152,34 +172,33 @@ void MachineConfigWindow::createGeneralPage() {
 
     this -> selectOS(0);
 
-    m_machineNameLineEdit = new QLineEdit();
     m_machineUuidLabel = new QLabel();
     m_machineStatusLabel = new QLabel();
 
-    m_machineDescTextEdit = new QPlainTextEdit();
+    m_basicTabFormLayout = new QFormLayout();
+    m_basicTabFormLayout -> setAlignment(Qt::AlignTop);
+    m_basicTabFormLayout -> setLabelAlignment(Qt::AlignLeft);
+    m_basicTabFormLayout -> setHorizontalSpacing(20);
+    m_basicTabFormLayout -> setVerticalSpacing(10);
+    m_basicTabFormLayout -> addRow(tr("Name") + ":", m_machineNameLineEdit);
+    m_basicTabFormLayout -> addRow(tr("Type") + ":", m_OSType);
+    m_basicTabFormLayout -> addRow(tr("Version") + ":", m_OSVersion);
+    m_basicTabFormLayout -> addRow(tr("UUID") + ":", m_machineUuidLabel);
+    m_basicTabFormLayout -> addRow(tr("Status") + ":", m_machineStatusLabel);
 
-    m_machineDataLayout = new QFormLayout();
-    m_machineDataLayout -> setAlignment(Qt::AlignLeft);
-    m_machineDataLayout -> setLabelAlignment(Qt::AlignLeft);
-    m_machineDataLayout -> setHorizontalSpacing(20);
-    m_machineDataLayout -> setVerticalSpacing(20);
-    m_machineDataLayout -> addRow(tr("Name") + ":", m_machineNameLineEdit);
-    m_machineDataLayout -> addRow(tr("Type") + ":", m_OSType);
-    m_machineDataLayout -> addRow(tr("Version") + ":", m_OSVersion);
-    m_machineDataLayout -> addRow(tr("UUID") + ":", m_machineUuidLabel);
-    m_machineDataLayout -> addRow(tr("Status") + ":", m_machineStatusLabel);
-    m_machineDataLayout -> addRow(tr("Description") + ":", m_machineDescTextEdit);
+    m_basicTabLayout = new QVBoxLayout();
+    m_basicTabLayout -> addItem(m_basicTabFormLayout);
 
-    m_machineGeneralGrpBox -> setLayout(m_machineDataLayout);
+    this -> setLayout(m_basicTabLayout);
 
-    m_generalPageLayout = new QVBoxLayout();
-    m_generalPageLayout -> addWidget(m_machineGeneralGrpBox);
-
-    m_generalPageWidget = new QWidget(this);
-    m_generalPageWidget -> setLayout(m_generalPageLayout);
+    qDebug() << "BasicTab created";
 }
 
-void MachineConfigWindow::selectOS(int OSSelected){
+BasicTab::~BasicTab() {
+    qDebug() << "BasicTab destroyed";
+}
+
+void BasicTab::selectOS(int OSSelected){
 
     this -> m_OSVersion -> clear();
 
@@ -211,6 +230,47 @@ void MachineConfigWindow::selectOS(int OSSelected){
         this -> m_OSVersion -> addItem(tr("Redox"));
         this -> m_OSVersion -> addItem(tr("ReactOS"));
     }
+}
+
+DescriptionTab::DescriptionTab(Machine *machine,
+                               QWidget *parent) : QWidget(parent) {
+
+    m_machineDescLabel = new QLabel(tr("Description") + ":");
+    m_machineDescTextEdit = new QPlainTextEdit();
+
+    m_descriptionLayout = new QVBoxLayout();
+    m_descriptionLayout -> setAlignment(Qt::AlignVCenter);
+    m_descriptionLayout -> addWidget(m_machineDescLabel);
+    m_descriptionLayout -> addWidget(m_machineDescTextEdit);
+
+    this -> setLayout(m_descriptionLayout);
+
+    qDebug() << "Created destroyed";
+}
+
+DescriptionTab::~DescriptionTab() {
+    qDebug() << "DescriptionTab destroyed";
+}
+
+void MachineConfigWindow::createHardwarePage() {
+
+    // TODO: Change this machine to the selected machine
+    Machine *machine = new Machine();
+
+    m_hardwareTabWidget = new QTabWidget();
+    m_hardwareTabWidget -> setSizePolicy(QSizePolicy::MinimumExpanding,
+                                         QSizePolicy::MinimumExpanding);
+    m_hardwareTabWidget -> addTab(new ProcessorTab(machine, Qt::AlignTop, this), tr("CPU"));
+    m_hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
+    m_hardwareTabWidget -> addTab(new AudioTab(machine, this), tr("Audio"));
+
+    m_hardwarePageLayout = new QVBoxLayout();
+    m_hardwarePageLayout -> setAlignment(Qt::AlignCenter);
+    m_hardwarePageLayout -> addWidget(m_hardwareTabWidget);
+
+    m_hardwarePageWidget = new QWidget(this);
+    m_hardwarePageWidget -> setLayout(m_hardwarePageLayout);
+
 }
 
 void MachineConfigWindow::saveMachineSettings() {

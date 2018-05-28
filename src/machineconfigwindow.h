@@ -36,11 +36,13 @@
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QComboBox>
+#include <QTabWidget>
 
 #include <QDebug>
 
 // Local
 #include "machine.h"
+#include "newmachine/hardwarepage.h"
 
 class MachineConfigWindow : public QWidget {
     Q_OBJECT
@@ -57,7 +59,6 @@ class MachineConfigWindow : public QWidget {
 
     private slots:
         void saveMachineSettings();
-        void selectOS(int OSSelected);
 
     protected:
 
@@ -76,23 +77,72 @@ class MachineConfigWindow : public QWidget {
         QAction *m_closeAction;
 
         // General page
+        QTabWidget *m_generalTabWidget;
         QVBoxLayout *m_generalPageLayout;
-        QFormLayout *m_machineDataLayout;
         QWidget *m_generalPageWidget;
-
-        QGroupBox *m_machineGeneralGrpBox;
-
-        QLineEdit *m_machineNameLineEdit;
-        QLabel *m_machineUuidLabel;
-        QLabel *m_machineStatusLabel;
 
         QComboBox *m_OSType;
         QComboBox *m_OSVersion;
 
-        QPlainTextEdit *m_machineDescTextEdit;
+        // Hardware page
+        QTabWidget *m_hardwareTabWidget;
+        QVBoxLayout *m_hardwarePageLayout;
+        QWidget *m_hardwarePageWidget;
 
         // Methods
         void createGeneralPage();
+        void createHardwarePage();
+
+};
+
+class BasicTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit BasicTab(Machine *machine,
+                          QWidget *parent = 0);
+        ~BasicTab();
+
+    signals:
+
+    public slots:
+
+    private slots:
+        void selectOS(int OSSelected);
+
+    protected:
+
+    private:
+        QVBoxLayout *m_basicTabLayout;
+        QFormLayout *m_basicTabFormLayout;
+
+        QLineEdit *m_machineNameLineEdit;
+
+        QComboBox *m_OSType;
+        QComboBox *m_OSVersion;
+
+        QLabel *m_machineUuidLabel;
+        QLabel *m_machineStatusLabel;
+};
+
+class DescriptionTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit DescriptionTab(Machine *machine,
+                                QWidget *parent = 0);
+        ~DescriptionTab();
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *m_descriptionLayout;
+
+        QLabel *m_machineDescLabel;
+        QPlainTextEdit *m_machineDescTextEdit;
 
 };
 
