@@ -37,6 +37,7 @@
 #include <QPlainTextEdit>
 #include <QComboBox>
 #include <QTabWidget>
+#include <QTreeWidget>
 
 #include <QDebug>
 
@@ -89,9 +90,21 @@ class MachineConfigWindow : public QWidget {
         QVBoxLayout *m_hardwarePageLayout;
         QWidget *m_hardwarePageWidget;
 
+        // Boot page
+
+        QVBoxLayout *m_bootPageLayout;
+        QWidget *m_bootPageWidget;
+
+        QTreeWidget *m_bootTree;
+        QTreeWidgetItem m_floppyTreeItem;
+        QTreeWidgetItem m_CDROMTreeItem;
+        QTreeWidgetItem m_hardDiskTreeItem;
+        QTreeWidgetItem m_networkTreeItem;
+
         // Methods
         void createGeneralPage();
         void createHardwarePage();
+        void createBootPage();
 
 };
 

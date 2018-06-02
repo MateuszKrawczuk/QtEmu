@@ -37,6 +37,7 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
 
     this -> createGeneralPage();
     this -> createHardwarePage();
+    this -> createBootPage();
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
@@ -81,6 +82,7 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
                                             QSizePolicy::Expanding);
     m_optionsStackedWidget -> addWidget(this -> m_generalPageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_hardwarePageWidget);
+    m_optionsStackedWidget -> addWidget(this -> m_bootPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -271,6 +273,46 @@ void MachineConfigWindow::createHardwarePage() {
     m_hardwarePageWidget = new QWidget(this);
     m_hardwarePageWidget -> setLayout(m_hardwarePageLayout);
 
+}
+
+void MachineConfigWindow::createBootPage() {
+
+    m_floppyTreeItem = QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_floppyTreeItem.setText(0, tr("Floppy"));
+    m_floppyTreeItem.setData(0, Qt::UserRole, "a");
+    m_floppyTreeItem.setCheckState(0, Qt::Unchecked);
+
+    m_CDROMTreeItem = QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_CDROMTreeItem.setText(0, tr("CDROM"));
+    m_CDROMTreeItem.setData(0, Qt::UserRole, "d");
+    m_CDROMTreeItem.setCheckState(0, Qt::Unchecked);
+
+    m_hardDiskTreeItem = QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_hardDiskTreeItem.setText(0, tr("Hard Disk"));
+    m_hardDiskTreeItem.setData(0, Qt::UserRole, "c");
+    m_hardDiskTreeItem.setCheckState(0, Qt::Unchecked);
+
+    m_networkTreeItem = QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_networkTreeItem.setText(0, tr("Network"));
+    m_networkTreeItem.setData(0, Qt::UserRole, "n");
+    m_networkTreeItem.setCheckState(0, Qt::Unchecked);
+
+    m_bootTree = new QTreeWidget();
+    m_bootTree -> setColumnCount(1);
+    m_bootTree -> resizeColumnToContents(0);
+    m_bootTree -> setHeaderHidden(true);
+    m_bootTree -> setRootIsDecorated(false);
+    m_bootTree -> insertTopLevelItem(0, &m_floppyTreeItem);
+    m_bootTree -> insertTopLevelItem(1, &m_CDROMTreeItem);
+    m_bootTree -> insertTopLevelItem(2, &m_hardDiskTreeItem);
+    m_bootTree -> insertTopLevelItem(3, &m_networkTreeItem);
+
+    m_bootPageLayout = new QVBoxLayout();
+    m_bootPageLayout -> setAlignment(Qt::AlignCenter);
+    m_bootPageLayout -> addWidget(m_bootTree);
+
+    m_bootPageWidget = new QWidget(this);
+    m_bootPageWidget -> setLayout(m_bootPageLayout);
 }
 
 void MachineConfigWindow::saveMachineSettings() {
