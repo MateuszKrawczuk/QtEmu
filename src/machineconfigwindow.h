@@ -40,6 +40,10 @@
 #include <QTreeWidget>
 #include <QCheckBox>
 #include <QToolButton>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 
 #include <QDebug>
 
@@ -95,19 +99,31 @@ class MachineConfigWindow : public QWidget {
         // Boot page
         QHBoxLayout *m_bootTreeLayout;
         QVBoxLayout *m_bootPageLayout;
+        QGridLayout *m_kernelLayout;
         QWidget *m_bootPageWidget;
 
         QTreeWidget *m_bootTree;
-        QTreeWidgetItem m_floppyTreeItem;
-        QTreeWidgetItem m_CDROMTreeItem;
-        QTreeWidgetItem m_hardDiskTreeItem;
-        QTreeWidgetItem m_networkTreeItem;
+        QTreeWidgetItem *m_floppyTreeItem;
+        QTreeWidgetItem *m_CDROMTreeItem;
+        QTreeWidgetItem *m_hardDiskTreeItem;
+        QTreeWidgetItem *m_networkTreeItem;
 
         QCheckBox *m_bootMenuCheckBox;
         QCheckBox *m_kernelBootCheckBox;
 
         QToolButton *m_moveUpToolButton;
         QToolButton *m_moveDownToolButton;
+
+        QLabel *m_kernelPathLabel;
+        QLabel *m_initrdLabel;
+        QLabel *m_kernelArgsLabel;
+
+        QLineEdit *m_kernelPathLineEdit;
+        QLineEdit *m_initredLineEdit;
+        QLineEdit *m_kernelArgsLineEdit;
+
+        QPushButton *m_kernelPathPushButton;
+        QPushButton *m_initrdPushButton;
 
         // Methods
         void createGeneralPage();
