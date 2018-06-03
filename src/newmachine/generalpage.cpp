@@ -177,11 +177,10 @@ bool MachineNamePage::validatePage() {
 }
 
 void MachineNamePage::cleanupPage() {
-
     if ( ! this -> m_machineFolder.isEmpty() ) {
-        QDir().rmpath(this -> m_machineFolder);
+        QDir machineDir(this -> m_machineFolder);
+        machineDir.removeRecursively();
     }
-
 }
 
 void MachineNamePage::initializePage() {

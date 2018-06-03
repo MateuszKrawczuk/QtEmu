@@ -38,6 +38,8 @@
 #include <QComboBox>
 #include <QTabWidget>
 #include <QTreeWidget>
+#include <QCheckBox>
+#include <QToolButton>
 
 #include <QDebug>
 
@@ -91,7 +93,7 @@ class MachineConfigWindow : public QWidget {
         QWidget *m_hardwarePageWidget;
 
         // Boot page
-
+        QHBoxLayout *m_bootTreeLayout;
         QVBoxLayout *m_bootPageLayout;
         QWidget *m_bootPageWidget;
 
@@ -100,6 +102,12 @@ class MachineConfigWindow : public QWidget {
         QTreeWidgetItem m_CDROMTreeItem;
         QTreeWidgetItem m_hardDiskTreeItem;
         QTreeWidgetItem m_networkTreeItem;
+
+        QCheckBox *m_bootMenuCheckBox;
+        QCheckBox *m_kernelBootCheckBox;
+
+        QToolButton *m_moveUpToolButton;
+        QToolButton *m_moveDownToolButton;
 
         // Methods
         void createGeneralPage();
