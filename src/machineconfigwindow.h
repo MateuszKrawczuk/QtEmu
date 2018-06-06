@@ -125,10 +125,31 @@ class MachineConfigWindow : public QWidget {
         QPushButton *m_kernelPathPushButton;
         QPushButton *m_initrdPushButton;
 
+        // Media page
+        QGridLayout *m_mediaPageLayout;
+        QFormLayout *m_mediaDetailsLayout;
+        QFormLayout *m_mediaOptionsLayout;
+        QWidget *m_mediaPageWidget;
+
+        QTreeWidget *m_mediaTree;
+        QTreeWidgetItem *m_mediaItem;
+
+        QLabel *m_mediaPathLabel;
+        QLabel *m_mediaSizeLabel;
+        QLabel *m_mediaFormatLabel;
+
+        QGroupBox *m_mediaSettingsGroupBox;
+        QGroupBox *m_mediaOptionsGroupBox;
+
+        QComboBox *m_addMediaComboBox;
+        QComboBox *m_cacheComboBox;
+        QComboBox *m_IOComboBox;
+
         // Methods
         void createGeneralPage();
         void createHardwarePage();
         void createBootPage();
+        void createMediaPage();
 
 };
 

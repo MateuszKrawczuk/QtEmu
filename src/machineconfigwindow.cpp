@@ -38,6 +38,7 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     this -> createGeneralPage();
     this -> createHardwarePage();
     this -> createBootPage();
+    this -> createMediaPage();
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
@@ -83,6 +84,7 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     m_optionsStackedWidget -> addWidget(this -> m_generalPageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_hardwarePageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_bootPageWidget);
+    m_optionsStackedWidget -> addWidget(this -> m_mediaPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -149,6 +151,8 @@ void MachineConfigWindow::createGeneralPage() {
 
     m_generalPageWidget = new QWidget(this);
     m_generalPageWidget -> setLayout(m_generalPageLayout);
+
+    qDebug() << "General page created";
 }
 
 BasicTab::BasicTab(Machine *machine,
@@ -273,6 +277,7 @@ void MachineConfigWindow::createHardwarePage() {
     m_hardwarePageWidget = new QWidget(this);
     m_hardwarePageWidget -> setLayout(m_hardwarePageLayout);
 
+    qDebug() << "Hardware page created";
 }
 
 void MachineConfigWindow::createBootPage() {
@@ -373,8 +378,79 @@ void MachineConfigWindow::createBootPage() {
 
     m_bootPageWidget = new QWidget(this);
     m_bootPageWidget -> setLayout(m_bootPageLayout);
+
+    qDebug() << "Boot page created";
+}
+
+void MachineConfigWindow::createMediaPage() {
+
+    m_mediaItem = new QTreeWidgetItem();
+
+    m_mediaTree = new QTreeWidget();
+    m_mediaTree -> setMaximumHeight(250);
+    m_mediaTree -> setMaximumWidth(200);
+    m_mediaTree -> setColumnCount(1);
+    m_mediaTree -> setHeaderHidden(true);
+    m_mediaTree -> setRootIsDecorated(false);
+    m_mediaTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    m_mediaPathLabel = new QLabel();
+    m_mediaSizeLabel = new QLabel();
+    m_mediaFormatLabel = new QLabel();
+
+    m_mediaDetailsLayout = new QFormLayout();
+    m_mediaDetailsLayout -> setAlignment(Qt::AlignTop);
+    m_mediaDetailsLayout -> setLabelAlignment(Qt::AlignLeft);
+    m_mediaDetailsLayout -> setHorizontalSpacing(20);
+    m_mediaDetailsLayout -> setVerticalSpacing(10);
+    m_mediaDetailsLayout -> addRow(tr("Path") + ":", m_mediaPathLabel);
+    m_mediaDetailsLayout -> addRow(tr("Size") + ":", m_mediaSizeLabel);
+    m_mediaDetailsLayout -> addRow(tr("Format") + ":", m_mediaFormatLabel);
+
+    m_mediaSettingsGroupBox = new QGroupBox(tr("Details"));
+    m_mediaSettingsGroupBox -> setLayout(m_mediaDetailsLayout);
+
+    m_cacheComboBox = new QComboBox();
+    m_cacheComboBox -> addItem("none");
+    m_cacheComboBox -> addItem("writethrough");
+    m_cacheComboBox -> addItem("writeback");
+    m_cacheComboBox -> addItem("directsync");
+    m_cacheComboBox -> addItem("unsafe");
+    m_cacheComboBox -> setCurrentIndex(0);
+
+    m_IOComboBox = new QComboBox();
+    m_IOComboBox -> addItem("threads");
+    m_IOComboBox -> addItem("native");
+    m_IOComboBox -> setCurrentIndex(0);
+
+    m_mediaOptionsLayout = new QFormLayout();
+    m_mediaOptionsLayout -> setAlignment(Qt::AlignTop);
+    m_mediaOptionsLayout -> setLabelAlignment(Qt::AlignLeft);
+    m_mediaOptionsLayout -> setHorizontalSpacing(20);
+    m_mediaOptionsLayout -> setVerticalSpacing(10);
+    m_mediaOptionsLayout -> addRow(tr("Cache mode") + ":", m_cacheComboBox);
+    m_mediaOptionsLayout -> addRow(tr("IO mode") + ":", m_IOComboBox);
+
+    m_mediaOptionsGroupBox = new QGroupBox(tr("Options"));
+    m_mediaOptionsGroupBox -> setLayout(m_mediaOptionsLayout);
+
+    m_addMediaComboBox = new QComboBox();
+
+    m_mediaPageLayout = new QGridLayout();
+    m_mediaPageLayout -> setAlignment(Qt::AlignTop);
+    m_mediaPageLayout -> setSpacing(1);
+    m_mediaPageLayout -> addWidget(m_mediaTree,             0, 0, 1, 1);
+    m_mediaPageLayout -> addWidget(m_mediaSettingsGroupBox, 0, 1, 1, 1);
+    m_mediaPageLayout -> addWidget(m_addMediaComboBox,      1, 0, 1, 1);
+    m_mediaPageLayout -> addWidget(m_mediaOptionsGroupBox,  1, 1, 1, 1);
+
+    m_mediaPageWidget = new QWidget();
+    m_mediaPageWidget -> setLayout(m_mediaPageLayout);
+
+    qDebug() << "Media page created";
 }
 
 void MachineConfigWindow::saveMachineSettings() {
 
+    qDebug() << "Machine settings saved";
 }
