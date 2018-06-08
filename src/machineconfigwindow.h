@@ -151,11 +151,47 @@ class MachineConfigWindow : public QWidget {
         QPushButton *m_addHDDPushButton;
         QPushButton *m_addCDROMPushButton;
 
+        // Network page
+        QVBoxLayout *m_networkLayout;
+        QWidget *m_networkPageWidget;
+
+        // Audio page
+        QHBoxLayout *m_audioTreeLayout;
+        QHBoxLayout *m_hostSoundSystemLayout;
+        QVBoxLayout *m_audioLayout;
+        QWidget *m_audioPageWidget;
+
+        QToolButton *m_moveUpAudioToolButton;
+        QToolButton *m_moveDownAudioToolButton;
+
+        QTreeWidget *m_audioTree;
+
+        QTreeWidgetItem *m_creativeTreeItem;
+        QTreeWidgetItem *m_intelAC97TreeItem;
+        QTreeWidgetItem *m_gravisTreeItem;
+        QTreeWidgetItem *m_intelHDTreeItem;
+        QTreeWidgetItem *m_ensoniqTreeItem;
+        QTreeWidgetItem *m_yamahaTreeItem;
+        QTreeWidgetItem *m_CS4231ATreeItem;
+        QTreeWidgetItem *m_speakerTreeItem;
+
+        QLabel *m_hostSoundSystemLabel;
+
+        QComboBox *m_hostSoundSystemComboBox;
+
+        // Accelerator page
+
+        // Display page
+
         // Methods
         void createGeneralPage();
         void createHardwarePage();
         void createBootPage();
         void createMediaPage();
+        void createNetworkPage();
+        void createAudioPage();
+        void createAcceleratorPage();
+        void createDisplayPage();
 
 };
 

@@ -39,6 +39,8 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     this -> createHardwarePage();
     this -> createBootPage();
     this -> createMediaPage();
+    this -> createNetworkPage();
+    this -> createAudioPage();
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
@@ -89,6 +91,8 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     m_optionsStackedWidget -> addWidget(this -> m_hardwarePageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_bootPageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_mediaPageWidget);
+    m_optionsStackedWidget -> addWidget(this -> m_networkPageWidget);
+    m_optionsStackedWidget -> addWidget(this -> m_audioPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -440,6 +444,7 @@ void MachineConfigWindow::createMediaPage() {
     m_mediaOptionsLayout -> addRow(tr("Read only") + ":", m_readOnlyMediaCheck);
 
     m_mediaOptionsGroupBox = new QGroupBox(tr("Options"));
+    m_mediaOptionsGroupBox -> setFlat(true);
     m_mediaOptionsGroupBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_mediaOptionsGroupBox -> setLayout(m_mediaOptionsLayout);
 
@@ -474,6 +479,125 @@ void MachineConfigWindow::createMediaPage() {
     m_mediaPageWidget -> setLayout(m_mediaPageLayout);
 
     qDebug() << "Media page created";
+}
+
+void MachineConfigWindow::createNetworkPage() {
+
+    m_networkLayout = new QVBoxLayout();
+
+    m_networkPageWidget = new QWidget();
+    m_networkPageWidget -> setLayout(m_networkLayout);
+
+    qDebug() << "Network page created";
+}
+
+void MachineConfigWindow::createAudioPage(){
+
+    m_moveUpAudioToolButton = new QToolButton();
+    m_moveUpAudioToolButton -> setArrowType(Qt::UpArrow);
+
+    m_moveDownAudioToolButton = new QToolButton();
+    m_moveDownAudioToolButton -> setArrowType(Qt::DownArrow);
+
+    // TODO: Fix that...thing... do it into a for
+    m_creativeTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_creativeTreeItem -> setText(0, tr("Creative Sound Blaster 16"));
+    m_creativeTreeItem -> setData(0, Qt::UserRole, "sb16");
+    m_creativeTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_intelAC97TreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_intelAC97TreeItem -> setText(0, tr("Intel AC97(82801AA)"));
+    m_intelAC97TreeItem -> setData(0, Qt::UserRole, "ac97");
+    m_intelAC97TreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_gravisTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_gravisTreeItem -> setText(0, tr("Gravis Ultrasound GF1"));
+    m_gravisTreeItem -> setData(0, Qt::UserRole, "gus");
+    m_gravisTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_intelHDTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_intelHDTreeItem -> setText(0, tr("Intel HD Audio"));
+    m_intelHDTreeItem -> setData(0, Qt::UserRole, "hda");
+    m_intelHDTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_ensoniqTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_ensoniqTreeItem -> setText(0, tr("ENSONIQ AudioPCI ES1370"));
+    m_ensoniqTreeItem -> setData(0, Qt::UserRole, "es1370");
+    m_ensoniqTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_yamahaTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_yamahaTreeItem -> setText(0, tr("Yamaha YM3812"));
+    m_yamahaTreeItem -> setData(0, Qt::UserRole, "adlib");
+    m_yamahaTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_CS4231ATreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_CS4231ATreeItem -> setText(0, tr("CS4231A"));
+    m_CS4231ATreeItem -> setData(0, Qt::UserRole, "cs4231a");
+    m_CS4231ATreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_speakerTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_speakerTreeItem -> setText(0, tr("PC Speaker"));
+    m_speakerTreeItem -> setData(0, Qt::UserRole, "pcspk");
+    m_speakerTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_audioTree = new QTreeWidget();
+    m_audioTree -> setMaximumHeight(200);
+    m_audioTree -> setMaximumWidth(250);
+    m_audioTree -> setColumnCount(1);
+    m_audioTree -> setHeaderHidden(true);
+    m_audioTree -> setRootIsDecorated(false);
+    m_audioTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_audioTree -> insertTopLevelItem(0, m_creativeTreeItem);
+    m_audioTree -> insertTopLevelItem(1, m_intelAC97TreeItem);
+    m_audioTree -> insertTopLevelItem(2, m_gravisTreeItem);
+    m_audioTree -> insertTopLevelItem(3, m_intelHDTreeItem);
+    m_audioTree -> insertTopLevelItem(4, m_ensoniqTreeItem);
+    m_audioTree -> insertTopLevelItem(5, m_yamahaTreeItem);
+    m_audioTree -> insertTopLevelItem(6, m_CS4231ATreeItem);
+    m_audioTree -> insertTopLevelItem(7, m_speakerTreeItem);
+
+    m_audioTreeLayout = new QHBoxLayout();
+    m_audioTreeLayout -> setAlignment(Qt::AlignTop);
+    m_audioTreeLayout -> setSpacing(5);
+    m_audioTreeLayout -> addWidget(m_audioTree);
+    m_audioTreeLayout -> addWidget(m_moveUpAudioToolButton);
+    m_audioTreeLayout -> addWidget(m_moveDownAudioToolButton);
+
+    m_hostSoundSystemLabel = new QLabel(tr("Host sound system") + ":");
+
+    m_hostSoundSystemComboBox = new QComboBox();
+    m_hostSoundSystemComboBox -> addItem("alsa");
+    m_hostSoundSystemComboBox -> addItem("sdl");
+    m_hostSoundSystemComboBox -> addItem("pa");
+    m_hostSoundSystemComboBox -> addItem("spice");
+    m_hostSoundSystemComboBox -> addItem("wav");
+    m_hostSoundSystemComboBox -> addItem("none");
+
+    m_hostSoundSystemLayout = new QHBoxLayout();
+    m_hostSoundSystemLayout -> setAlignment(Qt::AlignLeft);
+    m_hostSoundSystemLayout -> setSpacing(5);
+    m_hostSoundSystemLayout -> addWidget(m_hostSoundSystemLabel);
+    m_hostSoundSystemLayout -> addWidget(m_hostSoundSystemComboBox);
+
+    m_audioLayout = new QVBoxLayout();
+    m_audioLayout -> setAlignment(Qt::AlignTop);
+    m_audioLayout -> addItem(m_audioTreeLayout);
+    m_audioLayout -> addItem(m_hostSoundSystemLayout);
+
+    m_audioPageWidget = new QWidget();
+    m_audioPageWidget -> setLayout(m_audioLayout);
+
+    qDebug() << "Audio page created";
+}
+
+void MachineConfigWindow::createAcceleratorPage() {
+
+    qDebug() << "Accelerator page created";
+}
+
+void MachineConfigWindow::createDisplayPage() {
+
+    qDebug() << "Display page created";
 }
 
 void MachineConfigWindow::saveMachineSettings() {
