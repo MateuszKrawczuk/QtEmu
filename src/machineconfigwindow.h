@@ -129,6 +129,7 @@ class MachineConfigWindow : public QWidget {
         QGridLayout *m_mediaPageLayout;
         QFormLayout *m_mediaDetailsLayout;
         QFormLayout *m_mediaOptionsLayout;
+        QHBoxLayout *m_mediaAddLayout;
         QWidget *m_mediaPageWidget;
 
         QTreeWidget *m_mediaTree;
@@ -140,10 +141,15 @@ class MachineConfigWindow : public QWidget {
 
         QGroupBox *m_mediaSettingsGroupBox;
         QGroupBox *m_mediaOptionsGroupBox;
+        QGroupBox *m_mediaAddGroupBox;
 
-        QComboBox *m_addMediaComboBox;
         QComboBox *m_cacheComboBox;
         QComboBox *m_IOComboBox;
+
+        QCheckBox *m_readOnlyMediaCheck;
+
+        QPushButton *m_addHDDPushButton;
+        QPushButton *m_addCDROMPushButton;
 
         // Methods
         void createGeneralPage();

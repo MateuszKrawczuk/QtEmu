@@ -69,12 +69,16 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-card",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
+    m_optionsListWidget -> addItem(tr("Audio"));
+    m_optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("audio-card",
+                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));// TODO
+
     m_optionsListWidget -> addItem(tr("Accelerator"));
-    m_optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("mathematica",
+    m_optionsListWidget -> item(6) -> setIcon(QIcon::fromTheme("mathematica",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     m_optionsListWidget -> addItem(tr("Display"));
-    m_optionsListWidget -> item(6) -> setIcon(QIcon::fromTheme("applications-multimedia",
+    m_optionsListWidget -> item(7) -> setIcon(QIcon::fromTheme("applications-multimedia",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     // Prepare window
@@ -268,7 +272,6 @@ void MachineConfigWindow::createHardwarePage() {
                                          QSizePolicy::MinimumExpanding);
     m_hardwareTabWidget -> addTab(new ProcessorTab(machine, Qt::AlignTop, this), tr("CPU"));
     m_hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
-    m_hardwareTabWidget -> addTab(new AudioTab(machine, this), tr("Audio"));
 
     m_hardwarePageLayout = new QVBoxLayout();
     m_hardwarePageLayout -> setAlignment(Qt::AlignCenter);
@@ -411,6 +414,7 @@ void MachineConfigWindow::createMediaPage() {
     m_mediaSettingsGroupBox -> setLayout(m_mediaDetailsLayout);
 
     m_cacheComboBox = new QComboBox();
+    m_cacheComboBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_cacheComboBox -> addItem("none");
     m_cacheComboBox -> addItem("writethrough");
     m_cacheComboBox -> addItem("writeback");
@@ -419,9 +423,12 @@ void MachineConfigWindow::createMediaPage() {
     m_cacheComboBox -> setCurrentIndex(0);
 
     m_IOComboBox = new QComboBox();
+    m_IOComboBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_IOComboBox -> addItem("threads");
     m_IOComboBox -> addItem("native");
     m_IOComboBox -> setCurrentIndex(0);
+
+    m_readOnlyMediaCheck = new QCheckBox();
 
     m_mediaOptionsLayout = new QFormLayout();
     m_mediaOptionsLayout -> setAlignment(Qt::AlignTop);
@@ -430,18 +437,37 @@ void MachineConfigWindow::createMediaPage() {
     m_mediaOptionsLayout -> setVerticalSpacing(10);
     m_mediaOptionsLayout -> addRow(tr("Cache mode") + ":", m_cacheComboBox);
     m_mediaOptionsLayout -> addRow(tr("IO mode") + ":", m_IOComboBox);
+    m_mediaOptionsLayout -> addRow(tr("Read only") + ":", m_readOnlyMediaCheck);
 
     m_mediaOptionsGroupBox = new QGroupBox(tr("Options"));
+    m_mediaOptionsGroupBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_mediaOptionsGroupBox -> setLayout(m_mediaOptionsLayout);
 
-    m_addMediaComboBox = new QComboBox();
+    m_addHDDPushButton = new QPushButton();
+    m_addHDDPushButton -> setIcon(QIcon::fromTheme("drive-harddisk",
+                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+    m_addHDDPushButton -> setToolTip(tr("Add hard disk media"));
+
+    m_addCDROMPushButton = new QPushButton();
+    m_addCDROMPushButton -> setIcon(QIcon::fromTheme("media-optical-data",
+                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+    m_addCDROMPushButton -> setToolTip(tr("Add optical media"));
+
+    m_mediaAddLayout = new QHBoxLayout();
+    m_mediaAddLayout -> setAlignment(Qt::AlignTop);
+    m_mediaAddLayout -> addWidget(m_addHDDPushButton);
+    m_mediaAddLayout -> addWidget(m_addCDROMPushButton);
+
+    m_mediaAddGroupBox = new QGroupBox();
+    m_mediaAddGroupBox -> setLayout(m_mediaAddLayout);
+    m_mediaAddGroupBox -> setFlat(true);
 
     m_mediaPageLayout = new QGridLayout();
     m_mediaPageLayout -> setAlignment(Qt::AlignTop);
     m_mediaPageLayout -> setSpacing(1);
     m_mediaPageLayout -> addWidget(m_mediaTree,             0, 0, 1, 1);
     m_mediaPageLayout -> addWidget(m_mediaSettingsGroupBox, 0, 1, 1, 1);
-    m_mediaPageLayout -> addWidget(m_addMediaComboBox,      1, 0, 1, 1);
+    m_mediaPageLayout -> addWidget(m_mediaAddGroupBox,      1, 0, 1, 1);
     m_mediaPageLayout -> addWidget(m_mediaOptionsGroupBox,  1, 1, 1, 1);
 
     m_mediaPageWidget = new QWidget();
