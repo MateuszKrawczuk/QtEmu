@@ -180,6 +180,19 @@ class MachineConfigWindow : public QWidget {
         QComboBox *m_hostSoundSystemComboBox;
 
         // Accelerator page
+        QHBoxLayout *m_accelTreeLayout;
+        QVBoxLayout *m_acceleratorLayout;
+        QWidget *m_acceleratorPageWidget;
+
+        QToolButton *m_moveUpAccelToolButton;
+        QToolButton *m_moveDownAccelToolButton;
+
+        QTreeWidget *m_acceleratorTree;
+
+        QTreeWidgetItem *m_tcgTreeItem;
+        QTreeWidgetItem *m_kvmTreeItem;
+        QTreeWidgetItem *m_xenTreeItem;
+        QTreeWidgetItem *m_haxmTreeItem;
 
         // Display page
 

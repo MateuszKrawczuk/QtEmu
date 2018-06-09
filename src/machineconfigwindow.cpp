@@ -41,6 +41,7 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     this -> createMediaPage();
     this -> createNetworkPage();
     this -> createAudioPage();
+    this -> createAcceleratorPage();
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
@@ -93,6 +94,7 @@ MachineConfigWindow::MachineConfigWindow(QUuid machineUuid,
     m_optionsStackedWidget -> addWidget(this -> m_mediaPageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_networkPageWidget);
     m_optionsStackedWidget -> addWidget(this -> m_audioPageWidget);
+    m_optionsStackedWidget -> addWidget(this -> m_acceleratorPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -591,6 +593,63 @@ void MachineConfigWindow::createAudioPage(){
 }
 
 void MachineConfigWindow::createAcceleratorPage() {
+
+    m_moveUpAccelToolButton = new QToolButton();
+    m_moveUpAccelToolButton -> setArrowType(Qt::UpArrow);
+
+    m_moveDownAccelToolButton = new QToolButton();
+    m_moveDownAccelToolButton -> setArrowType(Qt::DownArrow);
+
+    m_tcgTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_tcgTreeItem -> setText(0, "TCG - Tiny Code Generator");
+    m_tcgTreeItem -> setToolTip(0, "TCG - Tiny Code Generator");
+    m_tcgTreeItem -> setData(0, Qt::UserRole, "tcg");
+    m_tcgTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_kvmTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_kvmTreeItem -> setText(0, "KVM - Kernel-based Virtual Machine");
+    m_kvmTreeItem -> setToolTip(0, "KVM - Kernel-based Virtual Machine");
+    m_kvmTreeItem -> setData(0, Qt::UserRole, "kvm");
+    m_kvmTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    m_xenTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_xenTreeItem -> setText(0, "XEN");
+    m_xenTreeItem -> setData(0, Qt::UserRole, "xen");
+    m_xenTreeItem -> setCheckState(0, Qt::Unchecked);
+
+    #ifdef Q_OS_WIN
+    m_haxmTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
+    m_haxmTreeItem -> setText(0, "HAXM - Hardware Accelerated Execution Manager");
+    m_haxmTreeItem -> setToolTip(0, "HAXM - Hardware Accelerated Execution Manager");
+    m_haxmTreeItem -> setData(0, Qt::UserRole, "hax");
+    m_haxmTreeItem -> setCheckState(0, Qt::Unchecked);
+    #endif
+
+    m_acceleratorTree = new QTreeWidget();
+    m_acceleratorTree -> setMaximumHeight(150);
+    m_acceleratorTree -> setMaximumWidth(200);
+    m_acceleratorTree -> setColumnCount(1);
+    m_acceleratorTree -> setHeaderHidden(true);
+    m_acceleratorTree -> setRootIsDecorated(false);
+    m_acceleratorTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_acceleratorTree -> insertTopLevelItem(0, m_tcgTreeItem);
+    m_acceleratorTree -> insertTopLevelItem(1, m_kvmTreeItem);
+    m_acceleratorTree -> insertTopLevelItem(2, m_xenTreeItem);
+    m_acceleratorTree -> insertTopLevelItem(3, m_haxmTreeItem);
+
+    m_accelTreeLayout = new QHBoxLayout();
+    m_accelTreeLayout -> setAlignment(Qt::AlignTop);
+    m_accelTreeLayout -> setSpacing(5);
+    m_accelTreeLayout -> addWidget(m_acceleratorTree);
+    m_accelTreeLayout -> addWidget(m_moveUpAccelToolButton);
+    m_accelTreeLayout -> addWidget(m_moveDownAccelToolButton);
+
+    m_acceleratorLayout = new QVBoxLayout();
+    m_acceleratorLayout -> setAlignment(Qt::AlignTop);
+    m_acceleratorLayout -> addItem(m_accelTreeLayout);
+
+    m_acceleratorPageWidget = new QWidget();
+    m_acceleratorPageWidget -> setLayout(m_acceleratorLayout);
 
     qDebug() << "Accelerator page created";
 }
