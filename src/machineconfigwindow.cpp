@@ -635,7 +635,9 @@ void MachineConfigWindow::createAcceleratorPage() {
     m_acceleratorTree -> insertTopLevelItem(0, m_tcgTreeItem);
     m_acceleratorTree -> insertTopLevelItem(1, m_kvmTreeItem);
     m_acceleratorTree -> insertTopLevelItem(2, m_xenTreeItem);
+    #ifdef Q_OS_WIN
     m_acceleratorTree -> insertTopLevelItem(3, m_haxmTreeItem);
+    #endif
 
     m_accelTreeLayout = new QHBoxLayout();
     m_accelTreeLayout -> setAlignment(Qt::AlignTop);
