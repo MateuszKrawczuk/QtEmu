@@ -66,7 +66,7 @@ class ConfigWindow : public QWidget {
         void pushDevelopmentVersion(bool release);
         void setLanguageLabel(QString language);
         void setAuthorsLabel(int languagePosition);
-        void toggleUserPassword(int proxyOption);
+        void toggleServerPort(int proxyOption);
         void toggleAuth(bool authState);
         void setMachinePath();
         void saveSettings();
@@ -90,17 +90,13 @@ class ConfigWindow : public QWidget {
 
         // General page
         QGroupBox *m_machinePathGroup;
-        QGroupBox *m_startCommandGroup;
         QHBoxLayout *m_machinePathLayout;
-        QHBoxLayout *m_startCommandLayout;
         QVBoxLayout *m_generalPageLayout;
         QWidget *m_generalPageWidget;
 
         QLabel *m_machinePathLabel;
-        QLabel *m_startCommandLabel;
 
         QLineEdit *m_machinePathLineEdit;
-        QLineEdit *m_startCommandLineEdit;
 
         QPushButton *m_machinePathButton;
 
@@ -109,10 +105,6 @@ class ConfigWindow : public QWidget {
 
         QFileDialog *m_machinePathDialog;
         QFileDialog *m_startCommandDialog;
-
-        // Input page
-        QVBoxLayout *m_inputPageLayout;
-        QWidget *m_inputPageWidget;
 
         // Update QtEmu page
         QFormLayout *m_updatePageLayout;
@@ -168,7 +160,6 @@ class ConfigWindow : public QWidget {
 
         // Methods
         void createGeneralPage();
-        void createInputPage();
         void createUpdatePage();
         void createLanguagePage();
         void createStartPage();

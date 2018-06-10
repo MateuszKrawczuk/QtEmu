@@ -24,6 +24,13 @@
 // Local
 #include "configwindow.h"
 
+/**
+ * @brief QtEmu configuration menu
+ * @param parent, widget parent
+ *
+ * Configuration of QtEmu. Configure the machines path, language,
+ * qemu before and after commands and the proxy.
+ */
 ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
@@ -37,9 +44,6 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     settings.beginGroup("Configuration");
 
     this -> createGeneralPage();
-
-    // TODO
-    //this -> createInputPage();
 
     this -> createUpdatePage();
 
@@ -64,10 +68,6 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
 
-    //m_optionsListWidget -> addItem(tr("Input"));
-    //m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("preferences-desktop-keyboard",
-    //                                                          QIcon(":/icon/32x32/qtemu.png")));
-
     m_optionsListWidget -> addItem(tr("Update QtEmu"));
     m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
@@ -90,7 +90,6 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
                                              QSizePolicy::MinimumExpanding);
 
     m_categoriesStackedWidget -> addWidget(m_generalPageWidget);
-    //m_categoriesStackedWidget -> addWidget(m_inputPageWidget);
     m_categoriesStackedWidget -> addWidget(m_updatePageWidget);
     m_categoriesStackedWidget -> addWidget(m_languagePageWidget);
     m_categoriesStackedWidget -> addWidget(m_startPageWidget);
@@ -150,9 +149,13 @@ ConfigWindow::~ConfigWindow() {
     qDebug() << "ConfigWindow destroyed";
 }
 
+/**
+ * @brief Create the general page of the QtEmu configuration
+ *
+ * Create the general page of the QtEmu configuration where
+ * the machines path are indicated.
+ */
 void ConfigWindow::createGeneralPage() {
-
-    m_machinePathGroup = new QGroupBox(tr("Machine Path"));
 
     m_machinePathLabel  = new QLabel(tr("Default machine path") + ":");
 
@@ -168,43 +171,28 @@ void ConfigWindow::createGeneralPage() {
             this, &ConfigWindow::setMachinePath);
 
     m_machinePathLayout = new QHBoxLayout();
-    m_machinePathLayout -> setAlignment(Qt::AlignVCenter);
+    m_machinePathLayout -> setAlignment(Qt::AlignTop);
     m_machinePathLayout -> addWidget(m_machinePathLabel);
     m_machinePathLayout -> addWidget(m_machinePathLineEdit);
     m_machinePathLayout -> addWidget(m_machinePathButton);
 
+    m_machinePathGroup = new QGroupBox(tr("Machine Path"));
     m_machinePathGroup -> setLayout(m_machinePathLayout);
-
-    m_startCommandGroup = new QGroupBox(tr("QEMU Command"));
-
-    m_startCommandLabel = new QLabel(tr("QEMU start command") + ":");
-
-    m_startCommandLineEdit = new QLineEdit();
-    m_startCommandLineEdit -> setText("qemu"); // TODO: add support for MacOS and Windows
-
-    m_startCommandLayout = new QHBoxLayout();
-    m_startCommandLayout -> setAlignment(Qt::AlignVCenter);
-    m_startCommandLayout -> addWidget(m_startCommandLabel);
-    m_startCommandLayout -> addWidget(m_startCommandLineEdit);
-
-    m_startCommandGroup -> setLayout(m_startCommandLayout);
 
     m_generalPageLayout = new QVBoxLayout();
     m_generalPageLayout -> addWidget(m_machinePathGroup);
-    m_generalPageLayout -> addWidget(m_startCommandGroup);
 
     m_generalPageWidget = new QWidget(this);
     m_generalPageWidget -> setLayout(m_generalPageLayout);
 }
 
-void ConfigWindow::createInputPage(){
-
-    m_inputPageLayout = new QVBoxLayout();
-
-    m_inputPageWidget = new QWidget(this);
-    m_inputPageWidget -> setLayout(m_inputPageLayout);
-}
-
+/**
+ * @brief Create the update page of the QtEmu configuration
+ *
+ * Create the update page of the QtEmu configuration where
+ * the version of the software can be selected.
+ * Versions: Stable, Beta, Development
+ */
 void ConfigWindow::createUpdatePage(){
 
     m_updateCheckBox = new QCheckBox();
@@ -240,6 +228,12 @@ void ConfigWindow::createUpdatePage(){
     m_updatePageWidget -> setLayout(m_updatePageLayout);
 }
 
+/**
+ * @brief Create the language page of the QtEmu configuration
+ *
+ * Create the language page of the QtEmu configuration where
+ * the language can be selected.
+ */
 void ConfigWindow::createLanguagePage(){
     m_languageLabel = new QLabel(tr("Interface language"));
 
@@ -251,44 +245,7 @@ void ConfigWindow::createLanguagePage(){
     m_languagesListView -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     m_languagesListView -> addItem("English");
-    m_languagesListView -> item(0) -> setIcon(QIcon::fromTheme("eeuu-flag",
-                                                               QIcon(":/images/flags/32x32/flags/eeuu.png")));
-
-    m_languagesListView -> addItem("Deutsch");
-    m_languagesListView -> item(1) -> setIcon(QIcon::fromTheme("germany-flag",
-                                                               QIcon(":/images/flags/32x32/flags/germany.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Türkçe"));
-    m_languagesListView -> item(2) -> setIcon(QIcon::fromTheme("turkey-flag",
-                                                               QIcon(":/images/flags/32x32/flags/turkey.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Русский"));
-    m_languagesListView -> item(3) -> setIcon(QIcon::fromTheme("russia-flag",
-                                                               QIcon(":/images/flags/32x32/flags/russia.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Česky"));
-    m_languagesListView -> item(4) -> setIcon(QIcon::fromTheme("czech-flag",
-                                                               QIcon(":/images/flags/32x32/flags/czech.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Español"));
-    m_languagesListView -> item(5) -> setIcon(QIcon::fromTheme("spain-flag",
-                                                               QIcon(":/images/flags/32x32/flags/spain.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Français"));
-    m_languagesListView -> item(6) -> setIcon(QIcon::fromTheme("france-flag",
-                                                               QIcon(":/images/flags/32x32/flags/france.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Italiano"));
-    m_languagesListView -> item(7) -> setIcon(QIcon::fromTheme("italy-flag",
-                                                               QIcon(":/images/flags/32x32/flags/italy.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Português do Brasil"));
-    m_languagesListView -> item(8) -> setIcon(QIcon::fromTheme("brazil-flag",
-                                                               QIcon(":/images/flags/32x32/flags/brazil.png")));
-
-    m_languagesListView -> addItem(QString::fromUtf8("Polski"));
-    m_languagesListView -> item(9) -> setIcon(QIcon::fromTheme("poland-flag",
-                                                               QIcon(":/images/flags/32x32/flags/poland.png")));
+    m_languagesListView -> item(0) -> setIcon(QIcon(":/images/flags/32x32/eeuu.png"));
 
     m_languageDescription = new QLabel();
     m_languageAuthors = new QLabel();
@@ -313,6 +270,13 @@ void ConfigWindow::createLanguagePage(){
     m_languagePageWidget -> setLayout(m_languagePageLayout);
 }
 
+/**
+ * @brief Create the start page of the QtEmu configuration
+ *
+ * Create the start page of the QtEmu configuration where
+ * can be configured wich commands execute before and after
+ * the launch of QEMU.
+ */
 void ConfigWindow::createStartPage(){
 
     m_beforeStartLabel = new QLabel(tr("Execute before start") + ":");
@@ -332,6 +296,12 @@ void ConfigWindow::createStartPage(){
     m_startPageWidget -> setLayout(m_startPageLayout);
 }
 
+/**
+ * @brief Create the proxy page of the QtEmu configuration
+ *
+ * Create the proxy page of the QtEmu configuration where the
+ * proxy options can be configured.
+ */
 void ConfigWindow::createProxyPage(){
 
     m_proxyOptions = new QComboBox();
@@ -347,7 +317,7 @@ void ConfigWindow::createProxyPage(){
     m_portProxy -> setPlaceholderText("1080, 8080, etc...");
 
     connect(m_proxyOptions, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this, &ConfigWindow::toggleUserPassword);
+            this, &ConfigWindow::toggleServerPort);
 
     m_useAuth = new QCheckBox();
     m_useAuth -> setChecked(false);
@@ -362,7 +332,7 @@ void ConfigWindow::createProxyPage(){
     m_passwordProxy -> setEchoMode(QLineEdit::Password);
 
     // TODO: read the user settings
-    this -> toggleUserPassword(0);
+    this -> toggleServerPort(0);
     this -> toggleAuth(false);
 
     m_proxyPageLayout = new QFormLayout();
@@ -378,7 +348,13 @@ void ConfigWindow::createProxyPage(){
     m_proxyPageWidget -> setLayout(m_proxyPageLayout);
 }
 
-void ConfigWindow::toggleUpdate(bool updateState){
+/**
+ * @brief Enable or disabled the update radios
+ * @param updateState
+ *
+ * Indicate if the radios referred to the update section are enabled or disabled
+ */
+void ConfigWindow::toggleUpdate(bool updateState) {
 
     this -> m_updatesGroup -> setEnabled(updateState);
     this -> m_stableReleaseRadio -> setEnabled(updateState);
@@ -387,6 +363,12 @@ void ConfigWindow::toggleUpdate(bool updateState){
 
 }
 
+/**
+ * @brief Select stable version
+ * @param release
+ *
+ * Select stable version for the QtEmu release chanel
+ */
 void ConfigWindow::pushStableVersion(bool release){
 
     if (release) {
@@ -395,6 +377,12 @@ void ConfigWindow::pushStableVersion(bool release){
 
 }
 
+/**
+ * @brief Select beta version
+ * @param release
+ *
+ * Select beta version for the QtEmu release chanel
+ */
 void ConfigWindow::pushBetaVersion(bool release){
 
     if (release) {
@@ -403,6 +391,12 @@ void ConfigWindow::pushBetaVersion(bool release){
 
 }
 
+/**
+ * @brief Select development version
+ * @param release
+ *
+ * Select development version for the QtEmu release chanel
+ */
 void ConfigWindow::pushDevelopmentVersion(bool release){
 
     if (release) {
@@ -411,6 +405,12 @@ void ConfigWindow::pushDevelopmentVersion(bool release){
 
 }
 
+/**
+ * @brief Set the language label
+ * @param language, language string
+ *
+ * Set the language label
+ */
 void ConfigWindow::setLanguageLabel(QString language){
     QString description = tr("Language") + ": ";
     description.append(language);
@@ -418,6 +418,12 @@ void ConfigWindow::setLanguageLabel(QString language){
     this -> m_languageDescription -> setText(description);
 }
 
+/**
+ * @brief Set the name of the translator
+ * @param languagePosition, position of the language
+ *
+ * Set the name of the translator
+ */
 void ConfigWindow::setAuthorsLabel(int languagePosition){
     QString authors = tr("Authors") + ": ";
 
@@ -426,51 +432,6 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
             authors.append(tr("QtEmu Developers"));
             m_languageISOCode = "en";
             m_languagePos = 0;
-            break;
-        case 1:
-            authors.append(tr("QtEmu Developers"));
-            m_languageISOCode = "de";
-            m_languagePos = 1;
-            break;
-        case 2:
-            authors.append(QString::fromUtf8("Necmettin Begiter"));
-            m_languageISOCode = "tr";
-            m_languagePos = 2;
-            break;
-        case 3:
-            authors.append(QString::fromUtf8("Vasily Cheremisinov"));
-            m_languageISOCode = "ru";
-            m_languagePos = 3;
-            break;
-        case 4:
-            authors.append(QString::fromUtf8("excamo"));
-            m_languageISOCode = "cz";
-            m_languagePos = 4;
-            break;
-        case 5:
-            authors.append(QString::fromUtf8("Manolo Valdes"));
-            m_languageISOCode = "es";
-            m_languagePos = 5;
-            break;
-        case 6:
-            authors.append(QString::fromUtf8("Fathi Boudra"));
-            m_languageISOCode = "fr";
-            m_languagePos = 6;
-            break;
-        case 7:
-            authors.append(QString::fromUtf8("Gianluca Cecchi"));
-            m_languageISOCode = "it";
-            m_languagePos = 7;
-            break;
-        case 8:
-            authors.append(QString::fromUtf8("Jackson Miliszewski"));
-            m_languageISOCode = "pt-BR";
-            m_languagePos = 8;
-            break;
-        case 9:
-            authors.append(QString::fromUtf8("Milosz Galazka"));
-            m_languageISOCode = "pl";
-            m_languagePos = 9;
             break;
         default:
             authors.append(tr("Unknown author"));
@@ -482,7 +443,14 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
     this -> m_languageAuthors -> setText(authors);
 }
 
-void ConfigWindow::toggleUserPassword(int proxyOption){
+/**
+ * @brief Activate or deactivate the server and port
+ * @param proxyOption
+ *
+ * Activate or deactivate the server and port for
+ * QtEmu
+ */
+void ConfigWindow::toggleServerPort(int proxyOption){
 
     if (proxyOption == 0) {
         this -> m_serverNameProxy -> setEnabled(false);
@@ -491,9 +459,14 @@ void ConfigWindow::toggleUserPassword(int proxyOption){
         this -> m_serverNameProxy -> setEnabled(true);
         this -> m_portProxy -> setEnabled(true);
     }
-
 }
 
+/**
+ * @brief Establish user and password for proxy settings
+ * @param authState, activate or deactivate the user and password inputs
+ *
+ * Establish user and password for proxy settings
+ */
 void ConfigWindow::toggleAuth(bool authState){
 
     if (!authState) {
@@ -506,6 +479,12 @@ void ConfigWindow::toggleAuth(bool authState){
 
 }
 
+/**
+ * @brief Set the path for the machines
+ *
+ * Establish the path where the machines are
+ * going to be located
+ */
 void ConfigWindow::setMachinePath(){
 
     m_machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
@@ -519,6 +498,11 @@ void ConfigWindow::setMachinePath(){
 
 }
 
+/**
+ * @brief Save the QtEmu settings
+ *
+ * Load the QtEmu settings
+ */
 void ConfigWindow::saveSettings(){
     QSettings settings;
 
@@ -530,7 +514,6 @@ void ConfigWindow::saveSettings(){
 
     // General
     settings.setValue("machinePath", this -> m_machinePathLineEdit -> text());
-    settings.setValue("qemu", this -> m_startCommandLineEdit -> text());
 
     // Update
     settings.setValue("update", this -> m_updateCheckBox -> isChecked());
@@ -561,13 +544,17 @@ void ConfigWindow::saveSettings(){
 
 }
 
+/**
+ * @brief Load the QtEmu settings
+ *
+ * Load the QtEmu settings
+ */
 void ConfigWindow::loadSettings(){
     QSettings settings;
     settings.beginGroup("Configuration");
 
     // General
     m_machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
-    m_startCommandLineEdit -> setText(settings.value("qemu", "qemu").toString());
 
     // Update
     m_updateCheckBox -> setChecked(settings.value("update", true).toBool());
