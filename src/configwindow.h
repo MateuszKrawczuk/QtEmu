@@ -45,6 +45,7 @@
 #include <QFileDialog>
 #include <QGroupBox>
 #include <QRadioButton>
+#include <QCloseEvent>
 
 #include <QDebug>
 
@@ -60,6 +61,7 @@ class ConfigWindow : public QWidget {
     public slots:
 
     private slots:
+        void closeEvent (QCloseEvent *event);
         void toggleUpdate(bool updateState);
         void pushStableVersion(bool release);
         void pushBetaVersion(bool release);
@@ -69,6 +71,7 @@ class ConfigWindow : public QWidget {
         void toggleServerPort(int proxyOption);
         void toggleAuth(bool authState);
         void setMachinePath();
+        void cancelButton();
         void saveSettings();
         void loadSettings();
 

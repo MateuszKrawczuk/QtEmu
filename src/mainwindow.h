@@ -93,7 +93,6 @@ class MainWindow : public QMainWindow {
         QAction *m_newMachineAction;
         QAction *m_addMachineAction;
         QAction *m_settingsMachineAction;
-        QAction *m_duplicateMachineAction;
         QAction *m_removeMachineAction;
         QAction *m_groupMachineAction;
 
@@ -107,7 +106,6 @@ class MainWindow : public QMainWindow {
         QAction *m_stopMachineAction;
         QAction *m_resetMachineAction;
         QAction *m_pauseMachineAction;
-        //QAction *m_saveMachineAction;
         // End menus
 
         // Toolbar

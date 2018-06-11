@@ -96,10 +96,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> setCentralWidget(m_mainWidget);
 
     // Create the menus
-    createMenusActions();
-    createMenus();
-    createToolBars();
-    loadMachines();
+    this -> createMenusActions();
+    this -> createMenus();
+    this -> createToolBars();
+    this -> loadMachines();
 
     this -> loadUI(m_osListWidget -> count());
 
@@ -135,9 +135,7 @@ void MainWindow::createMenus() {
     m_machineMenu = new QMenu(tr("&Machine"), this);
     m_machineMenu -> addAction(m_newMachineAction);
     m_machineMenu -> addAction(m_settingsMachineAction);
-    m_machineMenu -> addAction(m_duplicateMachineAction);
     m_machineMenu -> addAction(m_removeMachineAction);
-    //machineMenu -> addAction(groupMachine);
 
     // Help
     m_helpMenu = new QMenu(tr("&Help"), this);
@@ -167,7 +165,7 @@ void MainWindow::createMenusActions() {
                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/configure.svg"))),
                                          tr("Preferences"),
                                          this);
-    //preferencesApp -> setShortcut(Qt::Key_F1);
+
     connect(m_preferencesAppAction, &QAction::triggered,
             m_configWindow, &QWidget::show);
 
@@ -182,7 +180,6 @@ void MainWindow::createMenusActions() {
                                   this);
 
     // Actions for Machine menu
-
     m_newMachineAction = new QAction(QIcon::fromTheme("project-development-new-template",
                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/project-development-new-template.svg"))),
                                      tr("New Machine"),
@@ -197,23 +194,12 @@ void MainWindow::createMenusActions() {
     connect(m_settingsMachineAction, &QAction::triggered,
             this, &MainWindow::machineOptions);
 
-    m_duplicateMachineAction = new QAction(QIcon::fromTheme("edit-duplicate",
-                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/edit-duplicate.svg"))),
-                                           tr("Duplicate Machine"),
-                                           this);
-
     m_removeMachineAction = new QAction(QIcon::fromTheme("project-development-close",
                                                          QIcon(QPixmap(":/images/icons/breeze/32x32/project-development-close.svg"))),
                                         tr("Remove Machine"),
                                         this);
     connect(m_removeMachineAction, &QAction::triggered,
             this, &MainWindow::deleteMachine);
-
-    /*groupMachine = new QAction(QIcon::fromTheme("view-group",
-                                                QIcon(":/icon/32x32/qtemu.png")),
-                               tr("Group Machines"),
-                               this);
-    */
 
     // Actions for Help menu
     m_helpQuickHelpAction = new QAction(QIcon::fromTheme("help-contents",
@@ -278,12 +264,6 @@ void MainWindow::createMenusActions() {
     m_pauseMachineAction -> setToolTip(tr("Pause machine"));
     connect(m_pauseMachineAction, &QAction::triggered,
             this, &MainWindow::pauseMachine);
-
-    /*m_saveMachineAction = new QAction(this);
-    m_saveMachineAction -> setIcon(QIcon::fromTheme("system-save-session",
-                                                    QIcon(":/icon/32x32/qtemu.png")));
-    m_saveMachineAction -> setToolTip(tr("Save machine"));*/
-
 }
 
 /**
@@ -295,6 +275,7 @@ void MainWindow::createToolBars() {
     this -> m_mainToolBar = addToolBar(tr("Toolbar"));
 
     m_mainToolBar -> setToolButtonStyle(Qt::ToolButtonFollowStyle);
+    m_mainToolBar -> setMovable(false);
 
     m_mainToolBar -> addAction(this -> m_newMachineAction);
     m_mainToolBar -> addAction(this -> m_settingsMachineAction);
@@ -303,9 +284,6 @@ void MainWindow::createToolBars() {
     m_mainToolBar -> addAction(this -> m_stopMachineAction);
     m_mainToolBar -> addAction(this -> m_resetMachineAction);
     m_mainToolBar -> addAction(this -> m_pauseMachineAction);
-    //m_mainToolBar -> addAction(this -> m_saveMachineAction);
-
-    m_mainToolBar -> setMovable(false);
 
 }
 
@@ -500,21 +478,16 @@ void MainWindow::loadUI(const int itemCount) {
     this -> m_stopMachineAction  -> setEnabled(false);
     this -> m_resetMachineAction -> setEnabled(false);
     this -> m_pauseMachineAction -> setEnabled(false);
-    //this -> m_saveMachineAction  -> setEnabled(false);
 
     if (itemCount == 0) {
         this -> m_settingsMachineAction  -> setEnabled(false);
-        this -> m_duplicateMachineAction -> setEnabled(false);
         this -> m_removeMachineAction    -> setEnabled(false);
-
         this -> m_startMachineAction     -> setEnabled(false);
     } else {
         this -> m_osListWidget -> setCurrentRow(0);
 
         this -> m_settingsMachineAction  -> setEnabled(true);
-        this -> m_duplicateMachineAction -> setEnabled(true);
         this -> m_removeMachineAction    -> setEnabled(true);
-
         this -> m_startMachineAction     -> setEnabled(true);
     }
 
@@ -621,18 +594,15 @@ void MainWindow::controlMachineActions(Machine::States state) {
         this -> m_stopMachineAction  -> setEnabled(true);
         this -> m_resetMachineAction -> setEnabled(true);
         this -> m_pauseMachineAction -> setEnabled(true);
-        //this -> m_saveMachineAction  -> setEnabled(true);
     } else if(state == Machine::Stopped) {
         this -> m_startMachineAction -> setEnabled(true);
         this -> m_stopMachineAction  -> setEnabled(false);
         this -> m_resetMachineAction -> setEnabled(false);
         this -> m_pauseMachineAction -> setEnabled(false);
-        //this -> m_saveMachineAction  -> setEnabled(false);
     } else if(state == Machine::Paused) {
         this -> m_startMachineAction -> setEnabled(false);
         this -> m_stopMachineAction  -> setEnabled(false);
         this -> m_resetMachineAction -> setEnabled(false);
         this -> m_pauseMachineAction -> setEnabled(true);
-        //this -> m_saveMachineAction  -> setEnabled(false);
     }
 }

@@ -89,11 +89,11 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     m_categoriesStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
                                              QSizePolicy::MinimumExpanding);
 
-    m_categoriesStackedWidget -> addWidget(m_generalPageWidget);
-    m_categoriesStackedWidget -> addWidget(m_updatePageWidget);
-    m_categoriesStackedWidget -> addWidget(m_languagePageWidget);
-    m_categoriesStackedWidget -> addWidget(m_startPageWidget);
-    m_categoriesStackedWidget -> addWidget(m_proxyPageWidget);
+    m_categoriesStackedWidget -> addWidget(this -> m_generalPageWidget);
+    m_categoriesStackedWidget -> addWidget(this -> m_updatePageWidget);
+    m_categoriesStackedWidget -> addWidget(this -> m_languagePageWidget);
+    m_categoriesStackedWidget -> addWidget(this -> m_startPageWidget);
+    m_categoriesStackedWidget -> addWidget(this -> m_proxyPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_categoriesStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -115,7 +115,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
                                     tr("Cancel"),
                                     this);
     connect(m_closeButton, &QAbstractButton::clicked,
-            this, &QWidget::hide);
+            this, &ConfigWindow::cancelButton);
 
     this -> m_buttonsLayout = new QHBoxLayout();
     m_buttonsLayout -> setAlignment(Qt::AlignRight);
@@ -124,7 +124,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     m_closeAction = new QAction(this);
     m_closeAction -> setShortcut(QKeySequence(Qt::Key_Escape));
-    connect(m_closeAction, &QAction::triggered, this, &QWidget::hide);
+    connect(m_closeAction, &QAction::triggered, this, &ConfigWindow::cancelButton);
     this -> addAction(m_closeAction);
 
     m_mainLayout = new QVBoxLayout();
@@ -147,6 +147,24 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
 ConfigWindow::~ConfigWindow() {
     qDebug() << "ConfigWindow destroyed";
+}
+
+/**
+ * @brief Event triggered when the user close the window
+ * @param event, close event
+ *
+ * Event triggered when the user close the window.
+ * Load the settings saved before by the user.
+ */
+void ConfigWindow::closeEvent (QCloseEvent *event) {
+
+    this -> loadSettings();
+
+    this -> hide();
+
+    this -> m_optionsListWidget -> setCurrentRow(0);
+
+    event -> accept();
 }
 
 /**
@@ -178,6 +196,7 @@ void ConfigWindow::createGeneralPage() {
 
     m_machinePathGroup = new QGroupBox(tr("Machine Path"));
     m_machinePathGroup -> setLayout(m_machinePathLayout);
+    m_machinePathGroup -> setFlat(true);
 
     m_generalPageLayout = new QVBoxLayout();
     m_generalPageLayout -> addWidget(m_machinePathGroup);
@@ -331,10 +350,6 @@ void ConfigWindow::createProxyPage(){
     m_passwordProxy = new QLineEdit();
     m_passwordProxy -> setEchoMode(QLineEdit::Password);
 
-    // TODO: read the user settings
-    this -> toggleServerPort(0);
-    this -> toggleAuth(false);
-
     m_proxyPageLayout = new QFormLayout();
 
     m_proxyPageLayout -> addRow(tr("Proxy type"), m_proxyOptions);
@@ -372,7 +387,7 @@ void ConfigWindow::toggleUpdate(bool updateState) {
 void ConfigWindow::pushStableVersion(bool release){
 
     if (release) {
-        m_releaseString = "stable";
+        this -> m_releaseString = "stable";
     }
 
 }
@@ -386,7 +401,7 @@ void ConfigWindow::pushStableVersion(bool release){
 void ConfigWindow::pushBetaVersion(bool release){
 
     if (release) {
-        m_releaseString = "beta";
+        this -> m_releaseString = "beta";
     }
 
 }
@@ -400,7 +415,7 @@ void ConfigWindow::pushBetaVersion(bool release){
 void ConfigWindow::pushDevelopmentVersion(bool release){
 
     if (release) {
-        m_releaseString = "alpha";
+        this -> m_releaseString = "alpha";
     }
 
 }
@@ -430,13 +445,13 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
     switch (languagePosition) {
         case 0:
             authors.append(tr("QtEmu Developers"));
-            m_languageISOCode = "en";
-            m_languagePos = 0;
+            this -> m_languageISOCode = "en";
+            this -> m_languagePos = 0;
             break;
         default:
             authors.append(tr("Unknown author"));
-            m_languageISOCode = "en";
-            m_languagePos = 0;
+            this -> m_languageISOCode = "en";
+            this -> m_languagePos = 0;
             break;
     }
 
@@ -487,15 +502,32 @@ void ConfigWindow::toggleAuth(bool authState){
  */
 void ConfigWindow::setMachinePath(){
 
-    m_machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
-                                                      QDir::homePath(),
-                                                      QFileDialog::ShowDirsOnly |
-                                                      QFileDialog::DontResolveSymlinks
-                                                      );
+    this -> m_machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
+                                                              QDir::homePath(),
+                                                              QFileDialog::ShowDirsOnly |
+                                                              QFileDialog::DontResolveSymlinks
+                                                              );
     if ( !m_machinePath.isEmpty() ) {
-        m_machinePathLineEdit -> setText(QDir::toNativeSeparators(m_machinePath));
+        this -> m_machinePathLineEdit -> setText(QDir::toNativeSeparators(m_machinePath));
     }
 
+}
+
+/**
+ * @brief Action triggered when button cancel is pressed
+ *
+ * Action trigerred when the button cancel is pressed.
+ * Load the settings saved before by the user.
+ */
+void ConfigWindow::cancelButton() {
+
+    this -> loadSettings();
+
+    this -> hide();
+
+    this -> m_optionsListWidget -> setCurrentRow(0);
+
+    qDebug() << "Config window canceled";
 }
 
 /**
@@ -541,7 +573,6 @@ void ConfigWindow::saveSettings(){
     this -> hide();
 
     qDebug() << "ConfigWindow: settings saved";
-
 }
 
 /**
@@ -554,26 +585,37 @@ void ConfigWindow::loadSettings(){
     settings.beginGroup("Configuration");
 
     // General
-    m_machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
+    this -> m_machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
 
     // Update
-    m_updateCheckBox -> setChecked(settings.value("update", true).toBool());
-    m_releaseString = settings.value("release", "stable").toString();
+    this -> m_updateCheckBox -> setChecked(settings.value("update", true).toBool());
+    this -> m_releaseString = settings.value("release", "stable").toString();
+
+    if (this -> m_releaseString == "alpha") {
+        this -> m_stableReleaseRadio -> setChecked(true);
+    } else if (this -> m_releaseString == "beta") {
+        this -> m_betaReleaseRadio -> setChecked(true);
+    } else {
+        this -> m_stableReleaseRadio -> setChecked(true);
+    }
 
     // Language
-    m_languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
+    this -> m_languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
 
     // Start page
-    m_beforeStart -> setPlainText(settings.value("startCommand", "").toString());
-    m_afterExit -> setPlainText(settings.value("afterCommand", "").toString());
+    this -> m_beforeStart -> setPlainText(settings.value("startCommand", "").toString());
+    this -> m_afterExit -> setPlainText(settings.value("afterCommand", "").toString());
 
     // Proxy
-    m_proxyOptions -> setCurrentIndex(settings.value("proxyType", 0).toInt());
-    m_serverNameProxy -> setText(settings.value("proxyHostname", "").toString());
-    m_portProxy -> setText(settings.value("proxyPort", "").toString());
-    m_useAuth -> setChecked(settings.value("auth", false).toBool());
-    m_userProxy -> setText(settings.value("proxyUser", "").toString());
-    m_passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
+    this -> m_proxyOptions -> setCurrentIndex(settings.value("proxyType", 0).toInt());
+    this -> m_serverNameProxy -> setText(settings.value("proxyHostname", "").toString());
+    this -> m_portProxy -> setText(settings.value("proxyPort", "").toString());
+    this -> m_useAuth -> setChecked(settings.value("auth", false).toBool());
+    this -> m_userProxy -> setText(settings.value("proxyUser", "").toString());
+    this -> m_passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
+
+    this -> toggleServerPort(settings.value("proxyType", 0).toInt());
+    this -> toggleAuth(this -> m_useAuth);
 
     settings.endGroup();
 }
