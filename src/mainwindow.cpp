@@ -386,15 +386,15 @@ void MainWindow::createNewMachine() {
 void MainWindow::machineOptions() {
 
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
-    Machine::States machineState;
 
+    Machine *machineOptions;
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
-            machineState = machine -> getState();
+            machineOptions = machine;
         }
     }
 
-    MachineConfigWindow *machineConfigWindow = new MachineConfigWindow(machineUuid, machineState, this);
+    MachineConfigWindow *machineConfigWindow = new MachineConfigWindow(machineOptions, this);
 
     machineConfigWindow -> show();
 }

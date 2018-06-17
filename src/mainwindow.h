@@ -45,7 +45,7 @@
 // Local
 #include "machine.h"
 #include "machineutils.h"
-#include "machineconfigwindow.h"
+#include "machineconfig/machineconfigwindow.h"
 #include "helpwidget.h"
 #include "aboutwidget.h"
 #include "configwindow.h"

@@ -69,9 +69,16 @@ SOURCES += src/main.cpp\
            src/newmachine/memorypage.cpp \
            src/newmachine/diskpage.cpp \
            src/newmachine/conclusionpage.cpp \
+           src/machineconfig/machineconfigwindow.cpp \
            src/utils/logger.cpp \
            src/machineutils.cpp \
-    src/machineconfigwindow.cpp
+    src/machineconfig/machineconfiggeneral.cpp \
+    src/machineconfig/machineconfighardware.cpp \
+    src/machineconfig/machineconfigboot.cpp \
+    src/machineconfig/machineconfigmedia.cpp \
+    src/machineconfig/machineconfignetwork.cpp \
+    src/machineconfig/machineconfigaudio.cpp \
+    src/machineconfig/machineconfigaccel.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -86,9 +93,16 @@ HEADERS  += src/mainwindow.h \
             src/newmachine/memorypage.h \
             src/newmachine/diskpage.h \
             src/newmachine/conclusionpage.h \
+            src/machineconfig/machineconfigwindow.h \
             src/utils/logger.h \
             src/machineutils.h \
-    src/machineconfigwindow.h
+    src/machineconfig/machineconfiggeneral.h \
+    src/machineconfig/machineconfighardware.h \
+    src/machineconfig/machineconfigboot.h \
+    src/machineconfig/machineconfigmedia.h \
+    src/machineconfig/machineconfignetwork.h \
+    src/machineconfig/machineconfigaudio.h \
+    src/machineconfig/machineconfigaccel.h
 
 OTHER_FILES += \
     CHANGELOG \
