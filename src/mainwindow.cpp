@@ -116,8 +116,8 @@ MainWindow::~MainWindow() {
     qDebug() << "MainWindow destroyed";
 }
 
-/*!
- * \brief Create the menus
+/**
+ * @brief Create the menus
  *
  * Create the menus for the top toolbar
  */
@@ -153,8 +153,8 @@ void MainWindow::createMenus() {
     this -> menuBar() -> addMenu(m_helpMenu);
 }
 
-/*!
- * \brief Create the actions for the menus
+/**
+ * @brief Create the actions for the menus
  *
  * Create the differents actions for the menus
  */
@@ -287,8 +287,35 @@ void MainWindow::createToolBars() {
 
 }
 
-/*!
- * \brief Load created machines
+/**
+ * @brief Open QtEmu Website
+ *
+ * Open the QtEmu official webpage into your browser
+ */
+void MainWindow::visitQtEmuWebsite() {
+    QDesktopServices::openUrl(QUrl("https://www.qtemu.org"));
+}
+
+/**
+ * @brief Open QtEmu Bug Tracker
+ *
+ * Open the QtEmu Bug Tracker into your browser
+ */
+void MainWindow::visitQtEmuBugTracker() {
+    QDesktopServices::openUrl(QUrl("https://gitlab.com/carlavilla/Qtemu/issues"));
+}
+
+/**
+ * @brief Open Qemu Website
+ *
+ * Open the Qemu official webpage into your browser
+ */
+void MainWindow::visitQemuWebsite() {
+    QDesktopServices::openUrl(QUrl("https://www.qemu.org/"));
+}
+
+/**
+ * @brief Load created machines
  *
  * Load all the machines stored in the qtemu.json file on config data folder
  */
@@ -327,35 +354,36 @@ void MainWindow::loadMachines() {
 
 }
 
-/*!
- * \brief Open QtEmu Website
+/**
+ * @brief Generate the machine object for the list
+ * @param machineJSON, JSON with the machine params
+ * @return machine object
  *
- * Open the QtEmu official webpage into your browser
+ * Generate the machine object for the list
  */
-void MainWindow::visitQtEmuWebsite() {
-    QDesktopServices::openUrl(QUrl("https://www.qtemu.org"));
+Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
+
+    QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
+
+    Machine *machine = new Machine(this);
+
+    machine -> setState(Machine::Stopped);
+    machine -> setName(machineJSON["name"].toString());
+    machine -> setOSType(machineJSON["OSType"].toString());
+    machine -> setOSVersion(machineJSON["OSVersion"].toString());
+    machine -> setRAM(machineJSON["RAM"].toDouble());
+    machine -> setUseNetwork(machineJSON["network"].toBool());
+    machine -> setPath(machineJSON["path"].toString());
+    machine -> setUuid(machineJSON["uuid"].toString());
+
+    connect(machine, &Machine::machineStateChangedSignal,
+            this, &MainWindow::machineStateChanged);
+
+    return machine;
 }
 
-/*!
- * \brief Open QtEmu Bug Tracker
- *
- * Open the QtEmu Bug Tracker into your browser
- */
-void MainWindow::visitQtEmuBugTracker() {
-    QDesktopServices::openUrl(QUrl("https://gitlab.com/carlavilla/Qtemu/issues"));
-}
-
-/*!
- * \brief Open Qemu Website
- *
- * Open the Qemu official webpage into your browser
- */
-void MainWindow::visitQemuWebsite() {
-    QDesktopServices::openUrl(QUrl("https://www.qemu.org/"));
-}
-
-/*!
- * \brief Open the create machine wizard
+/**
+ * @brief Open the create machine wizard
  *
  * Open the machine wizard to create a new machine
  */
@@ -378,8 +406,8 @@ void MainWindow::createNewMachine() {
 
 }
 
-/*!
- * \brief Open the machine options window
+/**
+ * @brief Open the machine options window
  *
  * Open the selected machine options window
  */
@@ -399,8 +427,8 @@ void MainWindow::machineOptions() {
     machineConfigWindow -> show();
 }
 
-/*!
- * \brief Start the selected machine
+/**
+ * @brief Start the selected machine
  *
  * Start the selected machine
  */
@@ -414,8 +442,8 @@ void MainWindow::runMachine() {
     }
 }
 
-/*!
- * \brief Reset the selected machine
+/**
+ * @brief Reset the selected machine
  *
  * Reset the selected machine
  */
@@ -429,8 +457,8 @@ void MainWindow::resetMachine() {
     }
 }
 
-/*!
- * \brief Pause or continue the selected machine
+/**
+ * @brief Pause or continue the selected machine
  *
  * If the State of the machine is Started, then
  * pause the machine.
@@ -448,11 +476,11 @@ void MainWindow::pauseMachine() {
 
 }
 
-/*!
-  * \brief Delete the selected machine
-  *
-  * Delete the selected machine and its associated files
-  */
+/**
+ * @brief Delete the selected machine
+ *
+ * Delete the selected machine and its associated files
+ */
 void MainWindow::deleteMachine() {
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
 
@@ -465,8 +493,8 @@ void MainWindow::deleteMachine() {
 
 }
 
-/*!
- * \brief Enable/Disable buttons
+/**
+ * @brief Enable/Disable buttons
  *
  * Enable/Disable the buttons in the menubar and in the main ui
  * If the osListWidget item doesn't have elements, elements
@@ -496,34 +524,6 @@ void MainWindow::loadUI(const int itemCount) {
         fillMachineDetailsSection(this -> m_machinesList[0]);
     }
 
-}
-
-/**
- * @brief Generate the machine object for the list
- * @param machineJSON, JSON with the machine params
- * @return machine object
- *
- * Generate the machine object for the list
- */
-Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
-
-    QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
-
-    Machine *machine = new Machine(this);
-
-    machine -> setState(Machine::Stopped);
-    machine -> setName(machineJSON["name"].toString());
-    machine -> setOSType(machineJSON["OSType"].toString());
-    machine -> setOSVersion(machineJSON["OSVersion"].toString());
-    machine -> setRAM(machineJSON["RAM"].toDouble());
-    machine -> setUseNetwork(machineJSON["network"].toBool());
-    machine -> setPath(machineJSON["path"].toString());
-    machine -> setUuid(machineJSON["uuid"].toString());
-
-    connect(machine, &Machine::machineStateChangedSignal,
-            this, &MainWindow::machineStateChanged);
-
-    return machine;
 }
 
 /**
