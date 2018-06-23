@@ -365,6 +365,9 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
 
     QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
 
+    QJsonObject gpuObject = machineJSON["gpu"].toObject();
+    QJsonObject cpuObject = machineJSON["cpu"].toObject();
+
     Machine *machine = new Machine(this);
 
     machine -> setState(Machine::Stopped);
@@ -375,6 +378,14 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     machine -> setUseNetwork(machineJSON["network"].toBool());
     machine -> setPath(machineJSON["path"].toString());
     machine -> setUuid(machineJSON["uuid"].toString());
+    machine -> setGPUType(gpuObject["GPUType"].toString());
+    machine -> setKeyboard(gpuObject["keyboard"].toString());
+    machine -> setCPUType(cpuObject["CPUType"].toString());
+    machine -> setCPUCount(cpuObject["CPUCount"].toInt());
+    machine -> setCoresSocket(cpuObject["coresSocket"].toInt());
+    machine -> setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
+    machine -> setSocketCount(cpuObject["socketCount"].toInt());
+    machine -> setThreadsCore(cpuObject["threadsCore"].toInt());
 
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);
