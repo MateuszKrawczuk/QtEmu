@@ -32,6 +32,55 @@
 // Local
 #include "machineutils.h"
 
+class Media {
+
+    public:
+        explicit Media();
+        ~Media();
+
+        QString mediaName() const;
+        void setMediaName(const QString &mediaName);
+
+        QString mediaPath() const;
+        void setMediaPath(const QString &mediaPath);
+
+        qlonglong mediaSize() const;
+        void setMediaSize(const qlonglong &mediaSize);
+
+        QString mediaType() const;
+        void setMediaType(const QString &mediaType);
+
+        QString mediaFormat() const;
+        void setMediaFormat(const QString &mediaFormat);
+
+        QString mediaInterface() const;
+        void setMediaInterface(const QString &mediaInterface);
+
+        QString mediaCache() const;
+        void setMediaCache(const QString &mediaCache);
+
+        QString mediaIO() const;
+        void setMediaIO(const QString &mediaIO);
+
+    signals:
+
+    public slots:
+
+    private slots:
+
+    protected:
+
+    private:
+        QString m_mediaName;
+        QString m_mediaPath;
+        qlonglong m_mediaSize;
+        QString m_mediaType;
+        QString m_mediaFormat;
+        QString m_mediaInterface;
+        QString m_mediaCache;
+        QString m_mediaIO;
+};
+
 class Machine: public QObject {
     Q_OBJECT
 
@@ -96,6 +145,9 @@ class Machine: public QObject {
 
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
+
+        QList<Media> getMedia() const;
+        void addMedia(const Media value);
 
         QString getDiskName() const;
         void setDiskName(const QString &value);
@@ -174,7 +226,10 @@ class Machine: public QObject {
         // Hardware - Network
         bool useNetwork;
 
-        // Hardware - Disk
+        // Hardware - media
+        QList<Media> media;
+
+        // Hardware - machine wizard
         QString diskName;
         QString diskPath;
         qlonglong diskSize;
@@ -189,7 +244,6 @@ class Machine: public QObject {
 
         // Methods
         QProcessEnvironment buildEnvironment();
-
 };
 
 #endif // MACHINE_H

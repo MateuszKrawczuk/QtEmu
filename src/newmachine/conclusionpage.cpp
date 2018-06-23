@@ -115,14 +115,8 @@ bool MachineConclusionPage::validatePage() {
 
     this -> m_newMachine -> setUuid(QUuid::createUuid().toString());
 
-    // Add the new machine to the list
-    QListWidgetItem *machine = new QListWidgetItem(this -> m_newMachine -> getName(), this -> m_osList);
-    machine -> setData(QMetaType::QUuid, this -> m_newMachine -> getUuid());
-    // TODO: Check if the json it's incomplete and the image not exits
-    machine -> setIcon(QIcon(":/images/os/64x64/" +
-                             SystemUtils::getOsIcon(this -> m_newMachine -> getOSVersion())));
-
     if( ! this -> m_newMachine -> getCreateNewDisk() ) {
+        this -> insertVMList();
         return true;
     }
 
@@ -158,15 +152,33 @@ bool MachineConclusionPage::validatePage() {
 
     if (isDiskCreated) {
 
-        createMachineJSON(this -> m_newMachine);
+        this -> createMachineJSON(this -> m_newMachine);
 
-        insertOSInFile(this -> m_newMachine);
+        this -> insertOSInFile(this -> m_newMachine);
+
+        this -> insertVMList();
 
         Logger::logMachineCreation(this -> m_newMachine -> getPath(),
                                    this -> m_newMachine -> getName(), "Machine created");
     }
 
     return isDiskCreated;
+}
+
+/**
+ * @brief Insert the new VM in te list
+ *
+ * Insert the new VM in te list
+ */
+void MachineConclusionPage::insertVMList() {
+
+    QListWidgetItem *machine = new QListWidgetItem(this -> m_newMachine -> getName(), this -> m_osList);
+
+    machine -> setData(QMetaType::QUuid, this -> m_newMachine -> getUuid());
+    // TODO: Check if the json it's incomplete and the image not exits
+    machine -> setIcon(QIcon(":/images/os/64x64/" +
+                             SystemUtils::getOsIcon(this -> m_newMachine -> getOSVersion())));
+
 }
 
 void MachineConclusionPage::createMachineJSON(Machine *machine) const {
@@ -225,8 +237,15 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     QJsonObject disk;
     disk["name"] = this -> m_newMachine -> getDiskName();
     disk["path"] = this -> m_newMachine -> getDiskPath();
+    disk["size"] = this -> m_newMachine -> getDiskSize();
+    disk["type"] = "hdd";
+    disk["format"] = this -> m_newMachine -> getDiskFormat();
+    disk["inteface"] = "sata";
 
-    machineJSONObject["disk"] = disk;
+    QJsonArray media;
+    media.append(disk);
+
+    machineJSONObject["media"] = media;
 
     QJsonArray accelerator;
     QStringList acceleratorList = this -> m_newMachine -> getAcceleratorLabel().split(",");
@@ -299,4 +318,3 @@ void MachineConclusionPage::insertOSInFile(Machine *newMachine){
     machinesFile.write(machinesJSONDocument.toJson());
     machinesFile.close();
 }
-

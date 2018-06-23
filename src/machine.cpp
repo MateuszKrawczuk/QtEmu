@@ -400,61 +400,41 @@ void Machine::setUseNetwork(bool value) {
 }
 
 /**
- * @brief Get the disk name of the machine
+ * @brief Get the list of media
+ * @return media list
  *
- * Get the disk name of the machine
- * Ex: debian
+ * Get the list of media of the machine
  */
-QString Machine::getDiskName() const {
-    return diskName;
+QList<Media> Machine::getMedia() const {
+    return media;
 }
 
 /**
- * @brief Set the disk name of the machine
+ * @brief Add media to the media list
+ * @param value, new media
  *
- * Set the disk name of the machine
- * Ex: debian
+ * Add media to the media list
  */
-void Machine::setDiskName(const QString &value) {
-    diskName = value;
+void Machine::addMedia(const Media value) {
+    this -> media.append(value);
 }
 
 /**
- * @brief Get the disk path of the machine
+ * @brief Get if there's necessary create a disk for the machine
  *
- * Get the disk path of the machine
- * Ex: /home/xexio/Vms/Debian/debian.qcow2
+ * Get if there's necessary create a disk for the machine
  */
-QString Machine::getDiskPath() const {
-    return diskPath;
+bool Machine::getCreateNewDisk() const {
+    return createNewDisk;
 }
 
 /**
- * @brief Set the disk path of the machine
+ * @brief Set if there's necessary create a disk for the machine
  *
- * Set the disk path of the machine
- * Ex: /home/xexio/Vms/Debian/debian.qcow2
+ * Set if there's necessary create a disk for the machine
  */
-void Machine::setDiskPath(const QString &value) {
-    diskPath = value;
-}
-
-/**
- * @brief Get the disk size
- *
- * Get the disk size
- */
-qlonglong Machine::getDiskSize() const {
-    return diskSize;
-}
-
-/**
- * @brief Set the disk size
- *
- * Set the disk size
- */
-void Machine::setDiskSize(const qlonglong &value) {
-    diskSize = value;
+void Machine::setCreateNewDisk(bool value) {
+    createNewDisk = value;
 }
 
 /**
@@ -478,21 +458,59 @@ void Machine::setDiskFormat(const QString &value) {
 }
 
 /**
- * @brief Get if there's necessary create a disk for the machine
+ * @brief Get the disk size
  *
- * Get if there's necessary create a disk for the machine
+ * Get the disk size
  */
-bool Machine::getCreateNewDisk() const {
-    return createNewDisk;
+qlonglong Machine::getDiskSize() const {
+    return diskSize;
 }
 
 /**
- * @brief Set if there's necessary create a disk for the machine
+ * @brief Set the disk size
  *
- * Set if there's necessary create a disk for the machine
+ * Set the disk size
  */
-void Machine::setCreateNewDisk(bool value) {
-    createNewDisk = value;
+void Machine::setDiskSize(const qlonglong &value) {
+    diskSize = value;
+}
+
+/**
+ * @brief Get the disk path of the machine
+ *
+ * Get the disk path of the machine
+ * Ex: /home/xexio/Vms/Debian/debian.qcow2
+ */
+QString Machine::getDiskPath() const {
+    return diskPath;
+}
+
+/**
+ * @brief Set the disk path of the machine
+ *
+ * Set the disk path of the machine
+ * Ex: /home/xexio/Vms/Debian/debian.qcow2
+ */
+void Machine::setDiskPath(const QString &value) {
+    diskPath = value;
+}
+
+/**
+ * @brief Get the disk name of the machine
+ * Get the disk name of the machine
+ * Ex: debian
+ */
+QString Machine::getDiskName() const {
+    return diskName;
+}
+
+/**
+ * @brief Set the disk name of the machine
+ * Set the disk name of the machine
+ * Ex: debian
+ */
+void Machine::setDiskName(const QString &value) {
+    diskName = value;
 }
 
 /**
@@ -686,4 +704,177 @@ QProcessEnvironment Machine::buildEnvironment() {
     env.insert("QEMU_AUDIO_DRV", "alsa");
 
     return env;
+}
+
+Media::Media() {
+    qDebug() << "Media object created";
+}
+
+Media::~Media() {
+    qDebug() << "Media object destroyed";
+}
+
+/**
+ * @brief Get the media name
+ * @return media name
+ *
+ * Get the media names
+ */
+QString Media::mediaName() const {
+    return m_mediaName;
+}
+
+/**
+ * @brief Set the media name
+ * @param mediaName, new name for the media
+ *
+ * Set the media name
+ */
+void Media::setMediaName(const QString &mediaName) {
+    m_mediaName = mediaName;
+}
+
+/**
+ * @brief Get the media path
+ * @return media path
+ *
+ * Get the media path
+ */
+QString Media::mediaPath() const {
+    return m_mediaPath;
+}
+
+/**
+ * @brief Set the new media path
+ * @param mediaPath, new media path
+ *
+ * Set the new media path
+ */
+void Media::setMediaPath(const QString &mediaPath) {
+    m_mediaPath = mediaPath;
+}
+
+/**
+ * @brief Get the media size
+ * @return media size
+ *
+ * Get the media size
+ */
+qlonglong Media::mediaSize() const {
+    return m_mediaSize;
+}
+
+/**
+ * @brief Set the media size
+ * @param mediaSize, media size
+ *
+ * Set the media size
+ */
+void Media::setMediaSize(const qlonglong &mediaSize) {
+    m_mediaSize = mediaSize;
+}
+
+/**
+ * @brief Get the media type
+ * @return media type
+ *
+ * Get the media type
+ */
+QString Media::mediaType() const {
+    return m_mediaType;
+}
+
+/**
+ * @brief Set the media type
+ * @param mediaType, new media type
+ *
+ * Set the media type
+ * Ex: ide, scsi...
+ */
+void Media::setMediaType(const QString &mediaType) {
+    m_mediaType = mediaType;
+}
+
+/**
+ * @brief Get the media format
+ * @return media format
+ *
+ * Get the media format
+ * Ex: qcow, qcow2, raw...
+ */
+QString Media::mediaFormat() const {
+    return m_mediaFormat;
+}
+
+/**
+ * @brief Set the media format
+ * @param mediaFormat, new media format
+ *
+ * Set the media format
+ */
+void Media::setMediaFormat(const QString &mediaFormat) {
+    m_mediaFormat = mediaFormat;
+}
+
+/**
+ * @brief Get the media interface
+ * @return media interface
+ *
+ * Get the media interface
+ * Ex: ide, scsi...
+ */
+QString Media::mediaInterface() const {
+    return m_mediaInterface;
+}
+
+/**
+ * @brief Set the new media interface
+ * @param mediaInterface, media interface
+ *
+ * Set the new media interface
+ */
+void Media::setMediaInterface(const QString &mediaInterface) {
+    m_mediaInterface = mediaInterface;
+}
+
+/**
+ * @brief Get the media cache
+ * @return the media cache
+ *
+ * Get the media cache
+ * Ex: none, writeback...
+ */
+QString Media::mediaCache() const {
+    return m_mediaCache;
+}
+
+/**
+ * @brief Set the media cache
+ * @param mediaCache, new media cache
+ *
+ * Set the media cache
+ */
+void Media::setMediaCache(const QString &mediaCache) {
+    m_mediaCache = mediaCache;
+}
+
+/**
+ * @brief Get the media IO
+ * @return media IO
+ *
+ * Get the media IO
+ * Ex: threads, native...
+ */
+QString Media::mediaIO() const {
+    return m_mediaIO;
+}
+
+/**
+ * @brief Set the media IO
+ * @param mediaIO, new media IO
+ *
+ * Set the media IO
+ */
+void Media::setMediaIO(const QString &mediaIO) {
+    m_mediaIO = mediaIO;
 }

@@ -56,6 +56,7 @@ class MachineConclusionPage: public QWizardPage {
     private:
         void initializePage();
         bool validatePage();
+        void insertVMList();
         void createMachineJSON(Machine *machine) const;
         void fillMachineJSON(QJsonObject &machineJSONObject) const;
         void insertOSInFile(Machine *newMachine);
