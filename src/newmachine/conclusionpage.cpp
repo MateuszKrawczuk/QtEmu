@@ -54,14 +54,11 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine, QListWidget *osLi
     m_audioLabel -> setWordWrap(true);
     m_RAMLabel         = new QLabel();
     m_acceleratorLabel = new QLabel();
+    m_acceleratorLabel -> setWordWrap(true);
     m_diskLabel        = new QLabel();
     m_diskLabel -> setWordWrap(true);
 
     m_conclusionLayout = new QGridLayout();
-
-    m_conclusionLayout -> setColumnStretch(1, 10);
-    m_conclusionLayout -> setColumnStretch(2, 10);
-    m_conclusionLayout -> setColumnStretch(3, 10);
 
     m_conclusionLayout -> addWidget(m_conclusionLabel,      0, 0, 1, 4);
     m_conclusionLayout -> addWidget(m_machineDescLabel,     1, 0, 1, 1);
