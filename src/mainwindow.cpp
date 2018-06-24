@@ -52,7 +52,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_machineRAMLabel      = new QLabel();
     m_machineGraphicsLabel = new QLabel();
     m_machineAudioLabel    = new QLabel();
+    m_machineAudioLabel -> setWordWrap(true);
     m_machineAccelLabel    = new QLabel();
+    m_machineAccelLabel -> setWordWrap(true);
     m_machineDiskLabel     = new QLabel();
     m_machineNetworkLabel  = new QLabel();
 
@@ -68,8 +70,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_machineDetailsLayout -> addRow(tr("Graphics") + ":", m_machineGraphicsLabel);
     m_machineDetailsLayout -> addRow(tr("Audio") + ":", m_machineAudioLabel);
     m_machineDetailsLayout -> addRow(tr("Accelerator") + ":", m_machineAccelLabel);
-    m_machineDetailsLayout -> addRow(tr("Disk") + ":", m_machineDiskLabel);
     m_machineDetailsLayout -> addRow(tr("Network") + ":", m_machineNetworkLabel);
+    m_machineDetailsLayout -> addRow(tr("Media") + ":", m_machineDiskLabel);
 
     m_machineDetailsGroup = new QGroupBox(tr("Machine details"));
     m_machineDetailsGroup -> setAlignment(Qt::AlignHCenter);

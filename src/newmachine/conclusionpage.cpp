@@ -33,7 +33,6 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine, QListWidget *osLi
     this -> m_osList = osListWidget;
 
     m_conclusionLabel = new QLabel(tr("Summary of the new machine"));
-
     m_machineDescLabel = new QLabel(tr("Name") + ":");
     m_OSTypeDescLabel = new QLabel(tr("Operating system") + ":");
     m_OSVersionDescLabel = new QLabel(tr("Operating system version") + ":");

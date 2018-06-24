@@ -36,6 +36,7 @@ MachineNamePage::MachineNamePage(Machine *machine,
 
     m_machineNameLabel = new QLabel(tr("Name") + ":");
     m_machineNameLineEdit = new QLineEdit();
+    m_machineNameLineEdit -> setMaxLength(250);
 
     m_OSTypeLabel = new QLabel(tr("Type") + ":");
     m_OSType = new QComboBox();
