@@ -92,7 +92,7 @@ KVMTab::~KVMTab() {
 
 void KVMTab::addKVMAccelerator(bool kvmAccelerator) {
     if(kvmAccelerator) {
-        this -> m_newMachine -> addAccelerator("kvm", "kvm");
+        this -> m_newMachine -> addAccelerator("kvm", "Kernel-based Virtual Machine (KVM)");
     } else {
         this -> m_newMachine -> removeAccelerator("kvm");
     }
@@ -132,7 +132,7 @@ XENTab::~XENTab() {
 
 void XENTab::addXENAccelerator(bool xenAccelerator) {
     if(xenAccelerator) {
-        this -> m_newMachine -> addAccelerator("xen", "xen");
+        this -> m_newMachine -> addAccelerator("xen", "Xen Hypervisor");
     } else {
         this -> m_newMachine -> removeAccelerator("xen");
     }
@@ -173,7 +173,7 @@ TCGTab::~TCGTab() {
 
 void TCGTab::addTCGAccelerator(bool tcgAccelerator) {
     if(tcgAccelerator) {
-        this -> m_newMachine -> addAccelerator("tcg", "tcg");
+        this -> m_newMachine -> addAccelerator("tcg", "Tiny Code Generator (TCG)");
     } else {
         this -> m_newMachine -> removeAccelerator("tcg");
     }
@@ -215,7 +215,7 @@ HAXMTab::~HAXMTab() {
 
 void HAXMTab::addHAXAccelerator(bool haxAccelerator) {
     if(haxAccelerator) {
-        this -> m_newMachine -> addAccelerator("hax", "hax");
+        this -> m_newMachine -> addAccelerator("hax", "Hardware Accelerated Execution Manager (HAXM)");
     } else {
         this -> m_newMachine -> removeAccelerator("hax");
     }

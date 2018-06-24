@@ -31,6 +31,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QMutableHashIterator>
+#include <QSet>
 #include <QDebug>
 
 // Local
@@ -49,6 +51,8 @@ class MachineUtils : public QObject {
         static QJsonObject getMachineJsonObject(const QUuid machineUuid);
         static QString getMachinePath(const QUuid machineUuid);
         static QString getMachineConfigPath(const QUuid machineUuid);
+        static QHash<QString, QString> getSoundCards(QJsonArray soundCardsArray);
+        static QHash<QString, QString> getAccelerators(QJsonArray acceleratorsArray);
 
     public slots:
 

@@ -368,6 +368,9 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     QJsonObject gpuObject = machineJSON["gpu"].toObject();
     QJsonObject cpuObject = machineJSON["cpu"].toObject();
 
+    QHash<QString, QString> soundsCardHash = MachineUtils::getSoundCards(machineJSON["audio"].toArray());
+    QHash<QString, QString> acceleratorsHash = MachineUtils::getAccelerators(machineJSON["accelerator"].toArray());
+
     Machine *machine = new Machine(this);
 
     machine -> setState(Machine::Stopped);
@@ -386,6 +389,8 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     machine -> setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
     machine -> setSocketCount(cpuObject["socketCount"].toInt());
     machine -> setThreadsCore(cpuObject["threadsCore"].toInt());
+    machine -> setAudio(soundsCardHash);
+    machine -> setAccelerator(acceleratorsHash);
 
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);
@@ -570,8 +575,8 @@ void MainWindow::fillMachineDetailsSection(Machine *machine){
     this -> m_machineCPULabel      -> setText(machine -> getCPUType());
     this -> m_machineRAMLabel      -> setText(QString::number(machine -> getRAM()) + " MiB");
     this -> m_machineGraphicsLabel -> setText(machine -> getGPUType());
-    this -> m_machineAudioLabel    -> setText(machine -> getAcceleratorLabel(false));
-    this -> m_machineAccelLabel    -> setText(machine -> getAudioLabel(false));
+    this -> m_machineAudioLabel    -> setText(machine -> getAudioLabel(false));
+    this -> m_machineAccelLabel    -> setText(machine -> getAcceleratorLabel(false));
     this -> m_machineNetworkLabel  -> setText(machine -> getUseNetwork() == true ? tr("Yes") : tr("no"));
 
 }

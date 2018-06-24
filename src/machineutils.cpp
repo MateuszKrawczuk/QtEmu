@@ -70,7 +70,6 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
             accelerators.append(",");
         }
         accelerators.append(accelerator[index].toString());
-        ++index;
     }
 
     qemuCommand << "-accel";
@@ -85,7 +84,6 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
             accelerators.append(",");
         }
         audioCards.append(audio[index].toString());
-        ++index;
     }
 
     qemuCommand << "-soundhw";
@@ -292,4 +290,60 @@ QString MachineUtils::getMachineConfigPath(const QUuid machineUuid) {
     }
 
     return machinePath;
+}
+
+QHash<QString, QString> MachineUtils::getSoundCards(QJsonArray soundCardsArray) {
+
+    QSet<QString> soundCardsSet;
+
+    for(int i = 0; i < soundCardsArray.size(); ++i) {
+        soundCardsSet.insert(soundCardsArray[i].toString());
+    }
+
+    QHash<QString, QString> soundCardsHash;
+    soundCardsHash.insert("sb16", "Creative Sound Blaster 16");
+    soundCardsHash.insert("es1370", "ENSONIQ AudioPCI ES1370");
+    soundCardsHash.insert("ac97", "Intel AC97(82801AA)");
+    soundCardsHash.insert("adlib", "Yamaha YM3812");
+    soundCardsHash.insert("gus", "Gravis Ultrasound GF1");
+    soundCardsHash.insert("cs4231a", "CS4231A");
+    soundCardsHash.insert("hda", "Intel HD Audio");
+    soundCardsHash.insert("pcspk", "PC Speaker");
+
+    QMutableHashIterator<QString, QString> i(soundCardsHash);
+    while(i.hasNext()) {
+        i.next();
+        if ( ! soundCardsSet.contains(i.key())) {
+            i.remove();
+        }
+    }
+
+    return soundCardsHash;
+}
+
+QHash<QString, QString> MachineUtils::getAccelerators(QJsonArray acceleratorsArray) {
+
+    QSet<QString> acceleratorsSet;
+
+    for(int i = 0; i < acceleratorsArray.size(); ++i) {
+        acceleratorsSet.insert(acceleratorsArray[i].toString());
+    }
+
+    QHash<QString, QString> acceleratorsHash;
+    acceleratorsHash.insert("kvm", "Kernel-based Virtual Machine (KVM)");
+    acceleratorsHash.insert("xen", "Xen Hypervisor");
+    acceleratorsHash.insert("tcg", "Tiny Code Generator (TCG)");
+    #ifdef Q_OS_WIN
+    acceleratorsHash.insert("hax", "Hardware Accelerated Execution Manager (HAXM)");
+    #endif
+
+    QMutableHashIterator<QString, QString> i(acceleratorsHash);
+    while(i.hasNext()) {
+        i.next();
+        if ( ! acceleratorsSet.contains(i.key())) {
+            i.remove();
+        }
+    }
+
+    return acceleratorsHash;
 }
