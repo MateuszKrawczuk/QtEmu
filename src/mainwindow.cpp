@@ -564,10 +564,16 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem) {
  * with the machine selected in the m_osListWidget
  */
 void MainWindow::fillMachineDetailsSection(Machine *machine){
-    this -> m_machineNameLabel -> setText(machine -> getName());
-    this -> m_machineOsLabel   -> setText(machine -> getOSType() + " - " + machine -> getOSVersion());
 
-    this -> m_machineRAMLabel  -> setText(QString::number(machine -> getRAM()) + " MiB");
+    this -> m_machineNameLabel     -> setText(machine -> getName());
+    this -> m_machineOsLabel       -> setText(machine -> getOSType() + " - " + machine -> getOSVersion());
+    this -> m_machineCPULabel      -> setText(machine -> getCPUType());
+    this -> m_machineRAMLabel      -> setText(QString::number(machine -> getRAM()) + " MiB");
+    this -> m_machineGraphicsLabel -> setText(machine -> getGPUType());
+    this -> m_machineAudioLabel    -> setText(machine -> getAcceleratorLabel());
+    this -> m_machineAccelLabel    -> setText(machine -> getAudioLabel());
+    this -> m_machineNetworkLabel  -> setText(machine -> getUseNetwork() == true ? tr("Yes") : tr("no"));
+
 }
 
 /**

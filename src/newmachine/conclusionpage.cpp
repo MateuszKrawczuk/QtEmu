@@ -134,11 +134,11 @@ bool MachineConclusionPage::validatePage() {
 
         settings.endGroup();
 
-        strMachinePath.append("/")
+        strMachinePath.append(QDir::toNativeSeparators("/"))
                       .append(this -> m_newMachine -> getName())
-                      .append("/")
+                      .append(QDir::toNativeSeparators("/"))
                       .append(this -> m_newMachine -> getDiskName().toLower().replace(" ", "_"))
-                      .append(".")
+                      .append(QDir::toNativeSeparators("."))
                       .append(this -> m_newMachine -> getDiskFormat());
     }
 
@@ -190,9 +190,9 @@ void MachineConclusionPage::createMachineJSON(Machine *machine) const {
 
     settings.endGroup();
 
-    QString machineFilePath = strMachinePath.append("/")
+    QString machineFilePath = strMachinePath.append(QDir::toNativeSeparators("/"))
                                             .append(machine -> getName())
-                                            .append("/")
+                                            .append(QDir::toNativeSeparators("/"))
                                             .append(machine -> getName().toLower().replace(" ", "_"))
                                             .append(".json");
 
