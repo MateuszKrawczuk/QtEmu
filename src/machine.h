@@ -173,9 +173,9 @@ class Machine: public QObject {
         void addAccelerator(const QString key, const QString value);
         void removeAccelerator(const QString accelerator);
 
-        QString getAudioLabel();
+        QString getAudioLabel(const bool showKey);
 
-        QString getAcceleratorLabel();
+        QString getAcceleratorLabel(const bool showKey);
 
         void runMachine(const QUuid machineUuid);
         void stopMachine();

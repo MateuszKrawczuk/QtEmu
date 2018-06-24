@@ -575,12 +575,13 @@ void Machine::removeAccelerator(const QString accelerator) {
 
 /**
  * @brief Get all the audio cards separated by commas
+ * @param showKey, return the key or the value
  * @return Audio cards separated by commas
  *
  * Get all the audio cards separated by commas
  * Ex: ac97, es1370, hda
  */
-QString Machine::getAudioLabel() {
+QString Machine::getAudioLabel(const bool showKey) {
     QHash<QString, QString>::const_iterator i = audio.constBegin();
     QString audioLabel;
     bool first = true;
@@ -592,7 +593,11 @@ QString Machine::getAudioLabel() {
             audioLabel.append(", ");
         }
 
-        audioLabel.append(i.key());
+        if (showKey) {
+            audioLabel.append(i.key());
+        } else {
+            audioLabel.append(i.value());
+        }
         ++i;
     }
 
@@ -602,12 +607,13 @@ QString Machine::getAudioLabel() {
 
 /**
  * @brief Get all the accelerators separated by commas
+ * @param showKey, return the key or the value
  * @return Accelerators separated by commas
  *
  * Get all the accelerators separated by commas
  * Ex: kvm,tcg
  */
-QString Machine::getAcceleratorLabel() {
+QString Machine::getAcceleratorLabel(const bool showKey) {
     QHash<QString, QString>::const_iterator i = accelerator.constBegin();
     QString acceleratorLabel;
     bool first = true;
@@ -619,7 +625,12 @@ QString Machine::getAcceleratorLabel() {
             acceleratorLabel.append(", ");
         }
 
-        acceleratorLabel.append(i.key());
+        if (showKey) {
+            acceleratorLabel.append(i.key());
+        } else {
+            acceleratorLabel.append(i.value());
+        }
+
         ++i;
     }
 

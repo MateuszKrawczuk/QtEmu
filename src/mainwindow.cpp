@@ -570,8 +570,8 @@ void MainWindow::fillMachineDetailsSection(Machine *machine){
     this -> m_machineCPULabel      -> setText(machine -> getCPUType());
     this -> m_machineRAMLabel      -> setText(QString::number(machine -> getRAM()) + " MiB");
     this -> m_machineGraphicsLabel -> setText(machine -> getGPUType());
-    this -> m_machineAudioLabel    -> setText(machine -> getAcceleratorLabel());
-    this -> m_machineAccelLabel    -> setText(machine -> getAudioLabel());
+    this -> m_machineAudioLabel    -> setText(machine -> getAcceleratorLabel(false));
+    this -> m_machineAccelLabel    -> setText(machine -> getAudioLabel(false));
     this -> m_machineNetworkLabel  -> setText(machine -> getUseNetwork() == true ? tr("Yes") : tr("no"));
 
 }

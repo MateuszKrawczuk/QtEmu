@@ -97,8 +97,8 @@ void MachineConclusionPage::initializePage() {
     this -> m_processorLabel   -> setText(this -> m_newMachine -> getCPUType());
     this -> m_graphicsLabel    -> setText(this -> m_newMachine -> getGPUType());
     this -> m_RAMLabel         -> setText(QString::number(this -> m_newMachine -> getRAM()).append(" MiB"));
-    this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel());
-    this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel());
+    this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel(false));
+    this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel(false));
     this -> m_diskLabel        -> setText(this -> m_newMachine -> getDiskName());
 
     if( ! this -> m_newMachine -> getDiskName().isEmpty()){
@@ -248,7 +248,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     machineJSONObject["media"] = media;
 
     QJsonArray accelerator;
-    QStringList acceleratorList = this -> m_newMachine -> getAcceleratorLabel().split(",");
+    QStringList acceleratorList = this -> m_newMachine -> getAcceleratorLabel(true).split(",");
 
     for (const auto& i : acceleratorList) {
         if( ! i.isEmpty() ){
@@ -261,7 +261,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     }
 
     QJsonArray audio;
-    QStringList audioList = this -> m_newMachine -> getAudioLabel().split(",");
+    QStringList audioList = this -> m_newMachine -> getAudioLabel(true).split(",");
 
     for (const auto& i : audioList) {
         if( ! i.isEmpty() ){
