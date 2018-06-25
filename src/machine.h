@@ -110,6 +110,9 @@ class Machine: public QObject {
         QString getUuid() const;
         void setUuid(const QString &value);
 
+        QString getDescription() const;
+        void setDescription(const QString &value);
+
         Machine::States getState() const;
         void setState(const States &value);
 
@@ -203,6 +206,7 @@ class Machine: public QObject {
         QString path;
         QString configPath;
         QString uuid;
+        QString description;
         States state;
 
         // Hardware - CPU

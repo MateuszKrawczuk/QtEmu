@@ -97,6 +97,8 @@ class MachineConfigWindow : public QWidget {
         MachineConfigAudio *m_configAudio;
         MachineConfigAccel *m_configAccel;
 
+        Machine *m_machine;
+
 };
 
 #endif // MACHINECONFIGWINDOW_H

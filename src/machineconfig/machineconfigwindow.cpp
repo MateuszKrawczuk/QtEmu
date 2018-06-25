@@ -27,6 +27,8 @@
 MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                          QWidget *parent) : QWidget(parent) {
 
+    this -> m_machine = machine;
+
     this -> setWindowTitle(tr("Machine Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
                                            QIcon(":/images/qtemu.png")));

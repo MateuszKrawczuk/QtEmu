@@ -708,8 +708,18 @@ void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus) {
     emit(machineStateChangedSignal(Machine::Stopped));
 }
 
-QProcessEnvironment Machine::buildEnvironment() {
+QString Machine::getDescription() const
+{
+    return description;
+}
 
+void Machine::setDescription(const QString &value)
+{
+    description = value;
+}
+
+QProcessEnvironment Machine::buildEnvironment() {
+    
     // TODO: Implement Windows and MacOS
     QProcessEnvironment env = m_machineProcess -> processEnvironment();
     env.insert("QEMU_AUDIO_DRV", "alsa");

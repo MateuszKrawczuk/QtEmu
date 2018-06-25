@@ -72,7 +72,7 @@ class BasicTab: public QWidget {
     public slots:
 
     private slots:
-        void selectOS(int OSSelected);
+        void selectOS(QString OSSelected);
 
     protected:
 

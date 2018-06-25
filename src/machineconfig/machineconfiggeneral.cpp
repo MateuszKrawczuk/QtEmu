@@ -52,6 +52,7 @@ BasicTab::BasicTab(Machine *machine,
                    QWidget *parent) : QWidget(parent) {
 
     m_machineNameLineEdit = new QLineEdit();
+    m_machineNameLineEdit -> setText(machine -> getName());
 
     m_OSType = new QComboBox();
     m_OSType -> setSizePolicy(QSizePolicy::Expanding,
@@ -61,18 +62,21 @@ BasicTab::BasicTab(Machine *machine,
     m_OSType -> addItem("Microsoft Windows");
     m_OSType -> addItem("BSD");
     m_OSType -> addItem(tr("Other"));
+    m_OSType -> setCurrentText(machine -> getOSType());
 
-    connect(m_OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(m_OSType, &QComboBox::currentTextChanged,
            this, &BasicTab::selectOS);
 
     m_OSVersion = new QComboBox();
     m_OSVersion -> setSizePolicy(QSizePolicy::Expanding,
                                  QSizePolicy::MinimumExpanding);
-
-    this -> selectOS(0);
+    this -> selectOS(machine -> getOSType());
+    m_OSVersion -> setCurrentText(machine -> getOSVersion());
 
     m_machineUuidLabel = new QLabel();
+    m_machineUuidLabel -> setText(machine -> getUuid());
     m_machineStatusLabel = new QLabel();
+    //m_machineStatusLabel -> setText(machine -> getState());
 
     m_basicTabFormLayout = new QFormLayout();
     m_basicTabFormLayout -> setAlignment(Qt::AlignTop);
@@ -97,11 +101,11 @@ BasicTab::~BasicTab() {
     qDebug() << "BasicTab destroyed";
 }
 
-void BasicTab::selectOS(int OSSelected){
+void BasicTab::selectOS(QString OSSelected){
 
     this -> m_OSVersion -> clear();
 
-    if (OSSelected == 0) {
+    if (OSSelected == "GNU/Linux") {
         this -> m_OSVersion -> addItem(tr("Debian"));
         this -> m_OSVersion -> addItem(tr("Ubuntu"));
         this -> m_OSVersion -> addItem(tr("Fedora"));
@@ -110,7 +114,7 @@ void BasicTab::selectOS(int OSSelected){
         this -> m_OSVersion -> addItem(tr("Gentoo"));
         this -> m_OSVersion -> addItem(tr("Arch Linux"));
         this -> m_OSVersion -> addItem(tr("Linux"));
-    } else if (OSSelected == 1) {
+    } else if (OSSelected == "Microsoft Windows") {
         this -> m_OSVersion -> addItem(tr("Microsoft 95"));
         this -> m_OSVersion -> addItem(tr("Microsoft 98"));
         this -> m_OSVersion -> addItem(tr("Microsoft 2000"));
@@ -119,11 +123,11 @@ void BasicTab::selectOS(int OSSelected){
         this -> m_OSVersion -> addItem(tr("Microsoft 7"));
         this -> m_OSVersion -> addItem(tr("Microsoft 8"));
         this -> m_OSVersion -> addItem(tr("Microsoft 10"));
-    } else if (OSSelected == 2) {
+    } else if (OSSelected == "BSD") {
         this -> m_OSVersion -> addItem(tr("FreeBSD"));
         this -> m_OSVersion -> addItem(tr("OpenBSD"));
         this -> m_OSVersion -> addItem(tr("NetBSD"));
-    } else if (OSSelected == 3) {
+    } else {
         this -> m_OSVersion -> addItem(tr("Debian GNU Hurd"));
         this -> m_OSVersion -> addItem(tr("Arch Hurd"));
         this -> m_OSVersion -> addItem(tr("Redox"));
@@ -136,6 +140,7 @@ DescriptionTab::DescriptionTab(Machine *machine,
 
     m_machineDescLabel = new QLabel(tr("Description") + ":");
     m_machineDescTextEdit = new QPlainTextEdit();
+    m_machineDescTextEdit -> setPlainText(machine -> getDescription());
 
     m_descriptionLayout = new QVBoxLayout();
     m_descriptionLayout -> setAlignment(Qt::AlignVCenter);
