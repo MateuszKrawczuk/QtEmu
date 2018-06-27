@@ -64,6 +64,7 @@ class BasicTab: public QWidget {
 
     public:
         explicit BasicTab(Machine *machine,
+                          bool enableFields,
                           QWidget *parent = 0);
         ~BasicTab();
 
@@ -73,6 +74,7 @@ class BasicTab: public QWidget {
 
     private slots:
         void selectOS(QString OSSelected);
+        QString getStatusLabel(Machine::States state);
 
     protected:
 
@@ -94,6 +96,7 @@ class DescriptionTab: public QWidget {
 
     public:
         explicit DescriptionTab(Machine *machine,
+                                bool enableFields,
                                 QWidget *parent = 0);
         ~DescriptionTab();
     signals:

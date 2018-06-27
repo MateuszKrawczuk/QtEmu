@@ -24,14 +24,29 @@
 // Local
 #include "machineconfiggeneral.h"
 
+/**
+ * @brief Configuration of the machine. General page
+ * @param machine, machine to be configured
+ * @param parent, parent widget
+ *
+ * Configuration of the machine. General page
+ * with basic data, name, os version, os type,
+ * state of the machine...
+ */
 MachineConfigGeneral::MachineConfigGeneral(Machine *machine,
                                            QWidget *parent) : QWidget(parent) {
+
+    bool enableFields = true;
+
+    if (machine -> getState() != Machine::Stopped) {
+        enableFields = false;
+    }
 
     m_generalTabWidget = new QTabWidget();
     m_generalTabWidget -> setSizePolicy(QSizePolicy::MinimumExpanding,
                                             QSizePolicy::MinimumExpanding);
-    m_generalTabWidget -> addTab(new BasicTab(machine, this), tr("Basic Details"));
-    m_generalTabWidget -> addTab(new DescriptionTab(machine, this), tr("Description"));
+    m_generalTabWidget -> addTab(new BasicTab(machine, enableFields, this), tr("Basic Details"));
+    m_generalTabWidget -> addTab(new DescriptionTab(machine, enableFields, this), tr("Description"));
 
     m_generalPageLayout = new QVBoxLayout();
     m_generalPageLayout -> setAlignment(Qt::AlignCenter);
@@ -49,14 +64,17 @@ MachineConfigGeneral::~MachineConfigGeneral() {
 }
 
 BasicTab::BasicTab(Machine *machine,
+                   bool enableFields,
                    QWidget *parent) : QWidget(parent) {
 
     m_machineNameLineEdit = new QLineEdit();
     m_machineNameLineEdit -> setText(machine -> getName());
+    m_machineNameLineEdit -> setEnabled(enableFields);
 
     m_OSType = new QComboBox();
     m_OSType -> setSizePolicy(QSizePolicy::Expanding,
                               QSizePolicy::MinimumExpanding);
+    m_OSType -> setEnabled(enableFields);
 
     m_OSType -> addItem("GNU/Linux");
     m_OSType -> addItem("Microsoft Windows");
@@ -70,13 +88,14 @@ BasicTab::BasicTab(Machine *machine,
     m_OSVersion = new QComboBox();
     m_OSVersion -> setSizePolicy(QSizePolicy::Expanding,
                                  QSizePolicy::MinimumExpanding);
+    m_OSVersion -> setEnabled(enableFields);
     this -> selectOS(machine -> getOSType());
     m_OSVersion -> setCurrentText(machine -> getOSVersion());
 
     m_machineUuidLabel = new QLabel();
     m_machineUuidLabel -> setText(machine -> getUuid());
     m_machineStatusLabel = new QLabel();
-    //m_machineStatusLabel -> setText(machine -> getState());
+    m_machineStatusLabel -> setText(BasicTab::getStatusLabel(machine -> getState()));
 
     m_basicTabFormLayout = new QFormLayout();
     m_basicTabFormLayout -> setAlignment(Qt::AlignTop);
@@ -135,11 +154,38 @@ void BasicTab::selectOS(QString OSSelected){
     }
 }
 
+QString BasicTab::getStatusLabel(Machine::States state) {
+
+    QString statusLabel;
+
+    switch (state) {
+        case Machine::Started:
+            statusLabel = tr("Started");
+            break;
+        case Machine::Stopped:
+            statusLabel = tr("Stopped");
+            break;
+        case Machine::Saved:
+            statusLabel = tr("Saved");
+            break;
+        case Machine::Paused:
+            statusLabel = tr("Paused");
+            break;
+        default:
+            statusLabel = tr("Stopped");
+            break;
+    }
+
+    return statusLabel;
+}
+
 DescriptionTab::DescriptionTab(Machine *machine,
+                               bool enableFields,
                                QWidget *parent) : QWidget(parent) {
 
     m_machineDescLabel = new QLabel(tr("Description") + ":");
     m_machineDescTextEdit = new QPlainTextEdit();
+    m_machineDescTextEdit -> setEnabled(enableFields);
     m_machineDescTextEdit -> setPlainText(machine -> getDescription());
 
     m_descriptionLayout = new QVBoxLayout();
