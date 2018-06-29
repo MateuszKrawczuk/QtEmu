@@ -62,6 +62,9 @@ class MachineConfigAccel : public QWidget {
         QTreeWidgetItem *m_xenTreeItem;
         QTreeWidgetItem *m_haxmTreeItem;
 
+        // Methods
+        void moveUpButton();
+        void moveDownButton();
 };
 
 #endif // MACHINECONFIGACCEL_H

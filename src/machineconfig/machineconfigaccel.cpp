@@ -27,35 +27,71 @@
 MachineConfigAccel::MachineConfigAccel(Machine *machine,
                                        QWidget *parent) : QWidget(parent) {
 
+    bool enableFields = true;
+
+    if (machine -> getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
     m_moveUpAccelToolButton = new QToolButton();
     m_moveUpAccelToolButton -> setArrowType(Qt::UpArrow);
+    m_moveUpAccelToolButton -> setEnabled(enableFields);
+    connect(m_moveUpAccelToolButton, &QAbstractButton::clicked,
+            this, &MachineConfigAccel::moveUpButton);
 
     m_moveDownAccelToolButton = new QToolButton();
     m_moveDownAccelToolButton -> setArrowType(Qt::DownArrow);
+    m_moveDownAccelToolButton -> setEnabled(enableFields);
+    connect(m_moveDownAccelToolButton, &QAbstractButton::clicked,
+            this, &MachineConfigAccel::moveDownButton);
+
+    QSet<QString> accelSet;
+    QHash<QString, QString> accelHash = machine -> getAccelerator();
+    QHashIterator<QString, QString> i(accelHash);
+    while (i.hasNext()) {
+        i.next();
+        accelSet.insert(i.key());
+    }
 
     m_tcgTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
     m_tcgTreeItem -> setText(0, "TCG - Tiny Code Generator");
     m_tcgTreeItem -> setToolTip(0, "TCG - Tiny Code Generator");
     m_tcgTreeItem -> setData(0, Qt::UserRole, "tcg");
-    m_tcgTreeItem -> setCheckState(0, Qt::Unchecked);
+    if (accelSet.contains("tcg")) {
+        m_tcgTreeItem -> setCheckState(0, Qt::Checked);
+    } else {
+        m_tcgTreeItem -> setCheckState(0, Qt::Unchecked);
+    }
 
     m_kvmTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
     m_kvmTreeItem -> setText(0, "KVM - Kernel-based Virtual Machine");
     m_kvmTreeItem -> setToolTip(0, "KVM - Kernel-based Virtual Machine");
     m_kvmTreeItem -> setData(0, Qt::UserRole, "kvm");
-    m_kvmTreeItem -> setCheckState(0, Qt::Unchecked);
+    if (accelSet.contains("kvm")) {
+        m_kvmTreeItem -> setCheckState(0, Qt::Checked);
+    } else {
+        m_kvmTreeItem -> setCheckState(0, Qt::Unchecked);
+    }
 
     m_xenTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
     m_xenTreeItem -> setText(0, "XEN");
     m_xenTreeItem -> setData(0, Qt::UserRole, "xen");
-    m_xenTreeItem -> setCheckState(0, Qt::Unchecked);
+    if (accelSet.contains("xen")) {
+        m_xenTreeItem -> setCheckState(0, Qt::Checked);
+    } else {
+        m_xenTreeItem -> setCheckState(0, Qt::Unchecked);
+    }
 
     #ifdef Q_OS_WIN
     m_haxmTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
     m_haxmTreeItem -> setText(0, "HAXM - Hardware Accelerated Execution Manager");
     m_haxmTreeItem -> setToolTip(0, "HAXM - Hardware Accelerated Execution Manager");
-    m_haxmTreeItem -> setData(0, Qt::UserRole, "hax");
-    m_haxmTreeItem -> setCheckState(0, Qt::Unchecked);
+    m_haxmTreeItem -> setData(0, Qt::UserRole, "hax");    
+    if (accelSet.contains("hax")) {
+        m_haxmTreeItem -> setCheckState(0, Qt::Checked);
+    } else {
+        m_haxmTreeItem -> setCheckState(0, Qt::Unchecked);
+    }
     #endif
 
     m_acceleratorTree = new QTreeWidget();
@@ -65,12 +101,14 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     m_acceleratorTree -> setHeaderHidden(true);
     m_acceleratorTree -> setRootIsDecorated(false);
     m_acceleratorTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_acceleratorTree -> setEnabled(enableFields);
     m_acceleratorTree -> insertTopLevelItem(0, m_tcgTreeItem);
     m_acceleratorTree -> insertTopLevelItem(1, m_kvmTreeItem);
     m_acceleratorTree -> insertTopLevelItem(2, m_xenTreeItem);
     #ifdef Q_OS_WIN
     m_acceleratorTree -> insertTopLevelItem(3, m_haxmTreeItem);
     #endif
+    m_acceleratorTree -> setCurrentItem(m_tcgTreeItem);
 
     m_accelTreeLayout = new QHBoxLayout();
     m_accelTreeLayout -> setAlignment(Qt::AlignTop);
@@ -91,4 +129,30 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
 
 MachineConfigAccel::~MachineConfigAccel() {
     qDebug() << "MachineConfigAccel destroyed";
+}
+
+void MachineConfigAccel::moveUpButton() {
+
+    int index = this -> m_acceleratorTree->currentIndex().row();
+    if( index < 1 || index > this -> m_acceleratorTree -> topLevelItemCount() ) {
+        return;
+    }
+
+    QTreeWidgetItem *item = this -> m_acceleratorTree -> takeTopLevelItem( index );
+    this -> m_acceleratorTree -> insertTopLevelItem( index - 1, item );
+
+    this -> m_acceleratorTree -> setCurrentItem( item );
+}
+
+void MachineConfigAccel::moveDownButton() {
+
+    int index = this -> m_acceleratorTree->currentIndex().row();
+    if( index < 0 || index > this -> m_acceleratorTree -> topLevelItemCount() - 2 ) {
+        return;
+    }
+
+    QTreeWidgetItem *item = this -> m_acceleratorTree ->takeTopLevelItem( index );
+    this -> m_acceleratorTree -> insertTopLevelItem( index + 1, item );
+
+    this -> m_acceleratorTree -> setCurrentItem( item );
 }
