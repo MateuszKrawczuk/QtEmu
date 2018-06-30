@@ -27,52 +27,23 @@
 MachineConfigAudio::MachineConfigAudio(Machine *machine,
                                        QWidget *parent) : QWidget(parent) {
 
+    bool enableFields = true;
+
+    if (machine -> getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
     m_moveUpAudioToolButton = new QToolButton();
     m_moveUpAudioToolButton -> setArrowType(Qt::UpArrow);
+    m_moveUpAudioToolButton -> setEnabled(enableFields);
+    connect(m_moveUpAudioToolButton, &QAbstractButton::clicked,
+            this, &MachineConfigAudio::moveUpButton);
 
     m_moveDownAudioToolButton = new QToolButton();
     m_moveDownAudioToolButton -> setArrowType(Qt::DownArrow);
-
-    // TODO: Fix that...thing... do it into a for
-    m_creativeTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_creativeTreeItem -> setText(0, tr("Creative Sound Blaster 16"));
-    m_creativeTreeItem -> setData(0, Qt::UserRole, "sb16");
-    m_creativeTreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_intelAC97TreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_intelAC97TreeItem -> setText(0, tr("Intel AC97(82801AA)"));
-    m_intelAC97TreeItem -> setData(0, Qt::UserRole, "ac97");
-    m_intelAC97TreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_gravisTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_gravisTreeItem -> setText(0, tr("Gravis Ultrasound GF1"));
-    m_gravisTreeItem -> setData(0, Qt::UserRole, "gus");
-    m_gravisTreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_intelHDTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_intelHDTreeItem -> setText(0, tr("Intel HD Audio"));
-    m_intelHDTreeItem -> setData(0, Qt::UserRole, "hda");
-    m_intelHDTreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_ensoniqTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_ensoniqTreeItem -> setText(0, tr("ENSONIQ AudioPCI ES1370"));
-    m_ensoniqTreeItem -> setData(0, Qt::UserRole, "es1370");
-    m_ensoniqTreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_yamahaTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_yamahaTreeItem -> setText(0, tr("Yamaha YM3812"));
-    m_yamahaTreeItem -> setData(0, Qt::UserRole, "adlib");
-    m_yamahaTreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_CS4231ATreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_CS4231ATreeItem -> setText(0, tr("CS4231A"));
-    m_CS4231ATreeItem -> setData(0, Qt::UserRole, "cs4231a");
-    m_CS4231ATreeItem -> setCheckState(0, Qt::Unchecked);
-
-    m_speakerTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_speakerTreeItem -> setText(0, tr("PC Speaker"));
-    m_speakerTreeItem -> setData(0, Qt::UserRole, "pcspk");
-    m_speakerTreeItem -> setCheckState(0, Qt::Unchecked);
+    m_moveDownAudioToolButton -> setEnabled(enableFields);
+    connect(m_moveDownAudioToolButton, &QAbstractButton::clicked,
+            this, &MachineConfigAudio::moveDownButton);
 
     m_audioTree = new QTreeWidget();
     m_audioTree -> setMaximumHeight(200);
@@ -81,14 +52,31 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
     m_audioTree -> setHeaderHidden(true);
     m_audioTree -> setRootIsDecorated(false);
     m_audioTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    m_audioTree -> insertTopLevelItem(0, m_creativeTreeItem);
-    m_audioTree -> insertTopLevelItem(1, m_intelAC97TreeItem);
-    m_audioTree -> insertTopLevelItem(2, m_gravisTreeItem);
-    m_audioTree -> insertTopLevelItem(3, m_intelHDTreeItem);
-    m_audioTree -> insertTopLevelItem(4, m_ensoniqTreeItem);
-    m_audioTree -> insertTopLevelItem(5, m_yamahaTreeItem);
-    m_audioTree -> insertTopLevelItem(6, m_CS4231ATreeItem);
-    m_audioTree -> insertTopLevelItem(7, m_speakerTreeItem);
+    m_audioTree -> setEnabled(enableFields);
+
+    QSet<QString> soundSet;
+    QHash<QString, QString> soundHash = machine -> getAudio();
+    QHashIterator<QString, QString> i(soundHash);
+    while (i.hasNext()) {
+        i.next();
+        soundSet.insert(i.key());
+    }
+
+    // TODO: Change QHash to QMap and respect user order
+    QHash<QString, QString> audioHash = SystemUtils::getSoundCards();
+    QHashIterator<QString, QString> j(audioHash);
+    while (j.hasNext()) {
+        j.next();
+
+        m_treeItem = new QTreeWidgetItem(this -> m_audioTree, QTreeWidgetItem::Type);
+        m_treeItem -> setText(0, j.value());
+        m_treeItem -> setData(0, Qt::UserRole, j.key());
+        if (soundSet.contains(j.key())) {
+            m_treeItem -> setCheckState(0, Qt::Checked);
+        } else {
+            m_treeItem -> setCheckState(0, Qt::Unchecked);
+        }
+    }
 
     m_audioTreeLayout = new QHBoxLayout();
     m_audioTreeLayout -> setAlignment(Qt::AlignTop);
@@ -100,6 +88,7 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
     m_hostSoundSystemLabel = new QLabel(tr("Host sound system") + ":");
 
     m_hostSoundSystemComboBox = new QComboBox();
+    m_hostSoundSystemComboBox -> setEnabled(enableFields);
     m_hostSoundSystemComboBox -> addItem("alsa");
     m_hostSoundSystemComboBox -> addItem("sdl");
     m_hostSoundSystemComboBox -> addItem("pa");
@@ -126,4 +115,30 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
 
 MachineConfigAudio::~MachineConfigAudio() {
     qDebug() << "MachineConfigAudio destroyed";
+}
+
+void MachineConfigAudio::moveUpButton() {
+
+    int index = this -> m_audioTree -> currentIndex().row();
+    if( index < 1 || index > this -> m_audioTree -> topLevelItemCount() ) {
+        return;
+    }
+
+    QTreeWidgetItem *item = this -> m_audioTree -> takeTopLevelItem( index );
+    this -> m_audioTree -> insertTopLevelItem( index - 1, item );
+
+    this -> m_audioTree -> setCurrentItem( item );
+}
+
+void MachineConfigAudio::moveDownButton() {
+
+    int index = this -> m_audioTree -> currentIndex().row();
+    if( index < 0 || index > this -> m_audioTree -> topLevelItemCount() - 2 ) {
+        return;
+    }
+
+    QTreeWidgetItem *item = this -> m_audioTree -> takeTopLevelItem( index );
+    this -> m_audioTree -> insertTopLevelItem( index + 1, item );
+
+    this -> m_audioTree -> setCurrentItem( item );
 }

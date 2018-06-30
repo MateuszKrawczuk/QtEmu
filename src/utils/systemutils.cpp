@@ -156,6 +156,22 @@ void SystemUtils::setKeyboardLayout(QComboBox *keyboardLayout) {
     keyboardLayout -> addItem("Turkish (tr)",                     QString("tr"));
 }
 
+QHash<QString, QString> SystemUtils::getSoundCards() {
+
+    QHash<QString, QString> soundCardsHash;
+
+    soundCardsHash.insert("sb16", "Creative Sound Blaster 16");
+    soundCardsHash.insert("ac97", "Intel AC97(82801AA)");
+    soundCardsHash.insert("gus", "Gravis Ultrasound GF1");
+    soundCardsHash.insert("hda", "Intel HD Audio");
+    soundCardsHash.insert("es1370", "ENSONIQ AudioPCI ES1370");
+    soundCardsHash.insert("adlib", "Yamaha YM3812");
+    soundCardsHash.insert("cs4231a", "CS4231A");
+    soundCardsHash.insert("pcspk", "PC Speaker");
+
+    return soundCardsHash;
+}
+
 QString SystemUtils::getOsIcon(const QString &osVersion) {
 
     if (osVersion.contains("Microsoft", Qt::CaseInsensitive)) {

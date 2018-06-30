@@ -32,6 +32,7 @@
 
 // Local
 #include "../machine.h"
+#include "../utils/systemutils.h"
 
 class MachineConfigAudio : public QWidget {
     Q_OBJECT
@@ -60,6 +61,8 @@ class MachineConfigAudio : public QWidget {
 
         QTreeWidget *m_audioTree;
 
+        QTreeWidgetItem *m_treeItem;
+
         QTreeWidgetItem *m_creativeTreeItem;
         QTreeWidgetItem *m_intelAC97TreeItem;
         QTreeWidgetItem *m_gravisTreeItem;
@@ -72,5 +75,9 @@ class MachineConfigAudio : public QWidget {
         QLabel *m_hostSoundSystemLabel;
 
         QComboBox *m_hostSoundSystemComboBox;
+
+        // Methods
+        void moveUpButton();
+        void moveDownButton();
 };
 #endif // MACHINECONFIGAUDIO_H

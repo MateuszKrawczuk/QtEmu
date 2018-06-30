@@ -108,7 +108,7 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     #ifdef Q_OS_WIN
     m_acceleratorTree -> insertTopLevelItem(3, m_haxmTreeItem);
     #endif
-    m_acceleratorTree -> setCurrentItem(m_tcgTreeItem);
+    m_acceleratorTree -> setCurrentItem(this -> m_tcgTreeItem);
 
     m_accelTreeLayout = new QHBoxLayout();
     m_accelTreeLayout -> setAlignment(Qt::AlignTop);
@@ -133,7 +133,7 @@ MachineConfigAccel::~MachineConfigAccel() {
 
 void MachineConfigAccel::moveUpButton() {
 
-    int index = this -> m_acceleratorTree->currentIndex().row();
+    int index = this -> m_acceleratorTree -> currentIndex().row();
     if( index < 1 || index > this -> m_acceleratorTree -> topLevelItemCount() ) {
         return;
     }
@@ -146,7 +146,7 @@ void MachineConfigAccel::moveUpButton() {
 
 void MachineConfigAccel::moveDownButton() {
 
-    int index = this -> m_acceleratorTree->currentIndex().row();
+    int index = this -> m_acceleratorTree -> currentIndex().row();
     if( index < 0 || index > this -> m_acceleratorTree -> topLevelItemCount() - 2 ) {
         return;
     }
