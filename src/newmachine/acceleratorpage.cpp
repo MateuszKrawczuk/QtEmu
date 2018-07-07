@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "acceleratorpage.h"
 
@@ -92,7 +90,7 @@ KVMTab::~KVMTab() {
 
 void KVMTab::addKVMAccelerator(bool kvmAccelerator) {
     if(kvmAccelerator) {
-        this -> m_newMachine -> addAccelerator("kvm", "Kernel-based Virtual Machine (KVM)");
+        this -> m_newMachine -> addAccelerator("kvm");
     } else {
         this -> m_newMachine -> removeAccelerator("kvm");
     }
@@ -132,7 +130,7 @@ XENTab::~XENTab() {
 
 void XENTab::addXENAccelerator(bool xenAccelerator) {
     if(xenAccelerator) {
-        this -> m_newMachine -> addAccelerator("xen", "Xen Hypervisor");
+        this -> m_newMachine -> addAccelerator("xen");
     } else {
         this -> m_newMachine -> removeAccelerator("xen");
     }
@@ -173,7 +171,7 @@ TCGTab::~TCGTab() {
 
 void TCGTab::addTCGAccelerator(bool tcgAccelerator) {
     if(tcgAccelerator) {
-        this -> m_newMachine -> addAccelerator("tcg", "Tiny Code Generator (TCG)");
+        this -> m_newMachine -> addAccelerator("tcg");
     } else {
         this -> m_newMachine -> removeAccelerator("tcg");
     }
@@ -215,7 +213,7 @@ HAXMTab::~HAXMTab() {
 
 void HAXMTab::addHAXAccelerator(bool haxAccelerator) {
     if(haxAccelerator) {
-        this -> m_newMachine -> addAccelerator("hax", "Hardware Accelerated Execution Manager (HAXM)");
+        this -> m_newMachine -> addAccelerator("hax");
     } else {
         this -> m_newMachine -> removeAccelerator("hax");
     }

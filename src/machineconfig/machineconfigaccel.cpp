@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "machineconfigaccel.h"
 
@@ -45,54 +43,16 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     connect(m_moveDownAccelToolButton, &QAbstractButton::clicked,
             this, &MachineConfigAccel::moveDownButton);
 
-    QSet<QString> accelSet;
-    QHash<QString, QString> accelHash = machine -> getAccelerator();
+    QStringList accelList = machine -> getAccelerator();
+
+    QHash<QString, QString> accelHash = SystemUtils::getAccelerators();
     QHashIterator<QString, QString> i(accelHash);
     while (i.hasNext()) {
         i.next();
-        accelSet.insert(i.key());
+        if ( ! accelList.contains(i.key())) {
+            accelList.append(i.key());
+        }
     }
-
-    m_tcgTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_tcgTreeItem -> setText(0, "TCG - Tiny Code Generator");
-    m_tcgTreeItem -> setToolTip(0, "TCG - Tiny Code Generator");
-    m_tcgTreeItem -> setData(0, Qt::UserRole, "tcg");
-    if (accelSet.contains("tcg")) {
-        m_tcgTreeItem -> setCheckState(0, Qt::Checked);
-    } else {
-        m_tcgTreeItem -> setCheckState(0, Qt::Unchecked);
-    }
-
-    m_kvmTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_kvmTreeItem -> setText(0, "KVM - Kernel-based Virtual Machine");
-    m_kvmTreeItem -> setToolTip(0, "KVM - Kernel-based Virtual Machine");
-    m_kvmTreeItem -> setData(0, Qt::UserRole, "kvm");
-    if (accelSet.contains("kvm")) {
-        m_kvmTreeItem -> setCheckState(0, Qt::Checked);
-    } else {
-        m_kvmTreeItem -> setCheckState(0, Qt::Unchecked);
-    }
-
-    m_xenTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_xenTreeItem -> setText(0, "XEN");
-    m_xenTreeItem -> setData(0, Qt::UserRole, "xen");
-    if (accelSet.contains("xen")) {
-        m_xenTreeItem -> setCheckState(0, Qt::Checked);
-    } else {
-        m_xenTreeItem -> setCheckState(0, Qt::Unchecked);
-    }
-
-    #ifdef Q_OS_WIN
-    m_haxmTreeItem = new QTreeWidgetItem(QTreeWidgetItem::Type);
-    m_haxmTreeItem -> setText(0, "HAXM - Hardware Accelerated Execution Manager");
-    m_haxmTreeItem -> setToolTip(0, "HAXM - Hardware Accelerated Execution Manager");
-    m_haxmTreeItem -> setData(0, Qt::UserRole, "hax");    
-    if (accelSet.contains("hax")) {
-        m_haxmTreeItem -> setCheckState(0, Qt::Checked);
-    } else {
-        m_haxmTreeItem -> setCheckState(0, Qt::Unchecked);
-    }
-    #endif
 
     m_acceleratorTree = new QTreeWidget();
     m_acceleratorTree -> setMaximumHeight(150);
@@ -102,13 +62,17 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     m_acceleratorTree -> setRootIsDecorated(false);
     m_acceleratorTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     m_acceleratorTree -> setEnabled(enableFields);
-    m_acceleratorTree -> insertTopLevelItem(0, m_tcgTreeItem);
-    m_acceleratorTree -> insertTopLevelItem(1, m_kvmTreeItem);
-    m_acceleratorTree -> insertTopLevelItem(2, m_xenTreeItem);
-    #ifdef Q_OS_WIN
-    m_acceleratorTree -> insertTopLevelItem(3, m_haxmTreeItem);
-    #endif
-    m_acceleratorTree -> setCurrentItem(this -> m_tcgTreeItem);
+
+    for(int i = 0; i < accelList.size(); ++i) {
+        m_treeItem = new QTreeWidgetItem(this -> m_acceleratorTree, QTreeWidgetItem::Type);
+        m_treeItem -> setText(0, accelHash.value(accelList.at(i)));
+        m_treeItem -> setData(0, Qt::UserRole, accelList.at(i));
+        if (machine -> getAccelerator().contains(accelList.at(i))) {
+            m_treeItem -> setCheckState(0, Qt::Checked);
+        } else {
+            m_treeItem -> setCheckState(0, Qt::Unchecked);
+        }
+    }
 
     m_accelTreeLayout = new QHBoxLayout();
     m_accelTreeLayout -> setAlignment(Qt::AlignTop);

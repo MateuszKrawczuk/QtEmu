@@ -30,6 +30,7 @@
 
 // Local
 #include "../machine.h"
+#include "../utils/systemutils.h"
 
 class MachineConfigAccel : public QWidget {
     Q_OBJECT
@@ -57,10 +58,7 @@ class MachineConfigAccel : public QWidget {
 
         QTreeWidget *m_acceleratorTree;
 
-        QTreeWidgetItem *m_tcgTreeItem;
-        QTreeWidgetItem *m_kvmTreeItem;
-        QTreeWidgetItem *m_xenTreeItem;
-        QTreeWidgetItem *m_haxmTreeItem;
+        QTreeWidgetItem *m_treeItem;
 
         // Methods
         void moveUpButton();

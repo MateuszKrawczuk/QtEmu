@@ -59,6 +59,8 @@ class SystemUtils {
         static void setGPUTypes(QComboBox *GPUType);
         static void setKeyboardLayout(QComboBox *keyboardLayout);
         static QHash<QString, QString> getSoundCards();
+        static QHash<QString, QString> getAccelerators();
+        static QMap<QString, QString> getMediaDevices();
 
         static QString getOsIcon(const QString &osVersion);
 

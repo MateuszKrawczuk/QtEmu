@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "machineconfigaudio.h"
 
@@ -45,6 +43,17 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
     connect(m_moveDownAudioToolButton, &QAbstractButton::clicked,
             this, &MachineConfigAudio::moveDownButton);
 
+    QStringList audioList = machine -> getAudio();
+
+    QHash<QString, QString> audioHash = SystemUtils::getSoundCards();
+    QHashIterator<QString, QString> i(audioHash);
+    while (i.hasNext()) {
+        i.next();
+        if ( ! audioList.contains(i.key())) {
+            audioList.append(i.key());
+        }
+    }
+
     m_audioTree = new QTreeWidget();
     m_audioTree -> setMaximumHeight(200);
     m_audioTree -> setMaximumWidth(250);
@@ -54,24 +63,11 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
     m_audioTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     m_audioTree -> setEnabled(enableFields);
 
-    QSet<QString> soundSet;
-    QHash<QString, QString> soundHash = machine -> getAudio();
-    QHashIterator<QString, QString> i(soundHash);
-    while (i.hasNext()) {
-        i.next();
-        soundSet.insert(i.key());
-    }
-
-    // TODO: Change QHash to QMap and respect user order
-    QHash<QString, QString> audioHash = SystemUtils::getSoundCards();
-    QHashIterator<QString, QString> j(audioHash);
-    while (j.hasNext()) {
-        j.next();
-
+    for(int i = 0; i < audioList.size(); ++i) {
         m_treeItem = new QTreeWidgetItem(this -> m_audioTree, QTreeWidgetItem::Type);
-        m_treeItem -> setText(0, j.value());
-        m_treeItem -> setData(0, Qt::UserRole, j.key());
-        if (soundSet.contains(j.key())) {
+        m_treeItem -> setText(0, audioHash.value(audioList.at(i)));
+        m_treeItem -> setData(0, Qt::UserRole, audioList.at(i));
+        if (machine -> getAudio().contains(audioList.at(i))) {
             m_treeItem -> setCheckState(0, Qt::Checked);
         } else {
             m_treeItem -> setCheckState(0, Qt::Unchecked);

@@ -367,11 +367,28 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
 
     QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
 
-    QJsonObject gpuObject = machineJSON["gpu"].toObject();
-    QJsonObject cpuObject = machineJSON["cpu"].toObject();
+    QJsonObject gpuObject    = machineJSON["gpu"].toObject();
+    QJsonObject cpuObject    = machineJSON["cpu"].toObject();
+    QJsonObject bootObject   = machineJSON["boot"].toObject();
+    QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
+    QJsonObject bootOrder    = bootObject["bootOrder"].toObject();
 
-    QHash<QString, QString> soundsCardHash = MachineUtils::getSoundCards(machineJSON["audio"].toArray());
-    QHash<QString, QString> acceleratorsHash = MachineUtils::getAccelerators(machineJSON["accelerator"].toArray());
+    QVariantHash bootOrderVariantHash = bootOrder.toVariantHash();
+    QHash<int, QString> bootOrderHash;
+
+    QMutableHashIterator<QString, QVariant> i(bootOrderVariantHash);
+    while(i.hasNext()) {
+        i.next();
+        bootOrderHash.insert(i.key().toInt(), i.value().toString());
+    }
+
+    Boot machineBoot;
+    machineBoot.setBootMenu(bootObject["bootMenu"].toBool());
+    machineBoot.setKernelBootEnabled(kernelObject["enabled"].toBool());
+    machineBoot.setKernelPath(kernelObject["kernelPath"].toString());
+    machineBoot.setInitrdPath(kernelObject["initrdPath"].toString());
+    machineBoot.setKernelArgs(kernelObject["kernelArgs"].toString());
+    machineBoot.setBootOrder(bootOrderHash);
 
     Machine *machine = new Machine(this);
 
@@ -391,8 +408,9 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     machine -> setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
     machine -> setSocketCount(cpuObject["socketCount"].toInt());
     machine -> setThreadsCore(cpuObject["threadsCore"].toInt());
-    machine -> setAudio(soundsCardHash);
-    machine -> setAccelerator(acceleratorsHash);
+    machine -> setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
+    machine -> setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
+    machine -> setMachineBoot(machineBoot);
 
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);
@@ -409,7 +427,7 @@ void MainWindow::createNewMachine() {
 
     m_machine = new Machine(this);
 
-    m_machine -> addAudio("ac97", "Intel AC97(82801AA)");
+    m_machine -> addAudio("ac97");
     m_machine -> setSocketCount(0);
     m_machine -> setCoresSocket(0);
     m_machine -> setThreadsCore(0);
@@ -577,8 +595,8 @@ void MainWindow::fillMachineDetailsSection(Machine *machine){
     this -> m_machineCPULabel      -> setText(machine -> getCPUType());
     this -> m_machineRAMLabel      -> setText(QString::number(machine -> getRAM()) + " MiB");
     this -> m_machineGraphicsLabel -> setText(machine -> getGPUType());
-    this -> m_machineAudioLabel    -> setText(machine -> getAudioLabel(false));
-    this -> m_machineAccelLabel    -> setText(machine -> getAcceleratorLabel(false));
+    this -> m_machineAudioLabel    -> setText(machine -> getAudioLabel());
+    this -> m_machineAccelLabel    -> setText(machine -> getAcceleratorLabel());
     this -> m_machineNetworkLabel  -> setText(machine -> getUseNetwork() == true ? tr("Yes") : tr("no"));
 
 }

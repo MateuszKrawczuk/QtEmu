@@ -18,8 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "machine.h"
 
@@ -181,6 +179,14 @@ Machine::States Machine::getState() const {
  */
 void Machine::setState(const States &value) {
     state = value;
+}
+
+QString Machine::getDescription() const {
+    return description;
+}
+
+void Machine::setDescription(const QString &value) {
+    description = value;
 }
 
 /**
@@ -367,7 +373,7 @@ void Machine::setRAM(const qlonglong &value) {
  * Get the audio cards of the machine
  * Ex: ac97, es1370, hda...
  */
-QHash<QString, QString> Machine::getAudio() const {
+QStringList Machine::getAudio() const {
     return audio;
 }
 
@@ -377,7 +383,7 @@ QHash<QString, QString> Machine::getAudio() const {
  * Set the audio cards of the machine
  * Ex: ac97, es1370, hda...
  */
-void Machine::setAudio(const QHash<QString, QString> &value) {
+void Machine::setAudio(const QStringList &value) {
     audio = value;
 }
 
@@ -519,7 +525,7 @@ void Machine::setDiskName(const QString &value) {
  * Get the accelerator machine
  * Ex: kvm, xen...
  */
-QHash<QString, QString> Machine::getAccelerator() const {
+QStringList Machine::getAccelerator() const {
     return accelerator;
 }
 
@@ -529,13 +535,29 @@ QHash<QString, QString> Machine::getAccelerator() const {
  * Set the accelerator machine
  * Ex: kvm, xen...
  */
-void Machine::setAccelerator(const QHash<QString, QString> &value) {
+void Machine::setAccelerator(const QStringList &value) {
     accelerator = value;
 }
 
+Boot Machine::getMachineBoot() const {
+    return m_machineBoot;
+}
+
+void Machine::setMachineBoot(const Boot &machineBoot) {
+    m_machineBoot = machineBoot;
+}
+
 // Methods
-void Machine::addAudio(const QString key, const QString value) {
-    this -> audio.insert(key, value);
+/**
+ * @brief Add the audio card to the list
+ * @param audio, audio card to be added
+ *
+ * Add the audio card to the list
+ */
+void Machine::addAudio(const QString audio) {
+    if( ! this -> audio.contains(audio)){
+        this -> audio.append(audio);
+    }
 }
 
 /**
@@ -546,93 +568,72 @@ void Machine::addAudio(const QString key, const QString value) {
  */
 void Machine::removeAudio(const QString audio) {
     if(this -> audio.contains(audio)){
-        this -> audio.remove(audio);
+        this -> audio.removeOne(audio);
     }
 }
 
 /**
- * @brief Add an accelerator to the map
- * @param key code of the accelerator
- * @param value description of the accelerator
+ * @brief Add an accelerator to the list
+ * @param accel code of the accelerator
  *
- * Add an accelerator to the map
+ * Add an accelerator to the list
  */
-void Machine::addAccelerator(const QString key, const QString value) {
-    this -> accelerator.insert(key, value);
+void Machine::addAccelerator(const QString accel) {
+    if ( ! this->accelerator.contains(accel)){
+        this -> accelerator.append(accel);
+    }
 }
 
 /**
- * @brief Remove an accelerator from the map
- * @param key code of the accelerator
+ * @brief Remove an accelerator from the list
+ * @param accel code of the accelerator
  *
- * Remove an accelerator from the map if exists
+ * Remove an accelerator from the list if exists
  */
-void Machine::removeAccelerator(const QString accelerator) {
-    if(this -> accelerator.contains(accelerator)){
-        this -> accelerator.remove(accelerator);
+void Machine::removeAccelerator(const QString accel) {
+    if(this -> accelerator.contains(accel)){
+        this -> accelerator.removeOne(accel);
     }
 }
 
 /**
  * @brief Get all the audio cards separated by commas
- * @param showKey, return the key or the value
  * @return Audio cards separated by commas
  *
  * Get all the audio cards separated by commas
  * Ex: ac97, es1370, hda
  */
-QString Machine::getAudioLabel(const bool showKey) {
-    QHash<QString, QString>::const_iterator i = audio.constBegin();
-    QString audioLabel;
-    bool first = true;
+QString Machine::getAudioLabel() {
 
-    while (i != audio.constEnd()) {
-        if(first){
-            first = false;
-        } else {
-            audioLabel.append(", ");
-        }
+    QHash<QString, QString> soundCardsHash = SystemUtils::getSoundCards();
 
-        if (showKey) {
-            audioLabel.append(i.key());
-        } else {
-            audioLabel.append(i.value());
-        }
-        ++i;
+    QStringList audioCards = this -> audio;
+    for(int i = 0; i < audioCards.size(); ++i) {
+        audioCards.replace(i, soundCardsHash.value(audioCards.at(i)));
     }
 
-    return audioLabel;
+    QString audioLabel = audioCards.join(",");
 
+    return audioLabel;
 }
 
 /**
  * @brief Get all the accelerators separated by commas
- * @param showKey, return the key or the value
  * @return Accelerators separated by commas
  *
  * Get all the accelerators separated by commas
  * Ex: kvm,tcg
  */
-QString Machine::getAcceleratorLabel(const bool showKey) {
-    QHash<QString, QString>::const_iterator i = accelerator.constBegin();
-    QString acceleratorLabel;
-    bool first = true;
+QString Machine::getAcceleratorLabel() {
 
-    while (i != accelerator.constEnd()) {
-        if(first){
-            first = false;
-        } else {
-            acceleratorLabel.append(", ");
-        }
+    QHash<QString, QString> acceleratorsHash = SystemUtils::getAccelerators();
 
-        if (showKey) {
-            acceleratorLabel.append(i.key());
-        } else {
-            acceleratorLabel.append(i.value());
-        }
-
-        ++i;
+    QStringList accel = this -> accelerator;
+    for(int i = 0; i < accel.size(); ++i) {
+        accel.replace(i, acceleratorsHash.value(accel.at(i)));
     }
+
+    QString acceleratorLabel = accel.join(",");
 
     return acceleratorLabel;
 }
@@ -706,16 +707,6 @@ void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus) {
     qDebug() << "Exit code: " << exitCode << " exit status: " << exitStatus;
     this -> state = Machine::Stopped;
     emit(machineStateChangedSignal(Machine::Stopped));
-}
-
-QString Machine::getDescription() const
-{
-    return description;
-}
-
-void Machine::setDescription(const QString &value)
-{
-    description = value;
 }
 
 QProcessEnvironment Machine::buildEnvironment() {
@@ -898,4 +889,60 @@ QString Media::mediaIO() const {
  */
 void Media::setMediaIO(const QString &mediaIO) {
     m_mediaIO = mediaIO;
+}
+
+Boot::Boot() {
+    qDebug() << "Boot object created";
+}
+
+Boot::~Boot() {
+    qDebug() << "Boot object destroyed";
+}
+
+bool Boot::bootMenu() const {
+    return m_bootMenu;
+}
+
+void Boot::setBootMenu(bool bootMenu) {
+    m_bootMenu = bootMenu;
+}
+
+bool Boot::kernelBootEnabled() const {
+    return m_kernelBootEnabled;
+}
+
+void Boot::setKernelBootEnabled(bool kernelBootEnabled) {
+    m_kernelBootEnabled = kernelBootEnabled;
+}
+
+QString Boot::kernelPath() const {
+    return m_kernelPath;
+}
+
+void Boot::setKernelPath(const QString &kernelPath) {
+    m_kernelPath = kernelPath;
+}
+
+QString Boot::initrdPath() const {
+    return m_initrdPath;
+}
+
+void Boot::setInitrdPath(const QString &initrdPath) {
+    m_initrdPath = initrdPath;
+}
+
+QString Boot::kernelArgs() const {
+    return m_kernelArgs;
+}
+
+void Boot::setKernelArgs(const QString &kernelArgs) {
+    m_kernelArgs = kernelArgs;
+}
+
+QHash<int, QString> Boot::getBootOrder() const {
+    return bootOrder;
+}
+
+void Boot::setBootOrder(const QHash<int, QString> &value) {
+    bootOrder = value;
 }

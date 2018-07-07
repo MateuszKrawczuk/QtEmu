@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "machineconfiggeneral.h"
 
@@ -61,6 +59,10 @@ MachineConfigGeneral::MachineConfigGeneral(Machine *machine,
 
 MachineConfigGeneral::~MachineConfigGeneral() {
     qDebug() << "MachineConfigGeneral destroyed";
+}
+
+void MachineConfigGeneral::saveGeneralData() {
+    qDebug() << "Save General Data";
 }
 
 BasicTab::BasicTab(Machine *machine,

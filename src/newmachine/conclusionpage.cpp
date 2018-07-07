@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "conclusionpage.h"
 
@@ -93,8 +91,8 @@ void MachineConclusionPage::initializePage() {
     this -> m_processorLabel   -> setText(this -> m_newMachine -> getCPUType());
     this -> m_graphicsLabel    -> setText(this -> m_newMachine -> getGPUType());
     this -> m_RAMLabel         -> setText(QString::number(this -> m_newMachine -> getRAM()).append(" MiB"));
-    this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel(false));
-    this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel(false));
+    this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel());
+    this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel());
     this -> m_diskLabel        -> setText(this -> m_newMachine -> getDiskName());
 
     if( ! this -> m_newMachine -> getDiskName().isEmpty()){
@@ -243,30 +241,29 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
 
     machineJSONObject["media"] = media;
 
-    QJsonArray accelerator;
-    QStringList acceleratorList = this -> m_newMachine -> getAcceleratorLabel(true).split(",");
+    QJsonObject kernelBoot;
+    kernelBoot["enabled"] = false;
+    kernelBoot["kernelPath"] = "";
+    kernelBoot["initrdPath"] = "";
+    kernelBoot["kernelArgs"] = "";
 
-    for (const auto& i : acceleratorList) {
-        if( ! i.isEmpty() ){
-            accelerator.append(i.trimmed());
-        }
+    QJsonObject bootOrder;
+    bootOrder["0"] = "CDROM";
+    bootOrder["2"] = "HDD";
+
+    QJsonObject boot;
+    boot["bootMenu"] = false;
+    boot["kernelBoot"] = kernelBoot;
+    boot["bootOrder"] = bootOrder;
+
+    machineJSONObject["boot"] = boot;
+
+    if( ! this -> m_newMachine -> getAccelerator().isEmpty()) { 
+        machineJSONObject["accelerator"] = QJsonArray::fromStringList(this -> m_newMachine -> getAccelerator());
     }
 
-    if( ! accelerator.isEmpty()) {
-        machineJSONObject["accelerator"] = accelerator;
-    }
-
-    QJsonArray audio;
-    QStringList audioList = this -> m_newMachine -> getAudioLabel(true).split(",");
-
-    for (const auto& i : audioList) {
-        if( ! i.isEmpty() ){
-            audio.append(i.trimmed());
-        }
-    }
-
-    if( ! audio.isEmpty()) {
-        machineJSONObject["audio"] = audio;
+    if( ! this -> m_newMachine -> getAudio().isEmpty()) {
+        machineJSONObject["audio"] = QJsonArray::fromStringList(this -> m_newMachine -> getAudio());
     }
 
 }

@@ -43,6 +43,9 @@ class MachineConfigGeneral : public QWidget {
 
         QWidget *m_generalPageWidget;
 
+        // Methods
+        void saveGeneralData();
+
     signals:
 
     public slots:
@@ -54,9 +57,6 @@ class MachineConfigGeneral : public QWidget {
     private:
         QTabWidget *m_generalTabWidget;
         QVBoxLayout *m_generalPageLayout;
-
-        QComboBox *m_OSType;
-        QComboBox *m_OSVersion;
 };
 
 class BasicTab: public QWidget {

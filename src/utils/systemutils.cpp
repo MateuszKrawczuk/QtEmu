@@ -18,8 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "systemutils.h"
 
@@ -170,6 +168,34 @@ QHash<QString, QString> SystemUtils::getSoundCards() {
     soundCardsHash.insert("pcspk", "PC Speaker");
 
     return soundCardsHash;
+}
+
+QHash<QString, QString> SystemUtils::getAccelerators() {
+
+    QHash<QString, QString> acceleratorsHash;
+
+    acceleratorsHash.insert("kvm", "Kernel-based Virtual Machine (KVM)");
+    acceleratorsHash.insert("xen", "Xen Hypervisor");
+    acceleratorsHash.insert("tcg", "Tiny Code Generator (TCG)");
+    #ifdef Q_OS_WIN
+    acceleratorsHash.insert("hax", "Hardware Accelerated Execution Manager (HAXM)");
+    #endif
+
+    return acceleratorsHash;
+}
+
+QMap<QString, QString> SystemUtils::getMediaDevices() {
+
+    QMap<QString, QString> mediaMap;
+
+    mediaMap.insert("a", "Floppy A");
+    mediaMap.insert("b", "Floppy B");
+    mediaMap.insert("c", "HDD");
+    mediaMap.insert("d", "CDROM");
+    mediaMap.insert("n-1", "Network 1");
+    mediaMap.insert("n-2", "Network 2");
+
+    return mediaMap;
 }
 
 QString SystemUtils::getOsIcon(const QString &osVersion) {

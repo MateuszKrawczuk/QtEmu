@@ -80,6 +80,10 @@ class MachineConfigBoot : public QWidget {
 
         QPushButton *m_kernelPathPushButton;
         QPushButton *m_initrdPushButton;
+
+        // Methods
+        void moveUpButton();
+        void moveDownButton();
 };
 
 #endif // MACHINECONFIGBOOT_H

@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "hardwarepage.h"
 
@@ -311,7 +309,7 @@ AudioTab::~AudioTab() {
 
 void AudioTab::selectCreativeCard(bool selectCreative) {
     if (selectCreative) {
-        this -> m_newMachine -> addAudio("sb16", "Creative Sound Blaster 16");
+        this -> m_newMachine -> addAudio("sb16");
     } else {
         this -> m_newMachine -> removeAudio("sb16");
     }
@@ -319,7 +317,7 @@ void AudioTab::selectCreativeCard(bool selectCreative) {
 
 void AudioTab::selectEnsoniqCard(bool selectEnsoniq) {
     if (selectEnsoniq) {
-        this -> m_newMachine -> addAudio("es1370", "ENSONIQ AudioPCI ES1370");
+        this -> m_newMachine -> addAudio("es1370");
     } else {
         this -> m_newMachine -> removeAudio("es1370");
     }
@@ -327,7 +325,7 @@ void AudioTab::selectEnsoniqCard(bool selectEnsoniq) {
 
 void AudioTab::selectIntelAC97Card(bool selectIntelAC97) {
     if (selectIntelAC97) {
-        this -> m_newMachine -> addAudio("ac97", "Intel AC97(82801AA)");
+        this -> m_newMachine -> addAudio("ac97");
     } else {
         this -> m_newMachine -> removeAudio("ac97");
     }
@@ -335,7 +333,7 @@ void AudioTab::selectIntelAC97Card(bool selectIntelAC97) {
 
 void AudioTab::selectYamahaCard(bool selectYamaha) {
     if (selectYamaha) {
-        this -> m_newMachine -> addAudio("adlib", "Yamaha YM3812");
+        this -> m_newMachine -> addAudio("adlib");
     } else {
         this -> m_newMachine -> removeAudio("adlib");
     }
@@ -343,7 +341,7 @@ void AudioTab::selectYamahaCard(bool selectYamaha) {
 
 void AudioTab::selectGravisCard(bool selectGravis) {
     if (selectGravis) {
-        this -> m_newMachine -> addAudio("gus", "Gravis Ultrasound GF1");
+        this -> m_newMachine -> addAudio("gus");
     } else {
         this -> m_newMachine -> removeAudio("gus");
     }
@@ -351,7 +349,7 @@ void AudioTab::selectGravisCard(bool selectGravis) {
 
 void AudioTab::selectCS4231ACard(bool selectCS4231A) {
     if (selectCS4231A) {
-        this -> m_newMachine -> addAudio("cs4231a", "CS4231A");
+        this -> m_newMachine -> addAudio("cs4231a");
     } else {
         this -> m_newMachine -> removeAudio("cs4231a");
     }
@@ -359,7 +357,7 @@ void AudioTab::selectCS4231ACard(bool selectCS4231A) {
 
 void AudioTab::selectIntelHDCard(bool selectIntelHD) {
     if (selectIntelHD) {
-        this -> m_newMachine -> addAudio("hda", "Intel HD Audio");
+        this -> m_newMachine -> addAudio("hda");
     } else {
         this -> m_newMachine -> removeAudio("hda");
     }
@@ -367,7 +365,7 @@ void AudioTab::selectIntelHDCard(bool selectIntelHD) {
 
 void AudioTab::selectPCSpeakerCard(bool selectPCSpeaker) {
     if (selectPCSpeaker) {
-        this -> m_newMachine -> addAudio("pcspk", "PC Speaker");
+        this -> m_newMachine -> addAudio("pcspk");
     } else {
         this -> m_newMachine -> removeAudio("pcspk");
     }

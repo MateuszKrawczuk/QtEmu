@@ -32,6 +32,48 @@
 // Local
 #include "machineutils.h"
 
+class Boot {
+
+    public:
+        explicit Boot();
+        ~Boot();
+
+        bool bootMenu() const;
+        void setBootMenu(bool bootMenu);
+
+        bool kernelBootEnabled() const;
+        void setKernelBootEnabled(bool kernelBootEnabled);
+
+        QString kernelPath() const;
+        void setKernelPath(const QString &kernelPath);
+
+        QString initrdPath() const;
+        void setInitrdPath(const QString &initrdPath);
+
+        QString kernelArgs() const;
+        void setKernelArgs(const QString &kernelArgs);
+
+        QHash<int, QString> getBootOrder() const;
+        void setBootOrder(const QHash<int, QString> &value);
+
+    signals:
+
+    public slots:
+
+    private slots:
+
+    protected:
+
+    private:
+        bool m_bootMenu;
+        bool m_kernelBootEnabled;
+        QString m_kernelPath;
+        QString m_initrdPath;
+        QString m_kernelArgs;
+        QHash<int, QString> bootOrder;
+
+};
+
 class Media {
 
     public:
@@ -143,8 +185,8 @@ class Machine: public QObject {
         qlonglong getRAM() const;
         void setRAM(const qlonglong &value);
 
-        QHash<QString, QString> getAudio() const;
-        void setAudio(const QHash<QString, QString> &value);
+        QStringList getAudio() const;
+        void setAudio(const QStringList &value);
 
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
@@ -167,18 +209,21 @@ class Machine: public QObject {
         bool getCreateNewDisk() const;
         void setCreateNewDisk(bool value);
 
-        QHash<QString, QString> getAccelerator() const;
-        void setAccelerator(const QHash<QString, QString> &value);
+        QStringList getAccelerator() const;
+        void setAccelerator(const QStringList &value);
 
-        void addAudio(const QString key, const QString value);
-        void removeAudio(const QString key);
+        Boot getMachineBoot() const;
+        void setMachineBoot(const Boot &machineBoot);
 
-        void addAccelerator(const QString key, const QString value);
-        void removeAccelerator(const QString accelerator);
+        // Methods
+        void addAudio(const QString audio);
+        void removeAudio(const QString audio);
 
-        QString getAudioLabel(const bool showKey);
+        void addAccelerator(const QString accel);
+        void removeAccelerator(const QString accel);
 
-        QString getAcceleratorLabel(const bool showKey);
+        QString getAudioLabel();
+        QString getAcceleratorLabel();
 
         void runMachine(const QUuid machineUuid);
         void stopMachine();
@@ -225,7 +270,7 @@ class Machine: public QObject {
         qlonglong RAM;
 
         // Hardware - Audio
-        QHash<QString, QString> audio;
+        QStringList audio;
 
         // Hardware - Network
         bool useNetwork;
@@ -241,7 +286,10 @@ class Machine: public QObject {
         bool createNewDisk;
 
         // Accelerator
-        QHash<QString, QString> accelerator;
+        QStringList accelerator;
+
+        // Boot
+        Boot m_machineBoot;
 
         // Process
         QProcess *m_machineProcess;

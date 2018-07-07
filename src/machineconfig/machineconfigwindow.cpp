@@ -19,8 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Qt
-
 // Local
 #include "machineconfigwindow.h"
 
@@ -146,7 +144,13 @@ MachineConfigWindow::~MachineConfigWindow() {
     qDebug() << "MachineConfigWindow destroyed";
 }
 
-
+/**
+ * @brief Save the machine configuration
+ *
+ * Save the machine configuration
+ */
 void MachineConfigWindow::saveMachineSettings() {
     qDebug() << "Machine settings saved";
+
+    this -> m_configGeneral -> saveGeneralData();
 }
