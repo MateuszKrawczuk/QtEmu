@@ -49,6 +49,24 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     Boot boot = machine -> getMachineBoot();
     QMap<int, QString> bootOrder = boot.getBootOrder();
 
+    QSet<QString> bootSet;
+    int maxBootOrderInt = bootOrder.size();
+    QMapIterator<int, QString> i(bootOrder);
+    while (i.hasNext()) {
+        i.next();
+        bootSet.insert(i.value());
+    }
+
+    QMap<QString, QString> mediaDevicesMap = SystemUtils::getMediaDevices();
+    QMapIterator<QString, QString> j(mediaDevicesMap);
+    while (j.hasNext()) {
+        j.next();
+        if ( ! bootSet.contains(j.value())) {
+            bootOrder.insert(maxBootOrderInt, j.value());
+            maxBootOrderInt++;
+        }
+    }
+
     m_bootTree = new QTreeWidget();
     m_bootTree -> setMaximumHeight(120);
     m_bootTree -> setMaximumWidth(150);
@@ -58,9 +76,24 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_bootTree -> setEnabled(enableFields);
     m_bootTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
+    QMapIterator<int, QString> k(bootOrder);
+    while (k.hasNext()) {
+        k.next();
+        m_treeItem = new QTreeWidgetItem(this -> m_bootTree, QTreeWidgetItem::Type);
+        m_treeItem -> setText(0, k.value());
+        m_treeItem -> setData(0, Qt::UserRole, mediaDevicesMap.key(k.value()));
+        if (bootSet.contains(k.value())) {
+            m_treeItem -> setCheckState(0, Qt::Checked);
+        } else {
+            m_treeItem -> setCheckState(0, Qt::Unchecked);
+        }
+    }
+
     m_kernelBootCheckBox = new QCheckBox();
     m_kernelBootCheckBox -> setEnabled(enableFields);
     m_kernelBootCheckBox -> setText(tr("Enable direct kernel boot"));
+    connect(m_kernelBootCheckBox, &QAbstractButton::toggled,
+            this, &MachineConfigBoot::selectEnableKernelBoot);
 
     m_kernelPathLabel = new QLabel(tr("Kernel path") + ":");
     m_initrdLabel = new QLabel(tr("Initrd path") + ":");
@@ -79,10 +112,15 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_kernelPathPushButton -> setEnabled(enableFields);
     m_kernelPathPushButton -> setIcon(QIcon::fromTheme("folder-symbolic",
                                                        QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
+    connect(m_kernelPathPushButton, &QAbstractButton::clicked,
+            this, &MachineConfigBoot::setKernelPath);
+
     m_initrdPushButton = new QPushButton();
     m_initrdPushButton -> setEnabled(enableFields);
     m_initrdPushButton -> setIcon(QIcon::fromTheme("folder-symbolic",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
+    connect(m_initrdPushButton, &QAbstractButton::clicked,
+            this, &MachineConfigBoot::setInitrdPath);
 
     m_bootTreeLayout = new QHBoxLayout();
     m_bootTreeLayout -> setAlignment(Qt::AlignTop);
@@ -111,6 +149,8 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
 
     m_bootPageWidget = new QWidget(this);
     m_bootPageWidget -> setLayout(m_bootPageLayout);
+
+    this -> selectEnableKernelBoot(boot.kernelBootEnabled());
 
     qDebug() << "MachineConfigBoot created";
 }
@@ -143,4 +183,35 @@ void MachineConfigBoot::moveDownButton() {
     this -> m_bootTree -> insertTopLevelItem( index + 1, item );
 
     this -> m_bootTree -> setCurrentItem( item );
+}
+
+void MachineConfigBoot::selectEnableKernelBoot(bool enableKernelBoot) {
+
+    this -> m_kernelPathLineEdit   -> setEnabled(enableKernelBoot);
+    this -> m_initredLineEdit      -> setEnabled(enableKernelBoot);
+    this -> m_kernelArgsLineEdit   -> setEnabled(enableKernelBoot);
+    this -> m_kernelPathPushButton -> setEnabled(enableKernelBoot);
+    this -> m_initrdPushButton     -> setEnabled(enableKernelBoot);
+}
+
+void MachineConfigBoot::setKernelPath(){
+
+    QString kernelPath = QFileDialog::getOpenFileName(this, tr("Select kernel path"),
+                                                      QDir::homePath());
+
+    if ( ! kernelPath.isEmpty() ) {
+        this -> m_kernelPathLineEdit -> setText(QDir::toNativeSeparators(kernelPath));
+    }
+
+}
+
+void MachineConfigBoot::setInitrdPath(){
+
+    QString initrdPath = QFileDialog::getOpenFileName(this, tr("Select initrd path"),
+                                                      QDir::homePath());
+
+    if ( ! initrdPath.isEmpty() ) {
+        this -> m_initredLineEdit -> setText(QDir::toNativeSeparators(initrdPath));
+    }
+
 }

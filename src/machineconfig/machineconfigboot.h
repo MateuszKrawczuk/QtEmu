@@ -32,6 +32,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QFileDialog>
 
 // Local
 #include "../machine.h"
@@ -59,10 +60,7 @@ class MachineConfigBoot : public QWidget {
         QGridLayout *m_kernelLayout;
 
         QTreeWidget *m_bootTree;
-        QTreeWidgetItem *m_floppyTreeItem;
-        QTreeWidgetItem *m_CDROMTreeItem;
-        QTreeWidgetItem *m_hardDiskTreeItem;
-        QTreeWidgetItem *m_networkTreeItem;
+        QTreeWidgetItem *m_treeItem;
 
         QCheckBox *m_bootMenuCheckBox;
         QCheckBox *m_kernelBootCheckBox;
@@ -84,6 +82,9 @@ class MachineConfigBoot : public QWidget {
         // Methods
         void moveUpButton();
         void moveDownButton();
+        void selectEnableKernelBoot(bool enableKernelBoot);
+        void setKernelPath();
+        void setInitrdPath();
 };
 
 #endif // MACHINECONFIGBOOT_H
