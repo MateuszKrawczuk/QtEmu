@@ -53,8 +53,8 @@ class Boot {
         QString kernelArgs() const;
         void setKernelArgs(const QString &kernelArgs);
 
-        QHash<int, QString> getBootOrder() const;
-        void setBootOrder(const QHash<int, QString> &value);
+        QMap<int, QString> getBootOrder() const;
+        void setBootOrder(const QMap<int, QString> &value);
 
     signals:
 
@@ -70,7 +70,7 @@ class Boot {
         QString m_kernelPath;
         QString m_initrdPath;
         QString m_kernelArgs;
-        QHash<int, QString> bootOrder;
+        QMap<int, QString> bootOrder;
 
 };
 

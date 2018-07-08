@@ -939,10 +939,10 @@ void Boot::setKernelArgs(const QString &kernelArgs) {
     m_kernelArgs = kernelArgs;
 }
 
-QHash<int, QString> Boot::getBootOrder() const {
+QMap<int, QString> Boot::getBootOrder() const {
     return bootOrder;
 }
 
-void Boot::setBootOrder(const QHash<int, QString> &value) {
+void Boot::setBootOrder(const QMap<int, QString> &value) {
     bootOrder = value;
 }

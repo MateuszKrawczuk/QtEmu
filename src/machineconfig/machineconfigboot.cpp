@@ -25,33 +25,29 @@
 MachineConfigBoot::MachineConfigBoot(Machine *machine,
                                      QWidget *parent) : QWidget(parent) {
 
+    bool enableFields = true;
+
+    if (machine -> getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
     m_bootMenuCheckBox = new QCheckBox();
     m_bootMenuCheckBox -> setText(tr("Enable boot menu"));
 
     m_moveUpToolButton = new QToolButton();
     m_moveUpToolButton -> setArrowType(Qt::UpArrow);
+    m_moveUpToolButton -> setEnabled(enableFields);
     connect(m_moveUpToolButton, &QAbstractButton::clicked,
             this, &MachineConfigBoot::moveUpButton);
 
     m_moveDownToolButton = new QToolButton();
     m_moveDownToolButton -> setArrowType(Qt::DownArrow);
+    m_moveDownToolButton -> setEnabled(enableFields);
     connect(m_moveDownToolButton, &QAbstractButton::clicked,
             this, &MachineConfigBoot::moveDownButton);
 
-    /*QStringList bootOrderList;
-
-    QMap<QString, QString> mediaDevices = SystemUtils::getMediaDevices();
-    QHash
-    QMapIterator<QString, QString> i(bootOrderVariantHash);
-    while(i.hasNext()) {
-        i.next();
-        bootOrderList.append(i.value());
-    }*/
-
-
-
-
-
+    Boot boot = machine -> getMachineBoot();
+    QMap<int, QString> bootOrder = boot.getBootOrder();
 
     m_bootTree = new QTreeWidget();
     m_bootTree -> setMaximumHeight(120);
@@ -59,9 +55,11 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_bootTree -> setColumnCount(1);
     m_bootTree -> setHeaderHidden(true);
     m_bootTree -> setRootIsDecorated(false);
+    m_bootTree -> setEnabled(enableFields);
     m_bootTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     m_kernelBootCheckBox = new QCheckBox();
+    m_kernelBootCheckBox -> setEnabled(enableFields);
     m_kernelBootCheckBox -> setText(tr("Enable direct kernel boot"));
 
     m_kernelPathLabel = new QLabel(tr("Kernel path") + ":");
@@ -70,14 +68,19 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
 
     m_kernelPathLineEdit = new QLineEdit();
     m_kernelPathLineEdit -> setPlaceholderText("/boot/vmlinuz-linux");
+    m_kernelPathLineEdit -> setEnabled(enableFields);
     m_initredLineEdit = new QLineEdit();
     m_initredLineEdit -> setPlaceholderText("/boot/initramfs-linux.img");
+    m_initredLineEdit -> setEnabled(enableFields);
     m_kernelArgsLineEdit = new QLineEdit();
+    m_kernelArgsLineEdit -> setEnabled(enableFields);
 
     m_kernelPathPushButton = new QPushButton();
+    m_kernelPathPushButton -> setEnabled(enableFields);
     m_kernelPathPushButton -> setIcon(QIcon::fromTheme("folder-symbolic",
                                                        QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
     m_initrdPushButton = new QPushButton();
+    m_initrdPushButton -> setEnabled(enableFields);
     m_initrdPushButton -> setIcon(QIcon::fromTheme("folder-symbolic",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
 

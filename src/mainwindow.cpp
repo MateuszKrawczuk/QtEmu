@@ -373,13 +373,13 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
     QJsonObject bootOrder    = bootObject["bootOrder"].toObject();
 
-    QVariantHash bootOrderVariantHash = bootOrder.toVariantHash();
-    QHash<int, QString> bootOrderHash;
+    QVariantMap bootOrderVariantMap = bootOrder.toVariantMap();
+    QMap<int, QString> bootOrderMap;
 
-    QMutableHashIterator<QString, QVariant> i(bootOrderVariantHash);
+    QMutableMapIterator<QString, QVariant> i(bootOrderVariantMap);
     while(i.hasNext()) {
         i.next();
-        bootOrderHash.insert(i.key().toInt(), i.value().toString());
+        bootOrderMap.insert(i.key().toInt(), i.value().toString());
     }
 
     Boot machineBoot;
@@ -388,7 +388,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     machineBoot.setKernelPath(kernelObject["kernelPath"].toString());
     machineBoot.setInitrdPath(kernelObject["initrdPath"].toString());
     machineBoot.setKernelArgs(kernelObject["kernelArgs"].toString());
-    machineBoot.setBootOrder(bootOrderHash);
+    machineBoot.setBootOrder(bootOrderMap);
 
     Machine *machine = new Machine(this);
 
