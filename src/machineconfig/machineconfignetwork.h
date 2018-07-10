@@ -24,6 +24,8 @@
 // Qt
 #include <QWidget>
 #include <QVBoxLayout>
+#include <QGroupBox>
+#include <QRadioButton>
 
 // Local
 #include "../machine.h"
@@ -47,6 +49,12 @@ class MachineConfigNetwork : public QWidget {
 
     private:
         QVBoxLayout *m_networkLayout;
+        QVBoxLayout *m_networkMainLayout;
+
+        QGroupBox *m_machineNetworkGroup;
+
+        QRadioButton *m_withNetworkRadio;
+        QRadioButton *m_withoutNetworkRadio;
 
 };
 #endif // MACHINECONFIGNETWORK_H

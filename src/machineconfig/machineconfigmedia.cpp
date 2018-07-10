@@ -25,9 +25,16 @@
 MachineConfigMedia::MachineConfigMedia(Machine *machine,
                                        QWidget *parent) : QWidget(parent) {
 
+    bool enableFields = true;
+
+    if (machine -> getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
     m_mediaItem = new QTreeWidgetItem();
 
     m_mediaTree = new QTreeWidget();
+    m_mediaTree -> setEnabled(enableFields);
     m_mediaTree -> setMaximumHeight(250);
     m_mediaTree -> setMaximumWidth(200);
     m_mediaTree -> setColumnCount(1);
@@ -52,6 +59,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaSettingsGroupBox -> setLayout(m_mediaDetailsLayout);
 
     m_cacheComboBox = new QComboBox();
+    m_cacheComboBox -> setEnabled(enableFields);
     m_cacheComboBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_cacheComboBox -> addItem("none");
     m_cacheComboBox -> addItem("writethrough");
@@ -61,12 +69,14 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_cacheComboBox -> setCurrentIndex(0);
 
     m_IOComboBox = new QComboBox();
+    m_IOComboBox -> setEnabled(enableFields);
     m_IOComboBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_IOComboBox -> addItem("threads");
     m_IOComboBox -> addItem("native");
     m_IOComboBox -> setCurrentIndex(0);
 
     m_readOnlyMediaCheck = new QCheckBox();
+    m_readOnlyMediaCheck -> setEnabled(enableFields);
 
     m_mediaOptionsLayout = new QFormLayout();
     m_mediaOptionsLayout -> setAlignment(Qt::AlignTop);
@@ -83,11 +93,13 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaOptionsGroupBox -> setLayout(m_mediaOptionsLayout);
 
     m_addHDDPushButton = new QPushButton();
+    m_addHDDPushButton -> setEnabled(enableFields);
     m_addHDDPushButton -> setIcon(QIcon::fromTheme("drive-harddisk",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
     m_addHDDPushButton -> setToolTip(tr("Add hard disk media"));
 
     m_addCDROMPushButton = new QPushButton();
+    m_addCDROMPushButton -> setEnabled(enableFields);
     m_addCDROMPushButton -> setIcon(QIcon::fromTheme("media-optical-data",
                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
     m_addCDROMPushButton -> setToolTip(tr("Add optical media"));

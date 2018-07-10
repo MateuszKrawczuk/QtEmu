@@ -32,6 +32,7 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     }
 
     m_bootMenuCheckBox = new QCheckBox();
+    m_bootMenuCheckBox -> setEnabled(enableFields);
     m_bootMenuCheckBox -> setText(tr("Enable boot menu"));
 
     m_moveUpToolButton = new QToolButton();

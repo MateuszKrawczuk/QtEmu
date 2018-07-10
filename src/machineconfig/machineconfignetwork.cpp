@@ -25,10 +25,32 @@
 MachineConfigNetwork::MachineConfigNetwork(Machine *machine,
                                            QWidget *parent) : QWidget(parent) {
 
+    bool enableFields = true;
+
+    if (machine -> getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
+    m_withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
+    m_withNetworkRadio -> setEnabled(enableFields);
+
+    m_withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
+    m_withoutNetworkRadio -> setEnabled(enableFields);
+
     m_networkLayout = new QVBoxLayout();
+    m_networkLayout -> setAlignment(Qt::AlignTop);
+    m_networkLayout -> setContentsMargins(5, 20, 5, 0);
+    m_networkLayout -> addWidget(m_withNetworkRadio);
+    m_networkLayout -> addWidget(m_withoutNetworkRadio);
+
+    m_machineNetworkGroup = new QGroupBox(tr("Machine Network"));
+    m_machineNetworkGroup -> setLayout(m_networkLayout);
+
+    m_networkMainLayout = new QVBoxLayout();
+    m_networkMainLayout -> addWidget(m_machineNetworkGroup);
 
     m_networkPageWidget = new QWidget();
-    m_networkPageWidget -> setLayout(m_networkLayout);
+    m_networkPageWidget -> setLayout(m_networkMainLayout);
 
     qDebug() << "MachineConfigNetwork created";
 }

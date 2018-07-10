@@ -65,7 +65,7 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
         if(firstAccel) {
             firstAccel = false;
         } else {
-            accelerators.append(",");
+            accelerators.append(", ");
         }
         accelerators.append(accelerator[index].toString());
     }
@@ -130,15 +130,26 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     qemuCommand << "-pidfile";
     qemuCommand << pipe.append(".pid");
 
-    // Network TODO, WIP...
+    // Network
+    bool networkEnabled = machineObject["network"].toBool();
+    if (networkEnabled) {
+        qemuCommand << "-net";
+        qemuCommand << "nic";
+
+        qemuCommand << "-net";
+        qemuCommand << "user";
+    } else {
+        qemuCommand << "-net";
+        qemuCommand << "none";
+    }
 
     // HDD
     //qemuCommand << "-drive";
     //qemuCommand << QString("file=").append(diskObject["path"].toString()).append(",index=0,media=disk");
 
     // CDROM TODO, for test not implemented yet :'(
-    qemuCommand << "-drive";
-    qemuCommand << QString("file=").append("/home/xexio/Downloads/nixos-minimal-18.03.132750.91b286c8935-x86_64-linux.iso").append(",if=ide,index=1,media=cdrom");
+    qemuCommand << "-cdrom";
+    qemuCommand << "/home/xexio/Downloads/torrent/archlinux-2018.06.01-x86_64.iso";
 
     qDebug() << "Command " <<qemuCommand;
 
