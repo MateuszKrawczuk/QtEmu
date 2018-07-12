@@ -234,7 +234,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     disk["size"] = this -> m_newMachine -> getDiskSize();
     disk["type"] = "hdd";
     disk["format"] = this -> m_newMachine -> getDiskFormat();
-    disk["inteface"] = "sata";
+    disk["interface"] = "hda";
 
     QJsonArray media;
     media.append(disk);

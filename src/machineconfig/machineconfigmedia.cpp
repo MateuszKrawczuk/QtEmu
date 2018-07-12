@@ -31,7 +31,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
         enableFields = false;
     }
 
-    m_mediaItem = new QTreeWidgetItem();
+    QList<Media> machineMedia = machine -> getMedia();
 
     m_mediaTree = new QTreeWidget();
     m_mediaTree -> setEnabled(enableFields);
@@ -41,6 +41,15 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaTree -> setHeaderHidden(true);
     m_mediaTree -> setRootIsDecorated(false);
     m_mediaTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+    for(int i = 0; i < machineMedia.size(); ++i) {
+        QString mediaName;
+        mediaName.append("(").append(machineMedia[i].mediaInterface().toUpper()).append(") ").append(machineMedia[i].mediaName());
+
+        m_mediaItem = new QTreeWidgetItem(this -> m_mediaTree, QTreeWidgetItem::Type);
+        m_mediaItem -> setText(0, mediaName);
+        m_mediaItem -> setData(0, Qt::UserRole, machineMedia[i].mediaName());
+    }
 
     m_mediaPathLabel = new QLabel();
     m_mediaSizeLabel = new QLabel();
@@ -92,6 +101,12 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaOptionsGroupBox -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_mediaOptionsGroupBox -> setLayout(m_mediaOptionsLayout);
 
+    m_addFloppyPushButton = new QPushButton();
+    m_addFloppyPushButton -> setEnabled(enableFields);
+    m_addFloppyPushButton -> setIcon(QIcon::fromTheme("media-floppy",
+                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+    m_addFloppyPushButton -> setToolTip(tr("Add Floppy"));
+
     m_addHDDPushButton = new QPushButton();
     m_addHDDPushButton -> setEnabled(enableFields);
     m_addHDDPushButton -> setIcon(QIcon::fromTheme("drive-harddisk",
@@ -106,6 +121,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
 
     m_mediaAddLayout = new QHBoxLayout();
     m_mediaAddLayout -> setAlignment(Qt::AlignTop);
+    m_mediaAddLayout -> addWidget(m_addFloppyPushButton);
     m_mediaAddLayout -> addWidget(m_addHDDPushButton);
     m_mediaAddLayout -> addWidget(m_addCDROMPushButton);
 
@@ -119,7 +135,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaPageLayout -> addWidget(m_mediaTree,             0, 0, 1, 1);
     m_mediaPageLayout -> addWidget(m_mediaSettingsGroupBox, 0, 1, 1, 1);
     m_mediaPageLayout -> addWidget(m_mediaAddGroupBox,      1, 0, 1, 1);
-    m_mediaPageLayout -> addWidget(m_mediaOptionsGroupBox,  1, 1, 1, 1);
+    //m_mediaPageLayout -> addWidget(m_mediaOptionsGroupBox,  1, 1, 1, 1); // TODO: In QtEmu 2.1
 
     m_mediaPageWidget = new QWidget();
     m_mediaPageWidget -> setLayout(m_mediaPageLayout);

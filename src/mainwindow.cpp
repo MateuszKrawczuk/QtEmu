@@ -367,13 +367,14 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
 
     QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
 
-    QJsonObject gpuObject    = machineJSON["gpu"].toObject();
-    QJsonObject cpuObject    = machineJSON["cpu"].toObject();
-    QJsonObject bootObject   = machineJSON["boot"].toObject();
-    QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
-    QJsonObject bootOrder    = bootObject["bootOrder"].toObject();
+    QJsonObject gpuObject       = machineJSON["gpu"].toObject();
+    QJsonObject cpuObject       = machineJSON["cpu"].toObject();
+    QJsonObject bootObject      = machineJSON["boot"].toObject();
+    QJsonObject kernelObject    = bootObject["kernelBoot"].toObject();
+    QJsonObject bootOrderObject = bootObject["bootOrder"].toObject();
+    QJsonArray mediaArray       = machineJSON["media"].toArray();
 
-    QVariantMap bootOrderVariantMap = bootOrder.toVariantMap();
+    QVariantMap bootOrderVariantMap = bootOrderObject.toVariantMap();
     QMap<int, QString> bootOrderMap;
 
     QMutableMapIterator<QString, QVariant> i(bootOrderVariantMap);
@@ -391,6 +392,22 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
     machineBoot.setBootOrder(bootOrderMap);
 
     Machine *machine = new Machine(this);
+
+    for(int i = 0; i < mediaArray.size(); ++i) {
+        QJsonObject mediaObject = mediaArray[i].toObject();
+
+        Media media;
+        media.setMediaName(mediaObject["name"].toString());
+        media.setMediaPath(mediaObject["path"].toString());
+        media.setMediaSize(mediaObject["size"].toDouble());
+        media.setMediaType(mediaObject["type"].toString());
+        media.setMediaFormat(mediaObject["format"].toString());
+        media.setMediaInterface(mediaObject["interface"].toString());
+        media.setMediaCache(mediaObject["cache"].toString());
+        media.setMediaIO(mediaObject["io"].toString());
+
+        machine -> addMedia(media);
+    }
 
     machine -> setState(Machine::Stopped);
     machine -> setName(machineJSON["name"].toString());

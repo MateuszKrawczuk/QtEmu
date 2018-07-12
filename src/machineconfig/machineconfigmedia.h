@@ -75,6 +75,7 @@ class MachineConfigMedia : public QWidget {
 
         QCheckBox *m_readOnlyMediaCheck;
 
+        QPushButton *m_addFloppyPushButton;
         QPushButton *m_addHDDPushButton;
         QPushButton *m_addCDROMPushButton;
 };
