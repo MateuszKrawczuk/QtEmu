@@ -104,6 +104,9 @@ class Media {
         QString mediaIO() const;
         void setMediaIO(const QString &mediaIO);
 
+        QUuid uuid() const;
+        void setUuid(const QUuid &uuid);
+
     signals:
 
     public slots:
@@ -121,6 +124,7 @@ class Media {
         QString m_mediaInterface;
         QString m_mediaCache;
         QString m_mediaIO;
+        QUuid m_uuid;
 };
 
 class Machine: public QObject {

@@ -235,6 +235,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     disk["type"] = "hdd";
     disk["format"] = this -> m_newMachine -> getDiskFormat();
     disk["interface"] = "hda";
+    disk["uuid"] = QUuid::createUuid().toString();
 
     QJsonArray media;
     media.append(disk);
@@ -249,7 +250,7 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
 
     QJsonObject bootOrder;
     bootOrder["0"] = "CDROM";
-    bootOrder["2"] = "HDD";
+    bootOrder["1"] = "HDD";
 
     QJsonObject boot;
     boot["bootMenu"] = false;

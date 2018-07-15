@@ -405,6 +405,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
         media.setMediaInterface(mediaObject["interface"].toString());
         media.setMediaCache(mediaObject["cache"].toString());
         media.setMediaIO(mediaObject["io"].toString());
+        media.setUuid(mediaObject["uuid"].toVariant().toUuid());
 
         machine -> addMedia(media);
     }

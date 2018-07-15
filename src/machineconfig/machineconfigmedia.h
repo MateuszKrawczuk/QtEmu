@@ -32,6 +32,8 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QMessageBox>
+#include <QFileDialog>
 
 // Local
 #include "../machine.h"
@@ -78,5 +80,17 @@ class MachineConfigMedia : public QWidget {
         QPushButton *m_addFloppyPushButton;
         QPushButton *m_addHDDPushButton;
         QPushButton *m_addCDROMPushButton;
+
+        QMessageBox *m_addHddDiskMessageBox;
+        QMessageBox *m_addOpticalMessageBox;
+        QMessageBox *m_addFloppyMessageBox;
+
+        QHash<QUuid, Media> *m_mediaHash;
+
+        // Methods
+        void fillDetailsSection();
+        void addFloppyMedia();
+        void addHddMedia();
+        void addOpticalMedia();
 };
 #endif // MACHINECONFIGMEDIA_H

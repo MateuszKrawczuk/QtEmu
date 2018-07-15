@@ -891,6 +891,14 @@ void Media::setMediaIO(const QString &mediaIO) {
     m_mediaIO = mediaIO;
 }
 
+QUuid Media::uuid() const {
+    return m_uuid;
+}
+
+void Media::setUuid(const QUuid &uuid) {
+    m_uuid = uuid;
+}
+
 Boot::Boot() {
     qDebug() << "Boot object created";
 }

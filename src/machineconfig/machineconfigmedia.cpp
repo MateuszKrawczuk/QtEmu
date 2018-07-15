@@ -31,7 +31,9 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
         enableFields = false;
     }
 
-    QList<Media> machineMedia = machine -> getMedia();
+    m_mediaPathLabel = new QLabel();
+    m_mediaSizeLabel = new QLabel();
+    m_mediaFormatLabel = new QLabel();
 
     m_mediaTree = new QTreeWidget();
     m_mediaTree -> setEnabled(enableFields);
@@ -42,18 +44,24 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaTree -> setRootIsDecorated(false);
     m_mediaTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
+    connect(m_mediaTree, &QTreeWidget::itemSelectionChanged,
+            this, &MachineConfigMedia::fillDetailsSection);
+
+    m_mediaHash = new QHash<QUuid, Media>;
+    QList<Media> machineMedia = machine -> getMedia();
+
     for(int i = 0; i < machineMedia.size(); ++i) {
         QString mediaName;
         mediaName.append("(").append(machineMedia[i].mediaInterface().toUpper()).append(") ").append(machineMedia[i].mediaName());
 
         m_mediaItem = new QTreeWidgetItem(this -> m_mediaTree, QTreeWidgetItem::Type);
         m_mediaItem -> setText(0, mediaName);
-        m_mediaItem -> setData(0, Qt::UserRole, machineMedia[i].mediaName());
+        m_mediaItem -> setData(0, Qt::UserRole, machineMedia[i].uuid());
+
+        this -> m_mediaHash -> insert(machineMedia[i].uuid(), machineMedia[i]);
     }
 
-    m_mediaPathLabel = new QLabel();
-    m_mediaSizeLabel = new QLabel();
-    m_mediaFormatLabel = new QLabel();
+    this -> m_mediaTree -> setCurrentItem(this -> m_mediaTree -> itemAt(0, 0));
 
     m_mediaDetailsLayout = new QFormLayout();
     m_mediaDetailsLayout -> setAlignment(Qt::AlignTop);
@@ -107,17 +115,26 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
     m_addFloppyPushButton -> setToolTip(tr("Add Floppy"));
 
+    connect(m_addFloppyPushButton, &QAbstractButton::clicked,
+            this, &MachineConfigMedia::addFloppyMedia);
+
     m_addHDDPushButton = new QPushButton();
     m_addHDDPushButton -> setEnabled(enableFields);
     m_addHDDPushButton -> setIcon(QIcon::fromTheme("drive-harddisk",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
     m_addHDDPushButton -> setToolTip(tr("Add hard disk media"));
 
+    connect(m_addHDDPushButton, &QAbstractButton::clicked,
+            this, &MachineConfigMedia::addHddMedia);
+
     m_addCDROMPushButton = new QPushButton();
     m_addCDROMPushButton -> setEnabled(enableFields);
     m_addCDROMPushButton -> setIcon(QIcon::fromTheme("media-optical-data",
                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
     m_addCDROMPushButton -> setToolTip(tr("Add optical media"));
+
+    connect(m_addCDROMPushButton, &QAbstractButton::clicked,
+            this, &MachineConfigMedia::addOpticalMedia);
 
     m_mediaAddLayout = new QHBoxLayout();
     m_mediaAddLayout -> setAlignment(Qt::AlignTop);
@@ -146,3 +163,44 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
 MachineConfigMedia::~MachineConfigMedia() {
     qDebug() << "MachineConfigMedia destroyed";
 }
+
+void MachineConfigMedia::fillDetailsSection() {
+    QUuid selectedMediaUuid = this -> m_mediaTree -> currentItem() -> data(0, Qt::UserRole).toUuid();
+    this -> m_mediaPathLabel   -> setText(this -> m_mediaHash -> value(selectedMediaUuid).mediaPath());
+    this -> m_mediaSizeLabel   -> setText(QString::number(this -> m_mediaHash -> value(selectedMediaUuid).mediaSize()));
+    this -> m_mediaFormatLabel -> setText(this -> m_mediaHash -> value(selectedMediaUuid).mediaFormat());
+}
+
+void MachineConfigMedia::addFloppyMedia() {
+
+}
+
+void MachineConfigMedia::addHddMedia() {
+    m_addHddDiskMessageBox = new QMessageBox(this);
+    m_addHddDiskMessageBox -> setWindowTitle(tr("QtEmu - Add Hard Disk"));
+    m_addHddDiskMessageBox -> setIcon(QMessageBox::Question);
+    m_addHddDiskMessageBox -> setText(tr("<p>Add a new Hard Disk</p>"));
+
+    QPushButton *newDiskButton = m_addHddDiskMessageBox -> addButton(tr("Create new disk"),
+                                                                     QMessageBox::ActionRole);
+    QPushButton *existingDiskButton = m_addHddDiskMessageBox -> addButton(tr("Choose existing disk"),
+                                                                          QMessageBox::ActionRole);
+    QPushButton *cancelButton = m_addHddDiskMessageBox -> addButton(QMessageBox::Abort);
+
+    m_addHddDiskMessageBox -> exec();
+
+    if (m_addHddDiskMessageBox -> clickedButton() == newDiskButton) {
+
+    } else if (m_addHddDiskMessageBox -> clickedButton() == existingDiskButton) {
+        QString diskPath = QFileDialog::getOpenFileName(this, tr("Select kernel path"),
+                                                        QDir::homePath());
+    } else if (m_addHddDiskMessageBox -> clickedButton() == cancelButton) {
+        m_addHddDiskMessageBox -> close();
+    }
+}
+
+void MachineConfigMedia::addOpticalMedia() {
+
+}
+
+
