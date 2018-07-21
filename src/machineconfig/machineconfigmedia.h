@@ -35,8 +35,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include <QListWidget>
+
 // Local
 #include "../machine.h"
+#include "../utils/newdiskwizard.h"
 
 class MachineConfigMedia : public QWidget {
     Q_OBJECT
@@ -86,6 +89,8 @@ class MachineConfigMedia : public QWidget {
         QMessageBox *m_addFloppyMessageBox;
 
         QHash<QUuid, Media> *m_mediaHash;
+
+        Machine *m_machineOptions;
 
         // Methods
         void fillDetailsSection();

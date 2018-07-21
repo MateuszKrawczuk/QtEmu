@@ -105,7 +105,7 @@ void MachineDiskPage::useExistingDiskPath() {
     this -> m_existingDiskPath = QFileDialog::getSaveFileName(this,
                                                               tr("Select an existing disk"),
                                                               QDir::homePath(),
-                                                              tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
+                                                              tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.vmdk)"));
 
     if ( !m_existingDiskPath.isEmpty() ) {
         this -> m_hardDiskPathLineEdit -> setText(QDir::toNativeSeparators(m_existingDiskPath));
@@ -325,7 +325,7 @@ void MachineNewDiskPage::selectNameNewDisk() {
     this -> m_diskName = QFileDialog::getSaveFileName(this,
                                                       tr("Select an existing disk"),
                                                       QDir::homePath(),
-                                                      tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.wmdk)"));
+                                                      tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.vmdk)"));
 
     if ( ! this -> m_diskName.isEmpty() ) {
         this -> m_fileNameLineEdit -> setText(QDir::toNativeSeparators(m_diskName));

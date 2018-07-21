@@ -25,6 +25,8 @@
 MachineConfigMedia::MachineConfigMedia(Machine *machine,
                                        QWidget *parent) : QWidget(parent) {
 
+    this -> m_machineOptions = machine;
+
     bool enableFields = true;
 
     if (machine -> getState() != Machine::Stopped) {
@@ -189,11 +191,16 @@ void MachineConfigMedia::addHddMedia() {
 
     m_addHddDiskMessageBox -> exec();
 
+    QString diskPath;
+
     if (m_addHddDiskMessageBox -> clickedButton() == newDiskButton) {
+        NewDiskWizard newDiskWizard(this -> m_machineOptions, this);
+
+        newDiskWizard.show();
+        newDiskWizard.exec();
 
     } else if (m_addHddDiskMessageBox -> clickedButton() == existingDiskButton) {
-        QString diskPath = QFileDialog::getOpenFileName(this, tr("Select kernel path"),
-                                                        QDir::homePath());
+       diskPath = QFileDialog::getOpenFileName(this, tr("Select kernel path"), QDir::homePath());
     } else if (m_addHddDiskMessageBox -> clickedButton() == cancelButton) {
         m_addHddDiskMessageBox -> close();
     }
@@ -202,5 +209,3 @@ void MachineConfigMedia::addHddMedia() {
 void MachineConfigMedia::addOpticalMedia() {
 
 }
-
-
