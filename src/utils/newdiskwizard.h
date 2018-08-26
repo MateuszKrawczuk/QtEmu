@@ -36,6 +36,7 @@
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 #include "../utils/systemutils.h"
 
 class NewDiskWizard : public QWizard {
@@ -43,7 +44,8 @@ class NewDiskWizard : public QWizard {
 
     public:
         explicit NewDiskWizard(Machine *machine,
-                               QWidget *parent = 0);
+                               QEMU *QEMUGlobalObject,
+                               QWidget *parent = nullptr);
         ~NewDiskWizard();
 
         enum { Page_Disk };
@@ -63,7 +65,8 @@ class NewDiskPage: public QWizardPage {
 
     public:
         explicit NewDiskPage(Machine *machine,
-                             QWidget *parent = 0);
+                             QEMU *QEMUGlobalObject,
+                             QWidget *parent = nullptr);
         ~NewDiskPage();
 
     signals:
@@ -111,6 +114,7 @@ class NewDiskPage: public QWizardPage {
         QString m_diskName;
 
         Machine *m_newMachine;
+        QEMU *m_qemuGlobalObject;
 
         // Methods
         bool validatePage();

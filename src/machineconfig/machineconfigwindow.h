@@ -49,6 +49,7 @@
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 #include "machineconfiggeneral.h"
 #include "machineconfighardware.h"
 #include "machineconfigboot.h"
@@ -62,7 +63,8 @@ class MachineConfigWindow : public QWidget {
 
     public:
         explicit MachineConfigWindow(Machine *machine,
-                                     QWidget *parent = 0);
+                                     QEMU *QEMUGlobalObject,
+                                     QWidget *parent = nullptr);
         ~MachineConfigWindow();
 
     signals:

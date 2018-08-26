@@ -36,6 +36,7 @@
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 #include "../utils/systemutils.h"
 #include "../utils/logger.h"
 
@@ -43,8 +44,10 @@ class MachineConclusionPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit MachineConclusionPage(Machine *machine, QListWidget *osListWidget,
-                                       QWidget *parent = 0);
+        explicit MachineConclusionPage(Machine *machine,
+                                       QListWidget *osListWidget,
+                                       QEMU *QEMUGlobalObject,
+                                       QWidget *parent = nullptr);
         ~MachineConclusionPage();
 
     signals:
@@ -87,6 +90,8 @@ class MachineConclusionPage: public QWizardPage {
         QListWidget *m_osList;
 
         Machine *m_newMachine;
+
+        QEMU *m_QEMUGlobalObject;
 };
 
 #endif // CONCLUSIONPAGE_H

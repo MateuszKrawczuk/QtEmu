@@ -23,9 +23,11 @@
 #include "machineconfigmedia.h"
 
 MachineConfigMedia::MachineConfigMedia(Machine *machine,
+                                       QEMU *QEMUGlobalObject,
                                        QWidget *parent) : QWidget(parent) {
 
     this -> m_machineOptions = machine;
+    this -> m_qemuGlobalObject = QEMUGlobalObject;
 
     bool enableFields = true;
 
@@ -194,7 +196,7 @@ void MachineConfigMedia::addHddMedia() {
     QString diskPath;
 
     if (m_addHddDiskMessageBox -> clickedButton() == newDiskButton) {
-        NewDiskWizard newDiskWizard(this -> m_machineOptions, this);
+        NewDiskWizard newDiskWizard(this -> m_machineOptions, this -> m_qemuGlobalObject, this);
 
         newDiskWizard.show();
         newDiskWizard.exec();

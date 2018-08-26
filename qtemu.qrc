@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>images/banner.png</file>
         <file>images/qtemu.png</file>
+        <file>images/QEMU.png</file>
         <file>images/flags/32x32/brazil.png</file>
         <file>images/flags/32x32/czech.png</file>
         <file>images/flags/32x32/eeuu.png</file>

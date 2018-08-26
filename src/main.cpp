@@ -31,6 +31,7 @@
 
 // Local
 #include "mainwindow.h"
+#include "qemu.h"
 #include "utils/logger.h"
 
 int main(int argc, char *argv[]) {
@@ -68,13 +69,14 @@ int main(int argc, char *argv[]) {
 
     if ( ! dataDirectory.exists(dataDirectoryPath) ) {
         dataDirectory.mkdir(dataDirectoryPath);
-        settings.setValue("QtEmuData", dataDirectoryPath);
 
         if (! dataDirectory.exists(dataDirectoryLogs) ) {
             dataDirectory.mkdir(dataDirectoryLogs);
-            settings.setValue("QtEmuLogs", dataDirectoryLogs);
         }
     }
+
+    settings.setValue("QtEmuData", dataDirectoryPath);
+    settings.setValue("QtEmuLogs", dataDirectoryLogs);
 
     settings.sync();
     settings.endGroup();
@@ -148,5 +150,4 @@ int main(int argc, char *argv[]) {
     qtemuWindow.show();
 
     return qtemuApp.exec();
-
 }

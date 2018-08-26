@@ -22,12 +22,15 @@
 // Local
 #include "conclusionpage.h"
 
-MachineConclusionPage::MachineConclusionPage(Machine *machine, QListWidget *osListWidget,
+MachineConclusionPage::MachineConclusionPage(Machine *machine,
+                                             QListWidget *osListWidget,
+                                             QEMU *QEMUGlobalObject,
                                              QWidget *parent) : QWizardPage(parent) {
 
     this -> setTitle(tr("Machine Summary"));
 
     this -> m_newMachine = machine;
+    this -> m_QEMUGlobalObject = QEMUGlobalObject;
     this -> m_osList = osListWidget;
 
     m_conclusionLabel = new QLabel(tr("Summary of the new machine"));
@@ -139,7 +142,8 @@ bool MachineConclusionPage::validatePage() {
     this -> m_newMachine -> setDiskPath(strMachinePath);
 
     // Create the disk
-    bool isDiskCreated = SystemUtils::createDisk(strMachinePath,
+    bool isDiskCreated = SystemUtils::createDisk(this -> m_QEMUGlobalObject,
+                                                 strMachinePath,
                                                  this -> m_newMachine -> getDiskFormat(),
                                                  this -> m_newMachine -> getDiskSize(),
                                                  false);
@@ -211,6 +215,8 @@ void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) cons
     machineJSONObject["network"]   = this -> m_newMachine -> getUseNetwork();
     machineJSONObject["path"]      = this -> m_newMachine -> getPath();
     machineJSONObject["uuid"]      = this -> m_newMachine -> getUuid();
+    // TODO: Implement another types
+    machineJSONObject["binary"]    = this -> m_QEMUGlobalObject -> getQEMUBinary("qemu-system-x86_64");
 
     QJsonObject cpu;
     cpu["CPUType"]     = this -> m_newMachine -> getCPUType();

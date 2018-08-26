@@ -23,6 +23,7 @@
 #include "machineconfigwindow.h"
 
 MachineConfigWindow::MachineConfigWindow(Machine *machine,
+                                         QEMU *QEMUGlobalObject,
                                          QWidget *parent) : QWidget(parent) {
 
     this -> m_machine = machine;
@@ -37,7 +38,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_configGeneral  = new MachineConfigGeneral(machine, this);
     m_configHardware = new MachineConfigHardware(machine, this);
     m_configBoot     = new MachineConfigBoot(machine, this);
-    m_configMedia    = new MachineConfigMedia(machine, this);
+    m_configMedia    = new MachineConfigMedia(machine, QEMUGlobalObject, this);
     m_configNetwork  = new MachineConfigNetwork(machine, this);
     m_configAudio    = new MachineConfigAudio(machine, this);
     m_configAccel    = new MachineConfigAccel(machine, this);

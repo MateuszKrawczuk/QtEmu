@@ -19,49 +19,39 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MACHINEWIZARD_H
-#define MACHINEWIZARD_H
+#ifndef QEMU_H
+#define QEMU_H
 
 // Qt
-#include <QWizard>
-#include <QListWidget>
+#include <QObject>
+#include <QDirIterator>
 #include <QFile>
+#include <QMap>
+#include <QSettings>
+#include <QJsonDocument>
 
 #include <QDebug>
 
-// Local
-#include "machine.h"
-#include "qemu.h"
-#include "utils/systemutils.h"
-
-#include "newmachine/generalpage.h"
-#include "newmachine/hardwarepage.h"
-#include "newmachine/acceleratorpage.h"
-#include "newmachine/memorypage.h"
-#include "newmachine/diskpage.h"
-#include "newmachine/conclusionpage.h"
-
-class MachineWizard : public QWizard {
+class QEMU : public QObject {
     Q_OBJECT
 
     public:
-        explicit MachineWizard(Machine *machine,
-                               QListWidget *osListWidget,
-                               QEMU *QEMUGlobalObject,
-                               QWidget *parent = 0);
-        ~MachineWizard();
+        explicit QEMU(QObject *parent = nullptr);
+        ~QEMU();
 
-        enum { Page_Name, Page_Hardware, Page_Accelerator,
-               Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
+        QString QEMUImgPath() const;
+        void setQEMUImgPath(const QString path);
 
-    signals:
-
-    public slots:
+        QMap<QString, QString> QEMUBinaries() const;
+        QString getQEMUBinary(const QString binary) const;
+        void setQEMUBinaries(const QString path);
 
     protected:
 
     private:
+        QString m_QEMUImgPath;
+        QMap<QString, QString> m_QEMUBinaries;
 
 };
 
-#endif // MACHINEWIZARD_H
+#endif // QEMU_H

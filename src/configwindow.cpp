@@ -51,6 +51,8 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     this -> createProxyPage();
 
+    this -> createQEMUPage();
+
     settings.endGroup();
 
     m_optionsListWidget = new QListWidget(this);
@@ -82,6 +84,9 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
+    m_optionsListWidget -> addItem(tr("QEMU"));
+    m_optionsListWidget -> item(5) -> setIcon(QIcon(QPixmap(":/images/QEMU.png")));
+
     // Prepare window
     m_categoriesStackedWidget = new QStackedWidget(this);
     m_categoriesStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
@@ -92,6 +97,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
     m_categoriesStackedWidget -> addWidget(this -> m_languagePageWidget);
     m_categoriesStackedWidget -> addWidget(this -> m_startPageWidget);
     m_categoriesStackedWidget -> addWidget(this -> m_proxyPageWidget);
+    m_categoriesStackedWidget -> addWidget(this -> m_QEMUPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_categoriesStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -359,6 +365,29 @@ void ConfigWindow::createProxyPage(){
 
     m_proxyPageWidget = new QWidget(this);
     m_proxyPageWidget -> setLayout(m_proxyPageLayout);
+}
+
+/**
+ * @brief Create the QEMU page of the QtEmu configuration
+ *
+ * Create the QEMU page of the QtEmu configuration where the
+ * QEMU related options can be configured. Binaries, Version of QEMU, qemu-img path, etc.
+ */
+void ConfigWindow::createQEMUPage() {
+
+    QStringList labels;
+
+    labels << "Name" << "Path";
+
+    m_binariesTableWidget = new QTableWidget();
+    m_binariesTableWidget -> setColumnCount(2);
+    m_binariesTableWidget -> setHorizontalHeaderLabels(labels);
+
+    m_QEMULayout = new QHBoxLayout();
+    m_QEMULayout -> addWidget(m_binariesTableWidget);
+
+    m_QEMUPageWidget = new QWidget(this);
+    m_QEMUPageWidget -> setLayout(m_QEMULayout);
 }
 
 /**

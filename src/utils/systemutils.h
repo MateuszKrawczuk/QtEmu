@@ -36,6 +36,7 @@
 #include <QDebug>
 
 // Local
+#include "../qemu.h"
 
 // GNU
 #ifdef Q_OS_LINUX
@@ -64,8 +65,11 @@ class SystemUtils {
 
         static QString getOsIcon(const QString &osVersion);
 
-        static bool createDisk(const QString &diskName, const QString &format,
-                               const double size, bool useEncryption);
+        static bool createDisk(QEMU *qemuGlobalObject,
+                               const QString &diskName,
+                               const QString &format,
+                               const double size,
+                               bool useEncryption);
 
     private:
 

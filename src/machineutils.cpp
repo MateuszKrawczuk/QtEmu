@@ -125,7 +125,9 @@ QStringList MachineUtils::generateMachineCommand(const QUuid machineUuid) {
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
-    QString pipe = machineObject["path"].toString().append("/").append(machineObject["name"].toString());
+    QString pipe = machineObject["path"].toString()
+                   .append(QDir::toNativeSeparators("/"))
+                   .append(machineObject["name"].toString());
 
     qemuCommand << "-pidfile";
     qemuCommand << pipe.append(".pid");

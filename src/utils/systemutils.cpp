@@ -44,7 +44,7 @@ void SystemUtils::getTotalMemory(int32_t &totalRAM) {
 
         GlobalMemoryStatusEx (&statex);
 
-        qDebug() << "Physical RAM => " << (int)statex.ullTotalPhys / (1024*1024*1024);
+        totalRAM = (int)statex.ullTotalPhys / (1024*1024*1024);
     #endif
 }
 
@@ -215,8 +215,11 @@ QString SystemUtils::getOsIcon(const QString &osVersion) {
     }
 }
 
-bool SystemUtils::createDisk(const QString &diskName, const QString &format,
-                             const double size, bool useEncryption) {
+bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
+                             const QString &diskName,
+                             const QString &format,
+                             const double size,
+                             bool useEncryption) {
 
     QProcess *qemuImgProcess = new QProcess();
 
@@ -234,11 +237,7 @@ bool SystemUtils::createDisk(const QString &diskName, const QString &format,
 
     QString program;
 
-    #ifdef Q_OS_LINUX
-    program = "qemu-img";
-    #endif
-
-    // TODO: Implement other platforms... :'(
+    program = qemuGlobalObject -> QEMUImgPath();
 
     qemuImgProcess -> start(program, args);
 
@@ -262,7 +261,7 @@ bool SystemUtils::createDisk(const QString &diskName, const QString &format,
         qemuImgNotFinishedMessageBox -> setText(QObject::tr("<p>Cannot finish qemu-img</p>"
                                                             "<p><strong>Image isn't created</strong></p>"
                                                             "<p>There's a problem with qemu-img, the process "
-                                                            "the process has not finished correctly</p>"));
+                                                            "has not finished correctly</p>"));
         qemuImgNotFinishedMessageBox -> exec();
 
         return false;
@@ -289,10 +288,10 @@ bool SystemUtils::createDisk(const QString &diskName, const QString &format,
             qemuImgOkMessageBox -> setText(QObject::tr("<p><strong>Image created</strong></p>"
                                                        "<p>" + out + "</p>"));
             qemuImgOkMessageBox -> exec();
+
+            return true;
         }
 
-        return true;
+        return false;
     }
-
-    return false;
 }

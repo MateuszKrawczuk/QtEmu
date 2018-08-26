@@ -21,7 +21,6 @@
 
 // Local
 #include "mainwindow.h"
-#include "machinewizard.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this -> setWindowTitle("QtEmu");
@@ -32,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     qApp -> setQuitOnLastWindowClosed(true);
 
     QSettings settings;
+
+    // Generate QEMU object
+    qemuGlobalObject = new QEMU(this);
 
     m_configWindow = new ConfigWindow(this);
     m_helpwidget  = new HelpWidget(this);
@@ -111,7 +113,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     connect(m_osListWidget, &QListWidget::customContextMenuRequested,
             this, &MainWindow::machinesMenu);
-
 }
 
 MainWindow::~MainWindow() {
@@ -451,7 +452,7 @@ void MainWindow::createNewMachine() {
     m_machine -> setThreadsCore(0);
     m_machine -> setMaxHotCPU(0);
 
-    MachineWizard newMachineWizard(m_machine, this -> m_osListWidget, this);
+    MachineWizard newMachineWizard(m_machine, this -> m_osListWidget, this -> qemuGlobalObject, this);
 
     newMachineWizard.show();
     newMachineWizard.exec();
@@ -476,7 +477,9 @@ void MainWindow::machineOptions() {
         }
     }
 
-    MachineConfigWindow *machineConfigWindow = new MachineConfigWindow(machineOptions, this);
+    MachineConfigWindow *machineConfigWindow = new MachineConfigWindow(machineOptions,
+                                                                       this -> qemuGlobalObject,
+                                                                       this);
 
     machineConfigWindow -> show();
 }

@@ -39,6 +39,7 @@
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 #include "../utils/newdiskwizard.h"
 
 class MachineConfigMedia : public QWidget {
@@ -46,6 +47,7 @@ class MachineConfigMedia : public QWidget {
 
     public:
         explicit MachineConfigMedia(Machine *machine,
+                                    QEMU *QEMUGlobalObject,
                                     QWidget *parent = 0);
         ~MachineConfigMedia();
         QWidget *m_mediaPageWidget;
@@ -91,6 +93,7 @@ class MachineConfigMedia : public QWidget {
         QHash<QUuid, Media> *m_mediaHash;
 
         Machine *m_machineOptions;
+        QEMU *m_qemuGlobalObject;
 
         // Methods
         void fillDetailsSection();

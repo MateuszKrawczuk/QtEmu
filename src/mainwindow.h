@@ -50,6 +50,8 @@
 #include "helpwidget.h"
 #include "aboutwidget.h"
 #include "configwindow.h"
+#include "machinewizard.h"
+#include "qemu.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -147,6 +149,9 @@ class MainWindow : public QMainWindow {
         QLabel *m_machineAccelLabel;
         QLabel *m_machineDiskLabel;
         QLabel *m_machineNetworkLabel;
+
+        // QEMU
+        QEMU *qemuGlobalObject;
 
         // Methods
         Machine* generateMachineObject(const QUuid machineUuid);

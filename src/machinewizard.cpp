@@ -22,7 +22,9 @@
 // Local
 #include "machinewizard.h"
 
-MachineWizard::MachineWizard(Machine *machine, QListWidget *osListWidget,
+MachineWizard::MachineWizard(Machine *machine,
+                             QListWidget *osListWidget,
+                             QEMU *QEMUGlobalObject,
                              QWidget *parent) : QWizard(parent) {
 
     setWindowTitle(tr("Create a new Machine"));
@@ -33,7 +35,7 @@ MachineWizard::MachineWizard(Machine *machine, QListWidget *osListWidget,
     setPage(Page_Memory, new MachineMemoryPage(machine, this));
     setPage(Page_Disk, new MachineDiskPage(machine, this));
     setPage(Page_New_Disk, new MachineNewDiskPage(machine ,this));
-    setPage(Page_Conclusion, new MachineConclusionPage(machine, osListWidget, this));
+    setPage(Page_Conclusion, new MachineConclusionPage(machine, osListWidget, QEMUGlobalObject, this));
 
     setStartId(Page_Name);
 

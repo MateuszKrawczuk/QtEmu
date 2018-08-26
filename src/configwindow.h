@@ -46,6 +46,7 @@
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QCloseEvent>
+#include <QTableWidget>
 
 #include <QDebug>
 
@@ -53,7 +54,7 @@ class ConfigWindow : public QWidget {
     Q_OBJECT
 
     public:
-        explicit ConfigWindow(QWidget *parent = 0);
+        explicit ConfigWindow(QWidget *parent = nullptr);
         ~ConfigWindow();
 
     signals:
@@ -161,13 +162,19 @@ class ConfigWindow : public QWidget {
 
         QCheckBox *m_useAuth;
 
+        // QEMU
+        QHBoxLayout *m_QEMULayout;
+        QWidget *m_QEMUPageWidget;
+
+        QTableWidget *m_binariesTableWidget;
+
         // Methods
         void createGeneralPage();
         void createUpdatePage();
         void createLanguagePage();
         void createStartPage();
         void createProxyPage();
-
+        void createQEMUPage();
 };
 
 #endif // CONFIGWINDOW_H

@@ -75,6 +75,7 @@ class BasicTab: public QWidget {
     private slots:
         void selectOS(QString OSSelected);
         QString getStatusLabel(Machine::States state);
+        void nameChanged();
 
     protected:
 
@@ -89,6 +90,8 @@ class BasicTab: public QWidget {
 
         QLabel *m_machineUuidLabel;
         QLabel *m_machineStatusLabel;
+
+        Machine *m_machineConfig;
 };
 
 class DescriptionTab: public QWidget {

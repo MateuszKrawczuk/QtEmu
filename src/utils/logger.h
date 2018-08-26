@@ -45,10 +45,6 @@ class Logger {
         static void logQtemuAction(const QString &message);
         static void logQtemuError(const QString &message);
 
-    signals:
-
-    public slots:
-
     protected:
 
     private:

@@ -23,11 +23,12 @@
 #include "newdiskwizard.h"
 
 NewDiskWizard::NewDiskWizard(Machine *machine,
+                             QEMU *QEMUGlobalObject,
                              QWidget *parent) : QWizard(parent) {
 
     setWindowTitle(tr("Create a new Disk"));
 
-    setPage(Page_Disk, new NewDiskPage(machine, this));
+    setPage(Page_Disk, new NewDiskPage(machine, QEMUGlobalObject, this));
 
     setStartId(Page_Disk);
 
@@ -52,9 +53,11 @@ NewDiskWizard::~NewDiskWizard() {
 }
 
 NewDiskPage::NewDiskPage(Machine *machine,
+                         QEMU *QEMUGlobalObject,
                          QWidget *parent) : QWizardPage(parent) {
 
     this -> m_newMachine = machine;
+    this -> m_qemuGlobalObject = QEMUGlobalObject;
 
     m_fileLocationGroupBox = new QGroupBox(tr("Disk path"));
 
@@ -196,7 +199,8 @@ QString NewDiskPage::getExtension() {
 
 bool NewDiskPage::validatePage() {
 
-    bool isDiskCreated = SystemUtils::createDisk(this -> m_diskName,
+    bool isDiskCreated = SystemUtils::createDisk(this -> m_qemuGlobalObject,
+                                                 this -> m_diskName,
                                                  NewDiskPage::getExtension(),
                                                  this -> m_diskSpinBox -> value(),
                                                  false);

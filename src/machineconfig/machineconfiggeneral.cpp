@@ -69,9 +69,13 @@ BasicTab::BasicTab(Machine *machine,
                    bool enableFields,
                    QWidget *parent) : QWidget(parent) {
 
+    this -> m_machineConfig = machine;
+
     m_machineNameLineEdit = new QLineEdit();
     m_machineNameLineEdit -> setText(machine -> getName());
     m_machineNameLineEdit -> setEnabled(enableFields);
+    connect(m_machineNameLineEdit, &QLineEdit::editingFinished,
+            this, &BasicTab::nameChanged);
 
     m_OSType = new QComboBox();
     m_OSType -> setSizePolicy(QSizePolicy::Expanding,
@@ -179,6 +183,10 @@ QString BasicTab::getStatusLabel(Machine::States state) {
     }
 
     return statusLabel;
+}
+
+void BasicTab::nameChanged() {
+    this -> m_machineConfig -> setName(this -> m_machineNameLineEdit -> text());
 }
 
 DescriptionTab::DescriptionTab(Machine *machine,
