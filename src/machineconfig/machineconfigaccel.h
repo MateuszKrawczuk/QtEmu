@@ -37,7 +37,7 @@ class MachineConfigAccel : public QWidget {
 
     public:
         explicit MachineConfigAccel(Machine *machine,
-                                    QWidget *parent = 0);
+                                    QWidget *parent = nullptr);
         ~MachineConfigAccel();
         QWidget *m_acceleratorPageWidget;
 

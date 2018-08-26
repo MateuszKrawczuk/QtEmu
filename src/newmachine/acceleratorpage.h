@@ -37,7 +37,7 @@ class MachineAcceleratorPage: public QWizardPage {
 
     public:
         explicit MachineAcceleratorPage(Machine *machine,
-                                        QWidget *parent = 0);
+                                        QWidget *parent = nullptr);
         ~MachineAcceleratorPage();
 
     signals:
@@ -59,7 +59,7 @@ class KVMTab: public QWidget {
 
     public:
         explicit KVMTab(Machine *machine,
-                        QWidget *parent = 0);
+                        QWidget *parent = nullptr);
         ~KVMTab();
     signals:
 
@@ -84,7 +84,7 @@ class XENTab: public QWidget {
 
     public:
         explicit XENTab(Machine *machine,
-                        QWidget *parent = 0);
+                        QWidget *parent = nullptr);
         ~XENTab();
     signals:
 
@@ -109,7 +109,7 @@ class TCGTab: public QWidget {
 
     public:
         explicit TCGTab(Machine *machine,
-                        QWidget *parent = 0);
+                        QWidget *parent = nullptr);
         ~TCGTab();
     signals:
 
@@ -134,7 +134,7 @@ class HAXMTab: public QWidget {
 
     public:
         explicit HAXMTab(Machine *machine,
-                         QWidget *parent = 0);
+                         QWidget *parent = nullptr);
         ~HAXMTab();
     signals:
 

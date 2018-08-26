@@ -38,7 +38,7 @@ class MachineMemoryPage: public QWizardPage {
 
     public:
         explicit MachineMemoryPage(Machine *machine,
-                                   QWidget *parent = 0);
+                                   QWidget *parent = nullptr);
         ~MachineMemoryPage();
 
     signals:

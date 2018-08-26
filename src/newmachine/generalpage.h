@@ -41,7 +41,7 @@ class MachineNamePage: public QWizardPage {
 
     public:
         explicit MachineNamePage(Machine *machine,
-                                 QWidget *parent = 0);
+                                 QWidget *parent = nullptr);
         ~MachineNamePage();
 
     signals:

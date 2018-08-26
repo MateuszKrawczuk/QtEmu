@@ -48,7 +48,7 @@ class MachineConfigMedia : public QWidget {
     public:
         explicit MachineConfigMedia(Machine *machine,
                                     QEMU *QEMUGlobalObject,
-                                    QWidget *parent = 0);
+                                    QWidget *parent = nullptr);
         ~MachineConfigMedia();
         QWidget *m_mediaPageWidget;
 

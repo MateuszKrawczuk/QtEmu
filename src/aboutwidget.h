@@ -43,7 +43,7 @@ class AboutTab : public QWidget {
     Q_OBJECT
 
     public:
-        explicit AboutTab(QWidget *parent = 0);
+        explicit AboutTab(QWidget *parent = nullptr);
         ~AboutTab();
     signals:
 
@@ -62,7 +62,7 @@ class AuthorsTab : public QWidget {
     Q_OBJECT
 
     public:
-        explicit AuthorsTab(QWidget *parent = 0);
+        explicit AuthorsTab(QWidget *parent = nullptr);
         ~AuthorsTab();
 
     signals:
@@ -80,7 +80,7 @@ class LicenseTab : public QWidget {
     Q_OBJECT
 
     public:
-        explicit LicenseTab(QWidget *parent = 0);
+        explicit LicenseTab(QWidget *parent = nullptr);
         ~LicenseTab();
 
     signals:
@@ -98,7 +98,7 @@ class AboutWidget : public QWidget {
     Q_OBJECT
 
     public:
-        explicit AboutWidget(QWidget *parent = 0);
+        explicit AboutWidget(QWidget *parent = nullptr);
         ~AboutWidget();
 
     signals:

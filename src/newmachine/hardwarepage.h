@@ -42,7 +42,7 @@ class MachineHardwarePage: public QWizardPage {
 
     public:
         explicit MachineHardwarePage(Machine *machine,
-                                     QWidget *parent = 0);
+                                     QWidget *parent = nullptr);
         ~MachineHardwarePage();
 
     signals:
@@ -63,8 +63,9 @@ class ProcessorTab: public QWidget {
     Q_OBJECT
 
     public:
-        explicit ProcessorTab(Machine *machine, Qt::Alignment layoutAlignment,
-                              QWidget *parent = 0);
+        explicit ProcessorTab(Machine *machine,
+                              Qt::Alignment layoutAlignment,
+                              QWidget *parent = nullptr);
         ~ProcessorTab();
 
     signals:
@@ -112,7 +113,7 @@ class GraphicsTab: public QWidget {
 
     public:
         explicit GraphicsTab(Machine *machine,
-                             QWidget *parent = 0);
+                             QWidget *parent = nullptr);
         ~GraphicsTab();
     signals:
 
@@ -139,7 +140,7 @@ class AudioTab: public QWidget {
 
     public:
         explicit AudioTab(Machine *machine,
-                          QWidget *parent = 0);
+                          QWidget *parent = nullptr);
         ~AudioTab();
     signals:
 
@@ -175,7 +176,7 @@ class NetworkTab: public QWidget {
 
     public:
         explicit NetworkTab(Machine *machine,
-                            QWidget *parent = 0);
+                            QWidget *parent = nullptr);
         ~NetworkTab();
     signals:
 

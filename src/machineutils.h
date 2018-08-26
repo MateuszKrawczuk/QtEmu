@@ -42,7 +42,7 @@ class MachineUtils : public QObject {
     Q_OBJECT
 
     public:
-        explicit MachineUtils(QObject *parent = 0);
+        explicit MachineUtils(QObject *parent = nullptr);
         ~MachineUtils();
 
         static QStringList generateMachineCommand(const QUuid machineUuid);

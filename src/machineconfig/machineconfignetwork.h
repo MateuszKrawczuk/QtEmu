@@ -35,7 +35,7 @@ class MachineConfigNetwork : public QWidget {
 
     public:
         explicit MachineConfigNetwork(Machine *machine,
-                                      QWidget *parent = 0);
+                                      QWidget *parent = nullptr);
         ~MachineConfigNetwork();
         QWidget *m_networkPageWidget;
 

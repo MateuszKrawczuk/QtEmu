@@ -42,7 +42,7 @@ class MachineConfigBoot : public QWidget {
 
     public:
         explicit MachineConfigBoot(Machine *machine,
-                                   QWidget *parent = 0);
+                                   QWidget *parent = nullptr);
         ~MachineConfigBoot();
         QWidget *m_bootPageWidget;
 

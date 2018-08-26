@@ -39,7 +39,7 @@ class MachineConfigAudio : public QWidget {
 
     public:
         explicit MachineConfigAudio(Machine *machine,
-                                    QWidget *parent = 0);
+                                    QWidget *parent = nullptr);
         ~MachineConfigAudio();
         QWidget *m_audioPageWidget;
 

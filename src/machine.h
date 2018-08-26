@@ -131,7 +131,7 @@ class Machine: public QObject {
     Q_OBJECT
 
     public:
-        explicit Machine(QObject *parent = 0);
+        explicit Machine(QObject *parent = nullptr);
         ~Machine();
 
         enum States {

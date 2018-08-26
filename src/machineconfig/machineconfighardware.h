@@ -35,7 +35,7 @@ class MachineConfigHardware : public QWidget {
 
     public:
         explicit MachineConfigHardware(Machine *machine,
-                                       QWidget *parent = 0);
+                                       QWidget *parent = nullptr);
         ~MachineConfigHardware();
         QWidget *m_hardwarePageWidget;
 

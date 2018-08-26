@@ -38,7 +38,7 @@ class MachineConfigGeneral : public QWidget {
 
     public:
         explicit MachineConfigGeneral(Machine *machine,
-                                      QWidget *parent = 0);
+                                      QWidget *parent = nullptr);
         ~MachineConfigGeneral();
 
         QWidget *m_generalPageWidget;
@@ -65,7 +65,7 @@ class BasicTab: public QWidget {
     public:
         explicit BasicTab(Machine *machine,
                           bool enableFields,
-                          QWidget *parent = 0);
+                          QWidget *parent = nullptr);
         ~BasicTab();
 
     signals:
@@ -100,7 +100,7 @@ class DescriptionTab: public QWidget {
     public:
         explicit DescriptionTab(Machine *machine,
                                 bool enableFields,
-                                QWidget *parent = 0);
+                                QWidget *parent = nullptr);
         ~DescriptionTab();
     signals:
 

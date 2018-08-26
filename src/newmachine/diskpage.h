@@ -50,7 +50,7 @@ class MachineDiskPage: public QWizardPage {
 
     public:
         explicit MachineDiskPage(Machine *machine,
-                                 QWidget *parent = 0);
+                                 QWidget *parent = nullptr);
         ~MachineDiskPage();
 
     signals:
@@ -92,7 +92,7 @@ class MachineNewDiskPage: public QWizardPage {
 
     public:
         explicit MachineNewDiskPage(Machine *machine,
-                                    QWidget *parent = 0);
+                                    QWidget *parent = nullptr);
         ~MachineNewDiskPage();
 
     signals:
