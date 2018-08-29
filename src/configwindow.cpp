@@ -380,8 +380,28 @@ void ConfigWindow::createQEMUPage(QEMU *QEMUGlobalObject) {
 
     labels << "Name" << "Path";
 
+    m_addBinaryToolButton = new QToolButton();
+    m_addBinaryToolButton -> setIcon(QIcon::fromTheme("list-add",
+                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+    /*connect(m_moveUpAccelToolButton, &QAbstractButton::clicked,
+            this, &ConfigWindow::moveUpButton);*/
+
+    m_deleteBinaryToolButton = new QToolButton();
+    m_deleteBinaryToolButton -> setIcon(QIcon::fromTheme("list-remove",
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+    /*connect(m_deleteBinaryToolButton, &QAbstractButton::clicked,
+            this, &ConfigWindow::moveUpButton);*/
+
     m_binariesTableWidget = new QTableWidget();
     m_binariesTableWidget -> setColumnCount(2);
+    m_binariesTableWidget -> setColumnWidth(0, 150);
+    m_binariesTableWidget -> setColumnWidth(1, 220);
+    m_binariesTableWidget -> setLayoutDirection(Qt::LeftToRight);
+    m_binariesTableWidget -> setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_binariesTableWidget -> setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_binariesTableWidget -> setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_binariesTableWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_binariesTableWidget -> setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
     m_binariesTableWidget -> setHorizontalHeaderLabels(labels);
 
     QMapIterator<QString, QString> iterator(QEMUGlobalObject -> QEMUBinaries());
@@ -394,11 +414,17 @@ void ConfigWindow::createQEMUPage(QEMU *QEMUGlobalObject) {
         m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 0, newItem);
 
         newItem = new QTableWidgetItem(iterator.value());
-        m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 1, newItem );
+        m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 1, newItem);
     }
+
+    m_QEMUButtonsLayout = new QVBoxLayout();
+    m_QEMUButtonsLayout -> setAlignment(Qt::AlignCenter);
+    m_QEMUButtonsLayout -> addWidget(m_addBinaryToolButton);
+    m_QEMUButtonsLayout -> addWidget(m_deleteBinaryToolButton);
 
     m_QEMULayout = new QHBoxLayout();
     m_QEMULayout -> addWidget(m_binariesTableWidget);
+    m_QEMULayout -> addItem(m_QEMUButtonsLayout);
 
     m_QEMUPageWidget = new QWidget(this);
     m_QEMUPageWidget -> setLayout(m_QEMULayout);

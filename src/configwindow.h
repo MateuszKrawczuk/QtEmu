@@ -47,6 +47,7 @@
 #include <QRadioButton>
 #include <QCloseEvent>
 #include <QTableWidget>
+#include <QToolButton>
 
 #include <QDebug>
 
@@ -167,10 +168,14 @@ class ConfigWindow : public QWidget {
         QCheckBox *m_useAuth;
 
         // QEMU
+        QVBoxLayout *m_QEMUButtonsLayout;
         QHBoxLayout *m_QEMULayout;
         QWidget *m_QEMUPageWidget;
 
         QTableWidget *m_binariesTableWidget;
+
+        QToolButton *m_addBinaryToolButton;
+        QToolButton *m_deleteBinaryToolButton;
 
         // Methods
         void createGeneralPage();
