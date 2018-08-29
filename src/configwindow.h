@@ -50,11 +50,15 @@
 
 #include <QDebug>
 
+// Local
+#include "qemu.h"
+
 class ConfigWindow : public QWidget {
     Q_OBJECT
 
     public:
-        explicit ConfigWindow(QWidget *parent = nullptr);
+        explicit ConfigWindow(QEMU *QEMUGlobalObject,
+                              QWidget *parent = nullptr);
         ~ConfigWindow();
 
     signals:
@@ -174,7 +178,7 @@ class ConfigWindow : public QWidget {
         void createLanguagePage();
         void createStartPage();
         void createProxyPage();
-        void createQEMUPage();
+        void createQEMUPage(QEMU *QEMUGlobalObject);
 };
 
 #endif // CONFIGWINDOW_H

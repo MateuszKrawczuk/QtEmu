@@ -29,7 +29,8 @@
  * Configuration of QtEmu. Configure the machines path, language,
  * qemu before and after commands and the proxy.
  */
-ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
+ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject,
+                           QWidget *parent) : QWidget(parent) {
     this -> setWindowTitle(tr("Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
                                            QIcon(":/images/qtemu.png")));
@@ -51,7 +52,7 @@ ConfigWindow::ConfigWindow(QWidget *parent) : QWidget(parent) {
 
     this -> createProxyPage();
 
-    this -> createQEMUPage();
+    this -> createQEMUPage(QEMUGlobalObject);
 
     settings.endGroup();
 
@@ -373,7 +374,7 @@ void ConfigWindow::createProxyPage(){
  * Create the QEMU page of the QtEmu configuration where the
  * QEMU related options can be configured. Binaries, Version of QEMU, qemu-img path, etc.
  */
-void ConfigWindow::createQEMUPage() {
+void ConfigWindow::createQEMUPage(QEMU *QEMUGlobalObject) {
 
     QStringList labels;
 
@@ -382,6 +383,19 @@ void ConfigWindow::createQEMUPage() {
     m_binariesTableWidget = new QTableWidget();
     m_binariesTableWidget -> setColumnCount(2);
     m_binariesTableWidget -> setHorizontalHeaderLabels(labels);
+
+    QMapIterator<QString, QString> iterator(QEMUGlobalObject -> QEMUBinaries());
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        m_binariesTableWidget -> insertRow(m_binariesTableWidget -> rowCount());
+
+        QTableWidgetItem *newItem = new QTableWidgetItem(iterator.key());
+        m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 0, newItem);
+
+        newItem = new QTableWidgetItem(iterator.value());
+        m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 1, newItem );
+    }
 
     m_QEMULayout = new QHBoxLayout();
     m_QEMULayout -> addWidget(m_binariesTableWidget);

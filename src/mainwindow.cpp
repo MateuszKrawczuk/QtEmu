@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // Generate QEMU object
     qemuGlobalObject = new QEMU(this);
 
-    m_configWindow = new ConfigWindow(this);
+    m_configWindow = new ConfigWindow(qemuGlobalObject, this);
     m_helpwidget  = new HelpWidget(this);
     m_aboutwidget = new AboutWidget(this);
 
@@ -470,7 +470,7 @@ void MainWindow::machineOptions() {
 
     QUuid machineUuid = this -> m_osListWidget -> currentItem() -> data(QMetaType::QUuid).toUuid();
 
-    Machine *machineOptions;
+    Machine *machineOptions = nullptr;
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
             machineOptions = machine;

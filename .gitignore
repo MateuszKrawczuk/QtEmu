@@ -2,3 +2,4 @@
 *~
 *.pro.user*
 build/
+builddir/
