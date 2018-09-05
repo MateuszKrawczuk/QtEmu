@@ -40,7 +40,6 @@
 #include <QStackedWidget>
 #include <QDir>
 #include <QFile>
-#include <QSet>
 #include <QProcess>
 
 // Local

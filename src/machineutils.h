@@ -32,7 +32,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QMutableHashIterator>
-#include <QSet>
 #include <QDebug>
 
 // Local

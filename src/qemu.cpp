@@ -24,9 +24,12 @@
 
 QEMU::QEMU(QObject *parent) : QObject(parent) {
 
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
     QString path;
     #ifdef Q_OS_LINUX
-    path = QDir::toNativeSeparators("/usr/bin");
+    path = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
     #endif
     #ifdef Q_OS_WIN
     path = QDir::toNativeSeparators("");
@@ -34,6 +37,10 @@ QEMU::QEMU(QObject *parent) : QObject(parent) {
     #ifdef Q_OS_MACOS
     path = QDir::toNativeSeparators("");
     #endif
+
+    settings.setValue("qemuBinaryPath", path);
+    settings.endGroup();
+    settings.sync();
 
     this -> setQEMUImgPath(path);
     this -> setQEMUBinaries(path);
@@ -70,6 +77,8 @@ QString QEMU::getQEMUBinary(const QString binary) const {
 }
 
 void QEMU::setQEMUBinaries(const QString path) {
+    m_QEMUBinaries.clear();
+
     QDirIterator it(path, QStringList() << "qemu-system-*", QDir::NoFilter, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         it.next();

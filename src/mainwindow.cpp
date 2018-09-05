@@ -457,6 +457,7 @@ void MainWindow::createNewMachine() {
     newMachineWizard.show();
     newMachineWizard.exec();
 
+    m_machinesList.append(m_machine);
     this -> loadUI(this -> m_osListWidget -> count());
 
 }
@@ -579,6 +580,16 @@ void MainWindow::loadUI(const int itemCount) {
     // Show the machine data in the labels
     if (this -> m_machinesList.size() > 0) {
         fillMachineDetailsSection(this -> m_machinesList[0]);
+    } else {
+        // TODO: Move that to a method
+        this -> m_machineNameLabel     -> setText("");
+        this -> m_machineOsLabel       -> setText("");
+        this -> m_machineCPULabel      -> setText("");
+        this -> m_machineRAMLabel      -> setText("");
+        this -> m_machineGraphicsLabel -> setText("");
+        this -> m_machineAudioLabel    -> setText("");
+        this -> m_machineAccelLabel    -> setText("");
+        this -> m_machineNetworkLabel  -> setText("");
     }
 
 }

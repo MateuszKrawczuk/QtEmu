@@ -48,6 +48,7 @@
 #include <QCloseEvent>
 #include <QTableWidget>
 #include <QToolButton>
+#include <QFileDialog>
 
 #include <QDebug>
 
@@ -80,6 +81,9 @@ class ConfigWindow : public QWidget {
         void cancelButton();
         void saveSettings();
         void loadSettings();
+        void setPathBinaries();
+        void findBinaries();
+        void binaryPathChanged(const QString binaryPath);
 
     protected:
 
@@ -168,14 +172,20 @@ class ConfigWindow : public QWidget {
         QCheckBox *m_useAuth;
 
         // QEMU
-        QVBoxLayout *m_QEMUButtonsLayout;
-        QHBoxLayout *m_QEMULayout;
+        QHBoxLayout *m_binaryLabelLayout;
+        QHBoxLayout *m_binaryLayout;
+        QVBoxLayout *m_QEMULayout;
         QWidget *m_QEMUPageWidget;
+
+        QLabel *m_findBinaryLabel;
+        QLineEdit *m_binaryPathLineEdit;
 
         QTableWidget *m_binariesTableWidget;
 
-        QToolButton *m_addBinaryToolButton;
-        QToolButton *m_deleteBinaryToolButton;
+        QToolButton *m_binariesPathToolButton;
+        QToolButton *m_searchBinariesToolButton;
+
+        QEMU *m_QEMUObject;
 
         // Methods
         void createGeneralPage();
@@ -183,7 +193,8 @@ class ConfigWindow : public QWidget {
         void createLanguagePage();
         void createStartPage();
         void createProxyPage();
-        void createQEMUPage(QEMU *QEMUGlobalObject);
+        void createQEMUPage();
+        void insertBinariesInTree();
 };
 
 #endif // CONFIGWINDOW_H

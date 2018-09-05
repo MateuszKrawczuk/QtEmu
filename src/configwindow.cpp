@@ -38,9 +38,7 @@ ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject,
     this -> setWindowModality(Qt::ApplicationModal);
     this -> setMinimumSize(640, 520);
 
-    QSettings settings;
-
-    settings.beginGroup("Configuration");
+    this -> m_QEMUObject = QEMUGlobalObject;
 
     this -> createGeneralPage();
 
@@ -52,9 +50,7 @@ ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject,
 
     this -> createProxyPage();
 
-    this -> createQEMUPage(QEMUGlobalObject);
-
-    settings.endGroup();
+    this -> createQEMUPage();
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget -> setViewMode(QListView::ListMode);
@@ -374,23 +370,32 @@ void ConfigWindow::createProxyPage(){
  * Create the QEMU page of the QtEmu configuration where the
  * QEMU related options can be configured. Binaries, Version of QEMU, qemu-img path, etc.
  */
-void ConfigWindow::createQEMUPage(QEMU *QEMUGlobalObject) {
+void ConfigWindow::createQEMUPage() {
+
+    m_findBinaryLabel = new QLabel(tr("QEMU binaries path"));
+    m_binaryPathLineEdit = new QLineEdit();
+    connect(m_binaryPathLineEdit, &QLineEdit::textChanged,
+            this, &ConfigWindow::binaryPathChanged);
+
+    m_binariesPathToolButton = new QToolButton();
+    m_binariesPathToolButton -> setToolTip(tr("QEMU binaries path"));
+    m_binariesPathToolButton -> setToolTipDuration(3000);
+    m_binariesPathToolButton -> setIcon(QIcon::fromTheme("folder-symbolic",
+                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+    connect(m_binariesPathToolButton, &QAbstractButton::clicked,
+            this, &ConfigWindow::setPathBinaries);
+
+    m_searchBinariesToolButton = new QToolButton();
+    m_searchBinariesToolButton -> setEnabled(false);
+    m_searchBinariesToolButton -> setToolTip(tr("Find binaries"));
+    m_searchBinariesToolButton -> setToolTipDuration(3000);
+    m_searchBinariesToolButton -> setIcon(QIcon::fromTheme("edit-find",
+                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+    connect(m_searchBinariesToolButton, &QAbstractButton::clicked,
+            this, &ConfigWindow::findBinaries);
 
     QStringList labels;
-
     labels << "Name" << "Path";
-
-    m_addBinaryToolButton = new QToolButton();
-    m_addBinaryToolButton -> setIcon(QIcon::fromTheme("list-add",
-                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
-    /*connect(m_moveUpAccelToolButton, &QAbstractButton::clicked,
-            this, &ConfigWindow::moveUpButton);*/
-
-    m_deleteBinaryToolButton = new QToolButton();
-    m_deleteBinaryToolButton -> setIcon(QIcon::fromTheme("list-remove",
-                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
-    /*connect(m_deleteBinaryToolButton, &QAbstractButton::clicked,
-            this, &ConfigWindow::moveUpButton);*/
 
     m_binariesTableWidget = new QTableWidget();
     m_binariesTableWidget -> setColumnCount(2);
@@ -404,30 +409,49 @@ void ConfigWindow::createQEMUPage(QEMU *QEMUGlobalObject) {
     m_binariesTableWidget -> setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
     m_binariesTableWidget -> setHorizontalHeaderLabels(labels);
 
-    QMapIterator<QString, QString> iterator(QEMUGlobalObject -> QEMUBinaries());
-    while (iterator.hasNext()) {
-        iterator.next();
+    this -> insertBinariesInTree();
 
-        m_binariesTableWidget -> insertRow(m_binariesTableWidget -> rowCount());
+    m_binaryLabelLayout = new QHBoxLayout();
+    m_binaryLabelLayout -> setAlignment(Qt::AlignLeft);
+    m_binaryLabelLayout -> addWidget(m_findBinaryLabel);
 
-        QTableWidgetItem *newItem = new QTableWidgetItem(iterator.key());
-        m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 0, newItem);
+    m_binaryLayout = new QHBoxLayout();
+    m_binaryLayout -> setAlignment(Qt::AlignCenter);
+    m_binaryLayout -> addWidget(m_binaryPathLineEdit);
+    m_binaryLayout -> addWidget(m_binariesPathToolButton);
+    m_binaryLayout -> addWidget(m_searchBinariesToolButton);
 
-        newItem = new QTableWidgetItem(iterator.value());
-        m_binariesTableWidget -> setItem(m_binariesTableWidget -> rowCount()-1, 1, newItem);
-    }
-
-    m_QEMUButtonsLayout = new QVBoxLayout();
-    m_QEMUButtonsLayout -> setAlignment(Qt::AlignCenter);
-    m_QEMUButtonsLayout -> addWidget(m_addBinaryToolButton);
-    m_QEMUButtonsLayout -> addWidget(m_deleteBinaryToolButton);
-
-    m_QEMULayout = new QHBoxLayout();
+    m_QEMULayout = new QVBoxLayout();
+    m_QEMULayout -> addItem(m_binaryLabelLayout);
+    m_QEMULayout -> addItem(m_binaryLayout);
     m_QEMULayout -> addWidget(m_binariesTableWidget);
-    m_QEMULayout -> addItem(m_QEMUButtonsLayout);
 
     m_QEMUPageWidget = new QWidget(this);
     m_QEMUPageWidget -> setLayout(m_QEMULayout);
+}
+
+/**
+ * @brief Insert all the QEMU binaries
+ *
+ * Insert all the QEMU binaries into the QTableWidget
+ */
+void ConfigWindow::insertBinariesInTree() {
+
+    this -> m_binariesTableWidget -> clearContents();
+    this -> m_binariesTableWidget -> setRowCount(0);
+
+    QMapIterator<QString, QString> iterator(this -> m_QEMUObject -> QEMUBinaries());
+    while (iterator.hasNext()) {
+        iterator.next();
+
+        this -> m_binariesTableWidget -> insertRow(this -> m_binariesTableWidget -> rowCount());
+
+        QTableWidgetItem *binaryItem = new QTableWidgetItem(iterator.key());
+        this -> m_binariesTableWidget -> setItem(this -> m_binariesTableWidget -> rowCount()-1, 0, binaryItem);
+
+        binaryItem = new QTableWidgetItem(iterator.value());
+        this -> m_binariesTableWidget -> setItem(this -> m_binariesTableWidget -> rowCount()-1, 1, binaryItem);
+    }
 }
 
 /**
@@ -590,6 +614,17 @@ void ConfigWindow::cancelButton() {
 
     this -> loadSettings();
 
+    this -> m_searchBinariesToolButton -> setEnabled(false);
+
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    this -> m_QEMUObject -> setQEMUBinaries(settings.value("qemuBinaryPath", "").toString());
+
+    settings.endGroup();
+
+    this -> insertBinariesInTree();
+
     this -> hide();
 
     this -> m_optionsListWidget -> setCurrentRow(0);
@@ -633,6 +668,9 @@ void ConfigWindow::saveSettings(){
     settings.setValue("auth", this -> m_useAuth -> isChecked());
     settings.setValue("proxyUser", this -> m_userProxy -> text());
     settings.setValue("proxyPassword", this -> m_passwordProxy -> text().toUtf8().toBase64());
+
+    // QEMU
+    settings.setValue("qemuBinaryPath", this -> m_binaryPathLineEdit -> text());
 
     settings.endGroup();
     settings.sync();
@@ -684,5 +722,55 @@ void ConfigWindow::loadSettings(){
     this -> toggleServerPort(settings.value("proxyType", 0).toInt());
     this -> toggleAuth(this -> m_useAuth);
 
+    // QEMU
+    // TODO: default value for different os
+    this -> binaryPathChanged(settings.value("qemuBinaryPath", "").toString());
+    this -> m_binaryPathLineEdit -> setText(settings.value("qemuBinaryPath", "").toString());
+
     settings.endGroup();
+}
+
+/**
+ * @brief Set the path for QEMU binaries
+ *
+ * Set the path for QEMU binaries
+ */
+void ConfigWindow::setPathBinaries() {
+
+    QString binariesPath = QFileDialog::getExistingDirectory(this, tr("Select a folder for QEMU binaries"),
+                                                             QDir::homePath(),
+                                                             QFileDialog::ShowDirsOnly |
+                                                             QFileDialog::DontResolveSymlinks
+                                                             );
+
+    if ( ! binariesPath.isEmpty()) {
+        this -> m_binaryPathLineEdit -> setText(binariesPath);
+        this -> m_searchBinariesToolButton -> setEnabled(true);
+    }
+}
+
+/**
+ * @brief Find QEMU binaries
+ *
+ * Find QEMU binaries in the specific folder
+ */
+void ConfigWindow::findBinaries() {
+
+    this -> m_QEMUObject -> setQEMUBinaries(this -> m_binaryPathLineEdit -> text());
+
+    this -> insertBinariesInTree();
+}
+
+/**
+ * @brief Enable/disable the search binaries button
+ *
+ * Enable/disable the search binaries button.
+ * If the input are empty, the button change to disabled
+ * If the input are fill, the button change to enabled
+ */
+void ConfigWindow::binaryPathChanged(const QString binaryPath) {
+    this -> m_binariesTableWidget -> clearContents();
+    this -> m_binariesTableWidget -> setRowCount(0);
+
+    this -> m_searchBinariesToolButton -> setEnabled(!binaryPath.isEmpty());
 }
