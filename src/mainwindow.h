@@ -24,6 +24,7 @@
 
 // Qt
 #include <QMainWindow>
+#include <QtNetwork>
 #include <QSettings>
 #include <QApplication>
 #include <QMenu>
@@ -69,6 +70,7 @@ class MainWindow : public QMainWindow {
         void visitQtEmuWebsite();
         void visitQtEmuBugTracker();
         void visitQemuWebsite();
+        void checkVersions();
         void createNewMachine();
         void machineOptions();
         void runMachine();

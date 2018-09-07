@@ -176,6 +176,8 @@ void MainWindow::createMenusActions() {
                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))),
                                          tr("Check for updates"),
                                          this);
+    connect(m_checkUpdateAppAction, &QAction::triggered,
+            this, &MainWindow::checkVersions);
 
     m_exitAppAction = new QAction(QIcon::fromTheme("application-exit",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/applcation-exit.svg"))),
@@ -318,6 +320,33 @@ void MainWindow::visitQemuWebsite() {
 }
 
 /**
+ * @brief Check QEMU and QtEmu version
+ *
+ * Check QEMU and QtEmu version
+ */
+void MainWindow::checkVersions() {
+
+    QNetworkRequest request(QUrl("https://www.carlavilla.es/docs/qtemu.json"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QNetworkAccessManager networkAccessManager;
+    QNetworkReply *reply = networkAccessManager.get(request);
+
+    while(!reply -> isFinished()) {
+        qApp -> processEvents();
+    }
+
+    QByteArray response = reply -> readAll();
+    QJsonDocument qemuQtEmuVersion = QJsonDocument::fromJson(response);
+    QString qemuVersion = qemuQtEmuVersion["qemu"].toString();
+    QString qtemuVersion = qemuQtEmuVersion["qtemu"].toString();
+
+    // TODO: Check the versions
+
+    reply -> deleteLater();
+}
+
+/**
  * @brief Load created machines
  *
  * Load all the machines stored in the qtemu.json file on config data folder
@@ -451,6 +480,7 @@ void MainWindow::createNewMachine() {
     m_machine -> setCoresSocket(0);
     m_machine -> setThreadsCore(0);
     m_machine -> setMaxHotCPU(0);
+    m_machine -> setState(Machine::Stopped);
 
     MachineWizard newMachineWizard(m_machine, this -> m_osListWidget, this -> qemuGlobalObject, this);
 
