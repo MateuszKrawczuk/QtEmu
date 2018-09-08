@@ -42,6 +42,7 @@
 #include <QDir>
 #include <QFile>
 #include <QProcess>
+#include <QMessageBox>
 
 // Local
 #include "machine.h"
@@ -71,6 +72,7 @@ class MainWindow : public QMainWindow {
         void visitQtEmuBugTracker();
         void visitQemuWebsite();
         void checkVersions();
+        void quitApp();
         void createNewMachine();
         void machineOptions();
         void runMachine();
@@ -150,6 +152,10 @@ class MainWindow : public QMainWindow {
         QLabel *m_machineAccelLabel;
         QLabel *m_machineDiskLabel;
         QLabel *m_machineNetworkLabel;
+
+        // Messages
+        QMessageBox *m_networkErrorMessageBox;
+        QMessageBox *m_versionMessageBox;
 
         // QEMU
         QEMU *qemuGlobalObject;

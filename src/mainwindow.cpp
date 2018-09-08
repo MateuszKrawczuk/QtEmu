@@ -183,6 +183,8 @@ void MainWindow::createMenusActions() {
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/applcation-exit.svg"))),
                                   tr("Exit"),
                                   this);
+    connect(m_exitAppAction, &QAction::triggered,
+            this, &MainWindow::quitApp);
 
     // Actions for Machine menu
     m_newMachineAction = new QAction(QIcon::fromTheme("project-development-new-template",
@@ -336,14 +338,49 @@ void MainWindow::checkVersions() {
         qApp -> processEvents();
     }
 
+    if (reply -> error()) {
+        m_networkErrorMessageBox = new QMessageBox();
+        m_networkErrorMessageBox -> setWindowTitle(tr("QtEmu - Network problem"));
+        m_networkErrorMessageBox -> setIcon(QMessageBox::Question);
+        m_networkErrorMessageBox -> setText(tr("<p>There's a network problem</p>"));
+
+        m_networkErrorMessageBox -> exec();
+        return;
+    }
+
     QByteArray response = reply -> readAll();
     QJsonDocument qemuQtEmuVersion = QJsonDocument::fromJson(response);
     QString qemuVersion = qemuQtEmuVersion["qemu"].toString();
     QString qtemuVersion = qemuQtEmuVersion["qtemu"].toString();
-
-    // TODO: Check the versions
+    QString installedQtEmuVersion = QCoreApplication::applicationVersion();
 
     reply -> deleteLater();
+
+    m_versionMessageBox = new QMessageBox();
+    m_versionMessageBox -> setWindowTitle(tr("QtEmu - Versions"));
+    m_versionMessageBox -> setIcon(QMessageBox::Question);
+    m_versionMessageBox -> setText(tr("<p><strong>QtEmu installed version: </strong>") + installedQtEmuVersion + "</p>" +
+                                   tr("<p><strong>Last QtEmu version: </strong>") + qtemuVersion + "</p>");
+
+    m_versionMessageBox -> exec();
+}
+
+/**
+ * @brief Close the app
+ *
+ * Close the app
+ */
+void MainWindow::quitApp() {
+
+    if (this -> isHidden()) {
+        this -> show();
+    }
+
+    qApp -> setQuitOnLastWindowClosed(true);
+
+    qApp -> closeAllWindows();
+
+    qApp -> quit();
 }
 
 /**
