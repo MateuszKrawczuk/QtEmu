@@ -376,11 +376,17 @@ void MainWindow::quitApp() {
         this -> show();
     }
 
-    qApp -> setQuitOnLastWindowClosed(true);
+    int confirmation = QMessageBox::question(this,
+                          tr("Quit?"),
+                          tr("Do you really want to close QtEmu?\nIf there are machines running there are going to close"),
+                          tr("&Yes, close the program"), tr("&No"),
+                          QString(), 1, 1);
 
-    qApp -> closeAllWindows();
-
-    qApp -> quit();
+    if (confirmation == 0) {
+        qApp -> setQuitOnLastWindowClosed(true);
+        qApp -> closeAllWindows();
+        qApp -> quit();
+    }
 }
 
 /**
