@@ -205,5 +205,21 @@ bool NewDiskPage::validatePage() {
                                                  this -> m_diskSpinBox -> value(),
                                                  false);
 
+    if (isDiskCreated) {
+        Media newDisk;
+
+/*        newDisk.setMediaName();
+        newDisk.setMediaPath();
+        newDisk.setMediaSize();
+        newDisk.setMediaType();
+        newDisk.setMediaFormat();
+        newDisk.setMediaInterface();
+        newDisk.setMediaCache();
+        newDisk.setMediaIO();
+        newDisk.setUuid();*/
+
+        emit diskCreated(newDisk);
+    }
+
     return isDiskCreated;
 }

@@ -548,14 +548,17 @@ void MainWindow::machineOptions() {
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
             machineOptions = machine;
+            break;
         }
     }
 
-    MachineConfigWindow *machineConfigWindow = new MachineConfigWindow(machineOptions,
-                                                                       this -> qemuGlobalObject,
-                                                                       this);
+    m_machineConfigWindow = new MachineConfigWindow(machineOptions,
+                                                    this -> qemuGlobalObject,
+                                                    this -> m_osListWidget -> currentItem(),
+                                                    this);
 
-    machineConfigWindow -> show();
+    m_machineConfigWindow -> show();
+
 }
 
 /**

@@ -64,6 +64,7 @@ class MachineConfigWindow : public QWidget {
     public:
         explicit MachineConfigWindow(Machine *machine,
                                      QEMU *QEMUGlobalObject,
+                                     QListWidgetItem *osWidget,
                                      QWidget *parent = nullptr);
         ~MachineConfigWindow();
 
@@ -73,6 +74,7 @@ class MachineConfigWindow : public QWidget {
 
     private slots:
         void saveMachineSettings();
+        void cancelMachineSettings();
 
     protected:
 
@@ -100,6 +102,7 @@ class MachineConfigWindow : public QWidget {
         MachineConfigAccel *m_configAccel;
 
         Machine *m_machine;
+        QListWidgetItem *m_osWidget;
 
 };
 

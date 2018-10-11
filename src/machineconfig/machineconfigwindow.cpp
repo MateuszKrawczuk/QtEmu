@@ -24,9 +24,11 @@
 
 MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                          QEMU *QEMUGlobalObject,
+                                         QListWidgetItem *osWidget,
                                          QWidget *parent) : QWidget(parent) {
 
     this -> m_machine = machine;
+    this -> m_osWidget = osWidget;
 
     this -> setWindowTitle(tr("Machine Preferences") + " - QtEmu");
     this -> setWindowIcon(QIcon::fromTheme("qtemu",
@@ -116,7 +118,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                     tr("Cancel"),
                                     this);
     connect(m_closeButton, &QAbstractButton::clicked,
-            this, &QWidget::hide);
+            this, &MachineConfigWindow::cancelMachineSettings);
 
     this -> m_buttonsLayout = new QHBoxLayout();
     m_buttonsLayout -> setAlignment(Qt::AlignRight);
@@ -153,5 +155,22 @@ MachineConfigWindow::~MachineConfigWindow() {
 void MachineConfigWindow::saveMachineSettings() {
     qDebug() << "Machine settings saved";
 
-    this -> m_configGeneral -> saveGeneralData();
+    this -> m_osWidget ->setText(this -> m_machine -> getName());
+
+    this -> hide();
+
+    delete this;
+}
+
+/**
+ * @brief Cancel the machine configuration
+ *
+ * Cancel the machine configuration
+ */
+void MachineConfigWindow::cancelMachineSettings() {
+    qDebug() << "Machine settings canceled";
+
+    this -> hide();
+
+    delete this;
 }

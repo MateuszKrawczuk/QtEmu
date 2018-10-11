@@ -70,8 +70,9 @@ class NewDiskPage: public QWizardPage {
         ~NewDiskPage();
 
     signals:
+        void diskCreated(Media newDisk);
 
-    public slots:
+    private slots:
         void selectNameNewDisk();
 
     protected:

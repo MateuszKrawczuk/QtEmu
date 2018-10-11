@@ -119,6 +119,7 @@ class MainWindow : public QMainWindow {
 
         // Widgets
         QWidget *m_mainWidget;
+        MachineConfigWindow *m_machineConfigWindow;
         ConfigWindow *m_configWindow;
         HelpWidget *m_helpwidget;
         AboutWidget *m_aboutwidget;

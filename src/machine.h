@@ -56,12 +56,6 @@ class Boot {
         QMap<int, QString> getBootOrder() const;
         void setBootOrder(const QMap<int, QString> &value);
 
-    signals:
-
-    public slots:
-
-    private slots:
-
     protected:
 
     private:
@@ -106,12 +100,6 @@ class Media {
 
         QUuid uuid() const;
         void setUuid(const QUuid &uuid);
-
-    signals:
-
-    public slots:
-
-    private slots:
 
     protected:
 

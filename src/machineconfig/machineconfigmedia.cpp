@@ -189,7 +189,8 @@ void MachineConfigMedia::addHddMedia() {
                                                                      QMessageBox::ActionRole);
     QPushButton *existingDiskButton = m_addHddDiskMessageBox -> addButton(tr("Choose existing disk"),
                                                                           QMessageBox::ActionRole);
-    QPushButton *cancelButton = m_addHddDiskMessageBox -> addButton(QMessageBox::Abort);
+    QPushButton *cancelButton = m_addHddDiskMessageBox -> addButton(tr("Exit"),
+                                                                    QMessageBox::ActionRole);
 
     m_addHddDiskMessageBox -> exec();
 
@@ -201,8 +202,10 @@ void MachineConfigMedia::addHddMedia() {
         newDiskWizard.show();
         newDiskWizard.exec();
 
+        qDebug() << "After";
+
     } else if (m_addHddDiskMessageBox -> clickedButton() == existingDiskButton) {
-       diskPath = QFileDialog::getOpenFileName(this, tr("Select kernel path"), QDir::homePath());
+       diskPath = QFileDialog::getOpenFileName(this, tr("Select disk"), QDir::homePath());
     } else if (m_addHddDiskMessageBox -> clickedButton() == cancelButton) {
         m_addHddDiskMessageBox -> close();
     }

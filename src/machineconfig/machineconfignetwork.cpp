@@ -33,9 +33,15 @@ MachineConfigNetwork::MachineConfigNetwork(Machine *machine,
 
     m_withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
     m_withNetworkRadio -> setEnabled(enableFields);
+    if (machine -> getUseNetwork() == true) {
+        m_withNetworkRadio -> setChecked(true);
+    }
 
     m_withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"));
     m_withoutNetworkRadio -> setEnabled(enableFields);
+    if (machine -> getUseNetwork() == false) {
+        m_withoutNetworkRadio -> setChecked(true);
+    }
 
     m_networkLayout = new QVBoxLayout();
     m_networkLayout -> setAlignment(Qt::AlignTop);
