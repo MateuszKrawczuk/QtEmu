@@ -37,6 +37,9 @@ QEMU::QEMU(QObject *parent) : QObject(parent) {
     #ifdef Q_OS_MACOS
     path = QDir::toNativeSeparators("");
     #endif
+    #ifdef Q_OS_FREEBSD
+    path = QDir::toNativeSeparators("");
+    #endif
 
     settings.setValue("qemuBinaryPath", path);
     settings.endGroup();

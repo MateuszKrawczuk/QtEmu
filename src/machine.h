@@ -217,10 +217,13 @@ class Machine: public QObject {
         QString getAudioLabel();
         QString getAcceleratorLabel();
 
-        void runMachine(const QUuid machineUuid);
+        void runMachine();
         void stopMachine();
         void resetMachine();
         void pauseMachine();
+
+        void generateMachineJSON();
+        void insertMachineConfigFile();
 
     signals:
         void machineStateChangedSignal(States newState);
@@ -288,6 +291,7 @@ class Machine: public QObject {
 
         // Methods
         QProcessEnvironment buildEnvironment();
+        QStringList generateMachineCommand();
 };
 
 #endif // MACHINE_H

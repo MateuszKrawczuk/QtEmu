@@ -36,8 +36,6 @@
 
 // Local
 #include "../machine.h"
-#include "../qemu.h"
-#include "../utils/systemutils.h"
 #include "../utils/logger.h"
 
 class MachineConclusionPage: public QWizardPage {
@@ -60,9 +58,7 @@ class MachineConclusionPage: public QWizardPage {
         void initializePage();
         bool validatePage();
         void insertVMList();
-        void createMachineJSON(Machine *machine) const;
-        void fillMachineJSON(QJsonObject &machineJSONObject) const;
-        void insertOSInFile(Machine *newMachine);
+        void generateMachineFiles();
 
         QGridLayout *m_conclusionLayout;
 

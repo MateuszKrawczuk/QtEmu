@@ -44,7 +44,6 @@ class MachineUtils : public QObject {
         explicit MachineUtils(QObject *parent = nullptr);
         ~MachineUtils();
 
-        static QStringList generateMachineCommand(const QUuid machineUuid);
         static bool deleteMachine(const QUuid machineUuid);
 
         static QJsonObject getMachineJsonObject(const QUuid machineUuid);

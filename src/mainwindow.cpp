@@ -519,6 +519,7 @@ void MainWindow::createNewMachine() {
     m_machine = new Machine(this);
 
     m_machine -> addAudio("ac97");
+    m_machine -> setRAM(0);
     m_machine -> setSocketCount(0);
     m_machine -> setCoresSocket(0);
     m_machine -> setThreadsCore(0);
@@ -530,9 +531,10 @@ void MainWindow::createNewMachine() {
     newMachineWizard.show();
     newMachineWizard.exec();
 
-    m_machinesList.append(m_machine);
-    this -> loadUI(this -> m_osListWidget -> count());
-
+    if ( ! m_machine->getUuid().isEmpty()) {
+        m_machinesList.append(m_machine);
+        this->loadUI(this->m_osListWidget->count());
+    }
 }
 
 /**
@@ -571,7 +573,8 @@ void MainWindow::runMachine() {
 
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
-            machine -> runMachine(machineUuid);
+            machine -> runMachine();
+            break;
         }
     }
 }
@@ -636,7 +639,6 @@ void MainWindow::deleteMachine() {
  * at least one element, elements are enabled
  */
 void MainWindow::loadUI(const int itemCount) {
-
     this -> m_stopMachineAction  -> setEnabled(false);
     this -> m_resetMachineAction -> setEnabled(false);
     this -> m_pauseMachineAction -> setEnabled(false);
@@ -667,7 +669,6 @@ void MainWindow::loadUI(const int itemCount) {
         this -> m_machineAccelLabel    -> setText("");
         this -> m_machineNetworkLabel  -> setText("");
     }
-
 }
 
 /**
@@ -697,7 +698,6 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem) {
  * with the machine selected in the m_osListWidget
  */
 void MainWindow::fillMachineDetailsSection(Machine *machine){
-
     this -> m_machineNameLabel     -> setText(machine -> getName());
     this -> m_machineOsLabel       -> setText(machine -> getOSType() + " - " + machine -> getOSVersion());
     this -> m_machineCPULabel      -> setText(machine -> getCPUType());
@@ -706,7 +706,6 @@ void MainWindow::fillMachineDetailsSection(Machine *machine){
     this -> m_machineAudioLabel    -> setText(machine -> getAudioLabel());
     this -> m_machineAccelLabel    -> setText(machine -> getAcceleratorLabel());
     this -> m_machineNetworkLabel  -> setText(machine -> getUseNetwork() == true ? tr("Yes") : tr("no"));
-
 }
 
 /**

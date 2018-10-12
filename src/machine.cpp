@@ -638,9 +638,9 @@ QString Machine::getAcceleratorLabel() {
     return acceleratorLabel;
 }
 
-void Machine::runMachine(const QUuid machineUuid) {
+void Machine::runMachine() {
 
-    QStringList args = MachineUtils::generateMachineCommand(machineUuid);
+    QStringList args = this->generateMachineCommand();
 
     QString program;
 
@@ -716,6 +716,238 @@ QProcessEnvironment Machine::buildEnvironment() {
     env.insert("QEMU_AUDIO_DRV", "alsa");
 
     return env;
+}
+
+QStringList Machine::generateMachineCommand() {
+
+    // TODO: Add qemu before commands
+
+    QStringList qemuCommand;
+
+    qemuCommand << "-monitor" << "stdio";
+
+    qemuCommand << "-name";
+    qemuCommand << this->name;
+
+    qemuCommand << "-uuid";
+    qemuCommand << this->uuid.remove("{").remove("}");
+
+    QString accelerators;
+    bool firstAccel = true;
+    QStringListIterator accelIterator(this->accelerator);
+    while (accelIterator.hasNext()) {
+        if(firstAccel) {
+            firstAccel = false;
+        } else {
+            accelerators.append(", ");
+        }
+        accelerators.append(accelIterator.next());
+    }
+
+    qemuCommand << "-accel";
+    qemuCommand << accelerators;
+
+    QString audioCards;
+    bool firstAudio = true;
+    QStringListIterator audioIterator(this->audio);
+    while (audioIterator.hasNext()) {
+        if(firstAudio) {
+            firstAudio = false;
+        } else {
+            audioCards.append(", ");
+        }
+        audioCards.append(audioIterator.next());
+    }
+
+    qemuCommand << "-soundhw";
+    qemuCommand << audioCards;
+
+    qemuCommand << "-m";
+    qemuCommand << QString::number(this->RAM);
+
+    qemuCommand << "-k";
+    qemuCommand << this->keyboard;
+
+    qemuCommand << "-vga";
+    qemuCommand << this->GPUType;
+
+    // CPU
+    qemuCommand << "-cpu";
+    qemuCommand << this->CPUType;
+
+    QString cpuArgs(QString::number(this->CPUCount));
+
+    cpuArgs.append(",cores=");
+    cpuArgs.append(QString::number(this->coresSocket));
+
+    cpuArgs.append(",threads=");
+    cpuArgs.append(QString::number(this->threadsCore));
+
+
+    cpuArgs.append(",sockets=");
+    cpuArgs.append(QString::number(this->socketCount));
+
+    cpuArgs.append(",maxcpus=");
+    cpuArgs.append(QString::number(this->maxHotCPU));
+
+    qemuCommand << "-smp";
+    qemuCommand << cpuArgs;
+
+    QString pipe = this->path.append(QDir::toNativeSeparators("/")).append(this->name);
+
+    qemuCommand << "-pidfile";
+    qemuCommand << pipe.append(".pid");
+
+    // Network
+    if (this->useNetwork) {
+        qemuCommand << "-net";
+        qemuCommand << "nic";
+
+        qemuCommand << "-net";
+        qemuCommand << "user";
+    } else {
+        qemuCommand << "-net";
+        qemuCommand << "none";
+    }
+
+    // HDD
+    //qemuCommand << "-drive";
+    //qemuCommand << QString("file=").append(diskObject["path"].toString()).append(",index=0,media=disk");
+
+    // CDROM TODO, for test not implemented yet :'(
+    qemuCommand << "-cdrom";
+    qemuCommand << "/home/xexio/Downloads/torrent/archlinux-2018.10.01-x86_64.iso";
+
+    qDebug() << "Command " <<qemuCommand;
+
+    return qemuCommand;
+}
+
+void Machine::generateMachineJSON() {
+
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+    settings.endGroup();
+
+    this->configPath = strMachinePath.append(QDir::toNativeSeparators("/"))
+                                     .append(this->name)
+                                     .append(QDir::toNativeSeparators("/"))
+                                     .append(this->name.toLower().replace(" ", "_"))
+                                     .append(".json");
+
+    QFile machineFile(this->configPath);
+    machineFile.open(QIODevice::WriteOnly); // TODO: Check if open the file fails
+
+    QJsonObject machineJSONObject;
+    machineJSONObject["name"]      = this->name;
+    machineJSONObject["OSType"]    = this->OSType;
+    machineJSONObject["OSVersion"] = this->OSVersion;
+    machineJSONObject["RAM"]       = this->RAM;
+    machineJSONObject["network"]   = this->useNetwork;
+    machineJSONObject["path"]      = this->path;
+    machineJSONObject["uuid"]      = this->uuid;
+    // TODO: Implement another types
+    machineJSONObject["binary"]    = "qemu-system-x86_64";
+
+    QJsonObject cpu;
+    cpu["CPUType"]     = this->CPUType;
+    cpu["CPUCount"]    = this->CPUCount;
+    cpu["socketCount"] = this->socketCount;
+    cpu["coresSocket"] = this->coresSocket;
+    cpu["threadsCore"] = this->threadsCore;
+    cpu["maxHotCPU"]   = this->maxHotCPU;
+
+    machineJSONObject["cpu"] = cpu;
+
+    QJsonObject gpu;
+    gpu["GPUType"]  = this->GPUType;
+    gpu["keyboard"] = this->keyboard;
+
+    machineJSONObject["gpu"] = gpu;
+
+    QJsonObject disk;
+    disk["name"] = this->diskName;
+    disk["path"] = this->diskPath;
+    disk["size"] = this->diskSize;
+    disk["type"] = "hdd";
+    disk["format"] = this->diskFormat;
+    disk["interface"] = "hda";
+    disk["uuid"] = QUuid::createUuid().toString();
+
+    QJsonArray media;
+    media.append(disk);
+
+    machineJSONObject["media"] = media;
+
+    QJsonObject kernelBoot;
+    kernelBoot["enabled"] = false;
+    kernelBoot["kernelPath"] = "";
+    kernelBoot["initrdPath"] = "";
+    kernelBoot["kernelArgs"] = "";
+
+    QJsonObject bootOrder;
+    bootOrder["0"] = "CDROM";
+    bootOrder["1"] = "HDD";
+
+    QJsonObject boot;
+    boot["bootMenu"] = false;
+    boot["kernelBoot"] = kernelBoot;
+    boot["bootOrder"] = bootOrder;
+
+    machineJSONObject["boot"] = boot;
+
+    machineJSONObject["accelerator"] = QJsonArray::fromStringList(this->accelerator);
+    machineJSONObject["audio"] = QJsonArray::fromStringList(this->audio);
+
+    QJsonDocument machineJSONDocument(machineJSONObject);
+
+    machineFile.write(machineJSONDocument.toJson());
+}
+
+/**
+ * @brief Insert the new machine in the machines file
+ *
+ * Insert the new machine in the machines file.
+ * At the bottom of the file.
+ */
+void Machine::insertMachineConfigFile(){
+
+    // TODO: Get the data directory path from QSettings
+    // Open the file
+    QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
+
+    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
+
+    QFile machinesFile(qtemuConfig);
+    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+
+    // Read all data included in the file
+    QByteArray machinesData = machinesFile.readAll();
+    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
+    QJsonObject machinesObject;
+
+    // Read other machines
+    QJsonArray machines = machinesDocument["machines"].toArray();
+
+    // Create the new machine
+    QJsonObject machine;
+    machine["uuid"]       = this->uuid;
+    machine["name"]       = this->name;
+    machine["path"]       = this->path;
+    machine["configpath"] = this->configPath;
+    machine["icon"]       = this->OSVersion.toLower().replace(" ", "_");
+
+    machines.append(machine);
+    machinesObject["machines"] = machines;
+
+    QJsonDocument machinesJSONDocument(machinesObject);
+
+    machinesFile.seek(0);
+    machinesFile.write(machinesJSONDocument.toJson());
+    machinesFile.close();
 }
 
 Media::Media() {

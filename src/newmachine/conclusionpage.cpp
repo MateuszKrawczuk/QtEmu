@@ -113,15 +113,15 @@ bool MachineConclusionPage::validatePage() {
     this -> m_newMachine -> setUuid(QUuid::createUuid().toString());
 
     if( ! this -> m_newMachine -> getCreateNewDisk() ) {
-        this -> insertVMList();
+        this->generateMachineFiles();
         return true;
     }
 
     QString strMachinePath;
 
-    if ( ! this -> m_newMachine -> getDiskPath().isEmpty()) {
+    if ( ! this->m_newMachine->getDiskPath().isEmpty()) {
 
-        strMachinePath = this -> m_newMachine -> getDiskPath();
+        strMachinePath = this->m_newMachine->getDiskPath();
 
     } else {
         QSettings settings;
@@ -132,32 +132,24 @@ bool MachineConclusionPage::validatePage() {
         settings.endGroup();
 
         strMachinePath.append(QDir::toNativeSeparators("/"))
-                      .append(this -> m_newMachine -> getName())
+                      .append(this->m_newMachine->getName())
                       .append(QDir::toNativeSeparators("/"))
-                      .append(this -> m_newMachine -> getDiskName().toLower().replace(" ", "_"))
+                      .append(this->m_newMachine->getDiskName().toLower().replace(" ", "_"))
                       .append(QDir::toNativeSeparators("."))
-                      .append(this -> m_newMachine -> getDiskFormat());
+                      .append(this->m_newMachine->getDiskFormat());
     }
 
-    this -> m_newMachine -> setDiskPath(strMachinePath);
+    this->m_newMachine->setDiskPath(strMachinePath);
 
     // Create the disk
-    bool isDiskCreated = SystemUtils::createDisk(this -> m_QEMUGlobalObject,
+    bool isDiskCreated = SystemUtils::createDisk(this->m_QEMUGlobalObject,
                                                  strMachinePath,
-                                                 this -> m_newMachine -> getDiskFormat(),
-                                                 this -> m_newMachine -> getDiskSize(),
+                                                 this->m_newMachine->getDiskFormat(),
+                                                 this->m_newMachine->getDiskSize(),
                                                  false);
 
     if (isDiskCreated) {
-
-        this -> createMachineJSON(this -> m_newMachine);
-
-        this -> insertOSInFile(this -> m_newMachine);
-
-        this -> insertVMList();
-
-        Logger::logMachineCreation(this -> m_newMachine -> getPath(),
-                                   this -> m_newMachine -> getName(), "Machine created");
+        this->generateMachineFiles();
     }
 
     return isDiskCreated;
@@ -176,145 +168,13 @@ void MachineConclusionPage::insertVMList() {
     // TODO: Check if the json it's incomplete and the image not exits
     machine -> setIcon(QIcon(":/images/os/64x64/" +
                              SystemUtils::getOsIcon(this -> m_newMachine -> getOSVersion())));
-
 }
 
-void MachineConclusionPage::createMachineJSON(Machine *machine) const {
+void MachineConclusionPage::generateMachineFiles() {
+    this->m_newMachine->generateMachineJSON();
+    this->m_newMachine->insertMachineConfigFile();
+    this->insertVMList();
 
-    QSettings settings;
-    settings.beginGroup("Configuration");
-
-    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
-
-    settings.endGroup();
-
-    QString machineFilePath = strMachinePath.append(QDir::toNativeSeparators("/"))
-                                            .append(machine -> getName())
-                                            .append(QDir::toNativeSeparators("/"))
-                                            .append(machine -> getName().toLower().replace(" ", "_"))
-                                            .append(".json");
-
-    QFile machineFile(machineFilePath);
-    machineFile.open(QIODevice::WriteOnly); // TODO: Check if open the file fails
-
-    QJsonObject machineJSONObject;
-    this -> fillMachineJSON(machineJSONObject); // Populate the JSON Object
-
-    QJsonDocument machineJSONDocument(machineJSONObject);
-
-    machineFile.write(machineJSONDocument.toJson());
-    machine -> setConfigPath(machineFilePath);
-}
-
-void MachineConclusionPage::fillMachineJSON(QJsonObject &machineJSONObject) const{
-
-    machineJSONObject["name"]      = this -> m_newMachine -> getName();
-    machineJSONObject["OSType"]    = this -> m_newMachine -> getOSType();
-    machineJSONObject["OSVersion"] = this -> m_newMachine -> getOSVersion();
-    machineJSONObject["RAM"]       = this -> m_newMachine -> getRAM();
-    machineJSONObject["network"]   = this -> m_newMachine -> getUseNetwork();
-    machineJSONObject["path"]      = this -> m_newMachine -> getPath();
-    machineJSONObject["uuid"]      = this -> m_newMachine -> getUuid();
-    // TODO: Implement another types
-    machineJSONObject["binary"]    = this -> m_QEMUGlobalObject -> getQEMUBinary("qemu-system-x86_64");
-
-    QJsonObject cpu;
-    cpu["CPUType"]     = this -> m_newMachine -> getCPUType();
-    cpu["CPUCount"]    = this -> m_newMachine -> getCPUCount();
-    cpu["socketCount"] = this -> m_newMachine -> getSocketCount();
-    cpu["coresSocket"] = this -> m_newMachine -> getCoresSocket();
-    cpu["threadsCore"] = this -> m_newMachine -> getThreadsCore();
-    cpu["maxHotCPU"]   = this -> m_newMachine -> getMaxHotCPU();
-
-    machineJSONObject["cpu"] = cpu;
-
-    QJsonObject gpu;
-    gpu["GPUType"]  = this -> m_newMachine -> getGPUType();
-    gpu["keyboard"] = this -> m_newMachine -> getKeyboard();
-
-    machineJSONObject["gpu"] = gpu;
-
-    QJsonObject disk;
-    disk["name"] = this -> m_newMachine -> getDiskName();
-    disk["path"] = this -> m_newMachine -> getDiskPath();
-    disk["size"] = this -> m_newMachine -> getDiskSize();
-    disk["type"] = "hdd";
-    disk["format"] = this -> m_newMachine -> getDiskFormat();
-    disk["interface"] = "hda";
-    disk["uuid"] = QUuid::createUuid().toString();
-
-    QJsonArray media;
-    media.append(disk);
-
-    machineJSONObject["media"] = media;
-
-    QJsonObject kernelBoot;
-    kernelBoot["enabled"] = false;
-    kernelBoot["kernelPath"] = "";
-    kernelBoot["initrdPath"] = "";
-    kernelBoot["kernelArgs"] = "";
-
-    QJsonObject bootOrder;
-    bootOrder["0"] = "CDROM";
-    bootOrder["1"] = "HDD";
-
-    QJsonObject boot;
-    boot["bootMenu"] = false;
-    boot["kernelBoot"] = kernelBoot;
-    boot["bootOrder"] = bootOrder;
-
-    machineJSONObject["boot"] = boot;
-
-    if( ! this -> m_newMachine -> getAccelerator().isEmpty()) { 
-        machineJSONObject["accelerator"] = QJsonArray::fromStringList(this -> m_newMachine -> getAccelerator());
-    }
-
-    if( ! this -> m_newMachine -> getAudio().isEmpty()) {
-        machineJSONObject["audio"] = QJsonArray::fromStringList(this -> m_newMachine -> getAudio());
-    }
-
-}
-
-/**
- * @brief Insert the new machine in the machines file
- * @param newMachine, machine to be inserted
- *
- * Insert the new machine in the machines file.
- * At the bottom of the file.
- */
-void MachineConclusionPage::insertOSInFile(Machine *newMachine){
-
-    // TODO: Get the data directory path from QSettings
-    // Open the file
-    QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
-
-    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
-
-    QFile machinesFile(qtemuConfig);
-    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
-
-    // Read all data included in the file
-    QByteArray machinesData = machinesFile.readAll();
-    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
-    QJsonObject machinesObject;
-
-    // Read other machines
-    QJsonArray machines = machinesDocument["machines"].toArray();
-
-    // Create the new machine
-    QJsonObject machine;
-    machine["uuid"]       = newMachine -> getUuid();
-    machine["name"]       = newMachine -> getName();
-    machine["path"]       = newMachine -> getPath();
-    machine["configpath"] = newMachine -> getConfigPath();
-    machine["icon"]       = newMachine -> getOSVersion().toLower().replace(" ", "_");
-
-    machines.append(machine);
-    machinesObject["machines"] = machines;
-
-    QJsonDocument machinesJSONDocument(machinesObject);
-
-    machinesFile.seek(0);
-    machinesFile.write(machinesJSONDocument.toJson());
-    machinesFile.close();
+    Logger::logMachineCreation(this->m_newMachine->getPath(),
+                               this->m_newMachine->getName(), "Machine created");
 }
