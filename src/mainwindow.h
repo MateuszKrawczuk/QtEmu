@@ -166,6 +166,7 @@ class MainWindow : public QMainWindow {
         void loadMachines();
         void controlMachineActions(Machine::States state);
         void fillMachineDetailsSection(Machine *machine);
+        void emptyMachineDetailsSection();
 
 };
 #endif // MAINWINDOW_H

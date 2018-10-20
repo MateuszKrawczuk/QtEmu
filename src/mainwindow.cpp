@@ -590,6 +590,7 @@ void MainWindow::resetMachine() {
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
             machine -> resetMachine();
+            break;
         }
     }
 }
@@ -608,6 +609,7 @@ void MainWindow::pauseMachine() {
     foreach (Machine *machine, this -> m_machinesList) {
         if (machine -> getUuid() == machineUuid.toString()){
             machine -> pauseMachine();
+            break;
         }
     }
 
@@ -626,6 +628,22 @@ void MainWindow::deleteMachine() {
     if (isMachineDeleted) {
         this -> m_osListWidget -> takeItem(this -> m_osListWidget -> currentRow());
         this -> loadUI(this -> m_osListWidget -> count());
+
+        bool machineRemovedList = false;
+        QMutableListIterator<Machine*> machines(this->m_machinesList);
+        while (machines.hasNext() && !machineRemovedList) {
+            if (machines.next()->getUuid() == machineUuid.toString()) {
+                machines.remove();
+            }
+        }
+
+        // TODO: Move to method, repeated code
+        // Show the machine data in the labels
+        if (this->m_machinesList.size() > 0) {
+            fillMachineDetailsSection(this->m_machinesList[0]);
+        } else {
+            this->emptyMachineDetailsSection();
+        }
     }
 
 }
@@ -655,19 +673,12 @@ void MainWindow::loadUI(const int itemCount) {
         this -> m_startMachineAction     -> setEnabled(true);
     }
 
+    // TODO: Move to method, repeated code
     // Show the machine data in the labels
-    if (this -> m_machinesList.size() > 0) {
-        fillMachineDetailsSection(this -> m_machinesList[0]);
+    if (this->m_machinesList.size() > 0) {
+        fillMachineDetailsSection(this->m_machinesList[0]);
     } else {
-        // TODO: Move that to a method
-        this -> m_machineNameLabel     -> setText("");
-        this -> m_machineOsLabel       -> setText("");
-        this -> m_machineCPULabel      -> setText("");
-        this -> m_machineRAMLabel      -> setText("");
-        this -> m_machineGraphicsLabel -> setText("");
-        this -> m_machineAudioLabel    -> setText("");
-        this -> m_machineAccelLabel    -> setText("");
-        this -> m_machineNetworkLabel  -> setText("");
+        this->emptyMachineDetailsSection();
     }
 }
 
@@ -697,7 +708,7 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem) {
  * Fill the machine details section of the main UI
  * with the machine selected in the m_osListWidget
  */
-void MainWindow::fillMachineDetailsSection(Machine *machine){
+void MainWindow::fillMachineDetailsSection(Machine *machine) {
     this -> m_machineNameLabel     -> setText(machine -> getName());
     this -> m_machineOsLabel       -> setText(machine -> getOSType() + " - " + machine -> getOSVersion());
     this -> m_machineCPULabel      -> setText(machine -> getCPUType());
@@ -706,6 +717,23 @@ void MainWindow::fillMachineDetailsSection(Machine *machine){
     this -> m_machineAudioLabel    -> setText(machine -> getAudioLabel());
     this -> m_machineAccelLabel    -> setText(machine -> getAcceleratorLabel());
     this -> m_machineNetworkLabel  -> setText(machine -> getUseNetwork() == true ? tr("Yes") : tr("no"));
+}
+
+/**
+ * @brief Empty the machine details section of the main UI
+ *
+ * Empty the machine details section of the main UI
+ * when there's no machines
+ */
+void MainWindow::emptyMachineDetailsSection() {
+    this -> m_machineNameLabel     -> setText("");
+    this -> m_machineOsLabel       -> setText("");
+    this -> m_machineCPULabel      -> setText("");
+    this -> m_machineRAMLabel      -> setText("");
+    this -> m_machineGraphicsLabel -> setText("");
+    this -> m_machineAudioLabel    -> setText("");
+    this -> m_machineAccelLabel    -> setText("");
+    this -> m_machineNetworkLabel  -> setText("");
 }
 
 /**
