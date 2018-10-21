@@ -823,7 +823,7 @@ QStringList Machine::generateMachineCommand() {
     return qemuCommand;
 }
 
-void Machine::generateMachineJSON() {
+void Machine::saveMachine() {
 
     QSettings settings;
     settings.beginGroup("Configuration");

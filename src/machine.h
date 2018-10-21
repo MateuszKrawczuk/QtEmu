@@ -222,7 +222,7 @@ class Machine: public QObject {
         void resetMachine();
         void pauseMachine();
 
-        void generateMachineJSON();
+        void saveMachine();
         void insertMachineConfigFile();
 
     signals:

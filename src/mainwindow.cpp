@@ -561,6 +561,7 @@ void MainWindow::machineOptions() {
 
     m_machineConfigWindow -> show();
 
+    qDebug() << "Before";
 }
 
 /**

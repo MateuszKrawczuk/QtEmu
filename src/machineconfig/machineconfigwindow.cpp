@@ -155,9 +155,9 @@ MachineConfigWindow::~MachineConfigWindow() {
 void MachineConfigWindow::saveMachineSettings() {
     qDebug() << "Machine settings saved";
 
-    this -> m_osWidget ->setText(this -> m_machine -> getName());
-
-    this -> hide();
+    this->m_osWidget->setText(this->m_machine->getName());
+    this->m_machine->saveMachine();
+    this->hide();
 
     delete this;
 }
@@ -170,7 +170,7 @@ void MachineConfigWindow::saveMachineSettings() {
 void MachineConfigWindow::cancelMachineSettings() {
     qDebug() << "Machine settings canceled";
 
-    this -> hide();
+    this->hide();
 
     delete this;
 }

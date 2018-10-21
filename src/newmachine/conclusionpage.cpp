@@ -171,7 +171,7 @@ void MachineConclusionPage::insertVMList() {
 }
 
 void MachineConclusionPage::generateMachineFiles() {
-    this->m_newMachine->generateMachineJSON();
+    this->m_newMachine->saveMachine();
     this->m_newMachine->insertMachineConfigFile();
     this->insertVMList();
 
