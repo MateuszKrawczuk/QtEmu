@@ -80,7 +80,8 @@ SOURCES += src/main.cpp\
     src/machineconfig/machineconfigaudio.cpp \
     src/machineconfig/machineconfigaccel.cpp \
     src/utils/newdiskwizard.cpp \
-    src/qemu.cpp
+    src/qemu.cpp \
+    src/machineconfig/machineconfiggeneraltabs.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -106,7 +107,8 @@ HEADERS  += src/mainwindow.h \
     src/machineconfig/machineconfigaudio.h \
     src/machineconfig/machineconfigaccel.h \
     src/utils/newdiskwizard.h \
-    src/qemu.h
+    src/qemu.h \
+    src/machineconfig/machineconfiggeneraltabs.h
 
 OTHER_FILES += \
     CHANGELOG \

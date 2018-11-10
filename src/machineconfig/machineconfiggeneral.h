@@ -32,6 +32,7 @@
 
 // Local
 #include "../machine.h"
+#include "machineconfiggeneraltabs.h"
 
 class MachineConfigGeneral : public QWidget {
     Q_OBJECT
@@ -57,62 +58,10 @@ class MachineConfigGeneral : public QWidget {
     private:
         QTabWidget *m_generalTabWidget;
         QVBoxLayout *m_generalPageLayout;
+
+        Machine *m_machine;
+        BasicTab *m_basicTab;
+        DescriptionTab *m_descriptionTab;
 };
 
-class BasicTab: public QWidget {
-    Q_OBJECT
-
-    public:
-        explicit BasicTab(Machine *machine,
-                          bool enableFields,
-                          QWidget *parent = nullptr);
-        ~BasicTab();
-
-    signals:
-
-    public slots:
-
-    private slots:
-        void selectOS(QString OSSelected);
-        QString getStatusLabel(Machine::States state);
-        void nameChanged();
-
-    protected:
-
-    private:
-        QVBoxLayout *m_basicTabLayout;
-        QFormLayout *m_basicTabFormLayout;
-
-        QLineEdit *m_machineNameLineEdit;
-
-        QComboBox *m_OSType;
-        QComboBox *m_OSVersion;
-
-        QLabel *m_machineUuidLabel;
-        QLabel *m_machineStatusLabel;
-
-        Machine *m_machineConfig;
-};
-
-class DescriptionTab: public QWidget {
-    Q_OBJECT
-
-    public:
-        explicit DescriptionTab(Machine *machine,
-                                bool enableFields,
-                                QWidget *parent = nullptr);
-        ~DescriptionTab();
-    signals:
-
-    public slots:
-
-    protected:
-
-    private:
-        QVBoxLayout *m_descriptionLayout;
-
-        QLabel *m_machineDescLabel;
-        QPlainTextEdit *m_machineDescTextEdit;
-
-};
 #endif // MACHINECONFIGGENERAL_H

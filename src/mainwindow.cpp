@@ -424,7 +424,8 @@ void MainWindow::loadMachines() {
                                  SystemUtils::getOsIcon(machineJSON["icon"].toString())));
 
         QUuid machineUuid = machine -> data(QMetaType::QUuid).toUuid();
-        this -> m_machinesList.append(generateMachineObject(machineUuid));
+        QString machineConfigPath = machineJSON["configpath"].toString();
+        this -> m_machinesList.append(generateMachineObject(machineUuid, machineConfigPath));
     }
 
 }
@@ -436,7 +437,7 @@ void MainWindow::loadMachines() {
  *
  * Generate the machine object for the list
  */
-Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
+Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QString machineConfigPath) {
 
     QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
 
@@ -483,25 +484,26 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid) {
         machine -> addMedia(media);
     }
 
-    machine -> setState(Machine::Stopped);
-    machine -> setName(machineJSON["name"].toString());
-    machine -> setOSType(machineJSON["OSType"].toString());
-    machine -> setOSVersion(machineJSON["OSVersion"].toString());
-    machine -> setRAM(machineJSON["RAM"].toDouble());
-    machine -> setUseNetwork(machineJSON["network"].toBool());
-    machine -> setPath(machineJSON["path"].toString());
-    machine -> setUuid(machineJSON["uuid"].toString());
-    machine -> setGPUType(gpuObject["GPUType"].toString());
-    machine -> setKeyboard(gpuObject["keyboard"].toString());
-    machine -> setCPUType(cpuObject["CPUType"].toString());
-    machine -> setCPUCount(cpuObject["CPUCount"].toInt());
-    machine -> setCoresSocket(cpuObject["coresSocket"].toInt());
-    machine -> setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
-    machine -> setSocketCount(cpuObject["socketCount"].toInt());
-    machine -> setThreadsCore(cpuObject["threadsCore"].toInt());
-    machine -> setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
-    machine -> setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
-    machine -> setMachineBoot(machineBoot);
+    machine->setState(Machine::Stopped);
+    machine->setName(machineJSON["name"].toString());
+    machine->setOSType(machineJSON["OSType"].toString());
+    machine->setOSVersion(machineJSON["OSVersion"].toString());
+    machine->setRAM(machineJSON["RAM"].toDouble());
+    machine->setUseNetwork(machineJSON["network"].toBool());
+    machine->setConfigPath(machineConfigPath);
+    machine->setPath(machineJSON["path"].toString());
+    machine->setUuid(machineJSON["uuid"].toString());
+    machine->setGPUType(gpuObject["GPUType"].toString());
+    machine->setKeyboard(gpuObject["keyboard"].toString());
+    machine->setCPUType(cpuObject["CPUType"].toString());
+    machine->setCPUCount(cpuObject["CPUCount"].toInt());
+    machine->setCoresSocket(cpuObject["coresSocket"].toInt());
+    machine->setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
+    machine->setSocketCount(cpuObject["socketCount"].toInt());
+    machine->setThreadsCore(cpuObject["threadsCore"].toInt());
+    machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
+    machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
+    machine->setMachineBoot(machineBoot);
 
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);
@@ -560,8 +562,6 @@ void MainWindow::machineOptions() {
                                                     this);
 
     m_machineConfigWindow -> show();
-
-    qDebug() << "Before";
 }
 
 /**

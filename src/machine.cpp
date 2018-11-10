@@ -824,33 +824,20 @@ QStringList Machine::generateMachineCommand() {
 }
 
 void Machine::saveMachine() {
-
-    QSettings settings;
-    settings.beginGroup("Configuration");
-
-    QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
-
-    settings.endGroup();
-
-    this->configPath = strMachinePath.append(QDir::toNativeSeparators("/"))
-                                     .append(this->name)
-                                     .append(QDir::toNativeSeparators("/"))
-                                     .append(this->name.toLower().replace(" ", "_"))
-                                     .append(".json");
-
     QFile machineFile(this->configPath);
     machineFile.open(QIODevice::WriteOnly); // TODO: Check if open the file fails
 
     QJsonObject machineJSONObject;
-    machineJSONObject["name"]      = this->name;
-    machineJSONObject["OSType"]    = this->OSType;
-    machineJSONObject["OSVersion"] = this->OSVersion;
-    machineJSONObject["RAM"]       = this->RAM;
-    machineJSONObject["network"]   = this->useNetwork;
-    machineJSONObject["path"]      = this->path;
-    machineJSONObject["uuid"]      = this->uuid;
+    machineJSONObject["name"]        = this->name;
+    machineJSONObject["OSType"]      = this->OSType;
+    machineJSONObject["OSVersion"]   = this->OSVersion;
+    machineJSONObject["description"] = this->description;
+    machineJSONObject["RAM"]         = this->RAM;
+    machineJSONObject["network"]     = this->useNetwork;
+    machineJSONObject["path"]        = this->path;
+    machineJSONObject["uuid"]        = this->uuid;
     // TODO: Implement another types
-    machineJSONObject["binary"]    = "qemu-system-x86_64";
+    machineJSONObject["binary"] = "qemu-system-x86_64";
 
     QJsonObject cpu;
     cpu["CPUType"]     = this->CPUType;

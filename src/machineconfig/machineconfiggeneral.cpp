@@ -40,11 +40,16 @@ MachineConfigGeneral::MachineConfigGeneral(Machine *machine,
         enableFields = false;
     }
 
+    this->m_machine = machine;
+
+    m_basicTab = new BasicTab(machine, enableFields, this);
+    m_descriptionTab = new DescriptionTab(machine, enableFields, this);
+
     m_generalTabWidget = new QTabWidget();
     m_generalTabWidget -> setSizePolicy(QSizePolicy::MinimumExpanding,
                                             QSizePolicy::MinimumExpanding);
-    m_generalTabWidget -> addTab(new BasicTab(machine, enableFields, this), tr("Basic Details"));
-    m_generalTabWidget -> addTab(new DescriptionTab(machine, enableFields, this), tr("Description"));
+    m_generalTabWidget -> addTab(this->m_basicTab, tr("Basic Details"));
+    m_generalTabWidget -> addTab(this->m_descriptionTab, tr("Description"));
 
     m_generalPageLayout = new QVBoxLayout();
     m_generalPageLayout -> setAlignment(Qt::AlignCenter);
@@ -62,152 +67,8 @@ MachineConfigGeneral::~MachineConfigGeneral() {
 }
 
 void MachineConfigGeneral::saveGeneralData() {
-    qDebug() << "Save General Data";
-}
-
-BasicTab::BasicTab(Machine *machine,
-                   bool enableFields,
-                   QWidget *parent) : QWidget(parent) {
-
-    this -> m_machineConfig = machine;
-
-    m_machineNameLineEdit = new QLineEdit();
-    m_machineNameLineEdit -> setText(machine -> getName());
-    m_machineNameLineEdit -> setEnabled(enableFields);
-    connect(m_machineNameLineEdit, &QLineEdit::editingFinished,
-            this, &BasicTab::nameChanged);
-
-    m_OSType = new QComboBox();
-    m_OSType -> setSizePolicy(QSizePolicy::Expanding,
-                              QSizePolicy::MinimumExpanding);
-    m_OSType -> setEnabled(enableFields);
-
-    m_OSType -> addItem("GNU/Linux");
-    m_OSType -> addItem("Microsoft Windows");
-    m_OSType -> addItem("BSD");
-    m_OSType -> addItem(tr("Other"));
-    m_OSType -> setCurrentText(machine -> getOSType());
-
-    connect(m_OSType, &QComboBox::currentTextChanged,
-           this, &BasicTab::selectOS);
-
-    m_OSVersion = new QComboBox();
-    m_OSVersion -> setSizePolicy(QSizePolicy::Expanding,
-                                 QSizePolicy::MinimumExpanding);
-    m_OSVersion -> setEnabled(enableFields);
-    this -> selectOS(machine -> getOSType());
-    m_OSVersion -> setCurrentText(machine -> getOSVersion());
-
-    m_machineUuidLabel = new QLabel();
-    m_machineUuidLabel -> setText(machine -> getUuid());
-    m_machineStatusLabel = new QLabel();
-    m_machineStatusLabel -> setText(BasicTab::getStatusLabel(machine -> getState()));
-
-    m_basicTabFormLayout = new QFormLayout();
-    m_basicTabFormLayout -> setAlignment(Qt::AlignTop);
-    m_basicTabFormLayout -> setLabelAlignment(Qt::AlignLeft);
-    m_basicTabFormLayout -> setHorizontalSpacing(20);
-    m_basicTabFormLayout -> setVerticalSpacing(10);
-    m_basicTabFormLayout -> addRow(tr("Name") + ":", m_machineNameLineEdit);
-    m_basicTabFormLayout -> addRow(tr("Type") + ":", m_OSType);
-    m_basicTabFormLayout -> addRow(tr("Version") + ":", m_OSVersion);
-    m_basicTabFormLayout -> addRow(tr("UUID") + ":", m_machineUuidLabel);
-    m_basicTabFormLayout -> addRow(tr("Status") + ":", m_machineStatusLabel);
-
-    m_basicTabLayout = new QVBoxLayout();
-    m_basicTabLayout -> addItem(m_basicTabFormLayout);
-
-    this -> setLayout(m_basicTabLayout);
-
-    qDebug() << "BasicTab created";
-}
-
-BasicTab::~BasicTab() {
-    qDebug() << "BasicTab destroyed";
-}
-
-void BasicTab::selectOS(QString OSSelected){
-
-    this -> m_OSVersion -> clear();
-
-    if (OSSelected == "GNU/Linux") {
-        this -> m_OSVersion -> addItem(tr("Debian"));
-        this -> m_OSVersion -> addItem(tr("Ubuntu"));
-        this -> m_OSVersion -> addItem(tr("Fedora"));
-        this -> m_OSVersion -> addItem(tr("OpenSuse"));
-        this -> m_OSVersion -> addItem(tr("Mageia"));
-        this -> m_OSVersion -> addItem(tr("Gentoo"));
-        this -> m_OSVersion -> addItem(tr("Arch Linux"));
-        this -> m_OSVersion -> addItem(tr("Linux"));
-    } else if (OSSelected == "Microsoft Windows") {
-        this -> m_OSVersion -> addItem(tr("Microsoft 95"));
-        this -> m_OSVersion -> addItem(tr("Microsoft 98"));
-        this -> m_OSVersion -> addItem(tr("Microsoft 2000"));
-        this -> m_OSVersion -> addItem(tr("Microsoft XP"));
-        this -> m_OSVersion -> addItem(tr("Microsoft Vista"));
-        this -> m_OSVersion -> addItem(tr("Microsoft 7"));
-        this -> m_OSVersion -> addItem(tr("Microsoft 8"));
-        this -> m_OSVersion -> addItem(tr("Microsoft 10"));
-    } else if (OSSelected == "BSD") {
-        this -> m_OSVersion -> addItem(tr("FreeBSD"));
-        this -> m_OSVersion -> addItem(tr("OpenBSD"));
-        this -> m_OSVersion -> addItem(tr("NetBSD"));
-    } else {
-        this -> m_OSVersion -> addItem(tr("Debian GNU Hurd"));
-        this -> m_OSVersion -> addItem(tr("Arch Hurd"));
-        this -> m_OSVersion -> addItem(tr("Redox"));
-        this -> m_OSVersion -> addItem(tr("ReactOS"));
-    }
-}
-
-QString BasicTab::getStatusLabel(Machine::States state) {
-
-    QString statusLabel;
-
-    switch (state) {
-        case Machine::Started:
-            statusLabel = tr("Started");
-            break;
-        case Machine::Stopped:
-            statusLabel = tr("Stopped");
-            break;
-        case Machine::Saved:
-            statusLabel = tr("Saved");
-            break;
-        case Machine::Paused:
-            statusLabel = tr("Paused");
-            break;
-        default:
-            statusLabel = tr("Stopped");
-            break;
-    }
-
-    return statusLabel;
-}
-
-void BasicTab::nameChanged() {
-    this -> m_machineConfig -> setName(this -> m_machineNameLineEdit -> text());
-}
-
-DescriptionTab::DescriptionTab(Machine *machine,
-                               bool enableFields,
-                               QWidget *parent) : QWidget(parent) {
-
-    m_machineDescLabel = new QLabel(tr("Description") + ":");
-    m_machineDescTextEdit = new QPlainTextEdit();
-    m_machineDescTextEdit -> setEnabled(enableFields);
-    m_machineDescTextEdit -> setPlainText(machine -> getDescription());
-
-    m_descriptionLayout = new QVBoxLayout();
-    m_descriptionLayout -> setAlignment(Qt::AlignVCenter);
-    m_descriptionLayout -> addWidget(m_machineDescLabel);
-    m_descriptionLayout -> addWidget(m_machineDescTextEdit);
-
-    this -> setLayout(m_descriptionLayout);
-
-    qDebug() << "DescriptionTab created";
-}
-
-DescriptionTab::~DescriptionTab() {
-    qDebug() << "DescriptionTab destroyed";
+    this->m_machine->setName(this->m_basicTab->getMachineName());
+    this->m_machine->setOSType(this->m_basicTab->getMachineType());
+    this->m_machine->setOSVersion(this->m_basicTab->getMachineVersion());
+    this->m_machine->setDescription(this->m_descriptionTab->getMachineDescription());
 }
