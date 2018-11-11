@@ -41,6 +41,9 @@ class MachineConfigAccel : public QWidget {
         ~MachineConfigAccel();
         QWidget *m_acceleratorPageWidget;
 
+        // Methods
+        void saveAccelData();
+
     signals:
 
     public slots:
@@ -59,6 +62,8 @@ class MachineConfigAccel : public QWidget {
         QTreeWidget *m_acceleratorTree;
 
         QTreeWidgetItem *m_treeItem;
+
+        Machine *m_machine;
 
         // Methods
         void moveUpButton();

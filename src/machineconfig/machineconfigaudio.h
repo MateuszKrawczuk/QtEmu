@@ -43,6 +43,9 @@ class MachineConfigAudio : public QWidget {
         ~MachineConfigAudio();
         QWidget *m_audioPageWidget;
 
+        // Methods
+        void saveAudioData();
+
     signals:
 
     public slots:
@@ -75,6 +78,8 @@ class MachineConfigAudio : public QWidget {
         QLabel *m_hostSoundSystemLabel;
 
         QComboBox *m_hostSoundSystemComboBox;
+
+        Machine *m_machine;
 
         // Methods
         void moveUpButton();

@@ -31,6 +31,8 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
         enableFields = false;
     }
 
+    this->m_machine = machine;
+
     m_moveUpAccelToolButton = new QToolButton();
     m_moveUpAccelToolButton -> setArrowType(Qt::UpArrow);
     m_moveUpAccelToolButton -> setEnabled(enableFields);
@@ -104,7 +106,6 @@ void MachineConfigAccel::moveUpButton() {
 
     QTreeWidgetItem *item = this -> m_acceleratorTree -> takeTopLevelItem( index );
     this -> m_acceleratorTree -> insertTopLevelItem( index - 1, item );
-
     this -> m_acceleratorTree -> setCurrentItem( item );
 }
 
@@ -117,6 +118,17 @@ void MachineConfigAccel::moveDownButton() {
 
     QTreeWidgetItem *item = this -> m_acceleratorTree ->takeTopLevelItem( index );
     this -> m_acceleratorTree -> insertTopLevelItem( index + 1, item );
-
     this -> m_acceleratorTree -> setCurrentItem( item );
+}
+
+void MachineConfigAccel::saveAccelData() {
+    this->m_machine->removeAllAccelerators();
+
+    QTreeWidgetItemIterator it(this->m_acceleratorTree);
+    while (*it) {
+        if ((*it)->checkState(0) == Qt::Checked) {
+            this->m_machine->addAccelerator((*it)->data(0, Qt::UserRole).toString());
+        }
+        ++it;
+    }
 }

@@ -39,6 +39,9 @@ class MachineConfigNetwork : public QWidget {
         ~MachineConfigNetwork();
         QWidget *m_networkPageWidget;
 
+        // Methods
+        void saveNetworkData();
+
     signals:
 
     public slots:
@@ -55,6 +58,8 @@ class MachineConfigNetwork : public QWidget {
 
         QRadioButton *m_withNetworkRadio;
         QRadioButton *m_withoutNetworkRadio;
+
+        Machine *m_machine;
 
 };
 #endif // MACHINECONFIGNETWORK_H

@@ -31,6 +31,8 @@ MachineConfigNetwork::MachineConfigNetwork(Machine *machine,
         enableFields = false;
     }
 
+    this->m_machine = machine;
+
     m_withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"));
     m_withNetworkRadio -> setEnabled(enableFields);
     if (machine -> getUseNetwork() == true) {
@@ -63,4 +65,14 @@ MachineConfigNetwork::MachineConfigNetwork(Machine *machine,
 
 MachineConfigNetwork::~MachineConfigNetwork() {
     qDebug() << "MachineConfigNetwork destroyed";
+}
+
+void MachineConfigNetwork::saveNetworkData() {
+    bool useNetwork = false;
+
+    if (this->m_withNetworkRadio->isChecked()) {
+        useNetwork = true;
+    }
+
+    this->m_machine->setUseNetwork(useNetwork);
 }

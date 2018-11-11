@@ -31,6 +31,8 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
         enableFields = false;
     }
 
+    this->m_machine = machine;
+
     m_moveUpAudioToolButton = new QToolButton();
     m_moveUpAudioToolButton -> setArrowType(Qt::UpArrow);
     m_moveUpAudioToolButton -> setEnabled(enableFields);
@@ -91,6 +93,7 @@ MachineConfigAudio::MachineConfigAudio(Machine *machine,
     m_hostSoundSystemComboBox -> addItem("spice");
     m_hostSoundSystemComboBox -> addItem("wav");
     m_hostSoundSystemComboBox -> addItem("none");
+    m_hostSoundSystemComboBox->setCurrentText(this->m_machine->getHostSoundSystem());
 
     m_hostSoundSystemLayout = new QHBoxLayout();
     m_hostSoundSystemLayout -> setAlignment(Qt::AlignLeft);
@@ -137,4 +140,18 @@ void MachineConfigAudio::moveDownButton() {
     this -> m_audioTree -> insertTopLevelItem( index + 1, item );
 
     this -> m_audioTree -> setCurrentItem( item );
+}
+
+void MachineConfigAudio::saveAudioData() {
+    this->m_machine->setHostSoundSystem(this->m_hostSoundSystemComboBox->currentText());
+
+    this->m_machine->removeAllAudioCards();
+
+    QTreeWidgetItemIterator it(this->m_audioTree);
+    while (*it) {
+        if ((*it)->checkState(0) == Qt::Checked) {
+            this->m_machine->addAudio((*it)->data(0, Qt::UserRole).toString());
+        }
+        ++it;
+    }
 }

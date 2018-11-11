@@ -156,13 +156,15 @@ void MachineConfigWindow::saveMachineSettings() {
     qDebug() << "Machine settings saved";
 
     emit(saveMachineSettingsSignal()); // For reload labels in mainwindow ;)
+    //this->m_osWidget->setText(this->m_machine->getName());
 
     this->m_configGeneral->saveGeneralData();
-
-    this->m_osWidget->setText(this->m_machine->getName());
+    this->m_configAudio->saveAudioData();
+    this->m_configNetwork->saveNetworkData();
+    this->m_configAccel->saveAccelData();
     this->m_machine->saveMachine();
-    this->hide();
 
+    this->hide();
     delete this;
 }
 
@@ -175,6 +177,5 @@ void MachineConfigWindow::cancelMachineSettings() {
     qDebug() << "Machine settings canceled";
 
     this->hide();
-
     delete this;
 }

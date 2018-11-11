@@ -180,6 +180,9 @@ class Machine: public QObject {
         QStringList getAudio() const;
         void setAudio(const QStringList &value);
 
+        QString getHostSoundSystem() const;
+        void setHostSoundSystem(const QString &value);
+
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
 
@@ -210,9 +213,11 @@ class Machine: public QObject {
         // Methods
         void addAudio(const QString audio);
         void removeAudio(const QString audio);
+        void removeAllAudioCards();
 
         void addAccelerator(const QString accel);
         void removeAccelerator(const QString accel);
+        void removeAllAccelerators();
 
         QString getAudioLabel();
         QString getAcceleratorLabel();
@@ -266,6 +271,7 @@ class Machine: public QObject {
 
         // Hardware - Audio
         QStringList audio;
+        QString hostSoundSystem;
 
         // Hardware - Network
         bool useNetwork;

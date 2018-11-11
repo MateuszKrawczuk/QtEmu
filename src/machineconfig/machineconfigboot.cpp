@@ -31,6 +31,8 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
         enableFields = false;
     }
 
+    this->m_machine = machine;
+
     m_bootMenuCheckBox = new QCheckBox();
     m_bootMenuCheckBox -> setEnabled(enableFields);
     m_bootMenuCheckBox -> setText(tr("Enable boot menu"));
@@ -216,3 +218,7 @@ void MachineConfigBoot::setInitrdPath(){
     }
 
 }
+
+/*void MachineConfigBoot::saveBootData() {
+    this->m_machine->
+}*/

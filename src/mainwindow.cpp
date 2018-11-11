@@ -501,6 +501,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machine->setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
     machine->setSocketCount(cpuObject["socketCount"].toInt());
     machine->setThreadsCore(cpuObject["threadsCore"].toInt());
+    machine->setHostSoundSystem(machineJSON["hostsoundsystem"].toString());
     machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
     machine->setMachineBoot(machineBoot);

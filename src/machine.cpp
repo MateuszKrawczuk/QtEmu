@@ -572,6 +572,10 @@ void Machine::removeAudio(const QString audio) {
     }
 }
 
+void Machine::removeAllAudioCards() {
+    this->audio.clear();
+}
+
 /**
  * @brief Add an accelerator to the list
  * @param accel code of the accelerator
@@ -594,6 +598,10 @@ void Machine::removeAccelerator(const QString accel) {
     if(this -> accelerator.contains(accel)){
         this -> accelerator.removeOne(accel);
     }
+}
+
+void Machine::removeAllAccelerators() {
+    this->accelerator.clear();
 }
 
 /**
@@ -707,6 +715,16 @@ void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus) {
     qDebug() << "Exit code: " << exitCode << " exit status: " << exitStatus;
     this -> state = Machine::Stopped;
     emit(machineStateChangedSignal(Machine::Stopped));
+}
+
+QString Machine::getHostSoundSystem() const
+{
+    return hostSoundSystem;
+}
+
+void Machine::setHostSoundSystem(const QString &value)
+{
+    hostSoundSystem = value;
 }
 
 QProcessEnvironment Machine::buildEnvironment() {
@@ -836,6 +854,7 @@ void Machine::saveMachine() {
     machineJSONObject["network"]     = this->useNetwork;
     machineJSONObject["path"]        = this->path;
     machineJSONObject["uuid"]        = this->uuid;
+    machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;
     // TODO: Implement another types
     machineJSONObject["binary"] = "qemu-system-x86_64";
 

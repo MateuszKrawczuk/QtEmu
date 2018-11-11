@@ -46,6 +46,9 @@ class MachineConfigBoot : public QWidget {
         ~MachineConfigBoot();
         QWidget *m_bootPageWidget;
 
+        // Method
+        void saveBootData();
+
     signals:
 
     public slots:
@@ -78,6 +81,8 @@ class MachineConfigBoot : public QWidget {
 
         QPushButton *m_kernelPathPushButton;
         QPushButton *m_initrdPushButton;
+
+        Machine *m_machine;
 
         // Methods
         void moveUpButton();
