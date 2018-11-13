@@ -488,6 +488,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machine->setName(machineJSON["name"].toString());
     machine->setOSType(machineJSON["OSType"].toString());
     machine->setOSVersion(machineJSON["OSVersion"].toString());
+    machine->setDescription(machineJSON["description"].toString());
     machine->setRAM(machineJSON["RAM"].toDouble());
     machine->setUseNetwork(machineJSON["network"].toBool());
     machine->setConfigPath(machineConfigPath);

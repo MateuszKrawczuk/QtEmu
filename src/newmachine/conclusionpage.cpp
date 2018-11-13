@@ -110,6 +110,19 @@ void MachineConclusionPage::initializePage() {
 
 bool MachineConclusionPage::validatePage() {
 
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    QString machinePath = settings.value("machinePath", QDir::homePath()).toString();
+
+    settings.endGroup();
+
+    this->m_newMachine->setConfigPath(machinePath.append(QDir::toNativeSeparators("/"))
+                                     .append(this->m_newMachine->getName())
+                                     .append(QDir::toNativeSeparators("/"))
+                                     .append(this->m_newMachine->getName().toLower().replace(" ", "_"))
+                                     .append(".json"));
+
     this -> m_newMachine -> setUuid(QUuid::createUuid().toString());
 
     if( ! this -> m_newMachine -> getCreateNewDisk() ) {
@@ -117,6 +130,8 @@ bool MachineConclusionPage::validatePage() {
         return true;
     }
 
+    // TODO: Refactor all this section...
+    //       the creation of the first disk is bullshit...
     QString strMachinePath;
 
     if ( ! this->m_newMachine->getDiskPath().isEmpty()) {

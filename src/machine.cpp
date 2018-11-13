@@ -885,21 +885,28 @@ void Machine::saveMachine() {
 
     QJsonArray media;
     media.append(disk);
-
     machineJSONObject["media"] = media;
 
-    QJsonObject kernelBoot;
-    kernelBoot["enabled"] = false;
-    kernelBoot["kernelPath"] = "";
-    kernelBoot["initrdPath"] = "";
-    kernelBoot["kernelArgs"] = "";
+    Boot machineBoot = this->m_machineBoot;
 
-    QJsonObject bootOrder;
-    bootOrder["0"] = "CDROM";
-    bootOrder["1"] = "HDD";
+    QJsonArray bootOrder;
+    QJsonObject order;
+    QMapIterator<int, QString> i(machineBoot.getBootOrder());
+    while (i.hasNext()) {
+        i.next();
+        order.insert(QString::number(i.key()), i.value());
+    }
+
+    bootOrder.append(order);
+
+    QJsonObject kernelBoot;
+    kernelBoot["enabled"] = machineBoot.kernelBootEnabled();
+    kernelBoot["kernelPath"] = machineBoot.kernelPath();
+    kernelBoot["initrdPath"] = machineBoot.initrdPath();
+    kernelBoot["kernelArgs"] = machineBoot.kernelArgs();
 
     QJsonObject boot;
-    boot["bootMenu"] = false;
+    boot["bootMenu"] = machineBoot.bootMenu();
     boot["kernelBoot"] = kernelBoot;
     boot["bootOrder"] = bootOrder;
 

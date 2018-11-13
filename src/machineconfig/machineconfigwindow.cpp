@@ -160,6 +160,7 @@ void MachineConfigWindow::saveMachineSettings() {
 
     this->m_configGeneral->saveGeneralData();
     this->m_configAudio->saveAudioData();
+    this->m_configBoot->saveBootData();
     this->m_configNetwork->saveNetworkData();
     this->m_configAccel->saveAccelData();
     this->m_machine->saveMachine();

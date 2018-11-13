@@ -219,6 +219,26 @@ void MachineConfigBoot::setInitrdPath(){
 
 }
 
-/*void MachineConfigBoot::saveBootData() {
-    this->m_machine->
-}*/
+void MachineConfigBoot::saveBootData() {
+    QMap<int, QString> bootOrder;
+
+    int counter = 0;
+    QTreeWidgetItemIterator it(this->m_bootTree);
+    while (*it) {
+        if ((*it)->checkState(0) == Qt::Checked) {
+            bootOrder.insert(counter, (*it)->data(0, Qt::UserRole).toString());
+            ++counter;
+        }
+        ++it;
+    }
+
+    Boot boot;
+    boot.setBootMenu(this->m_bootMenuCheckBox->isChecked());
+    boot.setKernelBootEnabled(this->m_kernelBootCheckBox->isChecked());
+    boot.setKernelPath(this->m_kernelPathLineEdit->text());
+    boot.setInitrdPath(this->m_initredLineEdit->text());
+    boot.setKernelArgs(this->m_kernelArgsLineEdit->text());
+    boot.setBootOrder(bootOrder);
+
+    this->m_machine->setMachineBoot(boot);
+}
