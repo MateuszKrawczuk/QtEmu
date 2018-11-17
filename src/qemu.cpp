@@ -27,26 +27,30 @@ QEMU::QEMU(QObject *parent) : QObject(parent) {
     QSettings settings;
     settings.beginGroup("Configuration");
 
-    QString path;
+    QString qemuBinariesPath;
+    QString qemuImgPath;
     #ifdef Q_OS_LINUX
-    path = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
+    qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
+    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
     #endif
     #ifdef Q_OS_WIN
-    path = QDir::toNativeSeparators("");
+    qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
+    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
     #endif
     #ifdef Q_OS_MACOS
-    path = QDir::toNativeSeparators("");
+    qemuBinariesPath = QDir::toNativeSeparators("");
+    qemuImgPath = QDir::toNativeSeparators("");
     #endif
     #ifdef Q_OS_FREEBSD
-    path = QDir::toNativeSeparators("");
+    qemuBinariesPath = QDir::toNativeSeparators("");
+    qemuImgPath = QDir::toNativeSeparators("");
     #endif
 
-    settings.setValue("qemuBinaryPath", path);
     settings.endGroup();
     settings.sync();
 
-    this -> setQEMUImgPath(path);
-    this -> setQEMUBinaries(path);
+    this -> setQEMUImgPath(qemuImgPath);
+    this -> setQEMUBinaries(qemuBinariesPath);
 
     qDebug() << "QEMU object created";
 }
@@ -60,14 +64,27 @@ QString QEMU::QEMUImgPath() const {
 }
 
 void QEMU::setQEMUImgPath(const QString path) {
-    QString qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
+
+    QString qemuImgPath;
+    #ifdef Q_OS_LINUX
+    qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
+    #endif
+    #ifdef Q_OS_WIN
+    qemuImgPath = path;
+    #endif
+    #ifdef Q_OS_MACOS
+    qemuImgPath = "";
+    #endif
+    #ifdef Q_OS_FREEBSD
+    qemuImgPath = "";
+    #endif
 
     QFile qemuImgFile(qemuImgPath);
     if (qemuImgFile.exists()) {
-        m_QEMUImgPath = qemuImgPath;
+        this->m_QEMUImgPath = qemuImgPath;
     } else {
-        m_QEMUImgPath = "";
-        qDebug() << "Cannot found qemu-img binary";
+        this->m_QEMUImgPath = "";
+        qDebug() << "Cannot find qemu-img binary";
     }
 }
 
@@ -80,11 +97,11 @@ QString QEMU::getQEMUBinary(const QString binary) const {
 }
 
 void QEMU::setQEMUBinaries(const QString path) {
-    m_QEMUBinaries.clear();
+    this->m_QEMUBinaries.clear();
 
     QDirIterator it(path, QStringList() << "qemu-system-*", QDir::NoFilter, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         it.next();
-        m_QEMUBinaries.insert(it.fileName(), it.filePath());
+        this->m_QEMUBinaries.insert(it.fileName(), it.filePath());
     }
 }

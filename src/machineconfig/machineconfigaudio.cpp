@@ -143,8 +143,8 @@ void MachineConfigAudio::moveDownButton() {
 }
 
 void MachineConfigAudio::saveAudioData() {
-    this->m_machine->setHostSoundSystem(this->m_hostSoundSystemComboBox->currentText());
 
+    this->m_machine->setHostSoundSystem(this->m_hostSoundSystemComboBox->currentText());
     this->m_machine->removeAllAudioCards();
 
     QTreeWidgetItemIterator it(this->m_audioTree);

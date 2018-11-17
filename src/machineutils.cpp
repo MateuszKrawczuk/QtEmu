@@ -193,3 +193,13 @@ QStringList MachineUtils::getAccelerators(QJsonArray acceleratorsArray) {
 
     return acceleratorsList;
 }
+
+QStringList MachineUtils::getMediaDevices(QJsonArray mediaDevicesArray) {
+
+    QStringList mediaDevicesList;
+    for(int i= 0; i < mediaDevicesArray.size(); ++i) {
+        mediaDevicesList.append(mediaDevicesArray[i].toString());
+    }
+
+    return mediaDevicesList;
+}

@@ -122,6 +122,7 @@ class MachineNewDiskPage: public QWizardPage {
         QGroupBox *m_fileTypeGroupBox;
 
         QLineEdit *m_fileNameLineEdit;
+        QLineEdit *m_diskFormatLineEdit; // Its hidden - used to share data between QWizardPages
 
         QDoubleSpinBox *m_diskSpinBox;
 
@@ -145,7 +146,6 @@ class MachineNewDiskPage: public QWizardPage {
         QMessageBox *m_qemuImgErrorMessageBox;
         QMessageBox *m_qemuImgOkMessageBox;
 
-        QString m_diskFormat;
         QString m_diskName;
 
         Machine *m_newMachine;

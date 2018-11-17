@@ -88,6 +88,8 @@ MachineConclusionPage::~MachineConclusionPage() {
 }
 
 void MachineConclusionPage::initializePage() {
+    QString machineName = field("machine.diskname").toString();
+
     this -> m_machineNameLabel -> setText(this -> m_newMachine -> getName());
     this -> m_OSTypeLabel      -> setText(this -> m_newMachine -> getOSType());
     this -> m_OSVersionLabel   -> setText(this -> m_newMachine -> getOSVersion());
@@ -96,9 +98,9 @@ void MachineConclusionPage::initializePage() {
     this -> m_RAMLabel         -> setText(QString::number(this -> m_newMachine -> getRAM()).append(" MiB"));
     this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel());
     this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel());
-    this -> m_diskLabel        -> setText(this -> m_newMachine -> getDiskName());
+    this -> m_diskLabel        -> setText(machineName);
 
-    if( ! this -> m_newMachine -> getDiskName().isEmpty()){
+    if( ! machineName.isEmpty()){
         this -> m_conclusionLayout -> addWidget(this -> m_diskDescLabel,    9, 0, 1, 1);
         this -> m_conclusionLayout -> addWidget(this -> m_diskLabel,        9, 1, 1, 1);
     } else {
@@ -110,64 +112,6 @@ void MachineConclusionPage::initializePage() {
 
 bool MachineConclusionPage::validatePage() {
 
-    QSettings settings;
-    settings.beginGroup("Configuration");
-
-    QString machinePath = settings.value("machinePath", QDir::homePath()).toString();
-
-    settings.endGroup();
-
-    this->m_newMachine->setConfigPath(machinePath.append(QDir::toNativeSeparators("/"))
-                                     .append(this->m_newMachine->getName())
-                                     .append(QDir::toNativeSeparators("/"))
-                                     .append(this->m_newMachine->getName().toLower().replace(" ", "_"))
-                                     .append(".json"));
-
-    this -> m_newMachine -> setUuid(QUuid::createUuid().toString());
-
-    if( ! this -> m_newMachine -> getCreateNewDisk() ) {
-        this->generateMachineFiles();
-        return true;
-    }
-
-    // TODO: Refactor all this section...
-    //       the creation of the first disk is bullshit...
-    QString strMachinePath;
-
-    if ( ! this->m_newMachine->getDiskPath().isEmpty()) {
-
-        strMachinePath = this->m_newMachine->getDiskPath();
-
-    } else {
-        QSettings settings;
-        settings.beginGroup("Configuration");
-
-        strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
-
-        settings.endGroup();
-
-        strMachinePath.append(QDir::toNativeSeparators("/"))
-                      .append(this->m_newMachine->getName())
-                      .append(QDir::toNativeSeparators("/"))
-                      .append(this->m_newMachine->getDiskName().toLower().replace(" ", "_"))
-                      .append(QDir::toNativeSeparators("."))
-                      .append(this->m_newMachine->getDiskFormat());
-    }
-
-    this->m_newMachine->setDiskPath(strMachinePath);
-
-    // Create the disk
-    bool isDiskCreated = SystemUtils::createDisk(this->m_QEMUGlobalObject,
-                                                 strMachinePath,
-                                                 this->m_newMachine->getDiskFormat(),
-                                                 this->m_newMachine->getDiskSize(),
-                                                 false);
-
-    if (isDiskCreated) {
-        this->generateMachineFiles();
-    }
-
-    return isDiskCreated;
 }
 
 /**

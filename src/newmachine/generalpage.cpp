@@ -130,8 +130,8 @@ bool MachineNamePage::validatePage() {
 
     QString strMachineName = field("machine.name").toString();
     QString strMachinePathMsg = strMachinePath;
-    QString strFullMachinePath = strMachinePath.append("/").append(strMachineName);
-    QString strMachineLogsPath = strMachinePath.append("/").append("logs");
+    QString strFullMachinePath = strMachinePath.append(QDir::toNativeSeparators("/")).append(strMachineName);
+    QString strMachineLogsPath = strMachinePath.append(QDir::toNativeSeparators("/")).append("logs");
 
     if ( QDir(strFullMachinePath).exists() ) {
         qDebug() << "The folder alredy exists" << strFullMachinePath;

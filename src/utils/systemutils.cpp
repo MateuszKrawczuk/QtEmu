@@ -44,7 +44,13 @@ void SystemUtils::getTotalMemory(int32_t &totalRAM) {
 
         GlobalMemoryStatusEx (&statex);
 
-        totalRAM = (int)statex.ullTotalPhys / (1024*1024*1024);
+        totalRAM = static_cast<int>(statex.ullTotalPhys / (1024*1024*1024));
+    #endif
+    #ifdef Q_OS_MACOS
+    // TODO
+    #endif
+    #ifdef Q_OS_FREEBSD
+    // TODO
     #endif
 }
 
@@ -174,12 +180,14 @@ QHash<QString, QString> SystemUtils::getAccelerators() {
 
     QHash<QString, QString> acceleratorsHash;
 
+#ifdef Q_OS_LINUX
     acceleratorsHash.insert("kvm", "Kernel-based Virtual Machine (KVM)");
+#endif
     acceleratorsHash.insert("xen", "Xen Hypervisor");
     acceleratorsHash.insert("tcg", "Tiny Code Generator (TCG)");
-    #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
     acceleratorsHash.insert("hax", "Hardware Accelerated Execution Manager (HAXM)");
-    #endif
+#endif
 
     return acceleratorsHash;
 }

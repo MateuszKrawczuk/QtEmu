@@ -51,6 +51,7 @@ class MachineUtils : public QObject {
         static QString getMachineConfigPath(const QUuid machineUuid);
         static QStringList getSoundCards(QJsonArray soundCardsArray);
         static QStringList getAccelerators(QJsonArray acceleratorsArray);
+        static QStringList getMediaDevices(QJsonArray mediaDevicesArray);
 
     public slots:
 

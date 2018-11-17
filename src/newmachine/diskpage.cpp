@@ -27,8 +27,7 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
 
     setTitle(tr("Machine virtual hard disk"));
 
-    this -> m_newMachine = machine;
-    this -> m_newMachine -> setCreateNewDisk(false);
+    this->m_newMachine = machine;
 
     m_machineDiskLabel = new QLabel(tr("Select a virtual hard disk to the new machine."
                                        "You can either create a new hard disk or select an existing one."
@@ -55,6 +54,7 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
 
     m_hardDiskPathLineEdit = new QLineEdit();
     m_hardDiskPathLineEdit -> setEnabled(false);
+    this->registerField("machine.diskPath", m_hardDiskPathLineEdit);
 
     m_pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
@@ -65,6 +65,8 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
             this, &MachineDiskPage::useExistingDiskPath);
 
     this -> useExistingDiskToggle(false);
+
+    registerField("createDisk", this->m_createDiskRadio);
 
     m_useOldDiskLayout = new QHBoxLayout();
     m_useOldDiskLayout -> setAlignment(Qt::AlignVCenter);
@@ -92,27 +94,22 @@ MachineDiskPage::~MachineDiskPage() {
 
 void MachineDiskPage::useExistingDiskToggle(bool toggled) {
 
-    this -> m_pathNewDiskPushButton -> setEnabled(toggled);
+    this->m_pathNewDiskPushButton->setEnabled(toggled);
 
     if( ! toggled ) {
-        this -> m_hardDiskPathLineEdit -> clear();
-        this -> m_newMachine -> setDiskPath("");
+        this->m_hardDiskPathLineEdit->clear();
     }
 }
 
 void MachineDiskPage::useExistingDiskPath() {
 
-    this -> m_existingDiskPath = QFileDialog::getSaveFileName(this,
-                                                              tr("Select an existing disk"),
-                                                              QDir::homePath(),
-                                                              tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.vmdk)"));
+    this->m_existingDiskPath = QFileDialog::getSaveFileName(this,
+                                                            tr("Select an existing disk"),
+                                                            QDir::homePath(),
+                                                            tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.vmdk)"));
 
     if ( !m_existingDiskPath.isEmpty() ) {
         this -> m_hardDiskPathLineEdit -> setText(QDir::toNativeSeparators(m_existingDiskPath));
-        this -> m_newMachine -> setDiskPath(QDir::toNativeSeparators(m_existingDiskPath));
-
-        QFileInfo machineDiskName(QDir::toNativeSeparators(m_existingDiskPath));
-        this -> m_newMachine -> setDiskName(machineDiskName.fileName());
     }
 }
 
@@ -125,23 +122,12 @@ int MachineDiskPage::nextId() const {
 }
 
 bool MachineDiskPage::validatePage() {
-
-    if(this -> m_noDiskRadio -> isChecked()) {
-        this -> m_newMachine -> setDiskName("");
-        this -> m_newMachine -> setDiskPath("");
-        this -> m_newMachine -> setDiskSize(0);
-        this -> m_newMachine -> setDiskFormat("");
-    } else if(this -> m_useExistingDiskRadio -> isChecked()) {
-        this -> m_newMachine -> setDiskSize(0);
-        this -> m_newMachine -> setDiskFormat("");
-    }
-
-    if(this -> m_useExistingDiskRadio -> isChecked() && this -> m_hardDiskPathLineEdit -> text().isEmpty()) {
+    if(this->m_useExistingDiskRadio->isChecked() && this->m_hardDiskPathLineEdit->text().isEmpty()) {
         m_notDiskMessageBox = new QMessageBox(this);
-        m_notDiskMessageBox -> setWindowTitle(tr("Qtemu - Disk not selected"));
-        m_notDiskMessageBox -> setIcon(QMessageBox::Warning);
-        m_notDiskMessageBox -> setText(tr("<p>Select a disk or another option</p>"));
-        m_notDiskMessageBox -> exec();
+        m_notDiskMessageBox->setWindowTitle(tr("Qtemu - Disk not selected"));
+        m_notDiskMessageBox->setIcon(QMessageBox::Warning);
+        m_notDiskMessageBox->setText(tr("<p>Select a disk or another option</p>"));
+        m_notDiskMessageBox->exec();
 
         return false;
     } else {
@@ -158,9 +144,13 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     m_fileLocationGroupBox = new QGroupBox(tr("Disk name"));
 
     m_fileNameLineEdit = new QLineEdit();
-    m_fileNameLineEdit -> setEnabled(false);
+    m_fileNameLineEdit->setEnabled(false);
+    this->registerField("machine.diskname*", m_fileNameLineEdit);
 
-    this -> registerField("machine.diskname*", m_fileNameLineEdit);
+    m_diskFormatLineEdit = new QLineEdit(this);
+    m_diskFormatLineEdit->setEnabled(false);
+    m_diskFormatLineEdit->setHidden(true);
+    this->registerField("machine.diskFormat", m_diskFormatLineEdit);
 
     m_pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
@@ -187,6 +177,7 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     m_diskSpinBox -> setMaximum(1000000);
     m_diskSpinBox -> stepBy(1);
 
+
     m_diskSlider = new QSlider(Qt::Horizontal);
     m_diskSlider -> setTickPosition(QSlider::TicksBelow);
     m_diskSlider -> setTickInterval(10);
@@ -195,6 +186,8 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
 
     connect(m_diskSlider, &QSlider::valueChanged,
             m_diskSpinBox, &QDoubleSpinBox::setValue);
+
+    this->registerField("machine.diskSize", m_diskSlider);
 
     connect(m_diskSpinBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             m_diskSlider, &QSlider::setValue);
@@ -221,11 +214,13 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     m_rawRadioButton   = new QRadioButton(tr("raw"));
     m_qcowRadioButton  = new QRadioButton(tr("qcow (QEMU Copy-on-write)"));
     m_qcow2RadioButton = new QRadioButton(tr("qcow2 (QEMU Copy-on-write 2)"));
-    m_qcow2RadioButton -> setChecked(true);
-    this -> selectQCow2Format(true);
     m_qedRadioButton   = new QRadioButton(tr("qed (QEMU enhanced disk)"));
     m_vmdkRadioButton  = new QRadioButton(tr("vmdk (Virtual Machine Disk)"));
     m_cloopRadioButton = new QRadioButton(tr("cloop (Compressed Loop)"));
+
+    // Select by default qcow2 format
+    m_qcow2RadioButton->setChecked(true);
+    this->selectQCow2Format(true);
 
     connect(m_rawRadioButton, &QAbstractButton::toggled,
                 this, &MachineNewDiskPage::selectRawFormat);
@@ -269,54 +264,46 @@ MachineNewDiskPage::~MachineNewDiskPage() {
 
 void MachineNewDiskPage::initializePage() {
     m_fileNameLineEdit -> setText(field("machine.name").toString());
-    this -> m_newMachine -> setDiskName(field("machine.name").toString());
-    this -> m_newMachine -> setDiskPath("");
-
-    this -> m_qcow2RadioButton -> setChecked(true);
+    this->m_qcow2RadioButton->setChecked(true);
 }
 
 bool MachineNewDiskPage::validatePage() {
-
-    this -> m_newMachine -> setCreateNewDisk(true);
-    this -> m_newMachine -> setDiskFormat(this -> m_diskFormat);
-    this -> m_newMachine -> setDiskSize(this -> m_diskSpinBox -> value());
-
     return true;
 }
 
 void MachineNewDiskPage::selectRawFormat(bool useRaw) {
     if(useRaw) {
-        this -> m_diskFormat = "raw";
+        this->m_diskFormatLineEdit->setText("raw");
     }
 }
 
 void MachineNewDiskPage::selectQCowFormat(bool useQCow) {
     if(useQCow) {
-        this -> m_diskFormat = "qcow";
+        this->m_diskFormatLineEdit->setText("qcow");
     }
 }
 
 void MachineNewDiskPage::selectQCow2Format(bool useQCow2) {
     if(useQCow2) {
-        this -> m_diskFormat = "qcow2";
+        this->m_diskFormatLineEdit->setText("qcow2");
     }
 }
 
 void MachineNewDiskPage::selectQedFormat(bool useQed) {
     if(useQed) {
-        this -> m_diskFormat = "qed";
+        this->m_diskFormatLineEdit->setText("qed");
     }
 }
 
 void MachineNewDiskPage::selectVmdkFormat(bool useVmdk) {
     if(useVmdk) {
-        this -> m_diskFormat = "vmdk";
+        this->m_diskFormatLineEdit->setText("vmdk");
     }
 }
 
 void MachineNewDiskPage::selectCloopFormat(bool useCloop) {
     if(useCloop) {
-        this -> m_diskFormat = "cloop";
+        this->m_diskFormatLineEdit->setText("cloop");
     }
 }
 
@@ -328,11 +315,6 @@ void MachineNewDiskPage::selectNameNewDisk() {
                                                       tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.vmdk)"));
 
     if ( ! this -> m_diskName.isEmpty() ) {
-        this -> m_fileNameLineEdit -> setText(QDir::toNativeSeparators(m_diskName));
-        this -> m_newMachine -> setDiskPath(QDir::toNativeSeparators(m_diskName));
-
-        QFileInfo machineDiskName(QDir::toNativeSeparators(m_diskName));
-        this -> m_newMachine -> setDiskName(machineDiskName.fileName());
+        this->m_fileNameLineEdit->setText(QDir::toNativeSeparators(m_diskName));
     }
-
 }

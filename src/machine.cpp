@@ -426,100 +426,6 @@ void Machine::addMedia(const Media value) {
 }
 
 /**
- * @brief Get if there's necessary create a disk for the machine
- *
- * Get if there's necessary create a disk for the machine
- */
-bool Machine::getCreateNewDisk() const {
-    return createNewDisk;
-}
-
-/**
- * @brief Set if there's necessary create a disk for the machine
- *
- * Set if there's necessary create a disk for the machine
- */
-void Machine::setCreateNewDisk(bool value) {
-    createNewDisk = value;
-}
-
-/**
- * @brief Get the disk format
- *
- * Get the disk format
- * Ex: qcow2, vmdk, raw...
- */
-QString Machine::getDiskFormat() const {
-    return diskFormat;
-}
-
-/**
- * @brief Get the disk format
- *
- * Get the disk format
- * Ex: qcow2, vmdk, raw...
- */
-void Machine::setDiskFormat(const QString &value) {
-    diskFormat = value;
-}
-
-/**
- * @brief Get the disk size
- *
- * Get the disk size
- */
-qlonglong Machine::getDiskSize() const {
-    return diskSize;
-}
-
-/**
- * @brief Set the disk size
- *
- * Set the disk size
- */
-void Machine::setDiskSize(const qlonglong &value) {
-    diskSize = value;
-}
-
-/**
- * @brief Get the disk path of the machine
- *
- * Get the disk path of the machine
- * Ex: /home/xexio/Vms/Debian/debian.qcow2
- */
-QString Machine::getDiskPath() const {
-    return diskPath;
-}
-
-/**
- * @brief Set the disk path of the machine
- *
- * Set the disk path of the machine
- * Ex: /home/xexio/Vms/Debian/debian.qcow2
- */
-void Machine::setDiskPath(const QString &value) {
-    diskPath = value;
-}
-
-/**
- * @brief Get the disk name of the machine
- * Get the disk name of the machine
- * Ex: debian
- */
-QString Machine::getDiskName() const {
-    return diskName;
-}
-
-/**
- * @brief Set the disk name of the machine
- * Set the disk name of the machine
- * Ex: debian
- */
-void Machine::setDiskName(const QString &value) {
-    diskName = value;
-}
-
-/**
  * @brief Get the accelerator machine
  *
  * Get the accelerator machine
@@ -660,6 +566,9 @@ void Machine::runMachine() {
     #endif
     #ifdef Q_OS_MACOS
     // TODO: Control MacOS execution
+    #endif
+    #ifdef Q_OS_FREEBSD
+    // TODO: Control FreeBSD execution
     #endif
 
     // TODO
@@ -865,21 +774,19 @@ void Machine::saveMachine() {
     cpu["coresSocket"] = this->coresSocket;
     cpu["threadsCore"] = this->threadsCore;
     cpu["maxHotCPU"]   = this->maxHotCPU;
-
     machineJSONObject["cpu"] = cpu;
 
     QJsonObject gpu;
     gpu["GPUType"]  = this->GPUType;
     gpu["keyboard"] = this->keyboard;
-
     machineJSONObject["gpu"] = gpu;
 
     QJsonObject disk;
-    disk["name"] = this->diskName;
-    disk["path"] = this->diskPath;
-    disk["size"] = this->diskSize;
+    //disk["name"] = this->diskName;
+    //disk["path"] = this->diskPath;
+    //disk["size"] = this->diskSize;
     disk["type"] = "hdd";
-    disk["format"] = this->diskFormat;
+    //disk["format"] = this->diskFormat;
     disk["interface"] = "hda";
     disk["uuid"] = QUuid::createUuid().toString();
 
@@ -887,28 +794,16 @@ void Machine::saveMachine() {
     media.append(disk);
     machineJSONObject["media"] = media;
 
-    Boot machineBoot = this->m_machineBoot;
-
-    QJsonArray bootOrder;
-    QJsonObject order;
-    QMapIterator<int, QString> i(machineBoot.getBootOrder());
-    while (i.hasNext()) {
-        i.next();
-        order.insert(QString::number(i.key()), i.value());
-    }
-
-    bootOrder.append(order);
-
     QJsonObject kernelBoot;
-    kernelBoot["enabled"] = machineBoot.kernelBootEnabled();
-    kernelBoot["kernelPath"] = machineBoot.kernelPath();
-    kernelBoot["initrdPath"] = machineBoot.initrdPath();
-    kernelBoot["kernelArgs"] = machineBoot.kernelArgs();
+    kernelBoot["enabled"] = this->m_machineBoot.kernelBootEnabled();
+    kernelBoot["kernelPath"] = this->m_machineBoot.kernelPath();
+    kernelBoot["initrdPath"] = this->m_machineBoot.initrdPath();
+    kernelBoot["kernelArgs"] = this->m_machineBoot.kernelArgs();
 
     QJsonObject boot;
-    boot["bootMenu"] = machineBoot.bootMenu();
+    boot["bootMenu"] = this->m_machineBoot.bootMenu();
     boot["kernelBoot"] = kernelBoot;
-    boot["bootOrder"] = bootOrder;
+    boot["bootOrder"] = QJsonArray::fromStringList(this->m_machineBoot.bootOrder());
 
     machineJSONObject["boot"] = boot;
 
@@ -1192,10 +1087,26 @@ void Boot::setKernelArgs(const QString &kernelArgs) {
     m_kernelArgs = kernelArgs;
 }
 
-QMap<int, QString> Boot::getBootOrder() const {
-    return bootOrder;
+QStringList Boot::bootOrder() const {
+    return m_bootOrder;
 }
 
-void Boot::setBootOrder(const QMap<int, QString> &value) {
-    bootOrder = value;
+void Boot::setBootOrder(const QStringList &bootOrder) {
+    m_bootOrder = bootOrder;
+}
+
+void Boot::addBootOrder(const QString bootOrder) {
+    if( ! this->m_bootOrder.contains(bootOrder)){
+        this->m_bootOrder.append(bootOrder);
+    }
+}
+
+void Boot::removeBootOrder(const QString bootOrder) {
+    if(this->m_bootOrder.contains(bootOrder)){
+        this->m_bootOrder.removeOne(bootOrder);
+    }
+}
+
+void Boot::removeAllBootOrder() {
+    this->m_bootOrder.clear();
 }

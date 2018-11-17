@@ -35,9 +35,14 @@ MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
     m_acceleratorTabWidget -> addTab(new KVMTab(machine, this), tr("KVM"));
     m_acceleratorTabWidget -> addTab(new XENTab(machine, this), tr("XEN"));
     #endif
-
     #ifdef Q_OS_WIN
     m_acceleratorTabWidget -> addTab(new HAXMTab(machine, this), tr("HAXM"));
+    #endif
+    #ifdef Q_OS_MACOS
+    // TODO
+    #endif
+    #ifdef Q_OS_FREEBSD
+    // TODO
     #endif
 
     m_acceleratorTabWidget -> addTab(new TCGTab(machine, this), tr("TCG"));
@@ -58,12 +63,11 @@ MachineAcceleratorPage::~MachineAcceleratorPage() {
 KVMTab::KVMTab(Machine *machine,
                QWidget *parent) : QWidget(parent) {
 
-    this -> m_newMachine = machine;
+    this->m_newMachine = machine;
+    this->addKVMAccelerator(true);
 
     m_kvmRadioButton = new QRadioButton("Kernel-based Virtual Machine (KVM)");
     m_kvmRadioButton -> setChecked(true);
-
-    this -> addKVMAccelerator(true);
 
     connect(m_kvmRadioButton, &QAbstractButton::toggled,
                 this, &KVMTab::addKVMAccelerator);
@@ -180,7 +184,10 @@ void TCGTab::addTCGAccelerator(bool tcgAccelerator) {
 HAXMTab::HAXMTab(Machine *machine,
                  QWidget *parent) : QWidget(parent) {
 
-    this -> m_newMachine = machine;
+    this->m_newMachine = machine;
+    #ifdef Q_OS_WIN
+    this->addHAXAccelerator(true);
+    #endif
 
     m_haxmRadioButton = new QRadioButton("Hardware Accelerated Execution Manager (HAXM)");
     m_haxmRadioButton -> setChecked(true);

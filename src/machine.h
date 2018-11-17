@@ -53,8 +53,13 @@ class Boot {
         QString kernelArgs() const;
         void setKernelArgs(const QString &kernelArgs);
 
-        QMap<int, QString> getBootOrder() const;
-        void setBootOrder(const QMap<int, QString> &value);
+        QStringList bootOrder() const;
+        void setBootOrder(const QStringList &bootOrder);
+
+        // Methods
+        void addBootOrder(const QString bootOrder);
+        void removeBootOrder(const QString bootOrder);
+        void removeAllBootOrder();
 
     protected:
 
@@ -64,7 +69,7 @@ class Boot {
         QString m_kernelPath;
         QString m_initrdPath;
         QString m_kernelArgs;
-        QMap<int, QString> bootOrder;
+        QStringList m_bootOrder;
 
 };
 
@@ -189,21 +194,6 @@ class Machine: public QObject {
         QList<Media> getMedia() const;
         void addMedia(const Media value);
 
-        QString getDiskName() const;
-        void setDiskName(const QString &value);
-
-        QString getDiskPath() const;
-        void setDiskPath(const QString &value);
-
-        qlonglong getDiskSize() const;
-        void setDiskSize(const qlonglong &value);
-
-        QString getDiskFormat() const;
-        void setDiskFormat(const QString &value);
-
-        bool getCreateNewDisk() const;
-        void setCreateNewDisk(bool value);
-
         QStringList getAccelerator() const;
         void setAccelerator(const QStringList &value);
 
@@ -278,13 +268,6 @@ class Machine: public QObject {
 
         // Hardware - media
         QList<Media> media;
-
-        // Hardware - machine wizard
-        QString diskName;
-        QString diskPath;
-        qlonglong diskSize;
-        QString diskFormat;
-        bool createNewDisk;
 
         // Accelerator
         QStringList accelerator;

@@ -445,17 +445,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     QJsonObject cpuObject       = machineJSON["cpu"].toObject();
     QJsonObject bootObject      = machineJSON["boot"].toObject();
     QJsonObject kernelObject    = bootObject["kernelBoot"].toObject();
-    QJsonObject bootOrderObject = bootObject["bootOrder"].toObject();
     QJsonArray mediaArray       = machineJSON["media"].toArray();
-
-    QVariantMap bootOrderVariantMap = bootOrderObject.toVariantMap();
-    QMap<int, QString> bootOrderMap;
-
-    QMutableMapIterator<QString, QVariant> i(bootOrderVariantMap);
-    while(i.hasNext()) {
-        i.next();
-        bootOrderMap.insert(i.key().toInt(), i.value().toString());
-    }
 
     Boot machineBoot;
     machineBoot.setBootMenu(bootObject["bootMenu"].toBool());
@@ -463,7 +453,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machineBoot.setKernelPath(kernelObject["kernelPath"].toString());
     machineBoot.setInitrdPath(kernelObject["initrdPath"].toString());
     machineBoot.setKernelArgs(kernelObject["kernelArgs"].toString());
-    machineBoot.setBootOrder(bootOrderMap);
+    machineBoot.setBootOrder(MachineUtils::getMediaDevices(bootObject["bootOrder"].toArray()));
 
     Machine *machine = new Machine(this);
 
