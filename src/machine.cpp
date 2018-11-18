@@ -445,12 +445,12 @@ void Machine::setAccelerator(const QStringList &value) {
     accelerator = value;
 }
 
-Boot Machine::getMachineBoot() const {
-    return m_machineBoot;
+Boot Machine::getBoot() const {
+    return m_boot;
 }
 
-void Machine::setMachineBoot(const Boot &machineBoot) {
-    m_machineBoot = machineBoot;
+void Machine::setBoot(const Boot &boot) {
+    m_boot = boot;
 }
 
 // Methods
@@ -745,7 +745,7 @@ QStringList Machine::generateMachineCommand() {
     qemuCommand << "-cdrom";
     qemuCommand << "/home/xexio/Downloads/torrent/archlinux-2018.10.01-x86_64.iso";
 
-    qDebug() << "Command " <<qemuCommand;
+    qDebug() << "Command " << qemuCommand;
 
     return qemuCommand;
 }
@@ -781,29 +781,30 @@ void Machine::saveMachine() {
     gpu["keyboard"] = this->keyboard;
     machineJSONObject["gpu"] = gpu;
 
-    QJsonObject disk;
-    //disk["name"] = this->diskName;
-    //disk["path"] = this->diskPath;
-    //disk["size"] = this->diskSize;
-    disk["type"] = "hdd";
-    //disk["format"] = this->diskFormat;
-    disk["interface"] = "hda";
-    disk["uuid"] = QUuid::createUuid().toString();
-
     QJsonArray media;
-    media.append(disk);
+    for (int i = 0; i < this->media.size(); ++i) {
+        QJsonObject disk;
+        disk["name"] = this->media.at(i).name();
+        disk["path"] = this->media.at(i).path();
+        disk["type"] = this->media.at(i).type();
+        disk["interface"] = this->media.at(i).interface();
+        disk["uuid"] = QUuid::createUuid().toString();
+
+        media.append(disk);
+    }
+
     machineJSONObject["media"] = media;
 
     QJsonObject kernelBoot;
-    kernelBoot["enabled"] = this->m_machineBoot.kernelBootEnabled();
-    kernelBoot["kernelPath"] = this->m_machineBoot.kernelPath();
-    kernelBoot["initrdPath"] = this->m_machineBoot.initrdPath();
-    kernelBoot["kernelArgs"] = this->m_machineBoot.kernelArgs();
+    kernelBoot["enabled"] = this->m_boot.kernelBootEnabled();
+    kernelBoot["kernelPath"] = this->m_boot.kernelPath();
+    kernelBoot["initrdPath"] = this->m_boot.initrdPath();
+    kernelBoot["kernelArgs"] = this->m_boot.kernelArgs();
 
     QJsonObject boot;
-    boot["bootMenu"] = this->m_machineBoot.bootMenu();
+    boot["bootMenu"] = this->m_boot.bootMenu();
     boot["kernelBoot"] = kernelBoot;
-    boot["bootOrder"] = QJsonArray::fromStringList(this->m_machineBoot.bootOrder());
+    boot["bootOrder"] = QJsonArray::fromStringList(this->m_boot.bootOrder());
 
     machineJSONObject["boot"] = boot;
 
@@ -813,6 +814,8 @@ void Machine::saveMachine() {
     QJsonDocument machineJSONDocument(machineJSONObject);
 
     machineFile.write(machineJSONDocument.toJson());
+
+    qDebug() << "Machine saved";
 }
 
 /**
@@ -872,8 +875,8 @@ Media::~Media() {
  *
  * Get the media names
  */
-QString Media::mediaName() const {
-    return m_mediaName;
+QString Media::name() const {
+    return m_name;
 }
 
 /**
@@ -882,8 +885,8 @@ QString Media::mediaName() const {
  *
  * Set the media name
  */
-void Media::setMediaName(const QString &mediaName) {
-    m_mediaName = mediaName;
+void Media::setName(const QString &name) {
+    m_name = name;
 }
 
 /**
@@ -892,8 +895,8 @@ void Media::setMediaName(const QString &mediaName) {
  *
  * Get the media path
  */
-QString Media::mediaPath() const {
-    return m_mediaPath;
+QString Media::path() const {
+    return m_path;
 }
 
 /**
@@ -902,8 +905,8 @@ QString Media::mediaPath() const {
  *
  * Set the new media path
  */
-void Media::setMediaPath(const QString &mediaPath) {
-    m_mediaPath = mediaPath;
+void Media::setPath(const QString &path) {
+    m_path = path;
 }
 
 /**
@@ -912,8 +915,8 @@ void Media::setMediaPath(const QString &mediaPath) {
  *
  * Get the media size
  */
-qlonglong Media::mediaSize() const {
-    return m_mediaSize;
+qlonglong Media::size() const {
+    return m_size;
 }
 
 /**
@@ -922,8 +925,8 @@ qlonglong Media::mediaSize() const {
  *
  * Set the media size
  */
-void Media::setMediaSize(const qlonglong &mediaSize) {
-    m_mediaSize = mediaSize;
+void Media::setSize(const qlonglong &size) {
+    m_size = size;
 }
 
 /**
@@ -932,8 +935,8 @@ void Media::setMediaSize(const qlonglong &mediaSize) {
  *
  * Get the media type
  */
-QString Media::mediaType() const {
-    return m_mediaType;
+QString Media::type() const {
+    return m_type;
 }
 
 /**
@@ -943,8 +946,8 @@ QString Media::mediaType() const {
  * Set the media type
  * Ex: ide, scsi...
  */
-void Media::setMediaType(const QString &mediaType) {
-    m_mediaType = mediaType;
+void Media::setType(const QString &type) {
+    m_type = type;
 }
 
 /**
@@ -954,8 +957,8 @@ void Media::setMediaType(const QString &mediaType) {
  * Get the media format
  * Ex: qcow, qcow2, raw...
  */
-QString Media::mediaFormat() const {
-    return m_mediaFormat;
+QString Media::format() const {
+    return m_format;
 }
 
 /**
@@ -964,8 +967,8 @@ QString Media::mediaFormat() const {
  *
  * Set the media format
  */
-void Media::setMediaFormat(const QString &mediaFormat) {
-    m_mediaFormat = mediaFormat;
+void Media::setFormat(const QString &format) {
+    m_format = format;
 }
 
 /**
@@ -975,8 +978,8 @@ void Media::setMediaFormat(const QString &mediaFormat) {
  * Get the media interface
  * Ex: ide, scsi...
  */
-QString Media::mediaInterface() const {
-    return m_mediaInterface;
+QString Media::interface() const {
+    return m_interface;
 }
 
 /**
@@ -985,8 +988,8 @@ QString Media::mediaInterface() const {
  *
  * Set the new media interface
  */
-void Media::setMediaInterface(const QString &mediaInterface) {
-    m_mediaInterface = mediaInterface;
+void Media::setInterface(const QString &interface) {
+    m_interface = interface;
 }
 
 /**
@@ -996,8 +999,8 @@ void Media::setMediaInterface(const QString &mediaInterface) {
  * Get the media cache
  * Ex: none, writeback...
  */
-QString Media::mediaCache() const {
-    return m_mediaCache;
+QString Media::cache() const {
+    return m_cache;
 }
 
 /**
@@ -1006,8 +1009,8 @@ QString Media::mediaCache() const {
  *
  * Set the media cache
  */
-void Media::setMediaCache(const QString &mediaCache) {
-    m_mediaCache = mediaCache;
+void Media::setCache(const QString &cache) {
+    m_cache = cache;
 }
 
 /**
@@ -1017,8 +1020,8 @@ void Media::setMediaCache(const QString &mediaCache) {
  * Get the media IO
  * Ex: threads, native...
  */
-QString Media::mediaIO() const {
-    return m_mediaIO;
+QString Media::IO() const {
+    return m_IO;
 }
 
 /**
@@ -1027,8 +1030,8 @@ QString Media::mediaIO() const {
  *
  * Set the media IO
  */
-void Media::setMediaIO(const QString &mediaIO) {
-    m_mediaIO = mediaIO;
+void Media::setIO(const QString &IO) {
+    m_IO = IO;
 }
 
 QUuid Media::uuid() const {

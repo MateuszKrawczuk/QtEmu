@@ -164,13 +164,14 @@ bool MachineNamePage::validatePage() {
         return false;
     }
 
-    this -> m_machineFolder = strFullMachinePath;
+    this->m_machineFolder = strFullMachinePath;
 
     // Set all the values in the machine object
-    this -> m_newMachine -> setName(this -> m_machineNameLineEdit -> text());
-    this -> m_newMachine -> setOSType(this -> m_OSType -> currentText());
-    this -> m_newMachine -> setOSVersion(this -> m_OSVersion -> currentText());
-    this -> m_newMachine -> setPath(strFullMachinePath);
+    this->m_newMachine->setName(this->m_machineNameLineEdit->text());
+    this->m_newMachine->setOSType(this->m_OSType->currentText());
+    this->m_newMachine->setOSVersion(this->m_OSVersion->currentText());
+    this->m_newMachine->setPath(strFullMachinePath);
+    this->m_newMachine->setUuid(QUuid::createUuid().toString());
 
     return true;
 }

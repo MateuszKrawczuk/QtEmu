@@ -79,29 +79,29 @@ class Media {
         explicit Media();
         ~Media();
 
-        QString mediaName() const;
-        void setMediaName(const QString &mediaName);
+        QString name() const;
+        void setName(const QString &name);
 
-        QString mediaPath() const;
-        void setMediaPath(const QString &mediaPath);
+        QString path() const;
+        void setPath(const QString &path);
 
-        qlonglong mediaSize() const;
-        void setMediaSize(const qlonglong &mediaSize);
+        qlonglong size() const;
+        void setSize(const qlonglong &size);
 
-        QString mediaType() const;
-        void setMediaType(const QString &mediaType);
+        QString type() const;
+        void setType(const QString &type);
 
-        QString mediaFormat() const;
-        void setMediaFormat(const QString &mediaFormat);
+        QString format() const;
+        void setFormat(const QString &format);
 
-        QString mediaInterface() const;
-        void setMediaInterface(const QString &mediaInterface);
+        QString interface() const;
+        void setInterface(const QString &interface);
 
-        QString mediaCache() const;
-        void setMediaCache(const QString &mediaCache);
+        QString cache() const;
+        void setCache(const QString &cache);
 
-        QString mediaIO() const;
-        void setMediaIO(const QString &mediaIO);
+        QString IO() const;
+        void setIO(const QString &IO);
 
         QUuid uuid() const;
         void setUuid(const QUuid &uuid);
@@ -109,14 +109,14 @@ class Media {
     protected:
 
     private:
-        QString m_mediaName;
-        QString m_mediaPath;
-        qlonglong m_mediaSize;
-        QString m_mediaType;
-        QString m_mediaFormat;
-        QString m_mediaInterface;
-        QString m_mediaCache;
-        QString m_mediaIO;
+        QString m_name;
+        QString m_path;
+        qlonglong m_size;
+        QString m_type;
+        QString m_format;
+        QString m_interface;
+        QString m_cache;
+        QString m_IO;
         QUuid m_uuid;
 };
 
@@ -197,8 +197,8 @@ class Machine: public QObject {
         QStringList getAccelerator() const;
         void setAccelerator(const QStringList &value);
 
-        Boot getMachineBoot() const;
-        void setMachineBoot(const Boot &machineBoot);
+        Boot getBoot() const;
+        void setBoot(const Boot &boot);
 
         // Methods
         void addAudio(const QString audio);
@@ -273,7 +273,7 @@ class Machine: public QObject {
         QStringList accelerator;
 
         // Boot
-        Boot m_machineBoot;
+        Boot m_boot;
 
         // Process
         QProcess *m_machineProcess;

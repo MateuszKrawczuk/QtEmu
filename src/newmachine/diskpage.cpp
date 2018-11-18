@@ -48,13 +48,11 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
     m_createDiskRadio -> setChecked(true);
 
     m_useExistingDiskRadio = new QRadioButton(tr("Use an existing virtual hard disk"));
-
     connect(m_useExistingDiskRadio, &QAbstractButton::toggled,
             this, &MachineDiskPage::useExistingDiskToggle);
 
     m_hardDiskPathLineEdit = new QLineEdit();
     m_hardDiskPathLineEdit -> setEnabled(false);
-    this->registerField("machine.diskPath", m_hardDiskPathLineEdit);
 
     m_pathNewDiskPushButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
@@ -64,9 +62,12 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
     connect(m_pathNewDiskPushButton, &QAbstractButton::clicked,
             this, &MachineDiskPage::useExistingDiskPath);
 
-    this -> useExistingDiskToggle(false);
+    this->useExistingDiskToggle(false);
 
-    registerField("createDisk", this->m_createDiskRadio);
+    this->registerField("noDisk", this->m_noDiskRadio);
+    this->registerField("createDisk", this->m_createDiskRadio);
+    this->registerField("useDisk", this->m_useExistingDiskRadio);
+    this->registerField("machine.diskPath", this->m_hardDiskPathLineEdit);
 
     m_useOldDiskLayout = new QHBoxLayout();
     m_useOldDiskLayout -> setAlignment(Qt::AlignVCenter);
@@ -187,7 +188,7 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     connect(m_diskSlider, &QSlider::valueChanged,
             m_diskSpinBox, &QDoubleSpinBox::setValue);
 
-    this->registerField("machine.diskSize", m_diskSlider);
+    this->registerField("machine.diskSize", m_diskSpinBox, "value", "valueChanged");
 
     connect(m_diskSpinBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             m_diskSlider, &QSlider::setValue);

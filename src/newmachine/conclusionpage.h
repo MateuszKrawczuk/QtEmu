@@ -33,6 +33,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QUuid>
+#include <QFileInfo>
 
 // Local
 #include "../machine.h"
@@ -55,11 +56,6 @@ class MachineConclusionPage: public QWizardPage {
     protected:
 
     private:
-        void initializePage();
-        bool validatePage();
-        void insertVMList();
-        void generateMachineFiles();
-
         QGridLayout *m_conclusionLayout;
 
         QLabel *m_machineDescLabel;
@@ -88,6 +84,14 @@ class MachineConclusionPage: public QWizardPage {
         Machine *m_newMachine;
 
         QEMU *m_QEMUGlobalObject;
+
+        // Methods
+        void initializePage();
+        bool validatePage();
+        void insertVMList();
+        void generateMachineFiles();
+        void addMedia(const QString name, const QString paths);
+        void generateBoot();
 };
 
 #endif // CONCLUSIONPAGE_H

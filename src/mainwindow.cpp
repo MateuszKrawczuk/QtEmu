@@ -441,11 +441,11 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
 
     QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
 
-    QJsonObject gpuObject       = machineJSON["gpu"].toObject();
-    QJsonObject cpuObject       = machineJSON["cpu"].toObject();
-    QJsonObject bootObject      = machineJSON["boot"].toObject();
-    QJsonObject kernelObject    = bootObject["kernelBoot"].toObject();
-    QJsonArray mediaArray       = machineJSON["media"].toArray();
+    QJsonObject gpuObject = machineJSON["gpu"].toObject();
+    QJsonObject cpuObject = machineJSON["cpu"].toObject();
+    QJsonObject bootObject = machineJSON["boot"].toObject();
+    QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
+    QJsonArray mediaArray = machineJSON["media"].toArray();
 
     Boot machineBoot;
     machineBoot.setBootMenu(bootObject["bootMenu"].toBool());
@@ -461,17 +461,12 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
         QJsonObject mediaObject = mediaArray[i].toObject();
 
         Media media;
-        media.setMediaName(mediaObject["name"].toString());
-        media.setMediaPath(mediaObject["path"].toString());
-        media.setMediaSize(mediaObject["size"].toDouble());
-        media.setMediaType(mediaObject["type"].toString());
-        media.setMediaFormat(mediaObject["format"].toString());
-        media.setMediaInterface(mediaObject["interface"].toString());
-        media.setMediaCache(mediaObject["cache"].toString());
-        media.setMediaIO(mediaObject["io"].toString());
+        media.setName(mediaObject["name"].toString());
+        media.setPath(mediaObject["path"].toString());
+        media.setType(mediaObject["type"].toString());
+        media.setInterface(mediaObject["interface"].toString());
         media.setUuid(mediaObject["uuid"].toVariant().toUuid());
-
-        machine -> addMedia(media);
+        machine->addMedia(media);
     }
 
     machine->setState(Machine::Stopped);
@@ -495,7 +490,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machine->setHostSoundSystem(machineJSON["hostsoundsystem"].toString());
     machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
-    machine->setMachineBoot(machineBoot);
+    machine->setBoot(machineBoot);
 
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);

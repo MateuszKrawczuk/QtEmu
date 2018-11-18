@@ -36,7 +36,7 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_bootMenuCheckBox = new QCheckBox();
     m_bootMenuCheckBox -> setEnabled(enableFields);
     m_bootMenuCheckBox -> setText(tr("Enable boot menu"));
-    m_bootMenuCheckBox->setChecked(this->m_machine->getMachineBoot().bootMenu());
+    m_bootMenuCheckBox->setChecked(this->m_machine->getBoot().bootMenu());
 
     m_moveUpToolButton = new QToolButton();
     m_moveUpToolButton -> setArrowType(Qt::UpArrow);
@@ -50,7 +50,7 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     connect(m_moveDownToolButton, &QAbstractButton::clicked,
             this, &MachineConfigBoot::moveDownButton);
 
-    QStringList bootList = this->m_machine->getMachineBoot().bootOrder();
+    QStringList bootList = this->m_machine->getBoot().bootOrder();
 
     QMap<QString, QString> mediaDevicesMap = SystemUtils::getMediaDevices();
     QMapIterator<QString, QString> i(mediaDevicesMap);
@@ -74,7 +74,7 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
         m_treeItem = new QTreeWidgetItem(this->m_bootTree, QTreeWidgetItem::Type);
         m_treeItem -> setText(0, mediaDevicesMap.value(bootList.at(i)));
         m_treeItem -> setData(0, Qt::UserRole, bootList.at(i));
-        if (machine->getMachineBoot().bootOrder().contains(bootList.at(i))) {
+        if (machine->getBoot().bootOrder().contains(bootList.at(i))) {
             m_treeItem -> setCheckState(0, Qt::Checked);
         } else {
             m_treeItem -> setCheckState(0, Qt::Unchecked);
@@ -84,7 +84,7 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_kernelBootCheckBox = new QCheckBox();
     m_kernelBootCheckBox -> setEnabled(enableFields);
     m_kernelBootCheckBox -> setText(tr("Enable direct kernel boot"));
-    m_kernelBootCheckBox->setChecked(this->m_machine->getMachineBoot().kernelBootEnabled());
+    m_kernelBootCheckBox->setChecked(this->m_machine->getBoot().kernelBootEnabled());
     connect(m_kernelBootCheckBox, &QAbstractButton::toggled,
             this, &MachineConfigBoot::selectEnableKernelBoot);
 
@@ -95,14 +95,14 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_kernelPathLineEdit = new QLineEdit();
     m_kernelPathLineEdit->setPlaceholderText("/boot/vmlinuz-linux");
     m_kernelPathLineEdit->setEnabled(enableFields);
-    m_kernelPathLineEdit->setText(this->m_machine->getMachineBoot().kernelPath());
+    m_kernelPathLineEdit->setText(this->m_machine->getBoot().kernelPath());
     m_initredLineEdit = new QLineEdit();
     m_initredLineEdit->setPlaceholderText("/boot/initramfs-linux.img");
     m_initredLineEdit->setEnabled(enableFields);
-    m_initredLineEdit->setText(this->m_machine->getMachineBoot().initrdPath());
+    m_initredLineEdit->setText(this->m_machine->getBoot().initrdPath());
     m_kernelArgsLineEdit = new QLineEdit();
     m_kernelArgsLineEdit->setEnabled(enableFields);
-    m_kernelArgsLineEdit->setText(this->m_machine->getMachineBoot().kernelArgs());
+    m_kernelArgsLineEdit->setText(this->m_machine->getBoot().kernelArgs());
 
     m_kernelPathPushButton = new QPushButton();
     m_kernelPathPushButton->setEnabled(enableFields);
@@ -146,7 +146,7 @@ MachineConfigBoot::MachineConfigBoot(Machine *machine,
     m_bootPageWidget = new QWidget(this);
     m_bootPageWidget -> setLayout(m_bootPageLayout);
 
-    this->selectEnableKernelBoot(this->m_machine->getMachineBoot().kernelBootEnabled());
+    this->selectEnableKernelBoot(this->m_machine->getBoot().kernelBootEnabled());
 
     qDebug() << "MachineConfigBoot created";
 }
@@ -229,5 +229,5 @@ void MachineConfigBoot::saveBootData() {
         ++it;
     }
 
-    this->m_machine->setMachineBoot(boot);
+    this->m_machine->setBoot(boot);
 }

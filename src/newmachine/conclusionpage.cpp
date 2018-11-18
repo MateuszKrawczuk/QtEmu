@@ -88,7 +88,7 @@ MachineConclusionPage::~MachineConclusionPage() {
 }
 
 void MachineConclusionPage::initializePage() {
-    QString machineName = field("machine.diskname").toString();
+    QString diskName = field("machine.diskname").toString();
 
     this -> m_machineNameLabel -> setText(this -> m_newMachine -> getName());
     this -> m_OSTypeLabel      -> setText(this -> m_newMachine -> getOSType());
@@ -98,9 +98,9 @@ void MachineConclusionPage::initializePage() {
     this -> m_RAMLabel         -> setText(QString::number(this -> m_newMachine -> getRAM()).append(" MiB"));
     this -> m_audioLabel       -> setText(this -> m_newMachine -> getAudioLabel());
     this -> m_acceleratorLabel -> setText(this -> m_newMachine -> getAcceleratorLabel());
-    this -> m_diskLabel        -> setText(machineName);
+    this -> m_diskLabel        -> setText(diskName);
 
-    if( ! machineName.isEmpty()){
+    if( ! diskName.isEmpty()){
         this -> m_conclusionLayout -> addWidget(this -> m_diskDescLabel,    9, 0, 1, 1);
         this -> m_conclusionLayout -> addWidget(this -> m_diskLabel,        9, 1, 1, 1);
     } else {
@@ -111,7 +111,70 @@ void MachineConclusionPage::initializePage() {
 }
 
 bool MachineConclusionPage::validatePage() {
+    // Data to crontol the disk
+    bool createNewDisk = field("createDisk").toBool();
+    bool useDisk = field("useDisk").toBool();
+    QString existingDiskPath = field("machine.diskPath").toString();
+    QString diskName = field("machine.diskname").toString();
+    QString diskFormat = field("machine.diskFormat").toString();
+    double diskSize = field("machine.diskSize").toDouble();
 
+    QSettings settings;
+    settings.beginGroup("Configuration");
+    QString machinesPath = settings.value("machinePath", QDir::homePath()).toString();
+    machinesPath.append(QDir::toNativeSeparators("/"))
+                        .append(this->m_newMachine->getName())
+                        .append(QDir::toNativeSeparators("/"));
+    settings.endGroup();
+
+    QString machineConfigPath = machinesPath;
+    this->m_newMachine->setConfigPath(machineConfigPath
+                                      .append(this->m_newMachine->getName().toLower().replace(" ", "_"))
+                                      .append(".json"));
+
+    if (createNewDisk) {
+        QString diskPathName = machinesPath;
+        diskPathName.append(diskName.toLower().replace(" ", "_"))
+                    .append(QDir::toNativeSeparators("."))
+                    .append(diskFormat);
+
+        bool isDiskCreated = SystemUtils::createDisk(this->m_QEMUGlobalObject,
+                                                     diskPathName,
+                                                     diskFormat,
+                                                     diskSize,
+                                                     false);
+        if (isDiskCreated) {
+            this->addMedia(diskName.toLower().replace(" ", "_"), diskPathName);
+        } else {
+            // If the creation of the disk fails
+            return false;
+        }
+    } else if (useDisk) {
+        if ( ! existingDiskPath.isEmpty()) {
+            // Add the existing media to the machine media
+            QFileInfo existingDisk(existingDiskPath);
+            this->addMedia(existingDisk.fileName(), existingDisk.filePath());
+        }
+    }
+
+    this->generateMachineFiles();
+
+    return true;
+}
+
+/**
+ * @brief Generate the machine files
+ *
+ * Generate the necessary machine files
+ */
+void MachineConclusionPage::generateMachineFiles() {
+    this->generateBoot();
+    this->m_newMachine->saveMachine();
+    this->m_newMachine->insertMachineConfigFile();
+    this->insertVMList();
+
+    Logger::logMachineCreation(this->m_newMachine->getPath(),
+                               this->m_newMachine->getName(), "Machine created");
 }
 
 /**
@@ -129,11 +192,25 @@ void MachineConclusionPage::insertVMList() {
                              SystemUtils::getOsIcon(this -> m_newMachine -> getOSVersion())));
 }
 
-void MachineConclusionPage::generateMachineFiles() {
-    this->m_newMachine->saveMachine();
-    this->m_newMachine->insertMachineConfigFile();
-    this->insertVMList();
+void MachineConclusionPage::addMedia(const QString name, const QString path) {
+    Media disk;
+    disk.setName(name);
+    disk.setPath(path);
+    disk.setType("hdd");
+    disk.setInterface("hda");
+    disk.setUuid(QUuid::createUuid().toString());
 
-    Logger::logMachineCreation(this->m_newMachine->getPath(),
-                               this->m_newMachine->getName(), "Machine created");
+    this->m_newMachine->addMedia(disk);
+}
+
+void MachineConclusionPage::generateBoot() {
+    Boot boot;
+    boot.setBootMenu(false);
+    boot.setKernelBootEnabled(false);
+    boot.setKernelPath("");
+    boot.setInitrdPath("");
+    boot.setKernelArgs("");
+    boot.addBootOrder("c"); // Boot from HDD
+
+    this->m_newMachine->setBoot(boot);
 }

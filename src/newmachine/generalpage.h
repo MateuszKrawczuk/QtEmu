@@ -31,6 +31,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QLineEdit>
+#include <QUuid>
 
 // Local
 #include "../machine.h"

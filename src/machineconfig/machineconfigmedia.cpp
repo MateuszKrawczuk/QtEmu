@@ -56,7 +56,10 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
 
     for(int i = 0; i < machineMedia.size(); ++i) {
         QString mediaName;
-        mediaName.append("(").append(machineMedia[i].mediaInterface().toUpper()).append(") ").append(machineMedia[i].mediaName());
+        mediaName.append("(")
+                 .append(machineMedia[i].interface().toUpper())
+                 .append(") ")
+                 .append(machineMedia[i].name());
 
         m_mediaItem = new QTreeWidgetItem(this -> m_mediaTree, QTreeWidgetItem::Type);
         m_mediaItem -> setText(0, mediaName);
@@ -169,10 +172,10 @@ MachineConfigMedia::~MachineConfigMedia() {
 }
 
 void MachineConfigMedia::fillDetailsSection() {
-    QUuid selectedMediaUuid = this -> m_mediaTree -> currentItem() -> data(0, Qt::UserRole).toUuid();
-    this -> m_mediaPathLabel   -> setText(this -> m_mediaHash -> value(selectedMediaUuid).mediaPath());
-    this -> m_mediaSizeLabel   -> setText(QString::number(this -> m_mediaHash -> value(selectedMediaUuid).mediaSize()));
-    this -> m_mediaFormatLabel -> setText(this -> m_mediaHash -> value(selectedMediaUuid).mediaFormat());
+    QUuid selectedMediaUuid = this->m_mediaTree->currentItem()->data(0, Qt::UserRole).toUuid();
+    this->m_mediaPathLabel->setText(this->m_mediaHash->value(selectedMediaUuid).path());
+    this->m_mediaSizeLabel->setText(QString::number(this->m_mediaHash->value(selectedMediaUuid).size()));
+    this->m_mediaFormatLabel-> setText(this->m_mediaHash->value(selectedMediaUuid).format());
 }
 
 void MachineConfigMedia::addFloppyMedia() {
