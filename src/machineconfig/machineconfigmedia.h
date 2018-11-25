@@ -92,6 +92,10 @@ class MachineConfigMedia : public QWidget {
 
         QHash<QUuid, Media> *m_mediaHash;
 
+        QList<Machine> *m_machineMediaAux;
+        QSet<QString> *m_diskSet;
+        QSet<QString> *m_floppySet;
+
         Machine *m_machineOptions;
         QEMU *m_qemuGlobalObject;
 

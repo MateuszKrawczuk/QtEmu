@@ -28,12 +28,13 @@
  *
  * About window with the about, authors and license information
  */
-AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
-    this -> setWindowTitle(tr("About") + " - QtEmu");
-    this -> setWindowIcon(QIcon::fromTheme("qtemu",
-                                           QIcon(":/images/qtemu.png")));
-    this -> setWindowFlag(Qt::Window);
-    this -> setFixedSize(625, 320);
+AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent)
+{
+    this->setWindowTitle(tr("About") + " - QtEmu");
+    this->setWindowIcon(QIcon::fromTheme("qtemu",
+                                         QIcon(":/images/qtemu.png")));
+    this->setWindowFlag(Qt::Window);
+    this->setFixedSize(625, 320);
 
     m_closeButton = new QPushButton(QIcon::fromTheme("window-close",
                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))),
@@ -45,68 +46,86 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent) {
     QList<QKeySequence> closeShortcuts;
     closeShortcuts << QKeySequence(Qt::Key_Escape);
     m_closeAction = new QAction(this);
-    m_closeAction -> setShortcuts(closeShortcuts);
+    m_closeAction->setShortcuts(closeShortcuts);
     connect(m_closeAction, &QAction::triggered,
             this, &QWidget::hide);
-    this -> addAction(m_closeAction);
+    this->addAction(m_closeAction);
 
     m_tabWidget = new QTabWidget(this);
-    m_tabWidget -> addTab(new AboutTab(), tr("About"));
-    m_tabWidget -> addTab(new AuthorsTab(), tr("Authors"));
-    m_tabWidget -> addTab(new LicenseTab(), tr("License"));
+    m_tabWidget->addTab(new AboutTab(this), tr("About"));
+    m_tabWidget->addTab(new AuthorsTab(this), tr("Authors"));
+    m_tabWidget->addTab(new LicenseTab(this), tr("License"));
 
     m_mainLayout = new QVBoxLayout(this);
 
-    m_iconLayout = new QHBoxLayout();
-    m_iconLayout -> setContentsMargins(0, 12, 0, 0);
+    m_iconLayout = new QHBoxLayout(this);
+    m_iconLayout->setContentsMargins(0, 12, 0, 0);
 
     m_qtemuIcon = new QLabel(this);
-    m_qtemuIcon -> setPixmap(QPixmap(":/images/qtemu.png"));
-    m_iconLayout -> addWidget(m_qtemuIcon, 0, Qt::AlignTop);
+    m_qtemuIcon->setPixmap(QPixmap(":/images/qtemu.png"));
+    m_iconLayout->addWidget(m_qtemuIcon, 0, Qt::AlignTop);
 
     m_qtemuAppInfo = new QLabel(QString("<h3><strong>%1 v%2</strong></h3>")
-                                .arg(qApp -> applicationName())
-                                .arg(qApp -> applicationVersion()), this);
-    m_qtemuAppInfo -> setContentsMargins(10, 0, 0, 0);
+                                .arg(qApp->applicationName())
+                                .arg(qApp->applicationVersion()), this);
+    m_qtemuAppInfo->setContentsMargins(10, 0, 0, 0);
 
-    m_iconLayout -> addWidget(m_qtemuAppInfo, 1, Qt::AlignTop);
-    m_mainLayout -> addItem(m_iconLayout);
-    m_mainLayout -> addWidget(m_tabWidget, 0);
-    m_mainLayout -> addWidget(m_closeButton, 1, Qt::AlignRight);
+    m_iconLayout->addWidget(m_qtemuAppInfo, 1, Qt::AlignTop);
+    m_mainLayout->addItem(m_iconLayout);
+    m_mainLayout->addWidget(m_tabWidget, 0);
+    m_mainLayout->addWidget(m_closeButton, 1, Qt::AlignRight);
 
     qDebug() << "AboutWidget created";
 }
 
-AboutWidget::~AboutWidget() {
+AboutWidget::~AboutWidget()
+{
     qDebug() << "AboutWidget destroyed";
 }
 
-void AboutWidget::closeEvent(QCloseEvent *event) {
-    this -> hide();
-    event -> ignore();
+void AboutWidget::closeEvent(QCloseEvent *event)
+{
+    this->hide();
+    event->ignore();
 }
 
-void AboutWidget::hideEvent(QHideEvent *event) {
-    event -> accept();
+void AboutWidget::hideEvent(QHideEvent *event)
+{
+    event->accept();
 }
 
-AboutTab::AboutTab(QWidget *parent) : QWidget(parent) {
+/**
+ * @brief About tab
+ * @param parent, widget parent
+ *
+ * About tab with information about QtEmu, the copyright and the url of the site
+ */
+AboutTab::AboutTab(QWidget *parent) : QWidget(parent)
+{
     QLabel *about = new QLabel(tr("QtEmu is a graphical user interface for QEMU"), this);
-    QLabel *copyright = new QLabel("Copyright (C) 2006-2009 Urs Wolfer and Ben Klopfenstein\nCopyright (C) 2017-2018 Sergio Carlavilla Delgado");
-    QLabel *urlSite = new QLabel("<a href=\"https://www.qtemu.org\">www.qtemu.org</a>");
+    QLabel *copyright = new QLabel("Copyright (C) 2006-2009 Urs Wolfer and Ben Klopfenstein\nCopyright (C) 2017-2018 Sergio Carlavilla Delgado", this);
+    QLabel *urlSite = new QLabel("<a href=\"https://www.qtemu.org\">www.qtemu.org</a>", this);
 
     m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout -> addWidget(about);
-    m_mainLayout -> addWidget(copyright);
-    m_mainLayout -> addWidget(urlSite, 0, Qt::AlignCenter);
+    m_mainLayout->addWidget(about);
+    m_mainLayout->addWidget(copyright);
+    m_mainLayout->addWidget(urlSite, 0, Qt::AlignCenter);
 
 }
 
-AboutTab::~AboutTab() {
+AboutTab::~AboutTab()
+{
     qDebug() << "AboutTab destroyed";
 }
 
-AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent) {
+/**
+ * @brief Authors tab
+ * @param parent, widget parent
+ *
+ * Authors tab with information about the authors
+ */
+AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent)
+{
 
     QString authors;
 
@@ -129,22 +148,30 @@ AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent) {
                    );
 
     m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout -> setContentsMargins(2, 2, 2, 2);
+    m_mainLayout->setContentsMargins(2, 2, 2, 2);
 
-    m_authorsBrowser = new QTextBrowser();
-    m_authorsBrowser -> setReadOnly(true);
-    m_authorsBrowser -> setOpenExternalLinks(false);
-    m_authorsBrowser -> setHtml(authors);
+    m_authorsBrowser = new QTextBrowser(this);
+    m_authorsBrowser->setReadOnly(true);
+    m_authorsBrowser->setOpenExternalLinks(false);
+    m_authorsBrowser->setHtml(authors);
 
-    m_mainLayout -> addWidget(m_authorsBrowser, 0);
+    m_mainLayout->addWidget(m_authorsBrowser, 0);
 
 }
 
-AuthorsTab::~AuthorsTab() {
+AuthorsTab::~AuthorsTab()
+{
     qDebug() << "AuthorsTab destroyed";
 }
 
-LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent) {
+/**
+ * @brief License tab
+ * @param parent, widget parent
+ *
+ * License tab with information about the License of QtEmu, GPLv2
+ */
+LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent)
+{
 
     QString license;
 
@@ -409,16 +436,17 @@ LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent) {
 
 
     m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout -> setContentsMargins(2, 2, 2, 2);
+    m_mainLayout->setContentsMargins(2, 2, 2, 2);
 
-    m_licenseBrowser = new QTextBrowser();
-    m_licenseBrowser -> setReadOnly(true);
-    m_licenseBrowser -> setOpenExternalLinks(false);
-    m_licenseBrowser -> setHtml(license);
+    m_licenseBrowser = new QTextBrowser(this);
+    m_licenseBrowser->setReadOnly(true);
+    m_licenseBrowser->setOpenExternalLinks(false);
+    m_licenseBrowser->setHtml(license);
 
-    m_mainLayout -> addWidget(m_licenseBrowser, 0);
+    m_mainLayout->addWidget(m_licenseBrowser, 0);
 }
 
-LicenseTab::~LicenseTab() {
+LicenseTab::~LicenseTab()
+{
     qDebug() << "LicenseTab destroyed";
 }

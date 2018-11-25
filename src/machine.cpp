@@ -21,8 +21,9 @@
 // Local
 #include "machine.h"
 
-Machine::Machine(QObject *parent) : QObject(parent) {
-    this -> m_machineProcess = new QProcess(this);
+Machine::Machine(QObject *parent) : QObject(parent)
+{
+    this->m_machineProcess = new QProcess(this);
 
     connect(m_machineProcess, &QProcess::readyReadStandardOutput,
             this, &Machine::readMachineStandardOut);
@@ -39,7 +40,8 @@ Machine::Machine(QObject *parent) : QObject(parent) {
     qDebug() << "Machine object created";
 }
 
-Machine::~Machine() {
+Machine::~Machine()
+{
     qDebug() << "Machine object destroyed";
 }
 
@@ -48,7 +50,8 @@ Machine::~Machine() {
  *
  * Get the name of the machine
  */
-QString Machine::getName() const {
+QString Machine::getName() const
+{
     return name;
 }
 
@@ -57,7 +60,8 @@ QString Machine::getName() const {
  *
  * Set the name of the machine
  */
-void Machine::setName(const QString &value) {
+void Machine::setName(const QString &value)
+{
     name = value;
 }
 
@@ -67,7 +71,8 @@ void Machine::setName(const QString &value) {
  * Get the operating system type of the machine.
  * Ex: GNU/Linux, Windows...
  */
-QString Machine::getOSType() const {
+QString Machine::getOSType() const
+{
     return OSType;
 }
 
@@ -77,7 +82,8 @@ QString Machine::getOSType() const {
  * Set the operating system type of the machine.
  * Ex: GNU/Linux, Windows...
  */
-void Machine::setOSType(const QString &value) {
+void Machine::setOSType(const QString &value)
+{
     OSType = value;
 }
 
@@ -87,7 +93,8 @@ void Machine::setOSType(const QString &value) {
  * Get the operating system version of the machine.
  * Ex: Debian, Mageia, Arch Linux...
  */
-QString Machine::getOSVersion() const {
+QString Machine::getOSVersion() const
+{
     return OSVersion;
 }
 
@@ -97,7 +104,8 @@ QString Machine::getOSVersion() const {
  * Set the operating system version of the machine.
  * Ex: Debian, Mageia, Arch Linux...
  */
-void Machine::setOSVersion(const QString &value) {
+void Machine::setOSVersion(const QString &value)
+{
     OSVersion = value;
 }
 
@@ -107,7 +115,8 @@ void Machine::setOSVersion(const QString &value) {
  * Get the machine path
  * Ex: /home/xexio/Vms/Debian
  */
-QString Machine::getPath() const {
+QString Machine::getPath() const
+{
     return path;
 }
 
@@ -117,7 +126,8 @@ QString Machine::getPath() const {
  * Set the machine path
  * Ex: /home/xexio/Vms/Debian
  */
-void Machine::setPath(const QString &value) {
+void Machine::setPath(const QString &value)
+{
     path = value;
 }
 
@@ -126,7 +136,8 @@ void Machine::setPath(const QString &value) {
  *
  * Get the configuration path
  */
-QString Machine::getConfigPath() const {
+QString Machine::getConfigPath() const
+{
     return configPath;
 }
 
@@ -135,7 +146,8 @@ QString Machine::getConfigPath() const {
  *
  * Set the configuration path
  */
-void Machine::setConfigPath(const QString &value) {
+void Machine::setConfigPath(const QString &value)
+{
     configPath = value;
 }
 
@@ -146,7 +158,8 @@ void Machine::setConfigPath(const QString &value) {
  * with QUuid
  * Ex: {fc6a2dd5-3c31-401f-a9c7-86ad6190a77f}
  */
-QString Machine::getUuid() const {
+QString Machine::getUuid() const
+{
     return uuid;
 }
 
@@ -157,7 +170,8 @@ QString Machine::getUuid() const {
  * with QUuid
  * Ex: {fc6a2dd5-3c31-401f-a9c7-86ad6190a77f}
  */
-void Machine::setUuid(const QString &value) {
+void Machine::setUuid(const QString &value)
+{
     uuid = value;
 }
 
@@ -167,7 +181,8 @@ void Machine::setUuid(const QString &value) {
  * Get the machine state
  * Ex: Started, Stopped or Rebooted
  */
-Machine::States Machine::getState() const {
+Machine::States Machine::getState() const
+{
     return state;
 }
 
@@ -177,15 +192,28 @@ Machine::States Machine::getState() const {
  * Set the machine state
  * Ex: Started, Stopped or Rebooted
  */
-void Machine::setState(const States &value) {
+void Machine::setState(const States &value)
+{
     state = value;
 }
 
-QString Machine::getDescription() const {
+/**
+ * @brief Get the machine descripcion
+ *
+ * Get the machine descripcion
+ */
+QString Machine::getDescription() const
+{
     return description;
 }
 
-void Machine::setDescription(const QString &value) {
+/**
+ * @brief Set the machine descripcion
+ *
+ * Set the machine descripcion
+ */
+void Machine::setDescription(const QString &value)
+{
     description = value;
 }
 
@@ -195,7 +223,8 @@ void Machine::setDescription(const QString &value) {
  * Get the CPU Type of the machine
  * Ex: core2duo, pentium, Opteron_G5...
  */
-QString Machine::getCPUType() const {
+QString Machine::getCPUType() const
+{
     return CPUType;
 }
 
@@ -205,7 +234,8 @@ QString Machine::getCPUType() const {
  * Set the CPU Type of the machine
  * Ex: core2duo, pentium, Opteron_G5...
  */
-void Machine::setCPUType(const QString &value) {
+void Machine::setCPUType(const QString &value)
+{
     CPUType = value;
 }
 
@@ -214,7 +244,8 @@ void Machine::setCPUType(const QString &value) {
  *
  * Get the CPU Count of the machine
  */
-qint64 Machine::getCPUCount() const {
+qint64 Machine::getCPUCount() const
+{
     return CPUCount;
 }
 
@@ -223,7 +254,8 @@ qint64 Machine::getCPUCount() const {
  *
  * Set the CPU Count of the machine
  */
-void Machine::setCPUCount(const qint64 &value) {
+void Machine::setCPUCount(const qint64 &value)
+{
     CPUCount = value;
 }
 
@@ -232,7 +264,8 @@ void Machine::setCPUCount(const qint64 &value) {
  *
  * Get the CPU Socket Count of the machine
  */
-qint64 Machine::getSocketCount() const {
+qint64 Machine::getSocketCount() const
+{
     return socketCount;
 }
 
@@ -241,7 +274,8 @@ qint64 Machine::getSocketCount() const {
  *
  * Set the CPU Socket Count of the machine
  */
-void Machine::setSocketCount(const qint64 &value) {
+void Machine::setSocketCount(const qint64 &value)
+{
     socketCount = value;
 }
 
@@ -250,7 +284,8 @@ void Machine::setSocketCount(const qint64 &value) {
  *
  * Get the CPU Cores per Socket of the machine
  */
-qint64 Machine::getCoresSocket() const {
+qint64 Machine::getCoresSocket() const
+{
     return coresSocket;
 }
 
@@ -259,7 +294,8 @@ qint64 Machine::getCoresSocket() const {
  *
  * Set the CPU Cores per Socket of the machine
  */
-void Machine::setCoresSocket(const qint64 &value) {
+void Machine::setCoresSocket(const qint64 &value)
+{
     coresSocket = value;
 }
 
@@ -268,7 +304,8 @@ void Machine::setCoresSocket(const qint64 &value) {
  *
  * Get the CPU Threads per Core of the machine
  */
-qint64 Machine::getThreadsCore() const {
+qint64 Machine::getThreadsCore() const
+{
     return threadsCore;
 }
 
@@ -277,7 +314,8 @@ qint64 Machine::getThreadsCore() const {
  *
  * Set the CPU Threads per Core of the machine
  */
-void Machine::setThreadsCore(const qint64 &value) {
+void Machine::setThreadsCore(const qint64 &value)
+{
     threadsCore = value;
 }
 
@@ -286,7 +324,8 @@ void Machine::setThreadsCore(const qint64 &value) {
  *
  * Get the max hot CPUs of the machine
  */
-qint64 Machine::getMaxHotCPU() const {
+qint64 Machine::getMaxHotCPU() const
+{
     return maxHotCPU;
 }
 
@@ -295,7 +334,8 @@ qint64 Machine::getMaxHotCPU() const {
  *
  * Set the max hot CPUs of the machine
  */
-void Machine::setMaxHotCPU(const qint64 &value) {
+void Machine::setMaxHotCPU(const qint64 &value)
+{
     maxHotCPU = value;
 }
 
@@ -305,7 +345,8 @@ void Machine::setMaxHotCPU(const qint64 &value) {
  * Get the GPU of the machine
  * Ex: std, vmware, cg3...
  */
-QString Machine::getGPUType() const {
+QString Machine::getGPUType() const
+{
     return GPUType;
 }
 
@@ -315,7 +356,8 @@ QString Machine::getGPUType() const {
  * Set the GPU of the machine
  * Ex: std, vmware, cg3...
  */
-void Machine::setGPUType(const QString &value) {
+void Machine::setGPUType(const QString &value)
+{
     GPUType = value;
 }
 
@@ -325,7 +367,8 @@ void Machine::setGPUType(const QString &value) {
  * Get the keyboard of the machine
  * Ex: ar, es, hr...
  */
-QString Machine::getKeyboard() const {
+QString Machine::getKeyboard() const
+{
     return keyboard;
 }
 
@@ -335,7 +378,8 @@ QString Machine::getKeyboard() const {
  * Set the keyboard of the machine
  * Ex: ar, es, hr...
  */
-void Machine::setKeyboard(const QString &value) {
+void Machine::setKeyboard(const QString &value)
+{
     keyboard = value;
 }
 
@@ -349,7 +393,8 @@ void Machine::setKeyboard(const QString &value) {
  * Ex: If your computer have 8GiB of RAM, your machine
  * are limited to that amount of RAM
  */
-qlonglong Machine::getRAM() const {
+qlonglong Machine::getRAM() const
+{
     return RAM;
 }
 
@@ -363,7 +408,8 @@ qlonglong Machine::getRAM() const {
  * Ex: If your computer have 8GiB of RAM, your machine
  * are limited to that amount of RAM
  */
-void Machine::setRAM(const qlonglong &value) {
+void Machine::setRAM(const qlonglong &value)
+{
     RAM = value;
 }
 
@@ -373,7 +419,8 @@ void Machine::setRAM(const qlonglong &value) {
  * Get the audio cards of the machine
  * Ex: ac97, es1370, hda...
  */
-QStringList Machine::getAudio() const {
+QStringList Machine::getAudio() const
+{
     return audio;
 }
 
@@ -383,7 +430,8 @@ QStringList Machine::getAudio() const {
  * Set the audio cards of the machine
  * Ex: ac97, es1370, hda...
  */
-void Machine::setAudio(const QStringList &value) {
+void Machine::setAudio(const QStringList &value)
+{
     audio = value;
 }
 
@@ -392,7 +440,8 @@ void Machine::setAudio(const QStringList &value) {
  *
  * Get if the machine have network
  */
-bool Machine::getUseNetwork() const {
+bool Machine::getUseNetwork() const
+{
     return useNetwork;
 }
 
@@ -401,7 +450,8 @@ bool Machine::getUseNetwork() const {
  *
  * Set if the machine have network
  */
-void Machine::setUseNetwork(bool value) {
+void Machine::setUseNetwork(bool value)
+{
     useNetwork = value;
 }
 
@@ -411,7 +461,8 @@ void Machine::setUseNetwork(bool value) {
  *
  * Get the list of media of the machine
  */
-QList<Media> Machine::getMedia() const {
+QList<Media> Machine::getMedia() const
+{
     return media;
 }
 
@@ -421,7 +472,8 @@ QList<Media> Machine::getMedia() const {
  *
  * Add media to the media list
  */
-void Machine::addMedia(const Media value) {
+void Machine::addMedia(const Media value)
+{
     this -> media.append(value);
 }
 
@@ -431,7 +483,8 @@ void Machine::addMedia(const Media value) {
  * Get the accelerator machine
  * Ex: kvm, xen...
  */
-QStringList Machine::getAccelerator() const {
+QStringList Machine::getAccelerator() const
+{
     return accelerator;
 }
 
@@ -441,14 +494,25 @@ QStringList Machine::getAccelerator() const {
  * Set the accelerator machine
  * Ex: kvm, xen...
  */
-void Machine::setAccelerator(const QStringList &value) {
+void Machine::setAccelerator(const QStringList &value)
+{
     accelerator = value;
 }
 
+/**
+ * @brief Get the machine boot
+ *
+ * Get the machine boot
+ */
 Boot Machine::getBoot() const {
     return m_boot;
 }
 
+/**
+ * @brief Set the machine boot
+ *
+ * Set the machine boot
+ */
 void Machine::setBoot(const Boot &boot) {
     m_boot = boot;
 }
@@ -460,9 +524,10 @@ void Machine::setBoot(const Boot &boot) {
  *
  * Add the audio card to the list
  */
-void Machine::addAudio(const QString audio) {
-    if( ! this -> audio.contains(audio)){
-        this -> audio.append(audio);
+void Machine::addAudio(const QString audio)
+{
+    if (!this->audio.contains(audio)) {
+        this->audio.append(audio);
     }
 }
 
@@ -472,13 +537,20 @@ void Machine::addAudio(const QString audio) {
  *
  * Remove the audio card from the list
  */
-void Machine::removeAudio(const QString audio) {
-    if(this -> audio.contains(audio)){
-        this -> audio.removeOne(audio);
+void Machine::removeAudio(const QString audio)
+{
+    if (this->audio.contains(audio)) {
+        this->audio.removeOne(audio);
     }
 }
 
-void Machine::removeAllAudioCards() {
+/**
+ * @brief Remove all audio cards
+ *
+ * Remove all audio cards of the machine
+ */
+void Machine::removeAllAudioCards()
+{
     this->audio.clear();
 }
 
@@ -488,9 +560,10 @@ void Machine::removeAllAudioCards() {
  *
  * Add an accelerator to the list
  */
-void Machine::addAccelerator(const QString accel) {
-    if ( ! this->accelerator.contains(accel)){
-        this -> accelerator.append(accel);
+void Machine::addAccelerator(const QString accel)
+{
+    if (!this->accelerator.contains(accel)) {
+        this->accelerator.append(accel);
     }
 }
 
@@ -500,13 +573,20 @@ void Machine::addAccelerator(const QString accel) {
  *
  * Remove an accelerator from the list if exists
  */
-void Machine::removeAccelerator(const QString accel) {
-    if(this -> accelerator.contains(accel)){
-        this -> accelerator.removeOne(accel);
+void Machine::removeAccelerator(const QString accel)
+{
+    if(this->accelerator.contains(accel)){
+        this->accelerator.removeOne(accel);
     }
 }
 
-void Machine::removeAllAccelerators() {
+/**
+ * @brief Remove all accelerators
+ *
+ * Remove all accelerators of the machine
+ */
+void Machine::removeAllAccelerators()
+{
     this->accelerator.clear();
 }
 
@@ -517,15 +597,14 @@ void Machine::removeAllAccelerators() {
  * Get all the audio cards separated by commas
  * Ex: ac97, es1370, hda
  */
-QString Machine::getAudioLabel() {
-
+QString Machine::getAudioLabel()
+{
     QHash<QString, QString> soundCardsHash = SystemUtils::getSoundCards();
 
-    QStringList audioCards = this -> audio;
+    QStringList audioCards = this->audio;
     for(int i = 0; i < audioCards.size(); ++i) {
         audioCards.replace(i, soundCardsHash.value(audioCards.at(i)));
     }
-
     QString audioLabel = audioCards.join(",");
 
     return audioLabel;
@@ -552,8 +631,8 @@ QString Machine::getAcceleratorLabel() {
     return acceleratorLabel;
 }
 
-void Machine::runMachine() {
-
+void Machine::runMachine()
+{
     QStringList args = this->generateMachineCommand();
 
     QString program;
@@ -577,52 +656,56 @@ void Machine::runMachine() {
     m_machineProcess -> start(program, args);
 }
 
-void Machine::stopMachine() {
-    this -> m_machineProcess -> write(qPrintable("system_powerdown\n"));
-    this -> state = Machine::Stopped;
+void Machine::stopMachine()
+{
+    this->m_machineProcess->write(qPrintable("system_powerdown\n"));
+    this->state = Machine::Stopped;
 
     emit(machineStateChangedSignal(Machine::Stopped));
 }
 
-void Machine::resetMachine() {
-    this -> m_machineProcess -> write(qPrintable("system_reset\n"));
+void Machine::resetMachine()
+{
+    this->m_machineProcess->write(qPrintable("system_reset\n"));
 }
 
-void Machine::pauseMachine() {
-
+void Machine::pauseMachine()
+{
     if (state == Machine::Started) {
-        this -> m_machineProcess -> write(qPrintable("stop\n"));
-        this -> state = Machine::Paused;
+        this->m_machineProcess->write(qPrintable("stop\n"));
+        this->state = Machine::Paused;
 
         emit(machineStateChangedSignal(Machine::Paused));
-
     } else if (state == Machine::Paused) {
-        this -> m_machineProcess -> write(qPrintable("cont\n"));
-        this -> state = Machine::Started;
+        this->m_machineProcess->write(qPrintable("cont\n"));
+        this->state = Machine::Started;
 
         emit(machineStateChangedSignal(Machine::Started));
     }
 }
 
-void Machine::readMachineStandardOut() {
+void Machine::readMachineStandardOut()
+{
     // TODO: Show in a window
-    qDebug() << "Standard Out: " << this -> m_machineProcess -> readAllStandardOutput();
+    qDebug() << "Standard Out: " << this->m_machineProcess->readAllStandardOutput();
 }
 
-void Machine::readMachineErrorOut() {
+void Machine::readMachineErrorOut()
+{
     // TODO: Show in a window
-    qDebug() << "Error Out: " <<  m_machineProcess -> readAllStandardError();
+    qDebug() << "Error Out: " <<  this->m_machineProcess->readAllStandardError();
 }
 
-void Machine::machineStarted() {
-    this -> state = Machine::Started;
-
+void Machine::machineStarted()
+{
+    this->state = Machine::Started;
     emit(machineStateChangedSignal(Machine::Started));
 }
 
-void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus) {
+void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
     qDebug() << "Exit code: " << exitCode << " exit status: " << exitStatus;
-    this -> state = Machine::Stopped;
+    this->state = Machine::Stopped;
     emit(machineStateChangedSignal(Machine::Stopped));
 }
 
@@ -636,17 +719,18 @@ void Machine::setHostSoundSystem(const QString &value)
     hostSoundSystem = value;
 }
 
-QProcessEnvironment Machine::buildEnvironment() {
-    
+QProcessEnvironment Machine::buildEnvironment()
+{
+
     // TODO: Implement Windows and MacOS
-    QProcessEnvironment env = m_machineProcess -> processEnvironment();
+    QProcessEnvironment env = m_machineProcess->processEnvironment();
     env.insert("QEMU_AUDIO_DRV", "alsa");
 
     return env;
 }
 
-QStringList Machine::generateMachineCommand() {
-
+QStringList Machine::generateMachineCommand()
+{
     // TODO: Add qemu before commands
 
     QStringList qemuCommand;
@@ -750,7 +834,8 @@ QStringList Machine::generateMachineCommand() {
     return qemuCommand;
 }
 
-void Machine::saveMachine() {
+void Machine::saveMachine()
+{
     QFile machineFile(this->configPath);
     machineFile.open(QIODevice::WriteOnly); // TODO: Check if open the file fails
 
@@ -824,8 +909,8 @@ void Machine::saveMachine() {
  * Insert the new machine in the machines file.
  * At the bottom of the file.
  */
-void Machine::insertMachineConfigFile(){
-
+void Machine::insertMachineConfigFile()
+{
     // TODO: Get the data directory path from QSettings
     // Open the file
     QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
@@ -861,11 +946,13 @@ void Machine::insertMachineConfigFile(){
     machinesFile.close();
 }
 
-Media::Media() {
+Media::Media()
+{
     qDebug() << "Media object created";
 }
 
-Media::~Media() {
+Media::~Media()
+{
     qDebug() << "Media object destroyed";
 }
 
@@ -875,7 +962,8 @@ Media::~Media() {
  *
  * Get the media names
  */
-QString Media::name() const {
+QString Media::name() const
+{
     return m_name;
 }
 
@@ -885,7 +973,8 @@ QString Media::name() const {
  *
  * Set the media name
  */
-void Media::setName(const QString &name) {
+void Media::setName(const QString &name)
+{
     m_name = name;
 }
 
@@ -895,7 +984,8 @@ void Media::setName(const QString &name) {
  *
  * Get the media path
  */
-QString Media::path() const {
+QString Media::path() const
+{
     return m_path;
 }
 
@@ -905,7 +995,8 @@ QString Media::path() const {
  *
  * Set the new media path
  */
-void Media::setPath(const QString &path) {
+void Media::setPath(const QString &path)
+{
     m_path = path;
 }
 
@@ -915,7 +1006,8 @@ void Media::setPath(const QString &path) {
  *
  * Get the media size
  */
-qlonglong Media::size() const {
+qlonglong Media::size() const
+{
     return m_size;
 }
 
@@ -925,7 +1017,8 @@ qlonglong Media::size() const {
  *
  * Set the media size
  */
-void Media::setSize(const qlonglong &size) {
+void Media::setSize(const qlonglong &size)
+{
     m_size = size;
 }
 
@@ -935,7 +1028,8 @@ void Media::setSize(const qlonglong &size) {
  *
  * Get the media type
  */
-QString Media::type() const {
+QString Media::type() const
+{
     return m_type;
 }
 
@@ -946,7 +1040,8 @@ QString Media::type() const {
  * Set the media type
  * Ex: ide, scsi...
  */
-void Media::setType(const QString &type) {
+void Media::setType(const QString &type)
+{
     m_type = type;
 }
 
@@ -957,7 +1052,8 @@ void Media::setType(const QString &type) {
  * Get the media format
  * Ex: qcow, qcow2, raw...
  */
-QString Media::format() const {
+QString Media::format() const
+{
     return m_format;
 }
 
@@ -967,7 +1063,8 @@ QString Media::format() const {
  *
  * Set the media format
  */
-void Media::setFormat(const QString &format) {
+void Media::setFormat(const QString &format)
+{
     m_format = format;
 }
 
@@ -978,7 +1075,8 @@ void Media::setFormat(const QString &format) {
  * Get the media interface
  * Ex: ide, scsi...
  */
-QString Media::interface() const {
+QString Media::interface() const
+{
     return m_interface;
 }
 
@@ -988,7 +1086,8 @@ QString Media::interface() const {
  *
  * Set the new media interface
  */
-void Media::setInterface(const QString &interface) {
+void Media::setInterface(const QString &interface)
+{
     m_interface = interface;
 }
 
@@ -999,7 +1098,8 @@ void Media::setInterface(const QString &interface) {
  * Get the media cache
  * Ex: none, writeback...
  */
-QString Media::cache() const {
+QString Media::cache() const
+{
     return m_cache;
 }
 
@@ -1009,7 +1109,8 @@ QString Media::cache() const {
  *
  * Set the media cache
  */
-void Media::setCache(const QString &cache) {
+void Media::setCache(const QString &cache)
+{
     m_cache = cache;
 }
 
@@ -1020,7 +1121,8 @@ void Media::setCache(const QString &cache) {
  * Get the media IO
  * Ex: threads, native...
  */
-QString Media::IO() const {
+QString Media::IO() const
+{
     return m_IO;
 }
 
@@ -1030,86 +1132,106 @@ QString Media::IO() const {
  *
  * Set the media IO
  */
-void Media::setIO(const QString &IO) {
+void Media::setIO(const QString &IO)
+{
     m_IO = IO;
 }
 
-QUuid Media::uuid() const {
+QUuid Media::uuid() const
+{
     return m_uuid;
 }
 
-void Media::setUuid(const QUuid &uuid) {
+void Media::setUuid(const QUuid &uuid)
+{
     m_uuid = uuid;
 }
 
-Boot::Boot() {
+Boot::Boot()
+{
     qDebug() << "Boot object created";
 }
 
-Boot::~Boot() {
+Boot::~Boot()
+{
     qDebug() << "Boot object destroyed";
 }
 
-bool Boot::bootMenu() const {
+bool Boot::bootMenu() const
+{
     return m_bootMenu;
 }
 
-void Boot::setBootMenu(bool bootMenu) {
+void Boot::setBootMenu(bool bootMenu)
+{
     m_bootMenu = bootMenu;
 }
 
-bool Boot::kernelBootEnabled() const {
+bool Boot::kernelBootEnabled() const
+{
     return m_kernelBootEnabled;
 }
 
-void Boot::setKernelBootEnabled(bool kernelBootEnabled) {
+void Boot::setKernelBootEnabled(bool kernelBootEnabled)
+{
     m_kernelBootEnabled = kernelBootEnabled;
 }
 
-QString Boot::kernelPath() const {
+QString Boot::kernelPath() const
+{
     return m_kernelPath;
 }
 
-void Boot::setKernelPath(const QString &kernelPath) {
+void Boot::setKernelPath(const QString &kernelPath)
+{
     m_kernelPath = kernelPath;
 }
 
-QString Boot::initrdPath() const {
+QString Boot::initrdPath() const
+{
     return m_initrdPath;
 }
 
-void Boot::setInitrdPath(const QString &initrdPath) {
+void Boot::setInitrdPath(const QString &initrdPath)
+{
     m_initrdPath = initrdPath;
 }
 
-QString Boot::kernelArgs() const {
+QString Boot::kernelArgs() const
+{
     return m_kernelArgs;
 }
 
-void Boot::setKernelArgs(const QString &kernelArgs) {
+void Boot::setKernelArgs(const QString &kernelArgs)
+{
     m_kernelArgs = kernelArgs;
 }
 
-QStringList Boot::bootOrder() const {
+QStringList Boot::bootOrder() const
+{
     return m_bootOrder;
 }
 
-void Boot::setBootOrder(const QStringList &bootOrder) {
+void Boot::setBootOrder(const QStringList &bootOrder)
+{
     m_bootOrder = bootOrder;
 }
 
-void Boot::addBootOrder(const QString bootOrder) {
-    if( ! this->m_bootOrder.contains(bootOrder)){
+void Boot::addBootOrder(const QString bootOrder)
+{
+    if (!this->m_bootOrder.contains(bootOrder)) {
         this->m_bootOrder.append(bootOrder);
     }
 }
 
-void Boot::removeBootOrder(const QString bootOrder) {
-    if(this->m_bootOrder.contains(bootOrder)){
+void Boot::removeBootOrder(const QString bootOrder)
+{
+    if (this->m_bootOrder.contains(bootOrder)) {
         this->m_bootOrder.removeOne(bootOrder);
     }
 }
 
-void Boot::removeAllBootOrder() {
+void Boot::removeAllBootOrder()
+{
     this->m_bootOrder.clear();
 }

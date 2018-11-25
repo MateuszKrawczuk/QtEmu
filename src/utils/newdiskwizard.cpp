@@ -217,8 +217,6 @@ bool NewDiskPage::validatePage() {
         newDisk.setMediaCache();
         newDisk.setMediaIO();
         newDisk.setUuid();*/
-
-        emit diskCreated(newDisk);
     }
 
     return isDiskCreated;

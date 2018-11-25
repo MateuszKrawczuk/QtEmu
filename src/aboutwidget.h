@@ -23,7 +23,6 @@
 #define ABOUTWIDGET_H
 
 // Qt
-
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -36,7 +35,6 @@
 #include <QPixmap>
 #include <QApplication>
 #include <QTextBrowser>
-
 #include <QDebug>
 
 class AboutTab : public QWidget {
