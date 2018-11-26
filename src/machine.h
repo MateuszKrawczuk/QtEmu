@@ -94,8 +94,8 @@ class Media {
         QString format() const;
         void setFormat(const QString &format);
 
-        QString interface() const;
-        void setInterface(const QString &interface);
+        QString driveInterface() const;
+        void setDriveInterface(const QString &driveInterface);
 
         QString cache() const;
         void setCache(const QString &cache);
@@ -114,7 +114,7 @@ class Media {
         qlonglong m_size;
         QString m_type;
         QString m_format;
-        QString m_interface;
+        QString m_driveInterface;
         QString m_cache;
         QString m_IO;
         QUuid m_uuid;
@@ -158,20 +158,20 @@ class Machine: public QObject {
         QString getCPUType() const;
         void setCPUType(const QString &value);
 
-        qint64 getCPUCount() const;
-        void setCPUCount(const qint64 &value);
+        int getCPUCount() const;
+        void setCPUCount(const int &value);
 
-        qint64 getSocketCount() const;
-        void setSocketCount(const qint64 &value);
+        int getSocketCount() const;
+        void setSocketCount(const int &value);
 
-        qint64 getCoresSocket() const;
-        void setCoresSocket(const qint64 &value);
+        int getCoresSocket() const;
+        void setCoresSocket(const int &value);
 
-        qint64 getThreadsCore() const;
-        void setThreadsCore(const qint64 &value);
+        int getThreadsCore() const;
+        void setThreadsCore(const int &value);
 
-        qint64 getMaxHotCPU() const;
-        void setMaxHotCPU(const qint64 &value);
+        int getMaxHotCPU() const;
+        void setMaxHotCPU(const int &value);
 
         QString getGPUType() const;
         void setGPUType(const QString &value);
@@ -246,11 +246,11 @@ class Machine: public QObject {
 
         // Hardware - CPU
         QString CPUType;
-        qint64 CPUCount;
-        qint64 socketCount;
-        qint64 coresSocket;
-        qint64 threadsCore;
-        qint64 maxHotCPU;
+        int CPUCount;
+        int socketCount;
+        int coresSocket;
+        int threadsCore;
+        int maxHotCPU;
 
         // Hardware - GPU
         QString GPUType;

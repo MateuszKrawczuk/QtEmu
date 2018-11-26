@@ -197,7 +197,7 @@ void MachineConclusionPage::addMedia(const QString name, const QString path) {
     disk.setName(name);
     disk.setPath(path);
     disk.setType("hdd");
-    disk.setInterface("hda");
+    disk.setDriveInterface("hda");
     disk.setUuid(QUuid::createUuid().toString());
 
     this->m_newMachine->addMedia(disk);

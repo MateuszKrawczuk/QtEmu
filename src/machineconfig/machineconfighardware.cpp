@@ -22,25 +22,43 @@
 // Local
 #include "machineconfighardware.h"
 
-MachineConfigHardware::MachineConfigHardware(Machine *machine,
-                                             QWidget *parent) : QWidget(parent) {
+MachineConfigHardware::MachineConfigHardware(Machine *machine, QWidget *parent) : QWidget(parent)
+{
+    this->m_machine = machine;
 
     m_hardwareTabWidget = new QTabWidget();
-    m_hardwareTabWidget -> setSizePolicy(QSizePolicy::MinimumExpanding,
+    m_hardwareTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
                                          QSizePolicy::MinimumExpanding);
-    m_hardwareTabWidget -> addTab(new ProcessorTab(machine, Qt::AlignTop, this), tr("CPU"));
-    m_hardwareTabWidget -> addTab(new GraphicsTab(machine, this), tr("Graphics"));
+
+    m_processorConfigTab = new ProcessorConfigTab(machine, this);
+    m_graphicsConfigTab = new GraphicsConfigTab(machine, this);
+
+    m_hardwareTabWidget->addTab(this->m_processorConfigTab, tr("CPU"));
+    m_hardwareTabWidget->addTab(this->m_graphicsConfigTab, tr("Graphics"));
 
     m_hardwarePageLayout = new QVBoxLayout();
-    m_hardwarePageLayout -> setAlignment(Qt::AlignCenter);
-    m_hardwarePageLayout -> addWidget(m_hardwareTabWidget);
+    m_hardwarePageLayout->setAlignment(Qt::AlignCenter);
+    m_hardwarePageLayout->addWidget(m_hardwareTabWidget);
 
     m_hardwarePageWidget = new QWidget(this);
-    m_hardwarePageWidget -> setLayout(m_hardwarePageLayout);
+    m_hardwarePageWidget->setLayout(m_hardwarePageLayout);
 
     qDebug() << "MachineConfigHardware created";
 }
 
-MachineConfigHardware::~MachineConfigHardware() {
+MachineConfigHardware::~MachineConfigHardware()
+{
     qDebug() << "MachineConfigHardware destroyed";
+}
+
+void MachineConfigHardware::saveHardwareData()
+{
+    this->m_machine->setCPUType(this->m_processorConfigTab->getCPUType());
+    this->m_machine->setCPUCount(this->m_processorConfigTab->getCPUCount());
+    this->m_machine->setCoresSocket(this->m_processorConfigTab->getCoresSocket());
+    this->m_machine->setSocketCount(this->m_processorConfigTab->getSocketCount());
+    this->m_machine->setThreadsCore(this->m_processorConfigTab->getThreadsCore());
+    this->m_machine->setMaxHotCPU(this->m_processorConfigTab->getMaxHotCPU());
+    this->m_machine->setGPUType(this->m_graphicsConfigTab->getGPUType());
+    this->m_machine->setKeyboard(this->m_graphicsConfigTab->getKeyboardLayout());
 }

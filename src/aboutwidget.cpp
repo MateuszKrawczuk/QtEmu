@@ -52,13 +52,13 @@ AboutWidget::AboutWidget(QWidget *parent) : QWidget(parent)
     this->addAction(m_closeAction);
 
     m_tabWidget = new QTabWidget(this);
-    m_tabWidget->addTab(new AboutTab(this), tr("About"));
-    m_tabWidget->addTab(new AuthorsTab(this), tr("Authors"));
-    m_tabWidget->addTab(new LicenseTab(this), tr("License"));
+    m_tabWidget->addTab(new AboutTab(), tr("About"));
+    m_tabWidget->addTab(new AuthorsTab(), tr("Authors"));
+    m_tabWidget->addTab(new LicenseTab(), tr("License"));
 
     m_mainLayout = new QVBoxLayout(this);
 
-    m_iconLayout = new QHBoxLayout(this);
+    m_iconLayout = new QHBoxLayout();
     m_iconLayout->setContentsMargins(0, 12, 0, 0);
 
     m_qtemuIcon = new QLabel(this);
@@ -126,7 +126,6 @@ AboutTab::~AboutTab()
  */
 AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent)
 {
-
     QString authors;
 
     authors.append(
@@ -147,14 +146,13 @@ AuthorsTab::AuthorsTab(QWidget *parent) : QWidget(parent)
                    "</p>"
                    );
 
-    m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout->setContentsMargins(2, 2, 2, 2);
-
     m_authorsBrowser = new QTextBrowser(this);
     m_authorsBrowser->setReadOnly(true);
     m_authorsBrowser->setOpenExternalLinks(false);
     m_authorsBrowser->setHtml(authors);
 
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout->setContentsMargins(2, 2, 2, 2);
     m_mainLayout->addWidget(m_authorsBrowser, 0);
 
 }
@@ -172,9 +170,7 @@ AuthorsTab::~AuthorsTab()
  */
 LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent)
 {
-
     QString license;
-
     license.append("<center><p><strong>GNU GENERAL PUBLIC LICENSE</strong></p></center>"
                    "<center><p>Version 2, June 1991<p></center>"
                     "<hr />"
@@ -434,15 +430,13 @@ LicenseTab::LicenseTab(QWidget *parent) : QWidget(parent)
                    "<p><center><strong>END OF TERMS AND CONDITIONS</strong></center></p>"
                     );
 
-
-    m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout->setContentsMargins(2, 2, 2, 2);
-
     m_licenseBrowser = new QTextBrowser(this);
     m_licenseBrowser->setReadOnly(true);
     m_licenseBrowser->setOpenExternalLinks(false);
     m_licenseBrowser->setHtml(license);
 
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout->setContentsMargins(2, 2, 2, 2);
     m_mainLayout->addWidget(m_licenseBrowser, 0);
 }
 

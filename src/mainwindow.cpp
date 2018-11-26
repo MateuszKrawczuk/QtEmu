@@ -464,7 +464,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
         media.setName(mediaObject["name"].toString());
         media.setPath(mediaObject["path"].toString());
         media.setType(mediaObject["type"].toString());
-        media.setInterface(mediaObject["interface"].toString());
+        media.setDriveInterface(mediaObject["interface"].toString());
         media.setUuid(mediaObject["uuid"].toVariant().toUuid());
         machine->addMedia(media);
     }

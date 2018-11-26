@@ -159,9 +159,11 @@ void MachineConfigWindow::saveMachineSettings() {
     //this->m_osWidget->setText(this->m_machine->getName());
 
     this->m_configGeneral->saveGeneralData();
-    this->m_configAudio->saveAudioData();
+    this->m_configHardware->saveHardwareData();
     this->m_configBoot->saveBootData();
+    //MEDIA
     this->m_configNetwork->saveNetworkData();
+    this->m_configAudio->saveAudioData();
     this->m_configAccel->saveAccelData();
     this->m_machine->saveMachine();
 

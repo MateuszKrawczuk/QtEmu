@@ -22,14 +22,21 @@
 // Local
 #include "helpwidget.h"
 
-HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
-    this -> setWindowTitle(tr("Quick Help") + " - QtEmu");
-    this -> setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-    this -> setWindowFlag(Qt::Window);
-    this -> setMinimumSize(100, 500);
+/**
+ * @brief Help window
+ * @param parent, widget parent
+ *
+ * Help window with a brief manual about QtEmu
+ */
+HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent)
+{
+    this->setWindowTitle(tr("Quick Help") + " - QtEmu");
+    this->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
+    this->setWindowFlag(Qt::Window);
+    this->setMinimumSize(100, 500);
 
     QSettings settings;
-    this -> resize(settings.value("HelpWidget/helpWindowSize",
+    this->resize(settings.value("HelpWidget/helpWindowSize",
                                 QSize(580, 700)).toSize());
 
     QString helpText;
@@ -173,9 +180,9 @@ HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
     helpText.append("<br />");
 
     m_helpTextBrowser = new QTextBrowser(this);
-    m_helpTextBrowser -> setReadOnly(true);
-    m_helpTextBrowser -> setOpenExternalLinks(false);
-    m_helpTextBrowser -> setHtml(helpText);
+    m_helpTextBrowser->setReadOnly(true);
+    m_helpTextBrowser->setOpenExternalLinks(false);
+    m_helpTextBrowser->setHtml(helpText);
 
     m_closeButton = new QPushButton(QIcon::fromTheme("window-close", QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))),
                                   tr("&Close"),
@@ -188,35 +195,38 @@ HelpWidget::HelpWidget(QWidget *parent) : QWidget(parent) {
     closeShortcuts << QKeySequence(Qt::Key_Escape);
     closeShortcuts << QKeySequence(Qt::Key_F1);
     m_closeAction = new QAction(this);
-    m_closeAction -> setShortcuts(closeShortcuts);
+    m_closeAction->setShortcuts(closeShortcuts);
     connect(m_closeAction, &QAction::triggered,
             this, &QWidget::hide);
-    this -> addAction(m_closeAction);
+    this->addAction(m_closeAction);
 
-    m_mainLayout = new QVBoxLayout();
-    m_mainLayout -> setContentsMargins(2, 2, 2, 2);
-    m_mainLayout -> addWidget(m_helpTextBrowser);
-    m_mainLayout -> addWidget(m_closeButton, 0, Qt::AlignRight);
-    this -> setLayout(m_mainLayout);
+    m_mainLayout = new QVBoxLayout(this);
+    m_mainLayout->setContentsMargins(2, 2, 2, 2);
+    m_mainLayout->addWidget(m_helpTextBrowser);
+    m_mainLayout->addWidget(m_closeButton, 0, Qt::AlignRight);
+    this->setLayout(m_mainLayout);
 
     qDebug() << "HelpWidget created";
 }
 
-HelpWidget::~HelpWidget() {
+HelpWidget::~HelpWidget()
+{
     qDebug() << "HelpWidget destroyed";
 }
 
-void HelpWidget::closeEvent(QCloseEvent *event) {
-    this -> hide();
-    event -> ignore();
+void HelpWidget::closeEvent(QCloseEvent *event)
+{
+    this->hide();
+    event->ignore();
 }
 
-void HelpWidget::hideEvent(QHideEvent *event) {
+void HelpWidget::hideEvent(QHideEvent *event)
+{
     QSettings settings;
 
     if (settings.isWritable()) {
-        settings.setValue("HelpWidget/helpWindowSize", this -> size());
+        settings.setValue("HelpWidget/helpWindowSize", this->size());
     }
 
-    event -> accept();
+    event->accept();
 }

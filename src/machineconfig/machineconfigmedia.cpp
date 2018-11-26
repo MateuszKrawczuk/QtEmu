@@ -56,7 +56,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     for(int i = 0; i < machineMedia.size(); ++i) {
         QString mediaName;
         mediaName.append("(")
-                 .append(machineMedia[i].interface().toUpper())
+                 .append(machineMedia[i].driveInterface().toUpper())
                  .append(") ")
                  .append(machineMedia[i].name());
 

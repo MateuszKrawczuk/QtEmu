@@ -244,7 +244,7 @@ void Machine::setCPUType(const QString &value)
  *
  * Get the CPU Count of the machine
  */
-qint64 Machine::getCPUCount() const
+int Machine::getCPUCount() const
 {
     return CPUCount;
 }
@@ -254,7 +254,7 @@ qint64 Machine::getCPUCount() const
  *
  * Set the CPU Count of the machine
  */
-void Machine::setCPUCount(const qint64 &value)
+void Machine::setCPUCount(const int &value)
 {
     CPUCount = value;
 }
@@ -264,7 +264,7 @@ void Machine::setCPUCount(const qint64 &value)
  *
  * Get the CPU Socket Count of the machine
  */
-qint64 Machine::getSocketCount() const
+int Machine::getSocketCount() const
 {
     return socketCount;
 }
@@ -274,7 +274,7 @@ qint64 Machine::getSocketCount() const
  *
  * Set the CPU Socket Count of the machine
  */
-void Machine::setSocketCount(const qint64 &value)
+void Machine::setSocketCount(const int &value)
 {
     socketCount = value;
 }
@@ -284,7 +284,7 @@ void Machine::setSocketCount(const qint64 &value)
  *
  * Get the CPU Cores per Socket of the machine
  */
-qint64 Machine::getCoresSocket() const
+int Machine::getCoresSocket() const
 {
     return coresSocket;
 }
@@ -294,7 +294,7 @@ qint64 Machine::getCoresSocket() const
  *
  * Set the CPU Cores per Socket of the machine
  */
-void Machine::setCoresSocket(const qint64 &value)
+void Machine::setCoresSocket(const int &value)
 {
     coresSocket = value;
 }
@@ -304,7 +304,7 @@ void Machine::setCoresSocket(const qint64 &value)
  *
  * Get the CPU Threads per Core of the machine
  */
-qint64 Machine::getThreadsCore() const
+int Machine::getThreadsCore() const
 {
     return threadsCore;
 }
@@ -314,7 +314,7 @@ qint64 Machine::getThreadsCore() const
  *
  * Set the CPU Threads per Core of the machine
  */
-void Machine::setThreadsCore(const qint64 &value)
+void Machine::setThreadsCore(const int &value)
 {
     threadsCore = value;
 }
@@ -324,7 +324,7 @@ void Machine::setThreadsCore(const qint64 &value)
  *
  * Get the max hot CPUs of the machine
  */
-qint64 Machine::getMaxHotCPU() const
+int Machine::getMaxHotCPU() const
 {
     return maxHotCPU;
 }
@@ -334,7 +334,7 @@ qint64 Machine::getMaxHotCPU() const
  *
  * Set the max hot CPUs of the machine
  */
-void Machine::setMaxHotCPU(const qint64 &value)
+void Machine::setMaxHotCPU(const int &value)
 {
     maxHotCPU = value;
 }
@@ -631,6 +631,11 @@ QString Machine::getAcceleratorLabel() {
     return acceleratorLabel;
 }
 
+/**
+ * @brief Run the machine in QEMU
+ *
+ * Run the machine in QEMU process
+ */
 void Machine::runMachine()
 {
     QStringList args = this->generateMachineCommand();
@@ -656,6 +661,11 @@ void Machine::runMachine()
     m_machineProcess -> start(program, args);
 }
 
+/**
+ * @brief Stop the machine
+ *
+ * Stop the machine
+ */
 void Machine::stopMachine()
 {
     this->m_machineProcess->write(qPrintable("system_powerdown\n"));
@@ -664,11 +674,22 @@ void Machine::stopMachine()
     emit(machineStateChangedSignal(Machine::Stopped));
 }
 
+/**
+ * @brief Reset the machine
+ *
+ * Reset the machine
+ */
 void Machine::resetMachine()
 {
     this->m_machineProcess->write(qPrintable("system_reset\n"));
 }
 
+/**
+ * @brief Pause the machine
+ *
+ * If the machine is started, paused it
+ * If the machine if paused, started it
+ */
 void Machine::pauseMachine()
 {
     if (state == Machine::Started) {
@@ -684,12 +705,22 @@ void Machine::pauseMachine()
     }
 }
 
+/**
+ * @brief Read standard output
+ *
+ * Read the machine standard output
+ */
 void Machine::readMachineStandardOut()
 {
     // TODO: Show in a window
     qDebug() << "Standard Out: " << this->m_machineProcess->readAllStandardOutput();
 }
 
+/**
+ * @brief Read error output
+ *
+ * Read the machine error output
+ */
 void Machine::readMachineErrorOut()
 {
     // TODO: Show in a window
@@ -872,7 +903,7 @@ void Machine::saveMachine()
         disk["name"] = this->media.at(i).name();
         disk["path"] = this->media.at(i).path();
         disk["type"] = this->media.at(i).type();
-        disk["interface"] = this->media.at(i).interface();
+        disk["interface"] = this->media.at(i).driveInterface();
         disk["uuid"] = QUuid::createUuid().toString();
 
         media.append(disk);
@@ -1075,9 +1106,9 @@ void Media::setFormat(const QString &format)
  * Get the media interface
  * Ex: ide, scsi...
  */
-QString Media::interface() const
+QString Media::driveInterface() const
 {
-    return m_interface;
+    return m_driveInterface;
 }
 
 /**
@@ -1086,9 +1117,9 @@ QString Media::interface() const
  *
  * Set the new media interface
  */
-void Media::setInterface(const QString &interface)
+void Media::setDriveInterface(const QString &driveInterface)
 {
-    m_interface = interface;
+    m_driveInterface = driveInterface;
 }
 
 /**

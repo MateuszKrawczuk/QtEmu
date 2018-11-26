@@ -25,10 +25,12 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QTabWidget>
+#include <QGroupBox>
+#include <QSpinBox>
 
 // Local
 #include "../machine.h"
-#include "../newmachine/hardwarepage.h"
+#include "machineconfighardwaretabs.h"
 
 class MachineConfigHardware : public QWidget {
     Q_OBJECT
@@ -38,6 +40,9 @@ class MachineConfigHardware : public QWidget {
                                        QWidget *parent = nullptr);
         ~MachineConfigHardware();
         QWidget *m_hardwarePageWidget;
+
+        // Methods
+        void saveHardwareData();
 
     signals:
 
@@ -51,5 +56,11 @@ class MachineConfigHardware : public QWidget {
         QTabWidget *m_hardwareTabWidget;
         QVBoxLayout *m_hardwarePageLayout;
 
+        ProcessorConfigTab *m_processorConfigTab;
+        GraphicsConfigTab *m_graphicsConfigTab;
+
+        Machine *m_machine;
+
 };
+
 #endif // MACHINECONFIGHARDWARE_H

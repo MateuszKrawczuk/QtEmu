@@ -29,79 +29,74 @@
  * Configuration of QtEmu. Configure the machines path, language,
  * qemu before and after commands and the proxy.
  */
-ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject,
-                           QWidget *parent) : QWidget(parent) {
-    this -> setWindowTitle(tr("Preferences") + " - QtEmu");
-    this -> setWindowIcon(QIcon::fromTheme("qtemu",
+ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject, QWidget *parent) : QWidget(parent)
+{
+    this->setWindowTitle(tr("Preferences") + " - QtEmu");
+    this->setWindowIcon(QIcon::fromTheme("qtemu",
                                            QIcon(":/images/qtemu.png")));
-    this -> setWindowFlags(Qt::Dialog);
-    this -> setWindowModality(Qt::ApplicationModal);
-    this -> setMinimumSize(640, 520);
+    this->setWindowFlags(Qt::Dialog);
+    this->setWindowModality(Qt::ApplicationModal);
+    this->setMinimumSize(640, 520);
 
-    this -> m_QEMUObject = QEMUGlobalObject;
+    this->m_QEMUObject = QEMUGlobalObject;
 
-    this -> createGeneralPage();
-
-    this -> createUpdatePage();
-
-    this -> createLanguagePage();
-
-    this -> createStartPage();
-
-    this -> createProxyPage();
-
-    this -> createQEMUPage();
+    this->createGeneralPage();
+    this->createUpdatePage();
+    this->createLanguagePage();
+    this->createStartPage();
+    this->createProxyPage();
+    this->createQEMUPage();
 
     m_optionsListWidget = new QListWidget(this);
-    m_optionsListWidget -> setViewMode(QListView::ListMode);
-    m_optionsListWidget -> setIconSize(QSize(32, 32));
-    m_optionsListWidget -> setMovement(QListView::Static);
-    m_optionsListWidget -> setMaximumWidth(170);
-    m_optionsListWidget -> setSpacing(7);
-    m_optionsListWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_optionsListWidget->setViewMode(QListView::ListMode);
+    m_optionsListWidget->setIconSize(QSize(32, 32));
+    m_optionsListWidget->setMovement(QListView::Static);
+    m_optionsListWidget->setMaximumWidth(170);
+    m_optionsListWidget->setSpacing(7);
+    m_optionsListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // Add options
-    m_optionsListWidget -> addItem(tr("General Options"));
-    m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-other",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+    m_optionsListWidget->addItem(tr("General Options"));
+    m_optionsListWidget->item(0)->setIcon(QIcon::fromTheme("preferences-other",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Update QtEmu"));
-    m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("update-none",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
+    m_optionsListWidget->addItem(tr("Update QtEmu"));
+    m_optionsListWidget->item(1)->setIcon(QIcon::fromTheme("update-none",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Language"));
-    m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("applications-education-language",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
+    m_optionsListWidget->addItem(tr("Language"));
+    m_optionsListWidget->item(2)->setIcon(QIcon::fromTheme("applications-education-language",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Start"));
-    m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("practice-start",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
+    m_optionsListWidget->addItem(tr("Start"));
+    m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("practice-start",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Proxy"));
-    m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-manager",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
+    m_optionsListWidget->addItem(tr("Proxy"));
+    m_optionsListWidget->item(4)->setIcon(QIcon::fromTheme("network-manager",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
-    m_optionsListWidget -> addItem(tr("QEMU"));
-    m_optionsListWidget -> item(5) -> setIcon(QIcon(QPixmap(":/images/QEMU.png")));
+    m_optionsListWidget->addItem(tr("QEMU"));
+    m_optionsListWidget->item(5)->setIcon(QIcon(QPixmap(":/images/QEMU.png")));
 
     // Prepare window
     m_categoriesStackedWidget = new QStackedWidget(this);
-    m_categoriesStackedWidget -> setSizePolicy(QSizePolicy::Preferred,
+    m_categoriesStackedWidget->setSizePolicy(QSizePolicy::Preferred,
                                              QSizePolicy::MinimumExpanding);
 
-    m_categoriesStackedWidget -> addWidget(this -> m_generalPageWidget);
-    m_categoriesStackedWidget -> addWidget(this -> m_updatePageWidget);
-    m_categoriesStackedWidget -> addWidget(this -> m_languagePageWidget);
-    m_categoriesStackedWidget -> addWidget(this -> m_startPageWidget);
-    m_categoriesStackedWidget -> addWidget(this -> m_proxyPageWidget);
-    m_categoriesStackedWidget -> addWidget(this -> m_QEMUPageWidget);
+    m_categoriesStackedWidget->addWidget(this->m_generalPageWidget);
+    m_categoriesStackedWidget->addWidget(this->m_updatePageWidget);
+    m_categoriesStackedWidget->addWidget(this->m_languagePageWidget);
+    m_categoriesStackedWidget->addWidget(this->m_startPageWidget);
+    m_categoriesStackedWidget->addWidget(this->m_proxyPageWidget);
+    m_categoriesStackedWidget->addWidget(this->m_QEMUPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_categoriesStackedWidget, &QStackedWidget::setCurrentIndex);
 
     m_topLayout = new QHBoxLayout();
-    m_topLayout -> addWidget(m_optionsListWidget);
-    m_topLayout -> addWidget(m_categoriesStackedWidget);
+    m_topLayout->addWidget(m_optionsListWidget);
+    m_topLayout->addWidget(m_categoriesStackedWidget);
 
     // Buttons
     m_saveButton = new QPushButton(QIcon::fromTheme("document-save",
@@ -118,35 +113,35 @@ ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject,
     connect(m_closeButton, &QAbstractButton::clicked,
             this, &ConfigWindow::cancelButton);
 
-    this -> m_buttonsLayout = new QHBoxLayout();
-    m_buttonsLayout -> setAlignment(Qt::AlignRight);
-    m_buttonsLayout -> addWidget(m_saveButton);
-    m_buttonsLayout -> addWidget(m_closeButton);
+    this->m_buttonsLayout = new QHBoxLayout();
+    m_buttonsLayout->setAlignment(Qt::AlignRight);
+    m_buttonsLayout->addWidget(m_saveButton);
+    m_buttonsLayout->addWidget(m_closeButton);
 
     m_closeAction = new QAction(this);
-    m_closeAction -> setShortcut(QKeySequence(Qt::Key_Escape));
+    m_closeAction->setShortcut(QKeySequence(Qt::Key_Escape));
     connect(m_closeAction, &QAction::triggered, this, &ConfigWindow::cancelButton);
-    this -> addAction(m_closeAction);
+    this->addAction(m_closeAction);
 
     m_mainLayout = new QVBoxLayout();
-    m_mainLayout -> addLayout(m_topLayout, 20);
-    m_mainLayout -> addSpacing(8);
-    m_mainLayout -> addStretch(1);
-    m_mainLayout -> addLayout(m_buttonsLayout);
+    m_mainLayout->addLayout(m_topLayout, 20);
+    m_mainLayout->addSpacing(8);
+    m_mainLayout->addStretch(1);
+    m_mainLayout->addLayout(m_buttonsLayout);
 
-    this -> setLayout(m_mainLayout);
+    this->setLayout(m_mainLayout);
 
-    this -> m_optionsListWidget -> setCurrentRow(0);
-    this -> m_optionsListWidget -> setFocus();
+    this->m_optionsListWidget->setCurrentRow(0);
+    this->m_optionsListWidget->setFocus();
 
     // Load settings
     loadSettings();
 
     qDebug() << "ConfigWindow created";
-
 }
 
-ConfigWindow::~ConfigWindow() {
+ConfigWindow::~ConfigWindow()
+{
     qDebug() << "ConfigWindow destroyed";
 }
 
@@ -157,15 +152,12 @@ ConfigWindow::~ConfigWindow() {
  * Event triggered when the user close the window.
  * Load the settings saved before by the user.
  */
-void ConfigWindow::closeEvent (QCloseEvent *event) {
-
-    this -> loadSettings();
-
-    this -> hide();
-
-    this -> m_optionsListWidget -> setCurrentRow(0);
-
-    event -> accept();
+void ConfigWindow::closeEvent (QCloseEvent *event)
+{
+    this->loadSettings();
+    this->hide();
+    this->m_optionsListWidget->setCurrentRow(0);
+    event->accept();
 }
 
 /**
@@ -174,12 +166,11 @@ void ConfigWindow::closeEvent (QCloseEvent *event) {
  * Create the general page of the QtEmu configuration where
  * the machines path are indicated.
  */
-void ConfigWindow::createGeneralPage() {
-
-    m_machinePathLabel  = new QLabel(tr("Default machine path") + ":");
-
-    m_machinePathLineEdit = new QLineEdit();
-    m_machinePathLineEdit -> setEnabled(false);
+void ConfigWindow::createGeneralPage()
+{
+    m_machinePathLabel  = new QLabel(tr("Default machine path") + ":", this);
+    m_machinePathLineEdit = new QLineEdit(this);
+    m_machinePathLineEdit->setEnabled(false);
 
     m_machinePathButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
@@ -190,20 +181,20 @@ void ConfigWindow::createGeneralPage() {
             this, &ConfigWindow::setMachinePath);
 
     m_machinePathLayout = new QHBoxLayout();
-    m_machinePathLayout -> setAlignment(Qt::AlignTop);
-    m_machinePathLayout -> addWidget(m_machinePathLabel);
-    m_machinePathLayout -> addWidget(m_machinePathLineEdit);
-    m_machinePathLayout -> addWidget(m_machinePathButton);
+    m_machinePathLayout->setAlignment(Qt::AlignTop);
+    m_machinePathLayout->addWidget(m_machinePathLabel);
+    m_machinePathLayout->addWidget(m_machinePathLineEdit);
+    m_machinePathLayout->addWidget(m_machinePathButton);
 
-    m_machinePathGroup = new QGroupBox(tr("Machine Path"));
-    m_machinePathGroup -> setLayout(m_machinePathLayout);
-    m_machinePathGroup -> setFlat(true);
+    m_machinePathGroup = new QGroupBox(tr("Machine Path"), this);
+    m_machinePathGroup->setLayout(m_machinePathLayout);
+    m_machinePathGroup->setFlat(true);
 
     m_generalPageLayout = new QVBoxLayout();
-    m_generalPageLayout -> addWidget(m_machinePathGroup);
+    m_generalPageLayout->addWidget(m_machinePathGroup);
 
     m_generalPageWidget = new QWidget(this);
-    m_generalPageWidget -> setLayout(m_generalPageLayout);
+    m_generalPageWidget->setLayout(m_generalPageLayout);
 }
 
 /**
@@ -213,39 +204,39 @@ void ConfigWindow::createGeneralPage() {
  * the version of the software can be selected.
  * Versions: Stable, Beta, Development
  */
-void ConfigWindow::createUpdatePage(){
-
-    m_updateCheckBox = new QCheckBox();
-    m_updateCheckBox -> setChecked(true);
+void ConfigWindow::createUpdatePage()
+{
+    m_updateCheckBox = new QCheckBox(this);
+    m_updateCheckBox->setChecked(true);
 
     connect(m_updateCheckBox, &QAbstractButton::toggled,
                 this, &ConfigWindow::toggleUpdate);
 
-    m_updatesGroup = new QGroupBox();
+    m_updatesGroup = new QGroupBox(this);
 
-    m_stableReleaseRadio = new QRadioButton(tr("Stable version"));
-    m_betaReleaseRadio = new QRadioButton(tr("Beta version"));
-    m_developmentRelaseRadio = new QRadioButton(tr("Development version"));
+    m_stableReleaseRadio = new QRadioButton(tr("Stable version"), this);
+    m_betaReleaseRadio = new QRadioButton(tr("Beta version"), this);
+    m_developmentRelaseRadio = new QRadioButton(tr("Development version"), this);
 
-    m_stableReleaseRadio -> setChecked(true);
+    m_stableReleaseRadio->setChecked(true);
 
     connect(m_stableReleaseRadio, &QAbstractButton::toggled,
                 this, &ConfigWindow::pushStableVersion);
 
     m_updateRadiosLayout = new QVBoxLayout();
-    m_updateRadiosLayout -> setAlignment(Qt::AlignVCenter);
-    m_updateRadiosLayout -> addWidget(m_stableReleaseRadio);
-    m_updateRadiosLayout -> addWidget(m_betaReleaseRadio);
-    m_updateRadiosLayout -> addWidget(m_developmentRelaseRadio);
+    m_updateRadiosLayout->setAlignment(Qt::AlignVCenter);
+    m_updateRadiosLayout->addWidget(m_stableReleaseRadio);
+    m_updateRadiosLayout->addWidget(m_betaReleaseRadio);
+    m_updateRadiosLayout->addWidget(m_developmentRelaseRadio);
 
-    m_updatesGroup -> setLayout(m_updateRadiosLayout);
+    m_updatesGroup->setLayout(m_updateRadiosLayout);
 
     m_updatePageLayout = new QFormLayout();
-    m_updatePageLayout -> addRow(tr("Check for updates"), m_updateCheckBox);
-    m_updatePageLayout -> addRow(m_updatesGroup);
+    m_updatePageLayout->addRow(tr("Check for updates"), m_updateCheckBox);
+    m_updatePageLayout->addRow(m_updatesGroup);
 
     m_updatePageWidget = new QWidget(this);
-    m_updatePageWidget -> setLayout(m_updatePageLayout);
+    m_updatePageWidget->setLayout(m_updatePageLayout);
 }
 
 /**
@@ -254,21 +245,20 @@ void ConfigWindow::createUpdatePage(){
  * Create the language page of the QtEmu configuration where
  * the language can be selected.
  */
-void ConfigWindow::createLanguagePage(){
-    m_languageLabel = new QLabel(tr("Interface language"));
+void ConfigWindow::createLanguagePage()
+{
+    m_languageLabel = new QLabel(tr("Interface language"), this);
 
-    m_languagesListView = new QListWidget();
+    m_languagesListView = new QListWidget(this);
+    m_languagesListView->setViewMode(QListView::ListMode);
+    m_languagesListView->setIconSize(QSize(32, 32));
+    m_languagesListView->setMovement(QListView::Static);
+    m_languagesListView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_languagesListView->addItem("English");
+    m_languagesListView->item(0)->setIcon(QIcon(":/images/flags/32x32/eeuu.png"));
 
-    m_languagesListView -> setViewMode(QListView::ListMode);
-    m_languagesListView -> setIconSize(QSize(32, 32));
-    m_languagesListView -> setMovement(QListView::Static);
-    m_languagesListView -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    m_languagesListView -> addItem("English");
-    m_languagesListView -> item(0) -> setIcon(QIcon(":/images/flags/32x32/eeuu.png"));
-
-    m_languageDescription = new QLabel();
-    m_languageAuthors = new QLabel();
+    m_languageDescription = new QLabel(this);
+    m_languageAuthors = new QLabel(this);
 
     connect(m_languagesListView, &QListWidget::currentTextChanged,
             this, &ConfigWindow::setLanguageLabel);
@@ -277,17 +267,17 @@ void ConfigWindow::createLanguagePage(){
             this, &ConfigWindow::setAuthorsLabel);
 
     m_languagePageLayout = new QVBoxLayout();
-    m_languagePageLayout -> addWidget(m_languageLabel);
-    m_languagePageLayout -> addWidget(m_languagesListView);
+    m_languagePageLayout->addWidget(m_languageLabel);
+    m_languagePageLayout->addWidget(m_languagesListView);
 
     m_languageHLayout = new QHBoxLayout();
-    m_languageHLayout -> addWidget(m_languageDescription);
-    m_languageHLayout -> addWidget(m_languageAuthors);
+    m_languageHLayout->addWidget(m_languageDescription);
+    m_languageHLayout->addWidget(m_languageAuthors);
 
-    m_languagePageLayout -> addItem(m_languageHLayout);
+    m_languagePageLayout->addItem(m_languageHLayout);
 
     m_languagePageWidget = new QWidget(this);
-    m_languagePageWidget -> setLayout(m_languagePageLayout);
+    m_languagePageWidget->setLayout(m_languagePageLayout);
 }
 
 /**
@@ -297,23 +287,23 @@ void ConfigWindow::createLanguagePage(){
  * can be configured wich commands execute before and after
  * the launch of QEMU.
  */
-void ConfigWindow::createStartPage(){
+void ConfigWindow::createStartPage()
+{
+    m_beforeStartLabel = new QLabel(tr("Execute before start") + ":", this);
+    m_afterExitLabel = new QLabel(tr("Execute after exit") + ":", this);
 
-    m_beforeStartLabel = new QLabel(tr("Execute before start") + ":");
-    m_afterExitLabel = new QLabel(tr("Execute after exit") + ":");
-
-    m_beforeStart = new QPlainTextEdit();
-    m_afterExit = new QPlainTextEdit();
+    m_beforeStart = new QPlainTextEdit(this);
+    m_afterExit = new QPlainTextEdit(this);
 
     m_startPageLayout = new QVBoxLayout();
 
-    m_startPageLayout -> addWidget(m_beforeStartLabel);
-    m_startPageLayout -> addWidget(m_beforeStart);
-    m_startPageLayout -> addWidget(m_afterExitLabel);
-    m_startPageLayout -> addWidget(m_afterExit);
+    m_startPageLayout->addWidget(m_beforeStartLabel);
+    m_startPageLayout->addWidget(m_beforeStart);
+    m_startPageLayout->addWidget(m_afterExitLabel);
+    m_startPageLayout->addWidget(m_afterExit);
 
     m_startPageWidget = new QWidget(this);
-    m_startPageWidget -> setLayout(m_startPageLayout);
+    m_startPageWidget->setLayout(m_startPageLayout);
 }
 
 /**
@@ -322,46 +312,45 @@ void ConfigWindow::createStartPage(){
  * Create the proxy page of the QtEmu configuration where the
  * proxy options can be configured.
  */
-void ConfigWindow::createProxyPage(){
+void ConfigWindow::createProxyPage()
+{
+    m_proxyOptions = new QComboBox(this);
+    m_proxyOptions->addItem(tr("Do not use a proxy"));
+    m_proxyOptions->addItem("SOCKS 5");
+    m_proxyOptions->addItem("HTTP");
+    m_proxyOptions->setCurrentIndex(0);
 
-    m_proxyOptions = new QComboBox();
-    m_proxyOptions -> addItem(tr("Do not use a proxy"));
-    m_proxyOptions -> addItem("SOCKS 5");
-    m_proxyOptions -> addItem("HTTP");
-    m_proxyOptions -> setCurrentIndex(0);
+    m_serverNameProxy = new QLineEdit(this);
+    m_serverNameProxy->setPlaceholderText("example.org");
 
-    m_serverNameProxy = new QLineEdit();
-    m_serverNameProxy -> setPlaceholderText("example.org");
-
-    m_portProxy = new QLineEdit();
-    m_portProxy -> setPlaceholderText("1080, 8080, etc...");
+    m_portProxy = new QLineEdit(this);
+    m_portProxy->setPlaceholderText("1080, 8080, etc...");
 
     connect(m_proxyOptions, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &ConfigWindow::toggleServerPort);
 
-    m_useAuth = new QCheckBox();
-    m_useAuth -> setChecked(false);
+    m_useAuth = new QCheckBox(this);
+    m_useAuth->setChecked(false);
 
     connect(m_useAuth, &QAbstractButton::toggled,
                 this, &ConfigWindow::toggleAuth);
 
-    m_userProxy = new QLineEdit();
-    m_userProxy -> setPlaceholderText(tr("Proxy username"));
+    m_userProxy = new QLineEdit(this);
+    m_userProxy->setPlaceholderText(tr("Proxy username"));
 
-    m_passwordProxy = new QLineEdit();
-    m_passwordProxy -> setEchoMode(QLineEdit::Password);
+    m_passwordProxy = new QLineEdit(this);
+    m_passwordProxy->setEchoMode(QLineEdit::Password);
 
     m_proxyPageLayout = new QFormLayout();
-
-    m_proxyPageLayout -> addRow(tr("Proxy type"), m_proxyOptions);
-    m_proxyPageLayout -> addRow(tr("Hostname"), m_serverNameProxy);
-    m_proxyPageLayout -> addRow(tr("Port"), m_portProxy);
-    m_proxyPageLayout -> addRow(tr("Use Authentication"), m_useAuth);
-    m_proxyPageLayout -> addRow(tr("User"), m_userProxy);
-    m_proxyPageLayout -> addRow(tr("Password"), m_passwordProxy);
+    m_proxyPageLayout->addRow(tr("Proxy type"), m_proxyOptions);
+    m_proxyPageLayout->addRow(tr("Hostname"), m_serverNameProxy);
+    m_proxyPageLayout->addRow(tr("Port"), m_portProxy);
+    m_proxyPageLayout->addRow(tr("Use Authentication"), m_useAuth);
+    m_proxyPageLayout->addRow(tr("User"), m_userProxy);
+    m_proxyPageLayout->addRow(tr("Password"), m_passwordProxy);
 
     m_proxyPageWidget = new QWidget(this);
-    m_proxyPageWidget -> setLayout(m_proxyPageLayout);
+    m_proxyPageWidget->setLayout(m_proxyPageLayout);
 }
 
 /**
@@ -370,26 +359,26 @@ void ConfigWindow::createProxyPage(){
  * Create the QEMU page of the QtEmu configuration where the
  * QEMU related options can be configured. Binaries, Version of QEMU, qemu-img path, etc.
  */
-void ConfigWindow::createQEMUPage() {
-
-    m_findBinaryLabel = new QLabel(tr("QEMU binaries path"));
-    m_binaryPathLineEdit = new QLineEdit();
+void ConfigWindow::createQEMUPage()
+{
+    m_findBinaryLabel = new QLabel(tr("QEMU binaries path"), this);
+    m_binaryPathLineEdit = new QLineEdit(this);
     connect(m_binaryPathLineEdit, &QLineEdit::textChanged,
             this, &ConfigWindow::binaryPathChanged);
 
-    m_binariesPathToolButton = new QToolButton();
-    m_binariesPathToolButton -> setToolTip(tr("QEMU binaries path"));
-    m_binariesPathToolButton -> setToolTipDuration(3000);
-    m_binariesPathToolButton -> setIcon(QIcon::fromTheme("folder-symbolic",
+    m_binariesPathToolButton = new QToolButton(this);
+    m_binariesPathToolButton->setToolTip(tr("QEMU binaries path"));
+    m_binariesPathToolButton->setToolTipDuration(3000);
+    m_binariesPathToolButton->setIcon(QIcon::fromTheme("folder-symbolic",
                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
     connect(m_binariesPathToolButton, &QAbstractButton::clicked,
             this, &ConfigWindow::setPathBinaries);
 
-    m_searchBinariesToolButton = new QToolButton();
-    m_searchBinariesToolButton -> setEnabled(false);
-    m_searchBinariesToolButton -> setToolTip(tr("Find binaries"));
-    m_searchBinariesToolButton -> setToolTipDuration(3000);
-    m_searchBinariesToolButton -> setIcon(QIcon::fromTheme("edit-find",
+    m_searchBinariesToolButton = new QToolButton(this);
+    m_searchBinariesToolButton->setEnabled(false);
+    m_searchBinariesToolButton->setToolTip(tr("Find binaries"));
+    m_searchBinariesToolButton->setToolTipDuration(3000);
+    m_searchBinariesToolButton->setIcon(QIcon::fromTheme("edit-find",
                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
     connect(m_searchBinariesToolButton, &QAbstractButton::clicked,
             this, &ConfigWindow::findBinaries);
@@ -397,55 +386,55 @@ void ConfigWindow::createQEMUPage() {
     QStringList labels;
     labels << "Name" << "Path";
 
-    m_binariesTableWidget = new QTableWidget();
-    m_binariesTableWidget -> setColumnCount(2);
-    m_binariesTableWidget -> setColumnWidth(0, 150);
-    m_binariesTableWidget -> setColumnWidth(1, 220);
-    m_binariesTableWidget -> setLayoutDirection(Qt::LeftToRight);
-    m_binariesTableWidget -> setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_binariesTableWidget -> setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_binariesTableWidget -> setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    m_binariesTableWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    m_binariesTableWidget -> setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
-    m_binariesTableWidget -> setHorizontalHeaderLabels(labels);
+    m_binariesTableWidget = new QTableWidget(this);
+    m_binariesTableWidget->setColumnCount(2);
+    m_binariesTableWidget->setColumnWidth(0, 150);
+    m_binariesTableWidget->setColumnWidth(1, 220);
+    m_binariesTableWidget->setLayoutDirection(Qt::LeftToRight);
+    m_binariesTableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_binariesTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_binariesTableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_binariesTableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_binariesTableWidget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
+    m_binariesTableWidget->setHorizontalHeaderLabels(labels);
 
-    this -> insertBinariesInTree();
+    this->insertBinariesInTree();
 
-    m_QEMUImgLabel = new QLabel(tr("QEMU img binary path"));
-    m_QEMUImgPathLineEdit = new QLineEdit();
+    m_QEMUImgLabel = new QLabel(tr("QEMU img binary path"), this);
+    m_QEMUImgPathLineEdit = new QLineEdit(this);
 
-    m_searchQEMUImgToolButton = new QToolButton();
-    m_searchQEMUImgToolButton -> setToolTip(tr("Find qemu-img binary"));
-    m_searchQEMUImgToolButton -> setToolTipDuration(3000);
-    m_searchQEMUImgToolButton -> setIcon(QIcon::fromTheme("edit-find",
+    m_searchQEMUImgToolButton = new QToolButton(this);
+    m_searchQEMUImgToolButton->setToolTip(tr("Find qemu-img binary"));
+    m_searchQEMUImgToolButton->setToolTipDuration(3000);
+    m_searchQEMUImgToolButton->setIcon(QIcon::fromTheme("edit-find",
                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
     connect(m_searchQEMUImgToolButton, &QAbstractButton::clicked,
             this, &ConfigWindow::findQemuImgBinary);
 
     m_binaryLabelLayout = new QHBoxLayout();
-    m_binaryLabelLayout -> setAlignment(Qt::AlignLeft);
-    m_binaryLabelLayout -> addWidget(m_findBinaryLabel);
+    m_binaryLabelLayout->setAlignment(Qt::AlignLeft);
+    m_binaryLabelLayout->addWidget(m_findBinaryLabel);
 
     m_binaryLayout = new QHBoxLayout();
-    m_binaryLayout -> setAlignment(Qt::AlignCenter);
-    m_binaryLayout -> addWidget(m_binaryPathLineEdit);
-    m_binaryLayout -> addWidget(m_binariesPathToolButton);
-    m_binaryLayout -> addWidget(m_searchBinariesToolButton);
+    m_binaryLayout->setAlignment(Qt::AlignCenter);
+    m_binaryLayout->addWidget(m_binaryPathLineEdit);
+    m_binaryLayout->addWidget(m_binariesPathToolButton);
+    m_binaryLayout->addWidget(m_searchBinariesToolButton);
 
     m_QEMUImgLayout = new QVBoxLayout();
-    m_QEMUImgLayout -> setAlignment(Qt::AlignLeft);
-    m_QEMUImgLayout -> addWidget(m_QEMUImgLabel);
-    m_QEMUImgLayout -> addWidget(m_QEMUImgPathLineEdit);
-    m_QEMUImgLayout -> addWidget(m_searchQEMUImgToolButton);
+    m_QEMUImgLayout->setAlignment(Qt::AlignLeft);
+    m_QEMUImgLayout->addWidget(m_QEMUImgLabel);
+    m_QEMUImgLayout->addWidget(m_QEMUImgPathLineEdit);
+    m_QEMUImgLayout->addWidget(m_searchQEMUImgToolButton);
 
     m_QEMULayout = new QVBoxLayout();
-    m_QEMULayout -> addItem(m_binaryLabelLayout);
-    m_QEMULayout -> addItem(m_binaryLayout);
-    m_QEMULayout -> addWidget(m_binariesTableWidget);
-    m_QEMULayout -> addItem(m_QEMUImgLayout);
+    m_QEMULayout->addItem(m_binaryLabelLayout);
+    m_QEMULayout->addItem(m_binaryLayout);
+    m_QEMULayout->addWidget(m_binariesTableWidget);
+    m_QEMULayout->addItem(m_QEMUImgLayout);
 
     m_QEMUPageWidget = new QWidget(this);
-    m_QEMUPageWidget -> setLayout(m_QEMULayout);
+    m_QEMUPageWidget->setLayout(m_QEMULayout);
 }
 
 /**
@@ -453,22 +442,22 @@ void ConfigWindow::createQEMUPage() {
  *
  * Insert all the QEMU binaries into the QTableWidget
  */
-void ConfigWindow::insertBinariesInTree() {
+void ConfigWindow::insertBinariesInTree()
+{
+    this->m_binariesTableWidget->clearContents();
+    this->m_binariesTableWidget->setRowCount(0);
 
-    this -> m_binariesTableWidget -> clearContents();
-    this -> m_binariesTableWidget -> setRowCount(0);
-
-    QMapIterator<QString, QString> iterator(this -> m_QEMUObject -> QEMUBinaries());
+    QMapIterator<QString, QString> iterator(this->m_QEMUObject->QEMUBinaries());
     while (iterator.hasNext()) {
         iterator.next();
 
-        this -> m_binariesTableWidget -> insertRow(this -> m_binariesTableWidget -> rowCount());
+        this->m_binariesTableWidget->insertRow(this->m_binariesTableWidget->rowCount());
 
         QTableWidgetItem *binaryItem = new QTableWidgetItem(iterator.key());
-        this -> m_binariesTableWidget -> setItem(this -> m_binariesTableWidget -> rowCount()-1, 0, binaryItem);
+        this->m_binariesTableWidget->setItem(this->m_binariesTableWidget->rowCount()-1, 0, binaryItem);
 
         binaryItem = new QTableWidgetItem(iterator.value());
-        this -> m_binariesTableWidget -> setItem(this -> m_binariesTableWidget -> rowCount()-1, 1, binaryItem);
+        this->m_binariesTableWidget->setItem(this->m_binariesTableWidget->rowCount()-1, 1, binaryItem);
     }
 }
 
@@ -478,13 +467,12 @@ void ConfigWindow::insertBinariesInTree() {
  *
  * Indicate if the radios referred to the update section are enabled or disabled
  */
-void ConfigWindow::toggleUpdate(bool updateState) {
-
-    this -> m_updatesGroup -> setEnabled(updateState);
-    this -> m_stableReleaseRadio -> setEnabled(updateState);
-    this -> m_betaReleaseRadio -> setEnabled(updateState);
-    this -> m_developmentRelaseRadio -> setEnabled(updateState);
-
+void ConfigWindow::toggleUpdate(bool updateState)
+{
+    this->m_updatesGroup->setEnabled(updateState);
+    this->m_stableReleaseRadio->setEnabled(updateState);
+    this->m_betaReleaseRadio->setEnabled(updateState);
+    this->m_developmentRelaseRadio->setEnabled(updateState);
 }
 
 /**
@@ -493,12 +481,11 @@ void ConfigWindow::toggleUpdate(bool updateState) {
  *
  * Select stable version for the QtEmu release chanel
  */
-void ConfigWindow::pushStableVersion(bool release){
-
+void ConfigWindow::pushStableVersion(bool release)
+{
     if (release) {
-        this -> m_releaseString = "stable";
+        this->m_releaseString = "stable";
     }
-
 }
 
 /**
@@ -507,12 +494,11 @@ void ConfigWindow::pushStableVersion(bool release){
  *
  * Select beta version for the QtEmu release chanel
  */
-void ConfigWindow::pushBetaVersion(bool release){
-
+void ConfigWindow::pushBetaVersion(bool release)
+{
     if (release) {
-        this -> m_releaseString = "beta";
+        this->m_releaseString = "beta";
     }
-
 }
 
 /**
@@ -521,12 +507,11 @@ void ConfigWindow::pushBetaVersion(bool release){
  *
  * Select development version for the QtEmu release chanel
  */
-void ConfigWindow::pushDevelopmentVersion(bool release){
-
+void ConfigWindow::pushDevelopmentVersion(bool release)
+{
     if (release) {
-        this -> m_releaseString = "alpha";
+        this->m_releaseString = "alpha";
     }
-
 }
 
 /**
@@ -535,11 +520,12 @@ void ConfigWindow::pushDevelopmentVersion(bool release){
  *
  * Set the language label
  */
-void ConfigWindow::setLanguageLabel(QString language){
+void ConfigWindow::setLanguageLabel(QString language)
+{
     QString description = tr("Language") + ": ";
     description.append(language);
 
-    this -> m_languageDescription -> setText(description);
+    this->m_languageDescription->setText(description);
 }
 
 /**
@@ -548,23 +534,24 @@ void ConfigWindow::setLanguageLabel(QString language){
  *
  * Set the name of the translator
  */
-void ConfigWindow::setAuthorsLabel(int languagePosition){
+void ConfigWindow::setAuthorsLabel(int languagePosition)
+{
     QString authors = tr("Authors") + ": ";
 
     switch (languagePosition) {
         case 0:
             authors.append(tr("QtEmu Developers"));
-            this -> m_languageISOCode = "en";
-            this -> m_languagePos = 0;
+            this->m_languageISOCode = "en";
+            this->m_languagePos = 0;
             break;
         default:
             authors.append(tr("Unknown author"));
-            this -> m_languageISOCode = "en";
-            this -> m_languagePos = 0;
+            this->m_languageISOCode = "en";
+            this->m_languagePos = 0;
             break;
     }
 
-    this -> m_languageAuthors -> setText(authors);
+    this->m_languageAuthors->setText(authors);
 }
 
 /**
@@ -574,14 +561,14 @@ void ConfigWindow::setAuthorsLabel(int languagePosition){
  * Activate or deactivate the server and port for
  * QtEmu
  */
-void ConfigWindow::toggleServerPort(int proxyOption){
-
+void ConfigWindow::toggleServerPort(int proxyOption)
+{
     if (proxyOption == 0) {
-        this -> m_serverNameProxy -> setEnabled(false);
-        this -> m_portProxy -> setEnabled(false);
+        this->m_serverNameProxy->setEnabled(false);
+        this->m_portProxy->setEnabled(false);
     } else {
-        this -> m_serverNameProxy -> setEnabled(true);
-        this -> m_portProxy -> setEnabled(true);
+        this->m_serverNameProxy->setEnabled(true);
+        this->m_portProxy->setEnabled(true);
     }
 }
 
@@ -591,16 +578,16 @@ void ConfigWindow::toggleServerPort(int proxyOption){
  *
  * Establish user and password for proxy settings
  */
-void ConfigWindow::toggleAuth(bool authState){
+void ConfigWindow::toggleAuth(bool authState)
+{
 
     if (!authState) {
-        this -> m_userProxy -> setText("");
-        this -> m_passwordProxy -> setText("");
+        this->m_userProxy->setText("");
+        this->m_passwordProxy->setText("");
     }
 
-    this -> m_userProxy -> setEnabled(authState);
-    this -> m_passwordProxy -> setEnabled(authState);
-
+    this->m_userProxy->setEnabled(authState);
+    this->m_passwordProxy->setEnabled(authState);
 }
 
 /**
@@ -609,17 +596,16 @@ void ConfigWindow::toggleAuth(bool authState){
  * Establish the path where the machines are
  * going to be located
  */
-void ConfigWindow::setMachinePath(){
-
-    this -> m_machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
-                                                              QDir::homePath(),
-                                                              QFileDialog::ShowDirsOnly |
-                                                              QFileDialog::DontResolveSymlinks
-                                                              );
-    if ( !m_machinePath.isEmpty() ) {
-        this -> m_machinePathLineEdit -> setText(QDir::toNativeSeparators(m_machinePath));
+void ConfigWindow::setMachinePath()
+{
+    this->m_machinePath = QFileDialog::getExistingDirectory(this, tr("Select a folder for Machines"),
+                                                            QDir::homePath(),
+                                                            QFileDialog::ShowDirsOnly |
+                                                            QFileDialog::DontResolveSymlinks
+                                                            );
+    if (!m_machinePath.isEmpty()) {
+        this->m_machinePathLineEdit->setText(QDir::toNativeSeparators(m_machinePath));
     }
-
 }
 
 /**
@@ -628,24 +614,19 @@ void ConfigWindow::setMachinePath(){
  * Action trigerred when the button cancel is pressed.
  * Load the settings saved before by the user.
  */
-void ConfigWindow::cancelButton() {
-
-    this -> loadSettings();
-
-    this -> m_searchBinariesToolButton -> setEnabled(false);
+void ConfigWindow::cancelButton()
+{
+    this->loadSettings();
+    this->m_searchBinariesToolButton->setEnabled(false);
 
     QSettings settings;
     settings.beginGroup("Configuration");
-
-    this -> m_QEMUObject -> setQEMUBinaries(settings.value("qemuBinaryPath", "").toString());
-
+    this->m_QEMUObject->setQEMUBinaries(settings.value("qemuBinaryPath", "").toString());
     settings.endGroup();
 
-    this -> insertBinariesInTree();
-
-    this -> hide();
-
-    this -> m_optionsListWidget -> setCurrentRow(0);
+    this->insertBinariesInTree();
+    this->hide();
+    this->m_optionsListWidget->setCurrentRow(0);
 
     qDebug() << "Config window canceled";
 }
@@ -655,7 +636,8 @@ void ConfigWindow::cancelButton() {
  *
  * Load the QtEmu settings
  */
-void ConfigWindow::saveSettings(){
+void ConfigWindow::saveSettings()
+{
     QSettings settings;
 
     if (!settings.isWritable()) {
@@ -665,27 +647,27 @@ void ConfigWindow::saveSettings(){
     settings.beginGroup("Configuration");
 
     // General
-    settings.setValue("machinePath", this -> m_machinePathLineEdit -> text());
+    settings.setValue("machinePath", this->m_machinePathLineEdit->text());
 
     // Update
-    settings.setValue("update", this -> m_updateCheckBox -> isChecked());
-    settings.setValue("release", this -> m_releaseString);
+    settings.setValue("update", this->m_updateCheckBox->isChecked());
+    settings.setValue("release", this->m_releaseString);
 
     // Language
-    settings.setValue("language", this -> m_languageISOCode);
-    settings.setValue("languagePos", this -> m_languagePos);
+    settings.setValue("language", this->m_languageISOCode);
+    settings.setValue("languagePos", this->m_languagePos);
 
     // Start page
-    settings.setValue("startCommand", this -> m_beforeStart -> toPlainText());
-    settings.setValue("afterCommand", this -> m_afterExit -> toPlainText());
+    settings.setValue("startCommand", this->m_beforeStart->toPlainText());
+    settings.setValue("afterCommand", this->m_afterExit->toPlainText());
 
     // Proxy
-    settings.setValue("proxyType", this -> m_proxyOptions -> currentIndex());
-    settings.setValue("proxyHostname", this -> m_serverNameProxy -> text());
-    settings.setValue("proxyPort", this -> m_portProxy -> text());
-    settings.setValue("auth", this -> m_useAuth -> isChecked());
-    settings.setValue("proxyUser", this -> m_userProxy -> text());
-    settings.setValue("proxyPassword", this -> m_passwordProxy -> text().toUtf8().toBase64());
+    settings.setValue("proxyType", this->m_proxyOptions->currentIndex());
+    settings.setValue("proxyHostname", this->m_serverNameProxy->text());
+    settings.setValue("proxyPort", this->m_portProxy->text());
+    settings.setValue("auth", this->m_useAuth->isChecked());
+    settings.setValue("proxyUser", this->m_userProxy->text());
+    settings.setValue("proxyPassword", this->m_passwordProxy->text().toUtf8().toBase64());
 
     // QEMU
     settings.setValue("qemuBinaryPath", this->m_binaryPathLineEdit->text());
@@ -694,7 +676,7 @@ void ConfigWindow::saveSettings(){
     settings.endGroup();
     settings.sync();
 
-    this -> hide();
+    this->hide();
 
     qDebug() << "ConfigWindow: settings saved";
 }
@@ -704,47 +686,47 @@ void ConfigWindow::saveSettings(){
  *
  * Load the QtEmu settings
  */
-void ConfigWindow::loadSettings(){
+void ConfigWindow::loadSettings()
+{
     QSettings settings;
     settings.beginGroup("Configuration");
 
     // General
-    this -> m_machinePathLineEdit -> setText(settings.value("machinePath", QDir::homePath()).toString());
+    this->m_machinePathLineEdit->setText(settings.value("machinePath", QDir::homePath()).toString());
 
     // Update
-    this -> m_updateCheckBox -> setChecked(settings.value("update", true).toBool());
-    this -> m_releaseString = settings.value("release", "stable").toString();
+    this->m_updateCheckBox->setChecked(settings.value("update", true).toBool());
+    this->m_releaseString = settings.value("release", "stable").toString();
 
-    if (this -> m_releaseString == "alpha") {
-        this -> m_stableReleaseRadio -> setChecked(true);
-    } else if (this -> m_releaseString == "beta") {
-        this -> m_betaReleaseRadio -> setChecked(true);
+    if (this->m_releaseString == "alpha") {
+        this->m_stableReleaseRadio->setChecked(true);
+    } else if (this->m_releaseString == "beta") {
+        this->m_betaReleaseRadio->setChecked(true);
     } else {
-        this -> m_stableReleaseRadio -> setChecked(true);
+        this->m_stableReleaseRadio->setChecked(true);
     }
 
     // Language
-    this -> m_languagesListView -> setCurrentRow(settings.value("languagePos", 0).toInt());
+    this->m_languagesListView->setCurrentRow(settings.value("languagePos", 0).toInt());
 
     // Start page
-    this -> m_beforeStart -> setPlainText(settings.value("startCommand", "").toString());
-    this -> m_afterExit -> setPlainText(settings.value("afterCommand", "").toString());
+    this->m_beforeStart->setPlainText(settings.value("startCommand", "").toString());
+    this->m_afterExit->setPlainText(settings.value("afterCommand", "").toString());
 
     // Proxy
-    this -> m_proxyOptions -> setCurrentIndex(settings.value("proxyType", 0).toInt());
-    this -> m_serverNameProxy -> setText(settings.value("proxyHostname", "").toString());
-    this -> m_portProxy -> setText(settings.value("proxyPort", "").toString());
-    this -> m_useAuth -> setChecked(settings.value("auth", false).toBool());
-    this -> m_userProxy -> setText(settings.value("proxyUser", "").toString());
-    this -> m_passwordProxy -> setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
-
-    this -> toggleServerPort(settings.value("proxyType", 0).toInt());
-    this -> toggleAuth(this -> m_useAuth);
+    this->m_proxyOptions->setCurrentIndex(settings.value("proxyType", 0).toInt());
+    this->m_serverNameProxy->setText(settings.value("proxyHostname", "").toString());
+    this->m_portProxy->setText(settings.value("proxyPort", "").toString());
+    this->m_useAuth->setChecked(settings.value("auth", false).toBool());
+    this->m_userProxy->setText(settings.value("proxyUser", "").toString());
+    this->m_passwordProxy->setText(QByteArray::fromBase64(settings.value("proxyPassword").toByteArray()));
+    this->toggleServerPort(settings.value("proxyType", 0).toInt());
+    this->toggleAuth(this->m_useAuth);
 
     // QEMU
     // TODO: default value for different os
-    this -> binaryPathChanged(settings.value("qemuBinaryPath", "").toString());
-    this -> m_binaryPathLineEdit -> setText(settings.value("qemuBinaryPath", "").toString());
+    this->binaryPathChanged(settings.value("qemuBinaryPath", "").toString());
+    this->m_binaryPathLineEdit->setText(settings.value("qemuBinaryPath", "").toString());
     this->m_QEMUImgPathLineEdit->setText(settings.value("qemuImgBinaryPath", "").toString());
 
     settings.endGroup();
@@ -755,17 +737,17 @@ void ConfigWindow::loadSettings(){
  *
  * Set the path for QEMU binaries
  */
-void ConfigWindow::setPathBinaries() {
-
+void ConfigWindow::setPathBinaries()
+{
     QString binariesPath = QFileDialog::getExistingDirectory(this, tr("Select a folder for QEMU binaries"),
                                                              QDir::homePath(),
                                                              QFileDialog::ShowDirsOnly |
                                                              QFileDialog::DontResolveSymlinks
                                                              );
 
-    if ( ! binariesPath.isEmpty()) {
-        this -> m_binaryPathLineEdit -> setText(binariesPath);
-        this -> m_searchBinariesToolButton -> setEnabled(true);
+    if (!binariesPath.isEmpty()) {
+        this->m_binaryPathLineEdit->setText(binariesPath);
+        this->m_searchBinariesToolButton->setEnabled(true);
     }
 }
 
@@ -774,11 +756,10 @@ void ConfigWindow::setPathBinaries() {
  *
  * Find QEMU binaries in the specific folder
  */
-void ConfigWindow::findBinaries() {
-
-    this -> m_QEMUObject -> setQEMUBinaries(this -> m_binaryPathLineEdit -> text());
-
-    this -> insertBinariesInTree();
+void ConfigWindow::findBinaries()
+{
+    this->m_QEMUObject->setQEMUBinaries(this->m_binaryPathLineEdit->text());
+    this->insertBinariesInTree();
 }
 
 /**
@@ -788,13 +769,18 @@ void ConfigWindow::findBinaries() {
  * If the input are empty, the button change to disabled
  * If the input are fill, the button change to enabled
  */
-void ConfigWindow::binaryPathChanged(const QString binaryPath) {
-    this -> m_binariesTableWidget -> clearContents();
-    this -> m_binariesTableWidget -> setRowCount(0);
-
-    this -> m_searchBinariesToolButton -> setEnabled(!binaryPath.isEmpty());
+void ConfigWindow::binaryPathChanged(const QString binaryPath)
+{
+    this->m_binariesTableWidget->clearContents();
+    this->m_binariesTableWidget->setRowCount(0);
+    this->m_searchBinariesToolButton->setEnabled(!binaryPath.isEmpty());
 }
 
+/**
+ * @brief Find qemu-img binary
+ *
+ * Find qemu-img binary in the specific folder
+ */
 void ConfigWindow::findQemuImgBinary() {
     this->m_QEMUImgPathLineEdit->clear();
 
@@ -803,7 +789,7 @@ void ConfigWindow::findQemuImgBinary() {
                                                        QDir::homePath()
                                                        );
 
-    if ( ! qemuImgPath.isEmpty()) {
-        this -> m_QEMUImgPathLineEdit -> setText(qemuImgPath);
+    if (!qemuImgPath.isEmpty()) {
+        this->m_QEMUImgPathLineEdit->setText(qemuImgPath);
     }
 }
