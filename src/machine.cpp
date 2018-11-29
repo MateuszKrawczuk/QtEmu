@@ -21,6 +21,12 @@
 // Local
 #include "machine.h"
 
+/**
+ * @brief Machine object
+ * @param parent, parent widget
+ *
+ * This is the heart of the application
+ */
 Machine::Machine(QObject *parent) : QObject(parent)
 {
     this->m_machineProcess = new QProcess(this);
@@ -474,7 +480,7 @@ QList<Media> Machine::getMedia() const
  */
 void Machine::addMedia(const Media value)
 {
-    this -> media.append(value);
+    this->media.append(value);
 }
 
 /**
@@ -515,6 +521,30 @@ Boot Machine::getBoot() const {
  */
 void Machine::setBoot(const Boot &boot) {
     m_boot = boot;
+}
+
+/**
+ * @brief Get the host sound system
+ * @return the host sound system
+ *
+ * Get the host sound system
+ * In GNU/Linux: Alsa, pa, etc...
+ * In Windows: wav...
+ */
+QString Machine::getHostSoundSystem() const
+{
+    return hostSoundSystem;
+}
+
+/**
+ * @brief Set the host sound system
+ * @param value, new host sound system
+ *
+ * Set the host sound system
+ */
+void Machine::setHostSoundSystem(const QString &value)
+{
+    hostSoundSystem = value;
 }
 
 // Methods
@@ -600,7 +630,6 @@ void Machine::removeAllAccelerators()
 QString Machine::getAudioLabel()
 {
     QHash<QString, QString> soundCardsHash = SystemUtils::getSoundCards();
-
     QStringList audioCards = this->audio;
     for(int i = 0; i < audioCards.size(); ++i) {
         audioCards.replace(i, soundCardsHash.value(audioCards.at(i)));
@@ -617,15 +646,13 @@ QString Machine::getAudioLabel()
  * Get all the accelerators separated by commas
  * Ex: kvm,tcg
  */
-QString Machine::getAcceleratorLabel() {
-
+QString Machine::getAcceleratorLabel()
+{
     QHash<QString, QString> acceleratorsHash = SystemUtils::getAccelerators();
-
-    QStringList accel = this -> accelerator;
+    QStringList accel = this->accelerator;
     for(int i = 0; i < accel.size(); ++i) {
         accel.replace(i, acceleratorsHash.value(accel.at(i)));
     }
-
     QString acceleratorLabel = accel.join(",");
 
     return acceleratorLabel;
@@ -636,29 +663,29 @@ QString Machine::getAcceleratorLabel() {
  *
  * Run the machine in QEMU process
  */
-void Machine::runMachine()
+void Machine::runMachine(QEMU *QEMUGlobalObject)
 {
+    // QEMU BEFORE COMMANDS
     QStringList args = this->generateMachineCommand();
 
     QString program;
-
     #ifdef Q_OS_LINUX
-    program = "qemu-system-x86_64";
+    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
     #endif
     #ifdef Q_OS_WIN
-    // TODO: Control windows execution
+    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64.exe"));
     #endif
     #ifdef Q_OS_MACOS
-    // TODO: Control MacOS execution
+    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
     #endif
     #ifdef Q_OS_FREEBSD
-    // TODO: Control FreeBSD execution
+    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
     #endif
 
-    // TODO
-    //m_machineProcess -> setProcessEnvironment(buildEnvironment());
-
-    m_machineProcess -> start(program, args);
+    if (program.isEmpty()) {
+        // SHOW MESSAGE
+    }
+    m_machineProcess->start(program, args);
 }
 
 /**
@@ -712,8 +739,13 @@ void Machine::pauseMachine()
  */
 void Machine::readMachineStandardOut()
 {
-    // TODO: Show in a window
-    qDebug() << "Standard Out: " << this->m_machineProcess->readAllStandardOutput();
+    /*m_machineStandardOutMessageBox = new QMessageBox();
+    m_machineStandardOutMessageBox->setWindowTitle(tr("QEMU - Standard Out"));
+    m_machineStandardOutMessageBox->setIcon(QMessageBox::Information);
+    m_machineStandardOutMessageBox->setText(this->m_machineProcess->readAllStandardOutput());
+    m_machineStandardOutMessageBox->exec();*/
+
+    qDebug() << "Standard out " << this->m_machineProcess->readAllStandardOutput();
 }
 
 /**
@@ -723,16 +755,31 @@ void Machine::readMachineStandardOut()
  */
 void Machine::readMachineErrorOut()
 {
-    // TODO: Show in a window
-    qDebug() << "Error Out: " <<  this->m_machineProcess->readAllStandardError();
+    /*m_machineErrorOutMessageBox = new QMessageBox();
+    m_machineStandardOutMessageBox->setWindowTitle(tr("QEMU - Error Out"));
+    m_machineStandardOutMessageBox->setIcon(QMessageBox::Critical);
+    m_machineStandardOutMessageBox->setText(this->m_machineProcess->readAllStandardError());
+    m_machineStandardOutMessageBox->exec();*/
+
+    qDebug() << "Standard error " << this->m_machineProcess->readAllStandardError();
 }
 
+/**
+ * @brief Machine started
+ *
+ * Emit a signal when the machine is started
+ */
 void Machine::machineStarted()
 {
     this->state = Machine::Started;
     emit(machineStateChangedSignal(Machine::Started));
 }
 
+/**
+ * @brief Machine finished
+ *
+ * Emit a signal when the machine is finished
+ */
 void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     qDebug() << "Exit code: " << exitCode << " exit status: " << exitStatus;
@@ -740,39 +787,30 @@ void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus)
     emit(machineStateChangedSignal(Machine::Stopped));
 }
 
-QString Machine::getHostSoundSystem() const
-{
-    return hostSoundSystem;
-}
-
-void Machine::setHostSoundSystem(const QString &value)
-{
-    hostSoundSystem = value;
-}
-
-QProcessEnvironment Machine::buildEnvironment()
-{
-
-    // TODO: Implement Windows and MacOS
-    QProcessEnvironment env = m_machineProcess->processEnvironment();
-    env.insert("QEMU_AUDIO_DRV", "alsa");
-
-    return env;
-}
-
+/**
+ * @brief Generate the machine command
+ * @return List with all the commands
+ *
+ * Generate the machine command to be executed in QEMU
+ */
 QStringList Machine::generateMachineCommand()
 {
-    // TODO: Add qemu before commands
-
     QStringList qemuCommand;
 
+    #ifdef Q_OS_WIN
+    //qemuCommand << "-monitor" << QString("tcp:%1:%2,server,nowait")
+    //                             .arg(settings.value("", "localhost").toString())
+    //                             .arg(settings.value("", 6000).toInt() + Embedded_Display_Port);
+    #else
     qemuCommand << "-monitor" << "stdio";
+    #endif
 
     qemuCommand << "-name";
     qemuCommand << this->name;
 
+    QString uuid(this->uuid);
     qemuCommand << "-uuid";
-    qemuCommand << this->uuid.remove("{").remove("}");
+    qemuCommand << uuid.remove("{").remove("}");
 
     QString accelerators;
     bool firstAccel = true;
@@ -813,7 +851,6 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-vga";
     qemuCommand << this->GPUType;
 
-    // CPU
     qemuCommand << "-cpu";
     qemuCommand << this->CPUType;
 
@@ -835,10 +872,10 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
-    QString pipe = this->path.append(QDir::toNativeSeparators("/")).append(this->name);
-
+    QString pipe = this->path;
+    pipe.append(QDir::toNativeSeparators("/")).append(this->name).append(".pid");
     qemuCommand << "-pidfile";
-    qemuCommand << pipe.append(".pid");
+    qemuCommand << pipe;
 
     // Network
     if (this->useNetwork) {
@@ -857,18 +894,31 @@ QStringList Machine::generateMachineCommand()
     //qemuCommand << QString("file=").append(diskObject["path"].toString()).append(",index=0,media=disk");
 
     // CDROM TODO, for test not implemented yet :'(
-    qemuCommand << "-cdrom";
-    qemuCommand << "/home/xexio/Downloads/torrent/archlinux-2018.10.01-x86_64.iso";
+    //qemuCommand << "-cdrom";
+    //qemuCommand << "/home/xexio/Downloads/torrent/archlinux-2018.10.01-x86_64.iso";
 
     qDebug() << "Command " << qemuCommand;
 
     return qemuCommand;
 }
 
+/**
+ * @brief Save the machine
+ *
+ * Save the machine data in the file of the machine
+ */
 void Machine::saveMachine()
 {
     QFile machineFile(this->configPath);
-    machineFile.open(QIODevice::WriteOnly); // TODO: Check if open the file fails
+    if (!machineFile.open(QFile::WriteOnly)) {
+        /*m_saveMachineMessageBox = new QMessageBox();
+        m_saveMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_saveMachineMessageBox->setIcon(QMessageBox::Critical);
+        m_saveMachineMessageBox->setText(tr("<p>Cannot save the machine</p>"
+                                            "<p>The file with the machine configuration are not writable</p>"));
+        m_saveMachineMessageBox->exec();*/
+        return;
+    }
 
     QJsonObject machineJSONObject;
     machineJSONObject["name"]        = this->name;
@@ -880,7 +930,6 @@ void Machine::saveMachine()
     machineJSONObject["path"]        = this->path;
     machineJSONObject["uuid"]        = this->uuid;
     machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;
-    // TODO: Implement another types
     machineJSONObject["binary"] = "qemu-system-x86_64";
 
     QJsonObject cpu;
@@ -942,14 +991,23 @@ void Machine::saveMachine()
  */
 void Machine::insertMachineConfigFile()
 {
-    // TODO: Get the data directory path from QSettings
-    // Open the file
-    QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
-
+    QSettings settings;
+    settings.beginGroup("DataFolder");
+    QString dataDirectoryPath = settings.value("QtEmuData",
+                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
+    settings.endGroup();
     QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
 
     QFile machinesFile(qtemuConfig);
-    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+    if (!machinesFile.open(QFile::ReadWrite)) {
+        /*m_machineConfigMessageBox = new QMessageBox();
+        m_machineConfigMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_machineConfigMessageBox->setIcon(QMessageBox::Critical);
+        m_machineConfigMessageBox->setText(tr("<p>Cannot save the machine</p>"
+                                              "<p>The file with the machine configuration are not writable</p>"));
+        m_machineConfigMessageBox->exec();*/
+        return;
+    }
 
     // Read all data included in the file
     QByteArray machinesData = machinesFile.readAll();
@@ -977,6 +1035,11 @@ void Machine::insertMachineConfigFile()
     machinesFile.close();
 }
 
+/**
+ * @brief Media object
+ *
+ * Media object for hdd, cdrom and floppy
+ */
 Media::Media()
 {
     qDebug() << "Media object created";
@@ -1168,16 +1231,33 @@ void Media::setIO(const QString &IO)
     m_IO = IO;
 }
 
+/**
+ * @brief Get the uuid of the media
+ * @return the uuid
+ *
+ * Get the uuid of the media
+ */
 QUuid Media::uuid() const
 {
     return m_uuid;
 }
 
+/**
+ * @brief Set the uuid of the media
+ * @param uuid, set the new uuid
+ *
+ * Set the uuid of the media
+ */
 void Media::setUuid(const QUuid &uuid)
 {
     m_uuid = uuid;
 }
 
+/**
+ * @brief Boot object
+ *
+ * Boot object
+ */
 Boot::Boot()
 {
     qDebug() << "Boot object created";
@@ -1188,66 +1268,141 @@ Boot::~Boot()
     qDebug() << "Boot object destroyed";
 }
 
+/**
+ * @brief Get if the boot menu is enabled
+ * @return true if boot menu is enabled
+ *
+ * Get if the boot menu is enabled
+ */
 bool Boot::bootMenu() const
 {
     return m_bootMenu;
 }
 
+/**
+ * @brief Enable the boot menu
+ * @param bootMenu, true enable the boot menu
+ *
+ * Enable the boot menu
+ */
 void Boot::setBootMenu(bool bootMenu)
 {
     m_bootMenu = bootMenu;
 }
 
+/**
+ * @brief Get if the kernel boot is enabled
+ * @return true if kernel boot is enabled
+ *
+ * Get if the kernel boot is enabled
+ */
 bool Boot::kernelBootEnabled() const
 {
     return m_kernelBootEnabled;
 }
 
+/**
+ * @brief Enable the kernel boot
+ * @param kernelBootEnabled, true enable the kernel boot
+ *
+ * Enable the kernel boot
+ */
 void Boot::setKernelBootEnabled(bool kernelBootEnabled)
 {
     m_kernelBootEnabled = kernelBootEnabled;
 }
 
+/**
+ * @brief Get the kernel path
+ *
+ * Get the kernel path
+ */
 QString Boot::kernelPath() const
 {
     return m_kernelPath;
 }
 
+/**
+ * @brief Set the kernel path
+ * @param kernelPath, kernel path
+ *
+ * Set the kernel path
+ */
 void Boot::setKernelPath(const QString &kernelPath)
 {
     m_kernelPath = kernelPath;
 }
 
+/**
+ * @brief Get the initrd path
+ *
+ * Get the initrd path
+ */
 QString Boot::initrdPath() const
 {
     return m_initrdPath;
 }
 
+/**
+ * @brief Set the initrd path
+ * @param initrdPath, initrd path
+ *
+ * Set the initrd path
+ */
 void Boot::setInitrdPath(const QString &initrdPath)
 {
     m_initrdPath = initrdPath;
 }
 
+/**
+ * @brief Get the kernel args
+ *
+ * Get the kernel args
+ */
 QString Boot::kernelArgs() const
 {
     return m_kernelArgs;
 }
 
+/**
+ * @brief Set the kernel args
+ * @param kernelArgs, kernel args
+ *
+ * Set the kernel args
+ */
 void Boot::setKernelArgs(const QString &kernelArgs)
 {
     m_kernelArgs = kernelArgs;
 }
 
+/**
+ * @brief Get the boot order
+ * @return list with the boot order
+ *
+ * Get the boot order
+ */
 QStringList Boot::bootOrder() const
 {
     return m_bootOrder;
 }
 
+/**
+ * @brief Set the boot order
+ * @param bootOrder, list with the new boot order
+ *
+ * Set the boot order
+ */
 void Boot::setBootOrder(const QStringList &bootOrder)
 {
     m_bootOrder = bootOrder;
 }
 
+/**
+ * @brief Add one option to the boot order
+ * @param bootOrder, option to be added
+ *
+ * Add one option to the boot order
+ */
 void Boot::addBootOrder(const QString bootOrder)
 {
     if (!this->m_bootOrder.contains(bootOrder)) {
@@ -1255,6 +1410,12 @@ void Boot::addBootOrder(const QString bootOrder)
     }
 }
 
+/**
+ * @brief Remove one option in the boot order
+ * @param bootOrder, option to be removed
+ *
+ * Remove one option in the boot order
+ */
 void Boot::removeBootOrder(const QString bootOrder)
 {
     if (this->m_bootOrder.contains(bootOrder)) {
@@ -1262,6 +1423,11 @@ void Boot::removeBootOrder(const QString bootOrder)
     }
 }
 
+/**
+ * @brief Remove all options in the boot order
+ *
+ * Remove all options in the boot order
+ */
 void Boot::removeAllBootOrder()
 {
     this->m_bootOrder.clear();

@@ -21,13 +21,20 @@
 // Local
 #include "machineconfighardwaretabs.h"
 
+/**
+ * @brief Tab with informacion about the machine CPU options
+ * @param machine, machine to be configured
+ * @param parent, parent widget
+ *
+ * Tab with informacion about the machine CPU options
+ */
 ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
                                        QWidget *parent) : QWidget(parent)
 {
-    m_CPUTypeLabel = new QLabel(tr("CPU Type") + ":");
+    m_CPUTypeLabel = new QLabel(tr("CPU Type") + ":", this);
     m_CPUTypeLabel->setWordWrap(true);
 
-    m_CPUType = new QComboBox();
+    m_CPUType = new QComboBox(this);
     SystemUtils::setCPUTypesx86(m_CPUType);
     int cpuTypeIndex = m_CPUType->findData(machine->getCPUType());
     if (cpuTypeIndex != -1) {
@@ -43,7 +50,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_CPUCountLabel = new QLabel(tr("CPU Count") + ":", this);
     m_CPUCountLabel->setWordWrap(true);
 
-    m_CPUCountSpinBox = new QSpinBox();
+    m_CPUCountSpinBox = new QSpinBox(this);
     m_CPUCountSpinBox->setMinimum(1);
     m_CPUCountSpinBox->setMaximum(255);
     m_CPUCountSpinBox->setValue(machine->getCPUCount());
@@ -51,7 +58,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_coresSocketLabel = new QLabel(tr("Cores per socket") + ":", this);
     m_coresSocketLabel->setWordWrap(true);
 
-    m_coresSocketSpinBox = new QSpinBox();
+    m_coresSocketSpinBox = new QSpinBox(this);
     m_coresSocketSpinBox->setMinimum(0);
     m_coresSocketSpinBox->setMaximum(255);
     m_coresSocketSpinBox->setValue(machine->getCoresSocket());
@@ -67,7 +74,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_socketCountLabel = new QLabel(tr("Socket count") + ":", this);
     m_socketCountLabel->setWordWrap(true);
 
-    m_socketCountSpinBox = new QSpinBox();
+    m_socketCountSpinBox = new QSpinBox(this);
     m_socketCountSpinBox->setMinimum(0);
     m_socketCountSpinBox->setMaximum(255);
     m_socketCountSpinBox->setValue(machine->getSocketCount());
@@ -75,7 +82,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_threadsCoreLabel = new QLabel(tr("Threads per core") + ":", this);
     m_threadsCoreLabel->setWordWrap(true);
 
-    m_threadsCoreSpinBox = new QSpinBox();
+    m_threadsCoreSpinBox = new QSpinBox(this);
     m_threadsCoreSpinBox->setMinimum(0);
     m_threadsCoreSpinBox->setMaximum(255);
     m_threadsCoreSpinBox->setValue(machine->getThreadsCore());
@@ -91,7 +98,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_maxHotCPULabel = new QLabel(tr("Maximum number of hotpluggable CPUs") + ":", this);
     m_maxHotCPULabel->setWordWrap(false);
 
-    m_maxHotCPUSpinBox = new QSpinBox();
+    m_maxHotCPUSpinBox = new QSpinBox(this);
     m_maxHotCPUSpinBox->setMinimum(0);
     m_maxHotCPUSpinBox->setMaximum(255);
     m_maxHotCPUSpinBox->setValue(machine->getMaxHotCPU());
@@ -108,7 +115,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_CPUSettingsLayout->addItem(m_socketLayout);
     m_CPUSettingsLayout->addItem(m_maxHotCPUsLayout);
 
-    m_CPUSettings = new QGroupBox(tr("CPU Settings"));
+    m_CPUSettings = new QGroupBox(tr("CPU Settings"), this);
     m_CPUSettings->setLayout(m_CPUSettingsLayout);
 
     m_processorLayout = new QVBoxLayout();
@@ -116,7 +123,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_processorLayout->addItem(m_CPUTypeLayout);
     m_processorLayout->addWidget(m_CPUSettings);
 
-    setLayout(m_processorLayout);
+    this->setLayout(m_processorLayout);
 
     qDebug() << "ProcessorConfigTab created";
 }
@@ -126,41 +133,85 @@ ProcessorConfigTab::~ProcessorConfigTab()
     qDebug() << "ProcessorConfigTab destroyed";
 }
 
+/**
+ * @brief Get the CPU type
+ * @return CPU type
+ *
+ * Get the CPU type
+ */
 QString ProcessorConfigTab::getCPUType()
 {
     return this->m_CPUType->currentData().toString();
 }
 
+/**
+ * @brief Get the CPU count
+ * @return CPU count
+ *
+ * Get the CPU count
+ */
 int ProcessorConfigTab::getCPUCount()
 {
     return this->m_CPUCountSpinBox->value();
 }
 
+/**
+ * @brief Get the cores per socket
+ * @return cores per socket
+ *
+ * Get the cores per socket
+ */
 int ProcessorConfigTab::getCoresSocket()
 {
     return this->m_coresSocketSpinBox->value();
 }
 
+/**
+ * @brief Get the socket count
+ * @return socket count
+ *
+ * Get the socket count
+ */
 int ProcessorConfigTab::getSocketCount()
 {
     return this->m_socketCountSpinBox->value();
 }
 
+/**
+ * @brief Get number of threads per core
+ * @return threads per core
+ *
+ * Get number of threads per core
+ */
 int ProcessorConfigTab::getThreadsCore()
 {
     return this->m_threadsCoreSpinBox->value();
 }
 
+/**
+ * @brief Get the maximum number of hotpluggable CPUs
+ * @return maximum number of hotpluggable CPUs
+ *
+ * Get the maximum number of hotpluggable CPUs
+ */
 int ProcessorConfigTab::getMaxHotCPU()
 {
     return this->m_maxHotCPUSpinBox->value();
 }
 
-GraphicsConfigTab::GraphicsConfigTab(Machine *machine, QWidget *parent) : QWidget(parent)
+/**
+ * @brief Tab with the GPU and keyboard
+ * @param machine, machine to be configured
+ * @param parent, parent widget
+ *
+ * Tab with the GPU and keyboard
+ */
+GraphicsConfigTab::GraphicsConfigTab(Machine *machine,
+                                     QWidget *parent) : QWidget(parent)
 {
     m_GPUTypeLabel = new QLabel(tr("GPU Type") + ":", this);
     m_GPUTypeLabel->setWordWrap(true);
-    m_GPUType = new QComboBox();
+    m_GPUType = new QComboBox(this);
     SystemUtils::setGPUTypes(m_GPUType);
     int gpuIndex = m_GPUType->findData(machine->getGPUType());
     if (gpuIndex != -1) {
@@ -169,7 +220,7 @@ GraphicsConfigTab::GraphicsConfigTab(Machine *machine, QWidget *parent) : QWidge
 
     m_keyboardLabel = new QLabel(tr("Keyboard layout") + ":", this);
     m_keyboardLabel->setWordWrap(true);
-    m_keyboard = new QComboBox();
+    m_keyboard = new QComboBox(this);
     SystemUtils::setKeyboardLayout(m_keyboard);
     int keyboardIndex = m_keyboard->findData(machine->getKeyboard());
     if (keyboardIndex != -1) {
@@ -184,7 +235,7 @@ GraphicsConfigTab::GraphicsConfigTab(Machine *machine, QWidget *parent) : QWidge
     m_graphicsLayout->addWidget(m_keyboardLabel, 2, 0, 1, 1);
     m_graphicsLayout->addWidget(m_keyboard,      2, 1, 1, 3);
 
-    setLayout(m_graphicsLayout);
+    this->setLayout(m_graphicsLayout);
 
     qDebug() << "GraphicsConfigTab created";
 }
@@ -194,11 +245,23 @@ GraphicsConfigTab::~GraphicsConfigTab()
     qDebug() << "GraphicsConfigTab destroyed";
 }
 
+/**
+ * @brief Get the GPU type
+ * @return GPU type
+ *
+ * Get the GPU type
+ */
 QString GraphicsConfigTab::getGPUType()
 {
     return this->m_GPUType->currentData().toString();
 }
 
+/**
+ * @brief Get the keyboard layout
+ * @return keyboard layout
+ *
+ * Get the keyboard layout
+ */
 QString GraphicsConfigTab::getKeyboardLayout()
 {
     return this->m_keyboard->currentData().toString();

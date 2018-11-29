@@ -22,8 +22,14 @@
 // Local
 #include "qemu.h"
 
-QEMU::QEMU(QObject *parent) : QObject(parent) {
-
+/**
+ * @brief QEMU object
+ * @param parent, parent widget
+ *
+ * QEMU object with properties of the emulator
+ */
+QEMU::QEMU(QObject *parent) : QObject(parent)
+{
     QSettings settings;
     settings.beginGroup("Configuration");
 
@@ -45,26 +51,39 @@ QEMU::QEMU(QObject *parent) : QObject(parent) {
     qemuBinariesPath = QDir::toNativeSeparators("");
     qemuImgPath = QDir::toNativeSeparators("");
     #endif
-
     settings.endGroup();
     settings.sync();
 
-    this -> setQEMUImgPath(qemuImgPath);
-    this -> setQEMUBinaries(qemuBinariesPath);
+    this->setQEMUImgPath(qemuImgPath);
+    this->setQEMUBinaries(qemuBinariesPath);
 
     qDebug() << "QEMU object created";
 }
 
-QEMU::~QEMU() {
+QEMU::~QEMU()
+{
     qDebug() << "QEMU object destroyed";
 }
 
-QString QEMU::QEMUImgPath() const {
+/**
+ * @brief Get the path of the qemu-img binary
+ * @return path of qemu-img
+ *
+ * Get the path of the qemu-img binary
+ */
+QString QEMU::QEMUImgPath() const
+{
     return m_QEMUImgPath;
 }
 
-void QEMU::setQEMUImgPath(const QString path) {
-
+/**
+ * @brief Set the path of the qemu-img binary
+ * @param path, path of qemu-img
+ *
+ * Set the path of the qemu-img binary
+ */
+void QEMU::setQEMUImgPath(const QString path)
+{
     QString qemuImgPath;
     #ifdef Q_OS_LINUX
     qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
@@ -73,10 +92,10 @@ void QEMU::setQEMUImgPath(const QString path) {
     qemuImgPath = path;
     #endif
     #ifdef Q_OS_MACOS
-    qemuImgPath = "";
+    qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
     #endif
     #ifdef Q_OS_FREEBSD
-    qemuImgPath = "";
+    qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
     #endif
 
     QFile qemuImgFile(qemuImgPath);
@@ -88,15 +107,37 @@ void QEMU::setQEMUImgPath(const QString path) {
     }
 }
 
-QMap<QString, QString> QEMU::QEMUBinaries() const {
+/**
+ * @brief Get all QEMU binaries
+ * @return QMap with all the qemu binaries location
+ *
+ * Get all QEMU binaries
+ */
+QMap<QString, QString> QEMU::QEMUBinaries() const
+{
     return m_QEMUBinaries;
 }
 
-QString QEMU::getQEMUBinary(const QString binary) const {
-    return this -> m_QEMUBinaries.value(binary);
+/**
+ * @brief Get the path where one binary are located
+ * @param binary, binary to be located
+ * @return path of the binary
+ *
+ * Get the path where one binary are located
+ */
+QString QEMU::getQEMUBinary(const QString binary) const
+{
+    return this->m_QEMUBinaries.value(binary);
 }
 
-void QEMU::setQEMUBinaries(const QString path) {
+/**
+ * @brief Set the QEMU binaries
+ * @param path, path where the QEMU binaries are located
+ *
+ * Set the QEMU binaries
+ */
+void QEMU::setQEMUBinaries(const QString path)
+{
     this->m_QEMUBinaries.clear();
 
     QDirIterator it(path, QStringList() << "qemu-system-*", QDir::NoFilter, QDirIterator::Subdirectories);

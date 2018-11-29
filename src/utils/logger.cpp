@@ -21,11 +21,13 @@
 // Local
 #include "logger.h"
 
-Logger::Logger() {
+Logger::Logger(QObject *parent) : QObject(parent)
+{
     qDebug() << "Logger created";
 }
 
-Logger::~Logger() {
+Logger::~Logger()
+{
     qDebug() << "Logger destroyed";
 }
 
@@ -35,7 +37,14 @@ void Logger::logMachineCreation(const QString &fileLocation,
     QString path = fileLocation + "/logs/" + machineName.toLower().replace(" ", "_") + ".log";
 
     QFile machineLogsFile(path);
-    machineLogsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
+    if (!machineLogsFile.open(QIODevice::Append)) {
+        QMessageBox *m_logMachineMessageBox = new QMessageBox();
+        m_logMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_logMachineMessageBox->setIcon(QMessageBox::Critical);
+        m_logMachineMessageBox->setText(tr("<p>Problem with the log</p>"));
+        m_logMachineMessageBox->exec();
+        return;
+    }
 
     QTextStream fileStream(&machineLogsFile);
     fileStream.setCodec("UTF-8");
@@ -50,23 +59,24 @@ void Logger::logMachineCreation(const QString &fileLocation,
 
 }
 
-void Logger::logMachineAction(const QString &fileLocation,
-                              const QString &machineName, const QString &message) {
-
-}
-
 void Logger::logQtemuAction(const QString &message) {
 
     QSettings settings;
     settings.beginGroup("DataFolder");
-
     QString logDirectoryPath = settings.value("QtEmuLogs").toString();
     settings.endGroup();
 
     QString logMessage = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ").append(message).append("\n");
 
     QFile logsFile(logDirectoryPath.append("/qtemu.log"));
-    logsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
+    if (!logsFile.open(QIODevice::Append)) {
+        QMessageBox *m_logQtEmuMessageBox = new QMessageBox();
+        m_logQtEmuMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_logQtEmuMessageBox->setIcon(QMessageBox::Critical);
+        m_logQtEmuMessageBox->setText(tr("<p>Problem with the log</p>"));
+        m_logQtEmuMessageBox->exec();
+        return;
+    }
 
     QTextStream fileStream(&logsFile);
     fileStream.setCodec("UTF-8");
@@ -92,7 +102,14 @@ void Logger::logQtemuError(const QString &message) {
     QString logMessage = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss ").append(message).append("\n");;
 
     QFile logsFile(logDirectoryPath.append("/qtemu.err"));
-    logsFile.open(QIODevice::Append); // TODO: Check if open the file fails and if write is allowed
+    if (!logsFile.open(QIODevice::Append)) {
+        QMessageBox *m_logQtEmuErrorMessageBox = new QMessageBox();
+        m_logQtEmuErrorMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_logQtEmuErrorMessageBox->setIcon(QMessageBox::Critical);
+        m_logQtEmuErrorMessageBox->setText(tr("<p>Problem with the log</p>"));
+        m_logQtEmuErrorMessageBox->exec();
+        return;
+    }
 
     QTextStream fileStream(&logsFile);
     fileStream.setCodec("UTF-8");

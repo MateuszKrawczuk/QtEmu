@@ -22,22 +22,28 @@
 // Local
 #include "generalpage.h"
 
+/**
+ * @brief Machine general page
+ * @param machine, new machine object
+ * @param parent, widget parent
+ *
+ * General page section. In this page you can select the name, OS type and version
+ */
 MachineNamePage::MachineNamePage(Machine *machine,
-                                 QWidget *parent) : QWizardPage(parent) {
-
+                                 QWidget *parent) : QWizardPage(parent)
+{
     this->setTitle(tr("Machine name and operating system"));
-
     this->m_newMachine = machine;
 
-    m_descriptionNameLabel = new QLabel(tr("Select name and operating system for your new machine."));
+    m_descriptionNameLabel = new QLabel(tr("Select name and operating system for your new machine."), this);
     m_descriptionNameLabel->setWordWrap(true);
 
-    m_machineNameLabel = new QLabel(tr("Name") + ":");
-    m_machineNameLineEdit = new QLineEdit();
+    m_machineNameLabel = new QLabel(tr("Name") + ":", this);
+    m_machineNameLineEdit = new QLineEdit(this);
     m_machineNameLineEdit->setMaxLength(250);
 
-    m_OSTypeLabel = new QLabel(tr("Type") + ":");
-    m_OSType = new QComboBox();
+    m_OSTypeLabel = new QLabel(tr("Type") + ":", this);
+    m_OSType = new QComboBox(this);
     m_OSType->addItem("GNU/Linux");
     m_OSType->addItem("Microsoft Windows");
     m_OSType->addItem("BSD");
@@ -46,8 +52,8 @@ MachineNamePage::MachineNamePage(Machine *machine,
     connect(m_OSType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &MachineNamePage::selectOS);
 
-    m_OSVersionLabel = new QLabel(tr("Version") + ":");
-    m_OSVersion = new QComboBox();
+    m_OSVersionLabel = new QLabel(tr("Version") + ":", this);
+    m_OSVersion = new QComboBox(this);
 
     this->selectOS(0);
 
@@ -74,12 +80,20 @@ MachineNamePage::MachineNamePage(Machine *machine,
     qDebug() << "MachineNamePage created";
 }
 
-MachineNamePage::~MachineNamePage() {
+MachineNamePage::~MachineNamePage()
+{
     qDebug() << "MachineNamePage destroyed";
 }
 
-void MachineNamePage::selectOS(int OSSelected) {
-
+/**
+ * @brief Update the data in the osversion combo
+ * @param OSSelected, indicated the os type
+ *
+ * Update the data in the osversion combo.
+ * If you select GNU/Linux, then charge all the GNU/Linux distributions
+ */
+void MachineNamePage::selectOS(int OSSelected)
+{
     this->m_OSVersion->clear();
 
     if (OSSelected == 0) {
@@ -112,17 +126,15 @@ void MachineNamePage::selectOS(int OSSelected) {
     }
 }
 
-bool MachineNamePage::validatePage() {
-
+bool MachineNamePage::validatePage()
+{
     if (!this->m_machineFolder.isEmpty()) {
         return true;
     }
 
     QSettings settings;
     settings.beginGroup("Configuration");
-
     QString strMachinePath = settings.value("machinePath", QDir::homePath()).toString();
-
     settings.endGroup();
 
     QString machineName = field("machine.name").toString();
@@ -130,7 +142,7 @@ bool MachineNamePage::validatePage() {
     QString fullMachinePath = strMachinePath.append(QDir::toNativeSeparators("/")).append(machineName);
     QString machineLogsPath = strMachinePath.append(QDir::toNativeSeparators("/")).append("logs");
 
-    if ( QDir(fullMachinePath).exists() ) {
+    if (QDir(fullMachinePath).exists()) {
         qDebug() << "The folder alredy exists" << fullMachinePath;
 
         m_createMachineMessageBox = new QMessageBox();
@@ -141,11 +153,10 @@ bool MachineNamePage::validatePage() {
                                               "<p>This folder alredy exists and possibly belongs to another machine.</p>")
                                            .arg(machineName).arg(machinePathMsg));
         m_createMachineMessageBox->exec();
-
         return false;
     }
 
-    if ( ! QDir().mkpath(fullMachinePath) || ! QDir().mkpath(machineLogsPath)) {
+    if (!QDir().mkpath(fullMachinePath) || !QDir().mkpath(machineLogsPath)) {
         qDebug() << "Machine folder not created" << fullMachinePath;
 
         m_createMachineMessageBox = new QMessageBox();
@@ -157,7 +168,6 @@ bool MachineNamePage::validatePage() {
                                               "you have permissions to create the machine folder.</p>")
                                            .arg(machineName).arg(machinePathMsg));
         m_createMachineMessageBox->exec();
-
         return false;
     }
 
@@ -173,13 +183,20 @@ bool MachineNamePage::validatePage() {
     return true;
 }
 
-void MachineNamePage::cleanupPage() {
-    if ( ! this->m_machineFolder.isEmpty() ) {
+/**
+ * @brief It is activated when cancel button is pressed
+ *
+ * If the machine folder is created, then remove it
+ */
+void MachineNamePage::cleanupPage()
+{
+    if (!this->m_machineFolder.isEmpty()) {
         QDir machineDir(this->m_machineFolder);
         machineDir.removeRecursively();
     }
 }
 
-void MachineNamePage::initializePage() {
+void MachineNamePage::initializePage()
+{
     this->m_machineFolder = QString();
 }

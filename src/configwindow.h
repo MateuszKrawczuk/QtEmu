@@ -176,6 +176,7 @@ class ConfigWindow : public QWidget {
         QHBoxLayout *m_binaryLabelLayout;
         QHBoxLayout *m_binaryLayout;
         QVBoxLayout *m_QEMUImgLayout;
+        QHBoxLayout *m_QEMUPathLayout;
         QVBoxLayout *m_QEMULayout;
         QWidget *m_QEMUPageWidget;
 

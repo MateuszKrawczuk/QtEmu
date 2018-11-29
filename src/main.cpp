@@ -34,8 +34,8 @@
 #include "qemu.h"
 #include "utils/logger.h"
 
-int main(int argc, char *argv[]) {
-
+int main(int argc, char *argv[])
+{
     QApplication qtemuApp(argc, argv);
     qtemuApp.setApplicationName("QtEmu");
     qtemuApp.setApplicationVersion("2.0-alpha2");
@@ -67,10 +67,10 @@ int main(int argc, char *argv[]) {
     QString dataDirectoryPath = QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/");
     QString dataDirectoryLogs = QDir::toNativeSeparators(dataDirectoryPath + "logs");
 
-    if ( ! dataDirectory.exists(dataDirectoryPath) ) {
+    if (!dataDirectory.exists(dataDirectoryPath)) {
         dataDirectory.mkdir(dataDirectoryPath);
 
-        if (! dataDirectory.exists(dataDirectoryLogs) ) {
+        if (!dataDirectory.exists(dataDirectoryLogs)) {
             dataDirectory.mkdir(dataDirectoryLogs);
         }
     }
@@ -138,10 +138,7 @@ int main(int argc, char *argv[]) {
 
     Logger::logQtemuAction(logMessage);
 
-    //TODO implement command line arguments
-
     std::cout << "\n";
-
     std::cout << QString("- Running with Qt v%1\n\n").arg(qVersion())
                                                      .toStdString();
     std::cout.flush();

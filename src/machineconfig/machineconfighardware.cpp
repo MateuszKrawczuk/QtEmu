@@ -22,13 +22,21 @@
 // Local
 #include "machineconfighardware.h"
 
-MachineConfigHardware::MachineConfigHardware(Machine *machine, QWidget *parent) : QWidget(parent)
+/**
+ * @brief Hardware configuration window
+ * @param machine, machine to be configured
+ * @param parent, parent widget
+ *
+ * In this window the user can configure the hardware data
+ */
+MachineConfigHardware::MachineConfigHardware(Machine *machine,
+                                             QWidget *parent) : QWidget(parent)
 {
     this->m_machine = machine;
 
-    m_hardwareTabWidget = new QTabWidget();
+    m_hardwareTabWidget = new QTabWidget(this);
     m_hardwareTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
-                                         QSizePolicy::MinimumExpanding);
+                                       QSizePolicy::MinimumExpanding);
 
     m_processorConfigTab = new ProcessorConfigTab(machine, this);
     m_graphicsConfigTab = new GraphicsConfigTab(machine, this);
@@ -51,6 +59,11 @@ MachineConfigHardware::~MachineConfigHardware()
     qDebug() << "MachineConfigHardware destroyed";
 }
 
+/**
+ * @brief Save the hardware data of the machine
+ *
+ * Save the hardware data of the machine
+ */
 void MachineConfigHardware::saveHardwareData()
 {
     this->m_machine->setCPUType(this->m_processorConfigTab->getCPUType());

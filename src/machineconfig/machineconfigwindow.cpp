@@ -22,20 +22,29 @@
 // Local
 #include "machineconfigwindow.h"
 
+/**
+ * @brief Configuration window for the machines
+ * @param machine, machine to be configured
+ * @param QEMUGlobalObject, QEMU global object with data about QEMU
+ * @param osWidget
+ * @param parent, parent widget
+ *
+ * In this window, the user can change the machine options
+ */
 MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                          QEMU *QEMUGlobalObject,
                                          QListWidgetItem *osWidget,
-                                         QWidget *parent) : QWidget(parent) {
+                                         QWidget *parent) : QWidget(parent)
+{
+    this->m_machine = machine;
+    this->m_osWidget = osWidget;
 
-    this -> m_machine = machine;
-    this -> m_osWidget = osWidget;
-
-    this -> setWindowTitle(tr("Machine Preferences") + " - QtEmu");
-    this -> setWindowIcon(QIcon::fromTheme("qtemu",
-                                           QIcon(":/images/qtemu.png")));
-    this -> setWindowFlags(Qt::Dialog);
-    this -> setWindowModality(Qt::ApplicationModal);
-    this -> setMinimumSize(640, 500);
+    this->setWindowTitle(tr("Machine Preferences") + " - QtEmu");
+    this->setWindowIcon(QIcon::fromTheme("qtemu",
+                                         QIcon(":/images/qtemu.png")));
+    this->setWindowFlags(Qt::Dialog);
+    this->setWindowModality(Qt::ApplicationModal);
+    this->setMinimumSize(640, 500);
 
     m_configGeneral  = new MachineConfigGeneral(machine, this);
     m_configHardware = new MachineConfigHardware(machine, this);
@@ -46,64 +55,64 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_configAccel    = new MachineConfigAccel(machine, this);
 
     m_optionsListWidget = new QListWidget(this);
-    m_optionsListWidget -> setViewMode(QListView::ListMode);
-    m_optionsListWidget -> setIconSize(QSize(32, 32));
-    m_optionsListWidget -> setMovement(QListView::Static);
-    m_optionsListWidget -> setMaximumWidth(170);
-    m_optionsListWidget -> setSpacing(7);
-    m_optionsListWidget -> setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_optionsListWidget->setViewMode(QListView::ListMode);
+    m_optionsListWidget->setIconSize(QSize(32, 32));
+    m_optionsListWidget->setMovement(QListView::Static);
+    m_optionsListWidget->setMaximumWidth(170);
+    m_optionsListWidget->setSpacing(7);
+    m_optionsListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // Add options
-    m_optionsListWidget -> addItem(tr("General"));
-    m_optionsListWidget -> item(0) -> setIcon(QIcon::fromTheme("preferences-plugin",
+    m_optionsListWidget->addItem(tr("General"));
+    m_optionsListWidget->item(0)->setIcon(QIcon::fromTheme("preferences-plugin",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Hardware"));
-    m_optionsListWidget -> item(1) -> setIcon(QIcon::fromTheme("cpu",
+    m_optionsListWidget->addItem(tr("Hardware"));
+    m_optionsListWidget->item(1)->setIcon(QIcon::fromTheme("cpu",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Boot options"));
-    m_optionsListWidget -> item(2) -> setIcon(QIcon::fromTheme("checkmark",
+    m_optionsListWidget->addItem(tr("Boot options"));
+    m_optionsListWidget->item(2)->setIcon(QIcon::fromTheme("checkmark",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Media"));
-    m_optionsListWidget -> item(3) -> setIcon(QIcon::fromTheme("ntfs-config",
+    m_optionsListWidget->addItem(tr("Media"));
+    m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("ntfs-config",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Network"));
-    m_optionsListWidget -> item(4) -> setIcon(QIcon::fromTheme("network-card",
+    m_optionsListWidget->addItem(tr("Network"));
+    m_optionsListWidget->item(4)->setIcon(QIcon::fromTheme("network-card",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
-    m_optionsListWidget -> addItem(tr("Audio"));
-    m_optionsListWidget -> item(5) -> setIcon(QIcon::fromTheme("audio-card",
+    m_optionsListWidget->addItem(tr("Audio"));
+    m_optionsListWidget->item(5)->setIcon(QIcon::fromTheme("audio-card",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));// TODO
 
-    m_optionsListWidget -> addItem(tr("Accelerator"));
-    m_optionsListWidget -> item(6) -> setIcon(QIcon::fromTheme("mathematica",
+    m_optionsListWidget->addItem(tr("Accelerator"));
+    m_optionsListWidget->item(6)->setIcon(QIcon::fromTheme("mathematica",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
-    /*m_optionsListWidget -> addItem(tr("Display"));
-    m_optionsListWidget -> item(7) -> setIcon(QIcon::fromTheme("applications-multimedia",
+    /*m_optionsListWidget->addItem(tr("Display"));
+    m_optionsListWidget->item(7)->setIcon(QIcon::fromTheme("applications-multimedia",
                                                                QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));*/
 
     // Prepare window
     m_optionsStackedWidget = new QStackedWidget(this);
-    m_optionsStackedWidget -> setSizePolicy(QSizePolicy::Expanding,
-                                            QSizePolicy::Expanding);
-    m_optionsStackedWidget -> addWidget(this -> m_configGeneral  -> m_generalPageWidget);
-    m_optionsStackedWidget -> addWidget(this -> m_configHardware -> m_hardwarePageWidget);
-    m_optionsStackedWidget -> addWidget(this -> m_configBoot     -> m_bootPageWidget);
-    m_optionsStackedWidget -> addWidget(this -> m_configMedia    -> m_mediaPageWidget);
-    m_optionsStackedWidget -> addWidget(this -> m_configNetwork  -> m_networkPageWidget);
-    m_optionsStackedWidget -> addWidget(this -> m_configAudio    -> m_audioPageWidget);
-    m_optionsStackedWidget -> addWidget(this -> m_configAccel    -> m_acceleratorPageWidget);
+    m_optionsStackedWidget->setSizePolicy(QSizePolicy::Expanding,
+                                          QSizePolicy::Expanding);
+    m_optionsStackedWidget->addWidget(this->m_configGeneral->m_generalPageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configHardware->m_hardwarePageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configBoot->m_bootPageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configMedia->m_mediaPageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configNetwork->m_networkPageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configAudio->m_audioPageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configAccel->m_acceleratorPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
 
     m_topLayout = new QHBoxLayout();
-    m_topLayout -> addWidget(m_optionsListWidget);
-    m_topLayout -> addWidget(m_optionsStackedWidget);
+    m_topLayout->addWidget(m_optionsListWidget);
+    m_topLayout->addWidget(m_optionsStackedWidget);
 
     // Buttons
     m_saveButton = new QPushButton(QIcon::fromTheme("document-save",
@@ -120,30 +129,30 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     connect(m_closeButton, &QAbstractButton::clicked,
             this, &MachineConfigWindow::cancelMachineSettings);
 
-    this -> m_buttonsLayout = new QHBoxLayout();
-    m_buttonsLayout -> setAlignment(Qt::AlignRight);
-    m_buttonsLayout -> addWidget(m_saveButton);
-    m_buttonsLayout -> addWidget(m_closeButton);
+    this->m_buttonsLayout = new QHBoxLayout();
+    m_buttonsLayout->setAlignment(Qt::AlignRight);
+    m_buttonsLayout->addWidget(m_saveButton);
+    m_buttonsLayout->addWidget(m_closeButton);
 
     m_closeAction = new QAction(this);
-    m_closeAction -> setShortcut(QKeySequence(Qt::Key_Escape));
+    m_closeAction->setShortcut(QKeySequence(Qt::Key_Escape));
     connect(m_closeAction, &QAction::triggered, this, &QWidget::hide);
-    this -> addAction(m_closeAction);
+    this->addAction(m_closeAction);
 
     m_mainLayout = new QVBoxLayout();
-    m_mainLayout -> addLayout(m_topLayout, 20);
-    m_mainLayout -> addLayout(m_buttonsLayout);
+    m_mainLayout->addLayout(m_topLayout, 20);
+    m_mainLayout->addLayout(m_buttonsLayout);
 
-    this -> setLayout(m_mainLayout);
+    this->setLayout(m_mainLayout);
 
-    this -> m_optionsListWidget -> setCurrentRow(0);
-    this -> m_optionsListWidget -> setFocus();
+    this->m_optionsListWidget->setCurrentRow(0);
+    this->m_optionsListWidget->setFocus();
 
     qDebug() << "MachineConfigWindow created";
-
 }
 
-MachineConfigWindow::~MachineConfigWindow() {
+MachineConfigWindow::~MachineConfigWindow()
+{
     qDebug() << "MachineConfigWindow destroyed";
 }
 
@@ -152,10 +161,11 @@ MachineConfigWindow::~MachineConfigWindow() {
  *
  * Save the machine configuration
  */
-void MachineConfigWindow::saveMachineSettings() {
+void MachineConfigWindow::saveMachineSettings()
+{
     qDebug() << "Machine settings saved";
 
-    emit(saveMachineSettingsSignal()); // For reload labels in mainwindow ;)
+    emit(saveMachineSettingsSignal()); // For reload labels in mainwindow ;) // TODO
     //this->m_osWidget->setText(this->m_machine->getName());
 
     this->m_configGeneral->saveGeneralData();
@@ -176,9 +186,8 @@ void MachineConfigWindow::saveMachineSettings() {
  *
  * Cancel the machine configuration
  */
-void MachineConfigWindow::cancelMachineSettings() {
-    qDebug() << "Machine settings canceled";
-
+void MachineConfigWindow::cancelMachineSettings()
+{
     this->hide();
     delete this;
 }

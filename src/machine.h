@@ -26,10 +26,12 @@
 #include <QProcess>
 #include <QHash>
 #include <QUuid>
-
+#include <QMessageBox>
+#include <QSettings>
 #include <QDebug>
 
 // Local
+#include "qemu.h"
 #include "machineutils.h"
 
 class Boot {
@@ -212,7 +214,7 @@ class Machine: public QObject {
         QString getAudioLabel();
         QString getAcceleratorLabel();
 
-        void runMachine();
+        void runMachine(QEMU *QEMUGlobalObject);
         void stopMachine();
         void resetMachine();
         void pauseMachine();
@@ -277,6 +279,12 @@ class Machine: public QObject {
 
         // Process
         QProcess *m_machineProcess;
+
+        // Messages
+        /*QMessageBox *m_saveMachineMessageBox;
+        QMessageBox *m_machineConfigMessageBox;
+        QMessageBox *m_machineStandardOutMessageBox;
+        QMessageBox *m_machineErrorOutMessageBox;*/
 
         // Methods
         QProcessEnvironment buildEnvironment();

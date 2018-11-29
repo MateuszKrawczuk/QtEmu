@@ -22,30 +22,38 @@
 // Local
 #include "machineconfigaccel.h"
 
+/**
+ * @brief Accelerator configuration window
+ * @param machine, machine to be configured
+ * @param parent, parent widget
+ *
+ * In this window the user can select what accelerators want to use and
+ * it's order
+ */
 MachineConfigAccel::MachineConfigAccel(Machine *machine,
-                                       QWidget *parent) : QWidget(parent) {
-
+                                       QWidget *parent) : QWidget(parent)
+{
     bool enableFields = true;
 
-    if (machine -> getState() != Machine::Stopped) {
+    if (machine->getState() != Machine::Stopped) {
         enableFields = false;
     }
 
     this->m_machine = machine;
 
-    m_moveUpAccelToolButton = new QToolButton();
-    m_moveUpAccelToolButton -> setArrowType(Qt::UpArrow);
-    m_moveUpAccelToolButton -> setEnabled(enableFields);
+    m_moveUpAccelToolButton = new QToolButton(this);
+    m_moveUpAccelToolButton->setArrowType(Qt::UpArrow);
+    m_moveUpAccelToolButton->setEnabled(enableFields);
     connect(m_moveUpAccelToolButton, &QAbstractButton::clicked,
             this, &MachineConfigAccel::moveUpButton);
 
-    m_moveDownAccelToolButton = new QToolButton();
-    m_moveDownAccelToolButton -> setArrowType(Qt::DownArrow);
-    m_moveDownAccelToolButton -> setEnabled(enableFields);
+    m_moveDownAccelToolButton = new QToolButton(this);
+    m_moveDownAccelToolButton->setArrowType(Qt::DownArrow);
+    m_moveDownAccelToolButton->setEnabled(enableFields);
     connect(m_moveDownAccelToolButton, &QAbstractButton::clicked,
             this, &MachineConfigAccel::moveDownButton);
 
-    QStringList accelList = machine -> getAccelerator();
+    QStringList accelList = machine->getAccelerator();
 
     QHash<QString, QString> accelHash = SystemUtils::getAccelerators();
     QHashIterator<QString, QString> i(accelHash);
@@ -56,72 +64,89 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
         }
     }
 
-    m_acceleratorTree = new QTreeWidget();
-    m_acceleratorTree -> setMaximumHeight(150);
-    m_acceleratorTree -> setMaximumWidth(200);
-    m_acceleratorTree -> setColumnCount(1);
-    m_acceleratorTree -> setHeaderHidden(true);
-    m_acceleratorTree -> setRootIsDecorated(false);
-    m_acceleratorTree -> setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    m_acceleratorTree -> setEnabled(enableFields);
+    m_acceleratorTree = new QTreeWidget(this);
+    m_acceleratorTree->setMaximumHeight(150);
+    m_acceleratorTree->setMaximumWidth(200);
+    m_acceleratorTree->setColumnCount(1);
+    m_acceleratorTree->setHeaderHidden(true);
+    m_acceleratorTree->setRootIsDecorated(false);
+    m_acceleratorTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_acceleratorTree->setEnabled(enableFields);
 
     for(int i = 0; i < accelList.size(); ++i) {
-        m_treeItem = new QTreeWidgetItem(this -> m_acceleratorTree, QTreeWidgetItem::Type);
-        m_treeItem -> setText(0, accelHash.value(accelList.at(i)));
-        m_treeItem -> setData(0, Qt::UserRole, accelList.at(i));
-        if (machine -> getAccelerator().contains(accelList.at(i))) {
-            m_treeItem -> setCheckState(0, Qt::Checked);
+        m_treeItem = new QTreeWidgetItem(this->m_acceleratorTree, QTreeWidgetItem::Type);
+        m_treeItem->setText(0, accelHash.value(accelList.at(i)));
+        m_treeItem->setData(0, Qt::UserRole, accelList.at(i));
+        if (machine->getAccelerator().contains(accelList.at(i))) {
+            m_treeItem->setCheckState(0, Qt::Checked);
         } else {
-            m_treeItem -> setCheckState(0, Qt::Unchecked);
+            m_treeItem->setCheckState(0, Qt::Unchecked);
         }
     }
 
     m_accelTreeLayout = new QHBoxLayout();
-    m_accelTreeLayout -> setAlignment(Qt::AlignTop);
-    m_accelTreeLayout -> setSpacing(5);
-    m_accelTreeLayout -> addWidget(m_acceleratorTree);
-    m_accelTreeLayout -> addWidget(m_moveUpAccelToolButton);
-    m_accelTreeLayout -> addWidget(m_moveDownAccelToolButton);
+    m_accelTreeLayout->setAlignment(Qt::AlignTop);
+    m_accelTreeLayout->setSpacing(5);
+    m_accelTreeLayout->addWidget(m_acceleratorTree);
+    m_accelTreeLayout->addWidget(m_moveUpAccelToolButton);
+    m_accelTreeLayout->addWidget(m_moveDownAccelToolButton);
 
     m_acceleratorLayout = new QVBoxLayout();
-    m_acceleratorLayout -> setAlignment(Qt::AlignTop);
-    m_acceleratorLayout -> addItem(m_accelTreeLayout);
+    m_acceleratorLayout->setAlignment(Qt::AlignTop);
+    m_acceleratorLayout->addItem(m_accelTreeLayout);
 
     m_acceleratorPageWidget = new QWidget();
-    m_acceleratorPageWidget -> setLayout(m_acceleratorLayout);
+    m_acceleratorPageWidget->setLayout(m_acceleratorLayout);
 
     qDebug() << "MachineConfigAccel created";
 }
 
-MachineConfigAccel::~MachineConfigAccel() {
+MachineConfigAccel::~MachineConfigAccel()
+{
     qDebug() << "MachineConfigAccel destroyed";
 }
 
-void MachineConfigAccel::moveUpButton() {
-
-    int index = this -> m_acceleratorTree -> currentIndex().row();
-    if( index < 1 || index > this -> m_acceleratorTree -> topLevelItemCount() ) {
+/**
+ * @brief Move up the selected accelerator
+ *
+ * Move up one position the selected accelerator
+ */
+void MachineConfigAccel::moveUpButton()
+{
+    int index = this->m_acceleratorTree->currentIndex().row();
+    if(index < 1 || index > this->m_acceleratorTree->topLevelItemCount()) {
         return;
     }
 
-    QTreeWidgetItem *item = this -> m_acceleratorTree -> takeTopLevelItem( index );
-    this -> m_acceleratorTree -> insertTopLevelItem( index - 1, item );
-    this -> m_acceleratorTree -> setCurrentItem( item );
+    QTreeWidgetItem *item = this->m_acceleratorTree->takeTopLevelItem(index);
+    this->m_acceleratorTree->insertTopLevelItem(index - 1, item);
+    this->m_acceleratorTree->setCurrentItem(item);
 }
 
-void MachineConfigAccel::moveDownButton() {
-
-    int index = this -> m_acceleratorTree -> currentIndex().row();
-    if( index < 0 || index > this -> m_acceleratorTree -> topLevelItemCount() - 2 ) {
+/**
+ * @brief Move down the selected accelerator
+ *
+ * Move down one position the selected accelerator
+ */
+void MachineConfigAccel::moveDownButton()
+{
+    int index = this->m_acceleratorTree->currentIndex().row();
+    if (index < 0 || index > this->m_acceleratorTree->topLevelItemCount() - 2) {
         return;
     }
 
-    QTreeWidgetItem *item = this -> m_acceleratorTree ->takeTopLevelItem( index );
-    this -> m_acceleratorTree -> insertTopLevelItem( index + 1, item );
-    this -> m_acceleratorTree -> setCurrentItem( item );
+    QTreeWidgetItem *item = this->m_acceleratorTree ->takeTopLevelItem(index);
+    this->m_acceleratorTree->insertTopLevelItem(index + 1, item);
+    this->m_acceleratorTree->setCurrentItem(item);
 }
 
-void MachineConfigAccel::saveAccelData() {
+/**
+ * @brief Save the accelerators
+ *
+ * Save the selected accelerators in the specified order
+ */
+void MachineConfigAccel::saveAccelData()
+{
     this->m_machine->removeAllAccelerators();
 
     QTreeWidgetItemIterator it(this->m_acceleratorTree);

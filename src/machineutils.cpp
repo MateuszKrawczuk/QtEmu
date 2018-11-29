@@ -22,29 +22,43 @@
 // Local
 #include "machineutils.h"
 
-MachineUtils::MachineUtils(QObject *parent) : QObject(parent) {
+MachineUtils::MachineUtils(QObject *parent) : QObject(parent)
+{
     qDebug() << "MachineUtils object created";
 }
 
-MachineUtils::~MachineUtils() {
+MachineUtils::~MachineUtils()
+{
     qDebug() << "MachineUtils object destroyed";
 }
 
-bool MachineUtils::deleteMachine(const QUuid machineUuid) {
-
-    // TODO: Change all of this code to SystemUtils::getMachinePath
+/**
+ * @brief Delete the machine
+ * @param machineUuid, uuid of the machine
+ * @return true if the machine is deleted
+ *
+ * Delete all the files of the machine
+ */
+bool MachineUtils::deleteMachine(const QUuid machineUuid)
+{
     QSettings settings;
     settings.beginGroup("DataFolder");
-
     QString dataDirectoryPath = settings.value("QtEmuData",
                                                QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
     settings.endGroup();
 
     // Open the file with the machines
     QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
-
     QFile machinesFile(qtemuConfig);
-    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+    if (!machinesFile.open(QFile::ReadWrite)) {
+        QMessageBox *m_deleteMachineMessageBox = new QMessageBox();
+        m_deleteMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_deleteMachineMessageBox->setIcon(QMessageBox::Critical);
+        m_deleteMachineMessageBox->setText(tr("<p>Cannot save the machine</p>"
+                                              "<p>The file with the machine configuration are not writable</p>"));
+        m_deleteMachineMessageBox->exec();
+        return false;
+    }
 
     // Read all the machines included in the file
     QByteArray machinesData = machinesFile.readAll();
@@ -56,7 +70,6 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid) {
     QString machinePath;
     while(machinePos < machines.size() && ! machineExists) {
         QJsonObject machineJSON = machines[machinePos].toObject();
-
         if (machineUuid == machineJSON["uuid"].toVariant()) {
             machineExists = true;
             machinePath = machineJSON["path"].toString();
@@ -79,18 +92,28 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid) {
     machinesFile.close();
 
     QDir *machineDirectory = new QDir(QDir::toNativeSeparators(machinePath));
-
-    bool removedDirectory = machineDirectory -> removeRecursively();
+    bool removedDirectory = machineDirectory->removeRecursively();
 
     return removedDirectory;
 }
 
-QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid) {
-
+/**
+ * @brief Get the machine json object
+ * @param machineUuid, uuid of the machine
+ * @return machine json object
+ *
+ * Get the machine json object
+ */
+QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid)
+{
     QString machineConfigPath = getMachineConfigPath(machineUuid);
 
+    if (machineConfigPath.isEmpty()) {
+        // TODO...
+    }
+
     QFile machineFile(machineConfigPath);
-    machineFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
+    machineFile.open(QIODevice::ReadWrite);
 
     // Read all data included in the file
     QByteArray machineData = machineFile.readAll();
@@ -100,59 +123,32 @@ QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid) {
     return machineObject;
 }
 
-QString MachineUtils::getMachinePath(const QUuid machineUuid) {
-
+/**
+ * @brief Get the machine path
+ * @param machineUuid, uuid of the machine
+ * @return path where the machine is located
+ *
+ * Get the machine path
+ */
+QString MachineUtils::getMachineConfigPath(const QUuid machineUuid)
+{
     QSettings settings;
     settings.beginGroup("DataFolder");
-
     QString dataDirectoryPath = settings.value("QtEmuData",
                                                QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
     settings.endGroup();
-
-    // Open the file with the machines
     QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
-
     QFile machinesFile(qtemuConfig);
-    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
-
-    // Read all the machines included in the file
-    QByteArray machinesData = machinesFile.readAll();
-    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
-    QJsonArray machines = machinesDocument["machines"].toArray();
-
-    int machinePos = 0;
-    bool machineExists = false;
-    QString machinePath;
-    while(machinePos < machines.size() && ! machineExists) {
-        QJsonObject machineJSON = machines[machinePos].toObject();
-
-        if (machineUuid == machineJSON["uuid"].toVariant()) {
-            machineExists = true;
-            machinePath = machineJSON["path"].toString();
-        } else {
-            ++machinePos;
-        }
+    if (!machinesFile.open(QFile::ReadWrite)) {
+        QMessageBox *m_machinePathMessageBox = new QMessageBox();
+        m_machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_machinePathMessageBox->setIcon(QMessageBox::Critical);
+        m_machinePathMessageBox->setText(tr("<p>Cannot save the machine</p>"
+                                            "<p>The file with the machine configuration are not writable</p>"));
+        m_machinePathMessageBox->exec();
+        return "";
     }
 
-    return machinePath;
-}
-
-QString MachineUtils::getMachineConfigPath(const QUuid machineUuid) {
-
-    QSettings settings;
-    settings.beginGroup("DataFolder");
-
-    QString dataDirectoryPath = settings.value("QtEmuData",
-                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
-    settings.endGroup();
-
-    // Open the file with the machines
-    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
-
-    QFile machinesFile(qtemuConfig);
-    machinesFile.open(QIODevice::ReadWrite); // TODO: Check if open the file fails
-
-    // Read all the machines included in the file
     QByteArray machinesData = machinesFile.readAll();
     QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
     QJsonArray machines = machinesDocument["machines"].toArray();
@@ -162,7 +158,6 @@ QString MachineUtils::getMachineConfigPath(const QUuid machineUuid) {
     QString machinePath;
     while(machinePos < machines.size() && ! machineExists) {
         QJsonObject machineJSON = machines[machinePos].toObject();
-
         if (machineUuid == machineJSON["uuid"].toVariant()) {
             machineExists = true;
             machinePath = machineJSON["configpath"].toString();
@@ -174,8 +169,15 @@ QString MachineUtils::getMachineConfigPath(const QUuid machineUuid) {
     return machinePath;
 }
 
-QStringList MachineUtils::getSoundCards(QJsonArray soundCardsArray) {
-
+/**
+ * @brief Get the sound cards
+ * @param soundCardsArray, json array with the sound cards of the machine
+ * @return list with the sound cards
+ *
+ * Get the sound cards
+ */
+QStringList MachineUtils::getSoundCards(QJsonArray soundCardsArray)
+{
     QStringList soundCardsList;
     for(int i = 0; i < soundCardsArray.size(); ++i) {
         soundCardsList.append(soundCardsArray[i].toString());
@@ -184,8 +186,15 @@ QStringList MachineUtils::getSoundCards(QJsonArray soundCardsArray) {
     return soundCardsList;
 }
 
-QStringList MachineUtils::getAccelerators(QJsonArray acceleratorsArray) {
-
+/**
+ * @brief Get the accelerators
+ * @param acceleratorsArray, json array with the accelerators of the machine
+ * @return list with the accelerators
+ *
+ * Get the accelerators
+ */
+QStringList MachineUtils::getAccelerators(QJsonArray acceleratorsArray)
+{
     QStringList acceleratorsList;
     for(int i = 0; i < acceleratorsArray.size(); ++i) {
         acceleratorsList.append(acceleratorsArray[i].toString());
@@ -194,8 +203,15 @@ QStringList MachineUtils::getAccelerators(QJsonArray acceleratorsArray) {
     return acceleratorsList;
 }
 
-QStringList MachineUtils::getMediaDevices(QJsonArray mediaDevicesArray) {
-
+/**
+ * @brief Get the media devices
+ * @param mediaDevicesArray, json array with the media devices of the machine
+ * @return list with the media devices
+ *
+ * Get the media devices
+ */
+QStringList MachineUtils::getMediaDevices(QJsonArray mediaDevicesArray)
+{
     QStringList mediaDevicesList;
     for(int i= 0; i < mediaDevicesArray.size(); ++i) {
         mediaDevicesList.append(mediaDevicesArray[i].toString());

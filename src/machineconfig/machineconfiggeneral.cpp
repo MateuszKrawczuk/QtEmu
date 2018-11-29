@@ -32,11 +32,11 @@
  * state of the machine...
  */
 MachineConfigGeneral::MachineConfigGeneral(Machine *machine,
-                                           QWidget *parent) : QWidget(parent) {
-
+                                           QWidget *parent) : QWidget(parent)
+{
     bool enableFields = true;
 
-    if (machine -> getState() != Machine::Stopped) {
+    if (machine->getState() != Machine::Stopped) {
         enableFields = false;
     }
 
@@ -45,28 +45,35 @@ MachineConfigGeneral::MachineConfigGeneral(Machine *machine,
     m_basicTab = new BasicTab(machine, enableFields, this);
     m_descriptionTab = new DescriptionTab(machine, enableFields, this);
 
-    m_generalTabWidget = new QTabWidget();
-    m_generalTabWidget -> setSizePolicy(QSizePolicy::MinimumExpanding,
+    m_generalTabWidget = new QTabWidget(this);
+    m_generalTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
                                             QSizePolicy::MinimumExpanding);
-    m_generalTabWidget -> addTab(this->m_basicTab, tr("Basic Details"));
-    m_generalTabWidget -> addTab(this->m_descriptionTab, tr("Description"));
+    m_generalTabWidget->addTab(this->m_basicTab, tr("Basic Details"));
+    m_generalTabWidget->addTab(this->m_descriptionTab, tr("Description"));
 
     m_generalPageLayout = new QVBoxLayout();
-    m_generalPageLayout -> setAlignment(Qt::AlignCenter);
-    m_generalPageLayout -> addWidget(m_generalTabWidget);
+    m_generalPageLayout->setAlignment(Qt::AlignCenter);
+    m_generalPageLayout->addWidget(m_generalTabWidget);
 
     m_generalPageWidget = new QWidget(this);
-    m_generalPageWidget -> setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    m_generalPageWidget -> setLayout(m_generalPageLayout);
+    m_generalPageWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    m_generalPageWidget->setLayout(m_generalPageLayout);
 
     qDebug() << "MachineConfigGeneral created";
 }
 
-MachineConfigGeneral::~MachineConfigGeneral() {
+MachineConfigGeneral::~MachineConfigGeneral()
+{
     qDebug() << "MachineConfigGeneral destroyed";
 }
 
-void MachineConfigGeneral::saveGeneralData() {
+/**
+ * @brief Save the general data
+ *
+ * Save the general data
+ */
+void MachineConfigGeneral::saveGeneralData()
+{
     this->m_machine->setName(this->m_basicTab->getMachineName());
     this->m_machine->setOSType(this->m_basicTab->getMachineType());
     this->m_machine->setOSVersion(this->m_basicTab->getMachineVersion());

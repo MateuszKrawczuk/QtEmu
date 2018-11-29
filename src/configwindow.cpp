@@ -394,11 +394,9 @@ void ConfigWindow::createQEMUPage()
     m_binariesTableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_binariesTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_binariesTableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    m_binariesTableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_binariesTableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_binariesTableWidget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
     m_binariesTableWidget->setHorizontalHeaderLabels(labels);
-
-    this->insertBinariesInTree();
 
     m_QEMUImgLabel = new QLabel(tr("QEMU img binary path"), this);
     m_QEMUImgPathLineEdit = new QLineEdit(this);
@@ -421,11 +419,15 @@ void ConfigWindow::createQEMUPage()
     m_binaryLayout->addWidget(m_binariesPathToolButton);
     m_binaryLayout->addWidget(m_searchBinariesToolButton);
 
+    m_QEMUPathLayout = new QHBoxLayout();
+    m_QEMUPathLayout->setAlignment(Qt::AlignCenter);
+    m_QEMUPathLayout->addWidget(m_QEMUImgPathLineEdit);
+    m_QEMUPathLayout->addWidget(m_searchQEMUImgToolButton);
+
     m_QEMUImgLayout = new QVBoxLayout();
     m_QEMUImgLayout->setAlignment(Qt::AlignLeft);
     m_QEMUImgLayout->addWidget(m_QEMUImgLabel);
-    m_QEMUImgLayout->addWidget(m_QEMUImgPathLineEdit);
-    m_QEMUImgLayout->addWidget(m_searchQEMUImgToolButton);
+    m_QEMUImgLayout->addItem(m_QEMUPathLayout);
 
     m_QEMULayout = new QVBoxLayout();
     m_QEMULayout->addItem(m_binaryLabelLayout);
@@ -450,7 +452,6 @@ void ConfigWindow::insertBinariesInTree()
     QMapIterator<QString, QString> iterator(this->m_QEMUObject->QEMUBinaries());
     while (iterator.hasNext()) {
         iterator.next();
-
         this->m_binariesTableWidget->insertRow(this->m_binariesTableWidget->rowCount());
 
         QTableWidgetItem *binaryItem = new QTableWidgetItem(iterator.key());
@@ -728,6 +729,7 @@ void ConfigWindow::loadSettings()
     this->binaryPathChanged(settings.value("qemuBinaryPath", "").toString());
     this->m_binaryPathLineEdit->setText(settings.value("qemuBinaryPath", "").toString());
     this->m_QEMUImgPathLineEdit->setText(settings.value("qemuImgBinaryPath", "").toString());
+    this->insertBinariesInTree();
 
     settings.endGroup();
 }

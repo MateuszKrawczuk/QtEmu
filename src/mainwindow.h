@@ -157,6 +157,7 @@ class MainWindow : public QMainWindow {
         // Messages
         QMessageBox *m_networkErrorMessageBox;
         QMessageBox *m_versionMessageBox;
+        QMessageBox *m_loadMachinesMessageBox;
 
         // QEMU
         QEMU *qemuGlobalObject;
@@ -167,6 +168,7 @@ class MainWindow : public QMainWindow {
         void controlMachineActions(Machine::States state);
         void fillMachineDetailsSection(Machine *machine);
         void emptyMachineDetailsSection();
+        void updateMachineDetailsSection();
 
 };
 #endif // MAINWINDOW_H
