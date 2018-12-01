@@ -739,13 +739,26 @@ void Machine::pauseMachine()
  */
 void Machine::readMachineStandardOut()
 {
-    /*m_machineStandardOutMessageBox = new QMessageBox();
+    QByteArray rawStandardOut = this->m_machineProcess->readAllStandardOutput();
+    QString standardOut = rawStandardOut;
+    QStringList splitStandardOut = standardOut.split("[K");
+    QString cleanStandardOut = splitStandardOut.last().remove(QRegExp("\\[[KD]."));
+    // Remove space characters, included \r \t \n
+    cleanStandardOut = cleanStandardOut.simplified();
+
+    if (cleanStandardOut.isEmpty() ||
+        cleanStandardOut.contains("(qemu)") ||
+        cleanStandardOut.contains("monitor")) {
+        return;
+    }
+
+    m_machineStandardOutMessageBox = new QMessageBox();
     m_machineStandardOutMessageBox->setWindowTitle(tr("QEMU - Standard Out"));
     m_machineStandardOutMessageBox->setIcon(QMessageBox::Information);
-    m_machineStandardOutMessageBox->setText(this->m_machineProcess->readAllStandardOutput());
-    m_machineStandardOutMessageBox->exec();*/
-
-    qDebug() << "Standard out " << this->m_machineProcess->readAllStandardOutput();
+    m_machineStandardOutMessageBox->setText(cleanStandardOut);
+    m_machineStandardOutMessageBox->show();
+    m_machineStandardOutMessageBox->raise();
+    m_machineStandardOutMessageBox->activateWindow();
 }
 
 /**
@@ -755,13 +768,20 @@ void Machine::readMachineStandardOut()
  */
 void Machine::readMachineErrorOut()
 {
-    /*m_machineErrorOutMessageBox = new QMessageBox();
-    m_machineStandardOutMessageBox->setWindowTitle(tr("QEMU - Error Out"));
-    m_machineStandardOutMessageBox->setIcon(QMessageBox::Critical);
-    m_machineStandardOutMessageBox->setText(this->m_machineProcess->readAllStandardError());
-    m_machineStandardOutMessageBox->exec();*/
+    QByteArray rawErrorOutput = this->m_machineProcess->readAllStandardError();
+    QString errorOutput = rawErrorOutput;
 
-    qDebug() << "Standard error " << this->m_machineProcess->readAllStandardError();
+    if (errorOutput.isEmpty()) {
+        return;
+    }
+
+    m_machineErrorOutMessageBox = new QMessageBox();
+    m_machineErrorOutMessageBox->setWindowTitle(tr("QEMU - Error Out"));
+    m_machineErrorOutMessageBox->setIcon(QMessageBox::Critical);
+    m_machineErrorOutMessageBox->setText(errorOutput);
+    m_machineErrorOutMessageBox->show();
+    m_machineErrorOutMessageBox->raise();
+    m_machineErrorOutMessageBox->activateWindow();
 }
 
 /**

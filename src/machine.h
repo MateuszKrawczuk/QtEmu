@@ -28,12 +28,12 @@
 #include <QUuid>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTextCodec>
 #include <QDebug>
 
 // Local
 #include "qemu.h"
 #include "machineutils.h"
-
 class Boot {
 
     public:
@@ -281,10 +281,10 @@ class Machine: public QObject {
         QProcess *m_machineProcess;
 
         // Messages
-        /*QMessageBox *m_saveMachineMessageBox;
+        QMessageBox *m_saveMachineMessageBox;
         QMessageBox *m_machineConfigMessageBox;
         QMessageBox *m_machineStandardOutMessageBox;
-        QMessageBox *m_machineErrorOutMessageBox;*/
+        QMessageBox *m_machineErrorOutMessageBox;
 
         // Methods
         QProcessEnvironment buildEnvironment();
