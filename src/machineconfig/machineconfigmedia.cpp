@@ -205,7 +205,6 @@ void MachineConfigMedia::addHddMedia()
 
         newDiskWizard.show();
         newDiskWizard.exec();
-
     } else if (m_addHddDiskMessageBox->clickedButton() == existingDiskButton) {
        diskPath = QFileDialog::getOpenFileName(this, tr("Select disk"), QDir::homePath());
     } else if (m_addHddDiskMessageBox->clickedButton() == cancelButton) {

@@ -82,7 +82,8 @@ SOURCES +=  src/main.cpp\
             src/utils/newdiskwizard.cpp \
             src/qemu.cpp \
             src/machineconfig/machineconfiggeneraltabs.cpp \
-            src/machineconfig/machineconfighardwaretabs.cpp
+            src/machineconfig/machineconfighardwaretabs.cpp \
+    src/utils/qtemualerts.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -110,7 +111,8 @@ HEADERS  += src/mainwindow.h \
             src/utils/newdiskwizard.h \
             src/qemu.h \
             src/machineconfig/machineconfiggeneraltabs.h \
-            src/machineconfig/machineconfighardwaretabs.h
+            src/machineconfig/machineconfighardwaretabs.h \
+    src/utils/qtemualerts.h
 
 OTHER_FILES += \
     CHANGELOG \

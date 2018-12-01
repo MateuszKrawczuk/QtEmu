@@ -40,7 +40,7 @@ MachineMemoryPage::MachineMemoryPage(Machine *machine,
                 tr("Select the amount of base memory (RAM) in megabytes for virtual machine allocating."), this);
     m_descriptionMemoryLabel->setWordWrap(true);
 
-    int32_t totalRAM = 0;
+    int totalRAM = 0;
     SystemUtils::getTotalMemory(totalRAM);
     m_spinBoxMemoryLabel = new QLabel("MiB", this);
 

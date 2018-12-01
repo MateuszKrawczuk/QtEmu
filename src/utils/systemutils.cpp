@@ -29,7 +29,7 @@ SystemUtils::~SystemUtils() {
     qDebug() << "SystemUtils destroyed";
 }
 
-void SystemUtils::getTotalMemory(int32_t &totalRAM) {
+void SystemUtils::getTotalMemory(int &totalRAM) {
     #ifdef Q_OS_LINUX
         struct sysinfo sys_info;
 
@@ -39,12 +39,10 @@ void SystemUtils::getTotalMemory(int32_t &totalRAM) {
     #endif
     #ifdef Q_OS_WIN
         MEMORYSTATUSEX statex;
-
         statex.dwLength = sizeof (statex);
-
         GlobalMemoryStatusEx (&statex);
 
-        totalRAM = static_cast<int>(statex.ullTotalPhys / (1024*1024*1024));
+        totalRAM = static_cast<int>(statex.ullTotalPhys / (1024 * 1024));
     #endif
     #ifdef Q_OS_MACOS
     // TODO

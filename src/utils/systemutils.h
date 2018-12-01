@@ -54,7 +54,7 @@ class SystemUtils {
         SystemUtils();
         ~SystemUtils();
 
-        static void getTotalMemory(int32_t &totalRAM);
+        static void getTotalMemory(int &totalRAM);
 
         static void setCPUTypesx86(QComboBox *CPUType);
         static void setGPUTypes(QComboBox *GPUType);
