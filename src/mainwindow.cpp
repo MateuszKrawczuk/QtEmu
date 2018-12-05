@@ -64,8 +64,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_machineAudioLabel->setWordWrap(true);
     m_machineAccelLabel    = new QLabel(this);
     m_machineAccelLabel->setWordWrap(true);
-    m_machineDiskLabel     = new QLabel(this);
     m_machineNetworkLabel  = new QLabel(this);
+    m_machineMediaLabel    = new QLabel(this);
+    m_machineMediaLabel->setWordWrap(true);
 
     m_machineDetailsLayout = new QFormLayout();
     m_machineDetailsLayout->setSpacing(7);
@@ -80,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_machineDetailsLayout->addRow(tr("Audio") + ":", m_machineAudioLabel);
     m_machineDetailsLayout->addRow(tr("Accelerator") + ":", m_machineAccelLabel);
     m_machineDetailsLayout->addRow(tr("Network") + ":", m_machineNetworkLabel);
-    m_machineDetailsLayout->addRow(tr("Media") + ":", m_machineDiskLabel);
+    m_machineDetailsLayout->addRow(tr("Media") + ":", m_machineMediaLabel);
 
     m_machineDetailsGroup = new QGroupBox(tr("Machine details"), this);
     m_machineDetailsGroup->setAlignment(Qt::AlignHCenter);
@@ -187,7 +188,7 @@ void MainWindow::createMenusActions()
             this, &MainWindow::checkVersions);
 
     m_exitAppAction = new QAction(QIcon::fromTheme("application-exit",
-                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/applcation-exit.svg"))),
+                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/application-exit.svg"))),
                                   tr("Exit"),
                                   this);
     connect(m_exitAppAction, &QAction::triggered,
@@ -699,6 +700,15 @@ void MainWindow::fillMachineDetailsSection(Machine *machine)
     this->m_machineAudioLabel->setText(machine->getAudioLabel());
     this->m_machineAccelLabel->setText(machine->getAcceleratorLabel());
     this->m_machineNetworkLabel->setText(machine->getUseNetwork() == true ? tr("Yes") : tr("no"));
+    QString mediaLabel;
+    for (int i = 0; i < machine->getMedia().size(); ++i) {
+         mediaLabel.append("(")
+                   .append(machine->getMedia().at(i).driveInterface().toUpper())
+                   .append(") ")
+                   .append(machine->getMedia().at(i).name())
+                   .append("\n");
+    }
+    this->m_machineMediaLabel->setText(mediaLabel);
 }
 
 /**
@@ -717,6 +727,7 @@ void MainWindow::emptyMachineDetailsSection()
     this->m_machineAudioLabel->setText("");
     this->m_machineAccelLabel->setText("");
     this->m_machineNetworkLabel->setText("");
+    this->m_machineMediaLabel->setText("");
 }
 
 /**

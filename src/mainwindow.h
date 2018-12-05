@@ -151,8 +151,8 @@ class MainWindow : public QMainWindow {
         QLabel *m_machineGraphicsLabel;
         QLabel *m_machineAudioLabel;
         QLabel *m_machineAccelLabel;
-        QLabel *m_machineDiskLabel;
         QLabel *m_machineNetworkLabel;
+        QLabel *m_machineMediaLabel;
 
         // Messages
         QMessageBox *m_networkErrorMessageBox;
