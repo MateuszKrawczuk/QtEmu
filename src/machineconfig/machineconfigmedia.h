@@ -94,10 +94,12 @@ class MachineConfigMedia : public QWidget {
 
         QMessageBox *m_maxHddDiskMessageBox;
         QMessageBox *m_maxOpticalMessageBox;
+        QMessageBox *m_hdcOpticalConflictMessageBox;
         QMessageBox *m_maxFloppyMessageBox;
 
         QMap<QString, QString> *m_diskMap;
         QMap<QString, QString> *m_floppyMap;
+        QMap<QString, QString> *m_cdromMap; // Yes, I know there's only one cdrom...
 
         Machine *m_machineOptions;
         QEMU *m_qemuGlobalObject;

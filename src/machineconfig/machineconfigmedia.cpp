@@ -214,6 +214,12 @@ void MachineConfigMedia::addFloppyMedia()
     this->addMediaToTree(media);
 }
 
+/**
+ * @brief Add hdd media
+ *
+ * Add hdd media to the media list.
+ * hda, hdb, hdc and hdb can be addeds
+ */
 void MachineConfigMedia::addHddMedia()
 {
     m_addHddDiskMessageBox = new QMessageBox(this);
@@ -241,9 +247,49 @@ void MachineConfigMedia::addHddMedia()
     }
 }
 
+/**
+ * @brief Add a cdrom
+ *
+ * Add a cdrom to the media list.
+ * If the hdc is added to the media list.
+ * A cdrom can't be added
+ */
 void MachineConfigMedia::addOpticalMedia()
 {
+    if (this->m_cdromMap->size() == 0) {
+        m_maxOpticalMessageBox = new QMessageBox();
+        m_maxOpticalMessageBox->setWindowTitle(tr("Qtemu - cdrom"));
+        m_maxOpticalMessageBox->setIcon(QMessageBox::Critical);
+        m_maxOpticalMessageBox->setText(tr("<p>Only one cdrom can be added</p>"));
+        m_maxOpticalMessageBox->exec();
+        return;
+    }
 
+    if (!this->m_diskMap->contains("hdc")) {
+        m_hdcOpticalConflictMessageBox = new QMessageBox();
+        m_hdcOpticalConflictMessageBox->setWindowTitle(tr("Qtemu - cdrom"));
+        m_hdcOpticalConflictMessageBox->setIcon(QMessageBox::Critical);
+        m_hdcOpticalConflictMessageBox->setText(tr("<p>You cannot use hdc and cdrom at the same time</p>"));
+        m_hdcOpticalConflictMessageBox->exec();
+        return;
+    }
+
+    QString cdromPath = QFileDialog::getOpenFileName(this, tr("Select cdrom"), QDir::homePath());
+
+    if (cdromPath.isEmpty()) {
+        return;
+    }
+
+    QFileInfo cdromInfo(cdromPath);
+
+    Media media;
+    media.setName(cdromInfo.fileName());
+    media.setPath(QDir::toNativeSeparators(cdromInfo.absoluteFilePath()));
+    media.setType("cdrom");
+    media.setDriveInterface(this->m_cdromMap->first());
+    media.setUuid(QUuid::createUuid().toString());
+
+    this->addMediaToTree(media);
 }
 
 /**
@@ -262,6 +308,9 @@ void MachineConfigMedia::fillMaps()
     this->m_floppyMap = new QMap<QString, QString>;
     this->m_floppyMap->insert("fda", "fda");
     this->m_floppyMap->insert("fdb", "fdb");
+
+    this->m_cdromMap = new QMap<QString, QString>;
+    this->m_cdromMap->insert("cdrom", "cdrom");
 }
 
 /**
@@ -297,6 +346,7 @@ void MachineConfigMedia::removeInterface(const QString interface)
 {
     this->m_diskMap->remove(interface);
     this->m_floppyMap->remove(interface);
+    this->m_cdromMap->remove(interface);
 }
 
 /**
