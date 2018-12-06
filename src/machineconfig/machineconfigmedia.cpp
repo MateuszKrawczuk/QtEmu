@@ -58,7 +58,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
         this->addMediaToTree(machineMedia[i]);
     }
     this->m_mediaTree->setCurrentItem(this->m_mediaTree->itemAt(0, 0));
-    //this->fillDetailsSection();
+    this->fillDetailsSection();
 
     m_mediaDetailsLayout = new QFormLayout();
     m_mediaDetailsLayout->setAlignment(Qt::AlignTop);
@@ -206,7 +206,7 @@ void MachineConfigMedia::addFloppyMedia()
 
     Media media;
     media.setName(floppyInfo.fileName());
-    media.setPath(QDir::toNativeSeparators(floppyInfo.absolutePath()));
+    media.setPath(QDir::toNativeSeparators(floppyInfo.absoluteFilePath()));
     media.setType("fdd");
     media.setDriveInterface(this->m_floppyMap->first());
     media.setUuid(QUuid::createUuid().toString());
@@ -311,7 +311,9 @@ void MachineConfigMedia::saveMediaData()
 
     QTreeWidgetItemIterator it(this->m_mediaTree);
     while (*it) {
-        // (*it)->data(0, Qt::UserRole); TODO
+        QVariant mediaVariant = (*it)->data(0, Qt::UserRole);
+        Media media = mediaVariant.value<Media>();
+        this->m_machineOptions->addMedia(media);
         ++it;
     }
 }
