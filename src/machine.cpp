@@ -919,13 +919,13 @@ QStringList Machine::generateMachineCommand()
         qemuCommand << "none";
     }
 
-    // HDD
-    //qemuCommand << "-drive";
-    //qemuCommand << QString("file=").append(diskObject["path"].toString()).append(",index=0,media=disk");
+    for (int i = 0; i < media.size(); ++i) {
+        QString interface("-");
+        interface.append(media.at(i).driveInterface());
 
-    // CDROM TODO, for test not implemented yet :'(
-    //qemuCommand << "-cdrom";
-    //qemuCommand << "/home/xexio/Downloads/torrent/archlinux-2018.10.01-x86_64.iso";
+        qemuCommand << interface;
+        qemuCommand << media.at(i).path();
+    }
 
     qDebug() << "Command " << qemuCommand;
 
