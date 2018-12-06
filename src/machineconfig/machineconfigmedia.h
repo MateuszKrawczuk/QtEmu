@@ -34,13 +34,13 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QFileDialog>
-
 #include <QListWidget>
 
 // Local
 #include "../machine.h"
 #include "../qemu.h"
 #include "../utils/newdiskwizard.h"
+#include "../utils/systemutils.h"
 
 class MachineConfigMedia : public QWidget {
     Q_OBJECT
@@ -51,6 +51,9 @@ class MachineConfigMedia : public QWidget {
                                     QWidget *parent = nullptr);
         ~MachineConfigMedia();
         QWidget *m_mediaPageWidget;
+
+        // Methods
+        void saveMediaData();
 
     signals:
 
@@ -69,9 +72,8 @@ class MachineConfigMedia : public QWidget {
         QTreeWidget *m_mediaTree;
         QTreeWidgetItem *m_mediaItem;
 
+        QLabel *m_mediaNameLabel;
         QLabel *m_mediaPathLabel;
-        QLabel *m_mediaSizeLabel;
-        QLabel *m_mediaFormatLabel;
 
         QGroupBox *m_mediaSettingsGroupBox;
         QGroupBox *m_mediaOptionsGroupBox;
@@ -90,11 +92,12 @@ class MachineConfigMedia : public QWidget {
         QMessageBox *m_addOpticalMessageBox;
         QMessageBox *m_addFloppyMessageBox;
 
-        QHash<QUuid, Media> *m_mediaHash;
+        QMessageBox *m_maxHddDiskMessageBox;
+        QMessageBox *m_maxOpticalMessageBox;
+        QMessageBox *m_maxFloppyMessageBox;
 
-        QList<Machine> *m_machineMediaAux;
-        QSet<QString> *m_diskSet;
-        QSet<QString> *m_floppySet;
+        QMap<QString, QString> *m_diskMap;
+        QMap<QString, QString> *m_floppyMap;
 
         Machine *m_machineOptions;
         QEMU *m_qemuGlobalObject;
@@ -104,5 +107,8 @@ class MachineConfigMedia : public QWidget {
         void addFloppyMedia();
         void addHddMedia();
         void addOpticalMedia();
+        void fillMaps();
+        void addMediaToTree(Media media);
+        void removeInterface(const QString interface);
 };
 #endif // MACHINECONFIGMEDIA_H

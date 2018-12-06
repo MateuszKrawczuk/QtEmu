@@ -36,9 +36,8 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
         enableFields = false;
     }
 
+    m_mediaNameLabel = new QLabel(this);
     m_mediaPathLabel = new QLabel(this);
-    m_mediaSizeLabel = new QLabel(this);
-    m_mediaFormatLabel = new QLabel(this);
 
     m_mediaTree = new QTreeWidget(this);
     m_mediaTree->setEnabled(enableFields);
@@ -52,32 +51,22 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     connect(m_mediaTree, &QTreeWidget::itemSelectionChanged,
             this, &MachineConfigMedia::fillDetailsSection);
 
-    m_mediaHash = new QHash<QUuid, Media>;
+    this->fillMaps();
+
     QList<Media> machineMedia = machine->getMedia();
     for(int i = 0; i < machineMedia.size(); ++i) {
-        QString mediaName;
-        mediaName.append("(")
-                 .append(machineMedia[i].driveInterface().toUpper())
-                 .append(") ")
-                 .append(machineMedia[i].name());
-
-        m_mediaItem = new QTreeWidgetItem(this->m_mediaTree, QTreeWidgetItem::Type);
-        m_mediaItem->setText(0, mediaName);
-        m_mediaItem->setData(0, Qt::UserRole, machineMedia[i].uuid());
-
-        this->m_mediaHash->insert(machineMedia[i].uuid(), machineMedia[i]);
+        this->addMediaToTree(machineMedia[i]);
     }
-
     this->m_mediaTree->setCurrentItem(this->m_mediaTree->itemAt(0, 0));
+    //this->fillDetailsSection();
 
     m_mediaDetailsLayout = new QFormLayout();
     m_mediaDetailsLayout->setAlignment(Qt::AlignTop);
     m_mediaDetailsLayout->setLabelAlignment(Qt::AlignLeft);
     m_mediaDetailsLayout->setHorizontalSpacing(20);
     m_mediaDetailsLayout->setVerticalSpacing(10);
+    m_mediaDetailsLayout->addRow(tr("Name") + ":", m_mediaNameLabel);
     m_mediaDetailsLayout->addRow(tr("Path") + ":", m_mediaPathLabel);
-    m_mediaDetailsLayout->addRow(tr("Size") + ":", m_mediaSizeLabel);
-    m_mediaDetailsLayout->addRow(tr("Format") + ":", m_mediaFormatLabel);
 
     m_mediaSettingsGroupBox = new QGroupBox(tr("Details"), this);
     m_mediaSettingsGroupBox->setLayout(m_mediaDetailsLayout);
@@ -172,17 +161,57 @@ MachineConfigMedia::~MachineConfigMedia()
     qDebug() << "MachineConfigMedia destroyed";
 }
 
+/**
+ * @brief Fill the details section
+ *
+ * Fill the details section
+ */
 void MachineConfigMedia::fillDetailsSection()
 {
-    QUuid selectedMediaUuid = this->m_mediaTree->currentItem()->data(0, Qt::UserRole).toUuid();
-    this->m_mediaPathLabel->setText(this->m_mediaHash->value(selectedMediaUuid).path());
-    this->m_mediaSizeLabel->setText(QString::number(this->m_mediaHash->value(selectedMediaUuid).size()));
-    this->m_mediaFormatLabel->setText(this->m_mediaHash->value(selectedMediaUuid).format());
+    if (this->m_mediaTree->topLevelItemCount() <= 0) {
+        return;
+    }
+
+    QVariant mediaVariant = this->m_mediaTree->currentItem()->data(0, Qt::UserRole);
+    Media selectedMedia = mediaVariant.value<Media>();
+
+    this->m_mediaNameLabel->setText(selectedMedia.name());
+    this->m_mediaPathLabel->setText(selectedMedia.path());
 }
 
+/**
+ * @brief Add a floppy
+ *
+ * Add a floppy to the media list.
+ * Max two floppy per machine, fda and fdb
+ */
 void MachineConfigMedia::addFloppyMedia()
 {
+    if (this->m_floppyMap->size() == 0) {
+        m_maxFloppyMessageBox = new QMessageBox();
+        m_maxFloppyMessageBox->setWindowTitle(tr("Qtemu - floppy"));
+        m_maxFloppyMessageBox->setIcon(QMessageBox::Critical);
+        m_maxFloppyMessageBox->setText(tr("<p>Maximum number of floppy reached</p>"));
+        m_maxFloppyMessageBox->exec();
+        return;
+    }
 
+    QString floppyPath = QFileDialog::getOpenFileName(this, tr("Select disk"), QDir::homePath());
+
+    if (floppyPath.isEmpty()) {
+        return;
+    }
+
+    QFileInfo floppyInfo(floppyPath);
+
+    Media media;
+    media.setName(floppyInfo.fileName());
+    media.setPath(QDir::toNativeSeparators(floppyInfo.absolutePath()));
+    media.setType("fdd");
+    media.setDriveInterface(this->m_floppyMap->first());
+    media.setUuid(QUuid::createUuid().toString());
+
+    this->addMediaToTree(media);
 }
 
 void MachineConfigMedia::addHddMedia()
@@ -215,4 +244,74 @@ void MachineConfigMedia::addHddMedia()
 void MachineConfigMedia::addOpticalMedia()
 {
 
+}
+
+/**
+ * @brief Fill the Aux maps
+ *
+ * Fill the diskMap and floppyMap
+ */
+void MachineConfigMedia::fillMaps()
+{
+    this->m_diskMap = new QMap<QString, QString>;
+    this->m_diskMap->insert("hda", "hda");
+    this->m_diskMap->insert("hdb", "hdb");
+    this->m_diskMap->insert("hdc", "hdc");
+    this->m_diskMap->insert("hdd", "hdd");
+
+    this->m_floppyMap = new QMap<QString, QString>;
+    this->m_floppyMap->insert("fda", "fda");
+    this->m_floppyMap->insert("fdb", "fdb");
+}
+
+/**
+ * @brief Add the media to the tree
+ * @param media, machine media
+ *
+ * Add the media to the tree and removes
+ * all the interfaces
+ */
+void MachineConfigMedia::addMediaToTree(Media media)
+{
+    QString mediaName;
+    mediaName.append("(")
+             .append(media.driveInterface().toUpper())
+             .append(") ")
+             .append(media.name());
+
+    QVariant mediaVariant;
+    mediaVariant.setValue(media);
+
+    m_mediaItem = new QTreeWidgetItem(this->m_mediaTree, QTreeWidgetItem::Type);
+    m_mediaItem->setText(0, mediaName);
+    m_mediaItem->setData(0, Qt::UserRole, mediaVariant);
+
+    this->removeInterface(media.driveInterface());
+}
+
+/**
+ * @brief MachineConfigMedia::removeInterface
+ * @param interface
+ */
+void MachineConfigMedia::removeInterface(const QString interface)
+{
+    this->m_diskMap->remove(interface);
+    this->m_floppyMap->remove(interface);
+}
+
+/**
+ * @brief Save the media
+ *
+ * Add all the media to the machine
+ */
+void MachineConfigMedia::saveMediaData()
+{
+    // Remove all media from the machine
+    this->m_machineOptions->removeAllMedia();
+
+    QTreeWidgetItemIterator it(this->m_mediaTree);
+    while (*it) {
+        // (*it)->data(0, Qt::UserRole); TODO
+        ++it;
+    }
 }

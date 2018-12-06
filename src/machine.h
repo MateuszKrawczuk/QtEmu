@@ -34,6 +34,7 @@
 // Local
 #include "qemu.h"
 #include "machineutils.h"
+
 class Boot {
 
     public:
@@ -211,6 +212,8 @@ class Machine: public QObject {
         void removeAccelerator(const QString accel);
         void removeAllAccelerators();
 
+        void removeAllMedia();
+
         QString getAudioLabel();
         QString getAcceleratorLabel();
 
@@ -290,5 +293,7 @@ class Machine: public QObject {
         QProcessEnvironment buildEnvironment();
         QStringList generateMachineCommand();
 };
+
+Q_DECLARE_METATYPE(Media);
 
 #endif // MACHINE_H

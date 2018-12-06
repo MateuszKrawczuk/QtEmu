@@ -39,6 +39,11 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     this->m_machine = machine;
     this->m_osWidget = osWidget;
 
+    bool enableFields = true;
+    if (machine->getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
     this->setWindowTitle(tr("Machine Preferences") + " - QtEmu");
     this->setWindowIcon(QIcon::fromTheme("qtemu",
                                          QIcon(":/images/qtemu.png")));
@@ -119,6 +124,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/document-save.svg"))),
                                    tr("Save"),
                                    this);
+    this->m_saveButton->setEnabled(enableFields);
     connect(m_saveButton, &QAbstractButton::clicked,
             this, &MachineConfigWindow::saveMachineSettings);
 
@@ -171,7 +177,7 @@ void MachineConfigWindow::saveMachineSettings()
     this->m_configGeneral->saveGeneralData();
     this->m_configHardware->saveHardwareData();
     this->m_configBoot->saveBootData();
-    //MEDIA
+    this->m_configMedia->saveMediaData();
     this->m_configNetwork->saveNetworkData();
     this->m_configAudio->saveAudioData();
     this->m_configAccel->saveAccelData();

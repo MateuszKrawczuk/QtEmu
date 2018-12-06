@@ -621,6 +621,16 @@ void Machine::removeAllAccelerators()
 }
 
 /**
+ * @brief Remove all media
+ *
+ * Remove all media
+ */
+void Machine::removeAllMedia()
+{
+    this->media.clear();
+}
+
+/**
  * @brief Get all the audio cards separated by commas
  * @return Audio cards separated by commas
  *
