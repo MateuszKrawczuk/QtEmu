@@ -920,10 +920,10 @@ QStringList Machine::generateMachineCommand()
     }
 
     for (int i = 0; i < media.size(); ++i) {
-        QString interface("-");
-        interface.append(media.at(i).driveInterface());
+        QString driveInterface("-");
+        driveInterface.append(media.at(i).driveInterface());
 
-        qemuCommand << interface;
+        qemuCommand << driveInterface;
         qemuCommand << media.at(i).path();
     }
 

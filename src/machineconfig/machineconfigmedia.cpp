@@ -373,13 +373,13 @@ void MachineConfigMedia::addMediaToTree(Media media)
 
 /**
  * @brief MachineConfigMedia::removeInterface
- * @param interface
+ * @param driveInterface
  */
-void MachineConfigMedia::removeInterface(const QString interface)
+void MachineConfigMedia::removeInterface(const QString driveInterface)
 {
-    this->m_diskMap->remove(interface);
-    this->m_floppyMap->remove(interface);
-    this->m_cdromMap->remove(interface);
+    this->m_diskMap->remove(driveInterface);
+    this->m_floppyMap->remove(driveInterface);
+    this->m_cdromMap->remove(driveInterface);
 }
 
 /**
