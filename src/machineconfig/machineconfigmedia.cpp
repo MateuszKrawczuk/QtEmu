@@ -22,6 +22,12 @@
 // Local
 #include "machineconfigmedia.h"
 
+/**
+ * @brief MachineConfigMedia::MachineConfigMedia
+ * @param machine
+ * @param QEMUGlobalObject
+ * @param parent
+ */
 MachineConfigMedia::MachineConfigMedia(Machine *machine,
                                        QEMU *QEMUGlobalObject,
                                        QWidget *parent) : QWidget(parent)
@@ -222,18 +228,28 @@ void MachineConfigMedia::addFloppyMedia()
  */
 void MachineConfigMedia::addHddMedia()
 {
+    if (this->m_diskMap->size() == 0) {
+        m_maxHddDiskMessageBox = new QMessageBox();
+        m_maxHddDiskMessageBox->setWindowTitle(tr("Qtemu - hard disk"));
+        m_maxHddDiskMessageBox->setIcon(QMessageBox::Critical);
+        m_maxHddDiskMessageBox->setText(tr("<p>Maximum number of hard disks reached</p>"));
+        m_maxHddDiskMessageBox->exec();
+        return;
+    }
+
     m_addHddDiskMessageBox = new QMessageBox(this);
     m_addHddDiskMessageBox->setWindowTitle(tr("QtEmu - Add Hard Disk"));
     m_addHddDiskMessageBox->setIcon(QMessageBox::Question);
     m_addHddDiskMessageBox->setText(tr("<p>Add a new Hard Disk</p>"));
 
-    QPushButton *newDiskButton = m_addHddDiskMessageBox->addButton(tr("Create new disk"), QMessageBox::ActionRole);
-    QPushButton *existingDiskButton = m_addHddDiskMessageBox->addButton(tr("Choose existing disk"), QMessageBox::ActionRole);
-    QPushButton *cancelButton = m_addHddDiskMessageBox->addButton(tr("Exit"), QMessageBox::ActionRole);
+    QPushButton *newDiskButton = m_addHddDiskMessageBox->addButton(tr("Create new disk"),
+                                                                   QMessageBox::ActionRole);
+    QPushButton *existingDiskButton = m_addHddDiskMessageBox->addButton(tr("Choose existing disk"),
+                                                                        QMessageBox::ActionRole);
+    QPushButton *cancelButton = m_addHddDiskMessageBox->addButton(tr("Exit"),
+                                                                  QMessageBox::ActionRole);
 
     m_addHddDiskMessageBox->exec();
-
-    QString diskPath;
 
     if (m_addHddDiskMessageBox->clickedButton() == newDiskButton) {
         NewDiskWizard newDiskWizard(this->m_machineOptions, this->m_qemuGlobalObject, this);
@@ -241,7 +257,23 @@ void MachineConfigMedia::addHddMedia()
         newDiskWizard.show();
         newDiskWizard.exec();
     } else if (m_addHddDiskMessageBox->clickedButton() == existingDiskButton) {
-       diskPath = QFileDialog::getOpenFileName(this, tr("Select disk"), QDir::homePath());
+       QString diskPath = QFileDialog::getOpenFileName(this, tr("Select disk"), QDir::homePath());
+
+       if (diskPath.isEmpty()) {
+           return;
+       }
+
+       QFileInfo hddInfo(diskPath);
+
+       Media media;
+       media.setName(hddInfo.fileName());
+       media.setPath(QDir::toNativeSeparators(hddInfo.absoluteFilePath()));
+       media.setType("hdd");
+       media.setDriveInterface(this->m_diskMap->first());
+       media.setUuid(QUuid::createUuid().toString());
+
+       this->addMediaToTree(media);
+
     } else if (m_addHddDiskMessageBox->clickedButton() == cancelButton) {
         m_addHddDiskMessageBox->close();
     }
@@ -289,6 +321,7 @@ void MachineConfigMedia::addOpticalMedia()
     media.setDriveInterface(this->m_cdromMap->first());
     media.setUuid(QUuid::createUuid().toString());
 
+    this->removeInterface("hdc");
     this->addMediaToTree(media);
 }
 
