@@ -40,9 +40,11 @@ MachineConfigHardware::MachineConfigHardware(Machine *machine,
 
     m_processorConfigTab = new ProcessorConfigTab(machine, this);
     m_graphicsConfigTab = new GraphicsConfigTab(machine, this);
+    m_ramConfigTab = new RamConfigTab(machine, this);
 
     m_hardwareTabWidget->addTab(this->m_processorConfigTab, tr("CPU"));
     m_hardwareTabWidget->addTab(this->m_graphicsConfigTab, tr("Graphics"));
+    m_hardwareTabWidget->addTab(this->m_ramConfigTab, tr("RAM"));
 
     m_hardwarePageLayout = new QVBoxLayout();
     m_hardwarePageLayout->setAlignment(Qt::AlignCenter);
@@ -74,4 +76,5 @@ void MachineConfigHardware::saveHardwareData()
     this->m_machine->setMaxHotCPU(this->m_processorConfigTab->getMaxHotCPU());
     this->m_machine->setGPUType(this->m_graphicsConfigTab->getGPUType());
     this->m_machine->setKeyboard(this->m_graphicsConfigTab->getKeyboardLayout());
+    this->m_machine->setRAM(this->m_ramConfigTab->getAmountRam());
 }

@@ -32,7 +32,6 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
                                        QEMU *QEMUGlobalObject,
                                        QWidget *parent) : QWidget(parent)
 {
-
     this->m_machineOptions = machine;
     this->m_qemuGlobalObject = QEMUGlobalObject;
 

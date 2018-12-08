@@ -84,7 +84,7 @@ class GraphicsConfigTab: public QWidget {
 
     public:
         explicit GraphicsConfigTab(Machine *machine,
-                                    QWidget *parent = nullptr);
+                                   QWidget *parent = nullptr);
         ~GraphicsConfigTab();
 
         // Methods
@@ -106,6 +106,35 @@ class GraphicsConfigTab: public QWidget {
         QLabel *m_GPUTypeLabel;
         QLabel *m_keyboardLabel;
 
+};
+
+class RamConfigTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit RamConfigTab(Machine *machine,
+                              QWidget *parent = nullptr);
+        ~RamConfigTab();
+
+        // Methods
+        int getAmountRam();
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QGridLayout *m_machineMemoryLayout;
+
+        QSpinBox *m_memorySpinBox;
+        QSlider *m_memorySlider;
+
+        QLabel *m_descriptionMemoryLabel;
+        QLabel *m_spinBoxMemoryLabel;
+        QLabel *m_minMemoryLabel;
+        QLabel *m_maxMemorylabel;
 };
 
 #endif // MACHINECONFIGHARDWARETABS_H

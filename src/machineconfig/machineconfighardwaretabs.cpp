@@ -266,3 +266,73 @@ QString GraphicsConfigTab::getKeyboardLayout()
 {
     return this->m_keyboard->currentData().toString();
 }
+
+/**
+ * @brief Tab with the amount of RAM
+ * @param machine, machine to be configured
+ * @param parent, parent widget
+ *
+ * Tab with the amount of RAM
+ */
+RamConfigTab::RamConfigTab(Machine *machine,
+                           QWidget *parent) : QWidget(parent)
+{
+    m_descriptionMemoryLabel = new QLabel(tr("Select the amount of base memory (RAM) in "
+                                             "megabytes for virtual machine allocating."),
+                                          this);
+    m_descriptionMemoryLabel->setWordWrap(true);
+
+    int totalRAM = 0;
+    SystemUtils::getTotalMemory(totalRAM);
+    m_spinBoxMemoryLabel = new QLabel("MiB", this);
+
+    m_memorySpinBox = new QSpinBox(this);
+    m_memorySpinBox->setMinimum(1);
+    m_memorySpinBox->setMaximum(totalRAM);
+    m_memorySpinBox->setValue(static_cast<int>(machine->getRAM()));
+
+    m_memorySlider = new QSlider(Qt::Horizontal, this);
+    m_memorySlider->setTickPosition(QSlider::TicksBelow);
+    m_memorySlider->setTickInterval(500);
+    m_memorySlider->setMinimum(1);
+    m_memorySlider->setMaximum(totalRAM);
+    m_memorySlider->setValue(static_cast<int>(machine->getRAM()));
+
+    connect(m_memorySpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            m_memorySlider, &QSlider::setValue);
+
+    connect(m_memorySlider, &QSlider::valueChanged,
+            m_memorySpinBox, &QSpinBox::setValue);
+
+    m_minMemoryLabel = new QLabel("1 MiB", this);
+    m_maxMemorylabel = new QLabel(QString("%1 MiB").arg(totalRAM), this);
+
+    m_machineMemoryLayout = new QGridLayout();
+    m_machineMemoryLayout->setColumnStretch(1, 50);
+    m_machineMemoryLayout->addWidget(m_descriptionMemoryLabel, 0, 0, 1, 5);
+    m_machineMemoryLayout->addWidget(m_memorySlider,           1, 0, 1, 3);
+    m_machineMemoryLayout->addWidget(m_memorySpinBox,          1, 3, 1, 1);
+    m_machineMemoryLayout->addWidget(m_spinBoxMemoryLabel,     1, 4, 1, 1);
+    m_machineMemoryLayout->addWidget(m_minMemoryLabel,         2, 0, 1, 1);
+    m_machineMemoryLayout->addWidget(m_maxMemorylabel,         2, 2, 1, 1);
+
+    this->setLayout(m_machineMemoryLayout);
+
+    qDebug() << "RamConfigTab created";
+}
+
+RamConfigTab::~RamConfigTab()
+{
+    qDebug() << "RamConfigTab destroyed";
+}
+
+/**
+ * @brief Get the ram selected
+ * @return ram selected
+ *
+ * Get the ram selected
+ */
+int RamConfigTab::getAmountRam()
+{
+    return this->m_memorySpinBox->value();
+}
