@@ -252,10 +252,17 @@ void MachineConfigMedia::addHddMedia()
     m_addHddDiskMessageBox->exec();
 
     if (m_addHddDiskMessageBox->clickedButton() == newDiskButton) {
-        NewDiskWizard newDiskWizard(this->m_machineOptions, this->m_qemuGlobalObject, this);
+        Media newMedia;
+        newMedia.setDriveInterface(this->m_diskMap->first());
+
+        NewDiskWizard newDiskWizard(this->m_machineOptions, this->m_qemuGlobalObject, &newMedia, this);
 
         newDiskWizard.show();
         newDiskWizard.exec();
+
+        if (!newMedia.name().isEmpty() && !newMedia.path().isEmpty()){
+            this->addMediaToTree(newMedia);
+        }
     } else if (m_addHddDiskMessageBox->clickedButton() == existingDiskButton) {
        QString diskPath = QFileDialog::getOpenFileName(this, tr("Select disk"), QDir::homePath());
 
@@ -265,14 +272,14 @@ void MachineConfigMedia::addHddMedia()
 
        QFileInfo hddInfo(diskPath);
 
-       Media media;
-       media.setName(hddInfo.fileName());
-       media.setPath(QDir::toNativeSeparators(hddInfo.absoluteFilePath()));
-       media.setType("hdd");
-       media.setDriveInterface(this->m_diskMap->first());
-       media.setUuid(QUuid::createUuid().toString());
+       Media existingMedia;
+       existingMedia.setName(hddInfo.fileName());
+       existingMedia.setPath(QDir::toNativeSeparators(hddInfo.absoluteFilePath()));
+       existingMedia.setType("hdd");
+       existingMedia.setDriveInterface(this->m_diskMap->first());
+       existingMedia.setUuid(QUuid::createUuid().toString());
 
-       this->addMediaToTree(media);
+       this->addMediaToTree(existingMedia);
 
     } else if (m_addHddDiskMessageBox->clickedButton() == cancelButton) {
         m_addHddDiskMessageBox->close();

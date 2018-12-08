@@ -22,12 +22,22 @@
 // Local
 #include "newdiskwizard.h"
 
+/**
+ * @brief Wizard to create a new disk
+ * @param machine, machine to be configured
+ * @param QEMUGlobalObject, QEMU global object with data about QEMU
+ * @param media, new media
+ * @param parent, parent widget
+ *
+ * Wizard to create a new disk
+ */
 NewDiskWizard::NewDiskWizard(Machine *machine,
                              QEMU *QEMUGlobalObject,
+                             Media *media,
                              QWidget *parent) : QWizard(parent)
 {
     this->setWindowTitle(tr("Create a new Disk"));
-    this->setPage(Page_Disk, new NewDiskPage(machine, QEMUGlobalObject, this));
+    this->setPage(Page_Disk, new NewDiskPage(machine, QEMUGlobalObject, media, this));
     this->setStartId(Page_Disk);
 
     #ifndef Q_OS_MAC
@@ -50,22 +60,33 @@ NewDiskWizard::~NewDiskWizard()
     qDebug() << "NewDiskWizard destroyed";
 }
 
+/**
+ * @brief New disk page
+ * @param machine, machine to be configured
+ * @param QEMUGlobalObject, QEMU global object with data about QEMU
+ * @param media, new media
+ * @param parent, parent widget
+ *
+ * New disk page
+ */
 NewDiskPage::NewDiskPage(Machine *machine,
                          QEMU *QEMUGlobalObject,
+                         Media *media,
                          QWidget *parent) : QWizardPage(parent)
 {
-    this->m_newMachine = machine;
+    this->m_machineConfig = machine;
+    this->m_newMedia = media;
     this->m_qemuGlobalObject = QEMUGlobalObject;
 
     m_fileLocationGroupBox = new QGroupBox(tr("Disk path"), this);
 
-    QString newDiskPath = this->m_newMachine->getName().append("NewDisk");
+    QString newDiskPath = this->m_machineConfig->getName().append("NewDisk");
 
-    this->m_diskName = this->m_newMachine->getPath()
-                                           .append(QDir::toNativeSeparators("/"))
-                                           .append(this->m_newMachine->getName())
-                                           .append("NewDisk")
-                                           .append(".qcow2");
+    this->m_diskPath = this->m_machineConfig->getPath()
+                                              .append(QDir::toNativeSeparators("/"))
+                                              .append(this->m_machineConfig->getName())
+                                              .append("NewDisk")
+                                              .append(".qcow2");
 
     m_fileNameLineEdit = new QLineEdit(this);
     m_fileNameLineEdit->setEnabled(false);
@@ -155,28 +176,33 @@ NewDiskPage::~NewDiskPage()
     qDebug() << "NewDiskPage destroyed";
 }
 
+/**
+ * @brief Select the
+ */
 void NewDiskPage::selectNameNewDisk()
 {
-    QString newDiskPath = this->m_newMachine->getPath()
-                          .append(QDir::toNativeSeparators("/"))
-                          .append(this->m_newMachine->getName())
-                          .append("NewDisk")
-                          .append(".")
-                          .append(NewDiskPage::getExtension());
+    QString newDiskPath = this->m_machineConfig->getPath()
+                                                 .append(QDir::toNativeSeparators("/"))
+                                                 .append(this->m_machineConfig->getName())
+                                                 .append("NewDisk")
+                                                 .append(".")
+                                                 .append(NewDiskPage::getExtension());
 
-    this->m_diskName = QFileDialog::getSaveFileName(this,
+    this->m_diskPath = QFileDialog::getSaveFileName(this,
                                                     tr("Select a location for the new hard disk"),
                                                     newDiskPath,
                                                     tr("Image Files (*.raw *.qcow *.qcow2 *.qed *.vmdk *.cloop)"));
 
-    if (!this->m_diskName.isEmpty()) {
-        this->m_fileNameLineEdit->setText(QDir::toNativeSeparators(m_diskName));
+    if (!this->m_diskPath.isEmpty()) {
+        this->m_fileNameLineEdit->setText(QDir::toNativeSeparators(this->m_diskPath));
     }
 }
 
 /**
- * @brief NewDiskPage::getExtension
- * @return
+ * @brief Get the selected extension
+ * @return selected extension
+ *
+ * Get the selected extension
  */
 QString NewDiskPage::getExtension()
 {
@@ -208,10 +234,19 @@ QString NewDiskPage::getExtension()
 bool NewDiskPage::validatePage()
 {
     bool isDiskCreated = SystemUtils::createDisk(this->m_qemuGlobalObject,
-                                                 this->m_diskName,
+                                                 this->m_diskPath,
                                                  NewDiskPage::getExtension(),
                                                  this->m_diskSpinBox->value(),
                                                  false);
+
+    QFileInfo newDiskInfo(this->m_diskPath);
+
+    if (isDiskCreated) {
+        this->m_newMedia->setName(newDiskInfo.fileName());
+        this->m_newMedia->setPath(QDir::toNativeSeparators(newDiskInfo.absoluteFilePath()));
+        this->m_newMedia->setType("hdd");
+        this->m_newMedia->setUuid(QUuid::createUuid().toString());
+    }
 
     return isDiskCreated;
 }

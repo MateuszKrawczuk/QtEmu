@@ -45,6 +45,7 @@ class NewDiskWizard : public QWizard {
     public:
         explicit NewDiskWizard(Machine *machine,
                                QEMU *QEMUGlobalObject,
+                               Media *media,
                                QWidget *parent = nullptr);
         ~NewDiskWizard();
 
@@ -66,6 +67,7 @@ class NewDiskPage: public QWizardPage {
     public:
         explicit NewDiskPage(Machine *machine,
                              QEMU *QEMUGlobalObject,
+                             Media *media,
                              QWidget *parent = nullptr);
         ~NewDiskPage();
 
@@ -111,9 +113,10 @@ class NewDiskPage: public QWizardPage {
         QMessageBox *m_qemuImgOkMessageBox;
 
         QString m_diskFormat;
-        QString m_diskName;
+        QString m_diskPath;
 
-        Machine *m_newMachine;
+        Machine *m_machineConfig;
+        Media *m_newMedia;
         QEMU *m_qemuGlobalObject;
 
         // Methods
