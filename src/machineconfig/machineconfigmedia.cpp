@@ -43,7 +43,9 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     }
 
     m_mediaNameLabel = new QLabel(this);
+    m_mediaNameLabel->setWordWrap(true);
     m_mediaPathLabel = new QLabel(this);
+    m_mediaPathLabel->setWordWrap(true);
 
     m_mediaTree = new QTreeWidget(this);
     m_mediaTree->setEnabled(enableFields);
