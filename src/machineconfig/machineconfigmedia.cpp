@@ -55,9 +55,13 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaTree->setHeaderHidden(true);
     m_mediaTree->setRootIsDecorated(false);
     m_mediaTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_mediaTree->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(m_mediaTree, &QTreeWidget::itemSelectionChanged,
             this, &MachineConfigMedia::fillDetailsSection);
+
+    connect(m_mediaTree, &QTreeWidget::customContextMenuRequested,
+            this, &MachineConfigMedia::removeMedia);
 
     this->fillMaps();
 
@@ -67,6 +71,16 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     }
     this->m_mediaTree->setCurrentItem(this->m_mediaTree->itemAt(0, 0));
     this->fillDetailsSection();
+
+    m_removeMediaAction = new QAction(QIcon::fromTheme("remove",
+                                                       QIcon(":/images/qtemu.png")),
+                                      tr("Remove media"),
+                                      this);
+    connect(m_removeMediaAction, &QAction::triggered,
+            this, &MachineConfigMedia::removeMediaFromTree);
+
+    m_menu = new QMenu(this);
+    m_menu->addAction(m_removeMediaAction);
 
     m_mediaDetailsLayout = new QFormLayout();
     m_mediaDetailsLayout->setAlignment(Qt::AlignTop);
@@ -170,13 +184,23 @@ MachineConfigMedia::~MachineConfigMedia()
 }
 
 /**
+ * @brief Remove the selected media
+ *
+ * Remove the selected media
+ */
+void MachineConfigMedia::removeMedia(const QPoint &pos)
+{
+    this->m_menu->exec(m_mediaTree->mapToGlobal(pos));
+}
+
+/**
  * @brief Fill the details section
  *
  * Fill the details section
  */
 void MachineConfigMedia::fillDetailsSection()
 {
-    if (this->m_mediaTree->topLevelItemCount() <= 0) {
+    if (this->countMedia() <= 0) {
         return;
     }
 
@@ -381,6 +405,16 @@ void MachineConfigMedia::addMediaToTree(Media media)
 }
 
 /**
+ * @brief Remove the selected media from the tree
+ *
+ * Remove the selected media from the tree
+ */
+void MachineConfigMedia::removeMediaFromTree()
+{
+    this->m_mediaTree->takeTopLevelItem(this->m_mediaTree->currentColumn());
+}
+
+/**
  * @brief MachineConfigMedia::removeInterface
  * @param driveInterface
  */
@@ -389,6 +423,25 @@ void MachineConfigMedia::removeInterface(const QString driveInterface)
     this->m_diskMap->remove(driveInterface);
     this->m_floppyMap->remove(driveInterface);
     this->m_cdromMap->remove(driveInterface);
+}
+
+/**
+ * @brief Count the number of elements
+ * @return number of items
+ *
+ * Count the number of media that the m_mediaTree have
+ * inserted
+ */
+int MachineConfigMedia::countMedia()
+{
+    int count = 0;
+    QTreeWidgetItemIterator it(this->m_mediaTree);
+    while (*it) {
+        ++count;
+        ++it;
+    }
+
+    return count;
 }
 
 /**

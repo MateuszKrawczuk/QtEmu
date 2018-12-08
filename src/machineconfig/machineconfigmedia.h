@@ -35,6 +35,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QListWidget>
+#include <QAction>
+#include <QMenu>
 
 // Local
 #include "../machine.h"
@@ -60,6 +62,8 @@ class MachineConfigMedia : public QWidget {
     public slots:
 
     private slots:
+        void removeMedia(const QPoint &pos);
+        void removeMediaFromTree();
 
     protected:
 
@@ -88,6 +92,10 @@ class MachineConfigMedia : public QWidget {
         QPushButton *m_addHDDPushButton;
         QPushButton *m_addCDROMPushButton;
 
+        QAction *m_removeMediaAction;
+
+        QMenu *m_menu;
+
         QMessageBox *m_addHddDiskMessageBox;
         QMessageBox *m_addOpticalMessageBox;
         QMessageBox *m_addFloppyMessageBox;
@@ -112,5 +120,6 @@ class MachineConfigMedia : public QWidget {
         void fillMaps();
         void addMediaToTree(Media media);
         void removeInterface(const QString driveInterface);
+        int countMedia();
 };
 #endif // MACHINECONFIGMEDIA_H
