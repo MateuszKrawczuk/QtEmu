@@ -83,7 +83,8 @@ SOURCES +=  src/main.cpp\
             src/qemu.cpp \
             src/machineconfig/machineconfiggeneraltabs.cpp \
             src/machineconfig/machineconfighardwaretabs.cpp \
-    src/utils/qtemualerts.cpp
+            src/utils/qtemualerts.cpp \
+            src/utils/firstrunwizard.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -112,7 +113,8 @@ HEADERS  += src/mainwindow.h \
             src/qemu.h \
             src/machineconfig/machineconfiggeneraltabs.h \
             src/machineconfig/machineconfighardwaretabs.h \
-    src/utils/qtemualerts.h
+            src/utils/qtemualerts.h \
+            src/utils/firstrunwizard.h
 
 OTHER_FILES += \
     CHANGELOG \

@@ -33,6 +33,7 @@
 #include "mainwindow.h"
 #include "qemu.h"
 #include "utils/logger.h"
+#include "utils/firstrunwizard.h"
 
 int main(int argc, char *argv[])
 {
@@ -77,8 +78,6 @@ int main(int argc, char *argv[])
 
     settings.setValue("QtEmuData", dataDirectoryPath);
     settings.setValue("QtEmuLogs", dataDirectoryLogs);
-
-    settings.sync();
     settings.endGroup();
 
     // Translations
@@ -130,6 +129,18 @@ int main(int argc, char *argv[])
         qtemuApp.installTranslator(&translatorQtEmu);
     } else {
         std::cout << "Language unavailable";
+    }
+
+    // Launch first run winzard
+    settings.beginGroup("Configuration");
+    bool runFirstRunWizard = settings.value("firstrunwizard", true).toBool();
+    settings.endGroup();
+    settings.sync(); // sync settings
+
+    if (runFirstRunWizard) {
+        FirstRunWizard firstRunWizard(nullptr);
+        firstRunWizard.show();
+        firstRunWizard.exec();
     }
 
     // Load Logger

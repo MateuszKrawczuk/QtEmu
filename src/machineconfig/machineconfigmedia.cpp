@@ -23,10 +23,14 @@
 #include "machineconfigmedia.h"
 
 /**
- * @brief MachineConfigMedia::MachineConfigMedia
- * @param machine
- * @param QEMUGlobalObject
- * @param parent
+ * @brief Configuration of the machine. Media page
+ * @param machine, machine to be configured
+ * @param QEMUGlobalObject, QEMU global object with data about QEMU
+ * @param parent, parent widget
+ *
+ * Configuration of the machine. Media page.
+ * In this page you can add or remove hdd, cdrom and floppy
+ * to the machine
  */
 MachineConfigMedia::MachineConfigMedia(Machine *machine,
                                        QEMU *QEMUGlobalObject,
