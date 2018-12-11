@@ -84,27 +84,7 @@ QString QEMU::QEMUImgPath() const
  */
 void QEMU::setQEMUImgPath(const QString path)
 {
-    QString qemuImgPath;
-    #ifdef Q_OS_LINUX
-    qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
-    #endif
-    #ifdef Q_OS_WIN
-    qemuImgPath = path;
-    #endif
-    #ifdef Q_OS_MACOS
-    qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
-    #endif
-    #ifdef Q_OS_FREEBSD
-    qemuImgPath = path + QDir::toNativeSeparators("/") + "qemu-img";
-    #endif
-
-    QFile qemuImgFile(qemuImgPath);
-    if (qemuImgFile.exists()) {
-        this->m_QEMUImgPath = qemuImgPath;
-    } else {
-        this->m_QEMUImgPath = "";
-        qDebug() << "Cannot find qemu-img binary";
-    }
+    this->m_QEMUImgPath = path;
 }
 
 /**

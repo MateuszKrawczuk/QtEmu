@@ -170,6 +170,9 @@ bool MachineConclusionPage::validatePage()
 
     this->generateMachineFiles();
 
+    // Set the uuid in this point to control the LoadUI in the mainwindow
+    // don't move from here
+    this->m_newMachine->setUuid(QUuid::createUuid().toString());
     return true;
 }
 

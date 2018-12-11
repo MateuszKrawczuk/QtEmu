@@ -178,7 +178,6 @@ bool MachineNamePage::validatePage()
     this->m_newMachine->setOSType(this->m_OSType->currentText());
     this->m_newMachine->setOSVersion(this->m_OSVersion->currentText());
     this->m_newMachine->setPath(fullMachinePath);
-    this->m_newMachine->setUuid(QUuid::createUuid().toString());
 
     return true;
 }
