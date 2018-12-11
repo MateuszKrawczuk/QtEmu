@@ -34,6 +34,7 @@
 #include <QCloseEvent>
 #include <QSettings>
 #include <QPushButton>
+#include <QFileDialog>
 #include <QDebug>
 
 class FirstRunWizard : public QWizard {
@@ -49,8 +50,12 @@ class FirstRunWizard : public QWizard {
 
     public slots:
 
+    private slots:
+        void cancelButton();
+
     protected:
         virtual void closeEvent(QCloseEvent *event);
+        virtual void hideEvent(QHideEvent *event);
 
     private:
         QMessageBox *m_warningFinishMessageBox;
@@ -66,6 +71,9 @@ class QEMUBinariesPage: public QWizardPage {
     signals:
 
     private slots:
+        void setQemuBinariesPath();
+        void setQemuImgPath();
+        void setQemuMachinesPath();
 
     protected:
 
@@ -91,6 +99,9 @@ class QEMUBinariesPage: public QWizardPage {
         QPushButton *m_qemuBinariesPushButton;
         QPushButton *m_qemuImgPathPushButton;
         QPushButton *m_qemuMachinesPathPushButton;
+
+        // Methods
+        bool validatePage();
 };
 
 #endif // FIRSTRUNWIZARD_H
