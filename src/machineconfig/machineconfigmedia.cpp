@@ -60,7 +60,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     m_mediaTree->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(m_mediaTree, &QTreeWidget::itemSelectionChanged,
+    connect(m_mediaTree, &QTreeWidget::itemPressed,
             this, &MachineConfigMedia::fillDetailsSection);
 
     connect(m_mediaTree, &QTreeWidget::customContextMenuRequested,
@@ -93,10 +93,11 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaDetailsLayout->addRow(tr("Name") + ":", m_mediaNameLabel);
     m_mediaDetailsLayout->addRow(tr("Path") + ":", m_mediaPathLabel);
 
+    // QtEmu 2.1
     m_mediaSettingsGroupBox = new QGroupBox(tr("Details"), this);
     m_mediaSettingsGroupBox->setLayout(m_mediaDetailsLayout);
 
-    m_cacheComboBox = new QComboBox(this);
+    /*m_cacheComboBox = new QComboBox(this);
     m_cacheComboBox->setEnabled(enableFields);
     m_cacheComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_cacheComboBox->addItem("none");
@@ -128,7 +129,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaOptionsGroupBox = new QGroupBox(tr("Options"), this);
     m_mediaOptionsGroupBox->setFlat(true);
     m_mediaOptionsGroupBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    m_mediaOptionsGroupBox->setLayout(m_mediaOptionsLayout);
+    m_mediaOptionsGroupBox->setLayout(m_mediaOptionsLayout);*/
 
     m_addFloppyPushButton = new QPushButton(this);
     m_addFloppyPushButton->setEnabled(enableFields);
@@ -204,6 +205,8 @@ void MachineConfigMedia::removeMedia(const QPoint &pos)
 void MachineConfigMedia::fillDetailsSection()
 {
     if (this->countMedia() <= 0) {
+        this->m_mediaNameLabel->setText("");
+        this->m_mediaPathLabel->setText("");
         return;
     }
 
@@ -247,6 +250,7 @@ void MachineConfigMedia::addFloppyMedia()
     media.setUuid(QUuid::createUuid().toString());
 
     this->addMediaToTree(media);
+    this->fillDetailsSection();
 }
 
 /**
@@ -313,6 +317,7 @@ void MachineConfigMedia::addHddMedia()
     } else if (m_addHddDiskMessageBox->clickedButton() == cancelButton) {
         m_addHddDiskMessageBox->close();
     }
+    this->fillDetailsSection();
 }
 
 /**
@@ -359,6 +364,7 @@ void MachineConfigMedia::addOpticalMedia()
 
     this->removeInterface("hdc");
     this->addMediaToTree(media);
+    this->fillDetailsSection();
 }
 
 /**
@@ -404,6 +410,8 @@ void MachineConfigMedia::addMediaToTree(Media media)
     m_mediaItem->setText(0, mediaName);
     m_mediaItem->setData(0, Qt::UserRole, mediaVariant);
 
+    // To prevent undefined behavior :'(
+    this->m_mediaTree->setCurrentItem(m_mediaItem);
     this->removeInterface(media.driveInterface());
 }
 
@@ -414,12 +422,35 @@ void MachineConfigMedia::addMediaToTree(Media media)
  */
 void MachineConfigMedia::removeMediaFromTree()
 {
+    QVariant mediaVariant = this->m_mediaTree->currentItem()->data(0, Qt::UserRole);
+    Media selectedMedia = mediaVariant.value<Media>();
+
     this->m_mediaTree->takeTopLevelItem(this->m_mediaTree->currentColumn());
+    this->fillDetailsSection();
 }
 
 /**
- * @brief MachineConfigMedia::removeInterface
- * @param driveInterface
+ * @brief Add the interface to the maps
+ * @param driveInterface, interface to be added
+ *
+ * Add the interface to the maps
+ */
+void MachineConfigMedia::addInterface(const QString driveInterface)
+{
+    if (driveInterface == "cdrom") {
+        this->m_cdromMap->insert(driveInterface, driveInterface);
+    } else if (driveInterface.contains("hd")) {
+        this->m_diskMap->insert(driveInterface, driveInterface);
+    } else if (driveInterface.contains("fd")) {
+        this->m_floppyMap->insert(driveInterface, driveInterface);
+    }
+}
+
+/**
+ * @brief Remove the interface from the maps
+ * @param driveInterface, interface to be removed
+ *
+ * Remove the interface from the maps
  */
 void MachineConfigMedia::removeInterface(const QString driveInterface)
 {
@@ -443,7 +474,6 @@ int MachineConfigMedia::countMedia()
         ++count;
         ++it;
     }
-
     return count;
 }
 

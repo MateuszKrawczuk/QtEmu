@@ -49,6 +49,7 @@
 #include <QTableWidget>
 #include <QToolButton>
 #include <QFileDialog>
+#include <QSpinBox>
 
 #include <QDebug>
 
@@ -105,10 +106,15 @@ class ConfigWindow : public QWidget {
         // General page
         QGroupBox *m_machinePathGroup;
         QHBoxLayout *m_machinePathLayout;
+        QHBoxLayout *m_machineSocketLayout;
+        QHBoxLayout *m_machinePortSocketLayout;
+        QVBoxLayout *m_groupLayout;
         QVBoxLayout *m_generalPageLayout;
         QWidget *m_generalPageWidget;
 
         QLabel *m_machinePathLabel;
+        QLabel *m_monitorHostnameLabel;
+        QLabel *m_monitorSocketPathLabel;
 
         QLineEdit *m_machinePathLineEdit;
 
@@ -119,6 +125,10 @@ class ConfigWindow : public QWidget {
 
         QFileDialog *m_machinePathDialog;
         QFileDialog *m_startCommandDialog;
+
+        QComboBox *m_monitorHostnameComboBox;
+
+        QSpinBox *m_monitorSocketSpinBox;
 
         // Update QtEmu page
         QFormLayout *m_updatePageLayout;

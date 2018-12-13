@@ -98,7 +98,9 @@ class GraphicsConfigTab: public QWidget {
     protected:
 
     private:
-        QGridLayout *m_graphicsLayout;
+        QHBoxLayout *m_gpuLayout;
+        QHBoxLayout *m_keyboardLayout;
+        QVBoxLayout *m_graphicsLayout;
 
         QComboBox *m_GPUType;
         QComboBox *m_keyboard;

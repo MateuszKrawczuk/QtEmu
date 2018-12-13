@@ -180,18 +180,52 @@ void ConfigWindow::createGeneralPage()
     connect(m_machinePathButton, &QAbstractButton::clicked,
             this, &ConfigWindow::setMachinePath);
 
+#ifdef Q_OS_WIN
+    m_monitorHostnameLabel = new QLabel(tr("Hostname") + ":", this);
+    m_monitorHostnameLabel->setWordWrap(true);
+
+    m_monitorHostnameComboBox = new QComboBox(this);
+    m_monitorHostnameComboBox->addItem("localhost");
+    m_monitorHostnameComboBox->addItem("127.0.0.1");
+
+    m_monitorSocketPathLabel = new QLabel(tr("Port") + ":", this);
+    m_monitorSocketSpinBox = new QSpinBox(this);
+    m_monitorSocketSpinBox->setMinimum(1);
+    m_monitorSocketSpinBox->setMaximum(65535);
+    m_monitorSocketSpinBox->setValue(6000);
+#endif
+
     m_machinePathLayout = new QHBoxLayout();
     m_machinePathLayout->setAlignment(Qt::AlignTop);
     m_machinePathLayout->addWidget(m_machinePathLabel);
     m_machinePathLayout->addWidget(m_machinePathLineEdit);
     m_machinePathLayout->addWidget(m_machinePathButton);
 
+#ifdef Q_OS_WIN
+    m_machineSocketLayout = new QHBoxLayout();
+    m_machineSocketLayout->addWidget(m_monitorHostnameLabel);
+    m_machineSocketLayout->addWidget(m_monitorHostnameComboBox);
+
+    m_machinePortSocketLayout = new QHBoxLayout();
+    m_machinePortSocketLayout->addWidget(m_monitorSocketPathLabel);
+    m_machinePortSocketLayout->addWidget(m_monitorSocketSpinBox);
+#endif
+
+    m_groupLayout = new QVBoxLayout();
+    m_groupLayout->setAlignment(Qt::AlignTop);
+    m_groupLayout->addItem(m_machinePathLayout);
+
     m_machinePathGroup = new QGroupBox(tr("Machine Path"), this);
-    m_machinePathGroup->setLayout(m_machinePathLayout);
-    m_machinePathGroup->setFlat(true);
+    m_machinePathGroup->setLayout(m_groupLayout);
+    m_machinePathGroup->setFlat(false);
 
     m_generalPageLayout = new QVBoxLayout();
+    m_generalPageLayout->setAlignment(Qt::AlignTop);
     m_generalPageLayout->addWidget(m_machinePathGroup);
+#ifdef Q_OS_WIN
+    m_generalPageLayout->addItem(m_machineSocketLayout);
+    m_generalPageLayout->addItem(m_machinePortSocketLayout);
+#endif
 
     m_generalPageWidget = new QWidget(this);
     m_generalPageWidget->setLayout(m_generalPageLayout);
@@ -649,6 +683,10 @@ void ConfigWindow::saveSettings()
 
     // General
     settings.setValue("machinePath", this->m_machinePathLineEdit->text());
+#ifdef Q_OS_WIN
+    settings.setValue("qemuMonitorHost", this->m_monitorHostnameComboBox->currentText());
+    settings.setValue("qemuMonitorPort", this->m_monitorSocketSpinBox->value());
+#endif
 
     // Update
     settings.setValue("update", this->m_updateCheckBox->isChecked());
@@ -694,7 +732,10 @@ void ConfigWindow::loadSettings()
 
     // General
     this->m_machinePathLineEdit->setText(settings.value("machinePath", QDir::homePath()).toString());
-
+#ifdef Q_OS_WIN
+    this->m_monitorHostnameComboBox->setCurrentText(settings.value("qemuMonitorHost", "localhost").toString());
+    this->m_monitorSocketSpinBox->setValue(settings.value("qemuMonitorPort", 6000).toInt());
+#endif
     // Update
     this->m_updateCheckBox->setChecked(settings.value("update", true).toBool());
     this->m_releaseString = settings.value("release", "stable").toString();
@@ -725,7 +766,6 @@ void ConfigWindow::loadSettings()
     this->toggleAuth(this->m_useAuth);
 
     // QEMU
-    // TODO: default value for different os
     this->binaryPathChanged(settings.value("qemuBinaryPath", "").toString());
     this->m_binaryPathLineEdit->setText(settings.value("qemuBinaryPath", "").toString());
     this->m_QEMUImgPathLineEdit->setText(settings.value("qemuImgBinaryPath", "").toString());

@@ -218,6 +218,10 @@ GraphicsConfigTab::GraphicsConfigTab(Machine *machine,
        m_GPUType->setCurrentIndex(gpuIndex);
     }
 
+    m_gpuLayout = new QHBoxLayout();
+    m_gpuLayout->addWidget(m_GPUTypeLabel);
+    m_gpuLayout->addWidget(m_GPUType);
+
     m_keyboardLabel = new QLabel(tr("Keyboard layout") + ":", this);
     m_keyboardLabel->setWordWrap(true);
     m_keyboard = new QComboBox(this);
@@ -227,13 +231,14 @@ GraphicsConfigTab::GraphicsConfigTab(Machine *machine,
         m_keyboard->setCurrentIndex(keyboardIndex);
     }
 
-    m_graphicsLayout = new QGridLayout();
-    m_graphicsLayout->setColumnStretch(1, 10);
-    m_graphicsLayout->setColumnStretch(2, 10);
-    m_graphicsLayout->addWidget(m_GPUTypeLabel,  1, 0, 1, 1);
-    m_graphicsLayout->addWidget(m_GPUType,       1, 1, 1, 3);
-    m_graphicsLayout->addWidget(m_keyboardLabel, 2, 0, 1, 1);
-    m_graphicsLayout->addWidget(m_keyboard,      2, 1, 1, 3);
+    m_keyboardLayout = new QHBoxLayout();
+    m_keyboardLayout->addWidget(m_keyboardLabel);
+    m_keyboardLayout->addWidget(m_keyboard);
+
+    m_graphicsLayout = new QVBoxLayout();
+    m_graphicsLayout->setAlignment(Qt::AlignTop);
+    m_graphicsLayout->addItem(m_gpuLayout);
+    m_graphicsLayout->addItem(m_keyboardLayout);
 
     this->setLayout(m_graphicsLayout);
 
@@ -308,13 +313,15 @@ RamConfigTab::RamConfigTab(Machine *machine,
     m_maxMemorylabel = new QLabel(QString("%1 MiB").arg(totalRAM), this);
 
     m_machineMemoryLayout = new QGridLayout();
-    m_machineMemoryLayout->setColumnStretch(1, 50);
-    m_machineMemoryLayout->addWidget(m_descriptionMemoryLabel, 0, 0, 1, 5);
-    m_machineMemoryLayout->addWidget(m_memorySlider,           1, 0, 1, 3);
-    m_machineMemoryLayout->addWidget(m_memorySpinBox,          1, 3, 1, 1);
-    m_machineMemoryLayout->addWidget(m_spinBoxMemoryLabel,     1, 4, 1, 1);
-    m_machineMemoryLayout->addWidget(m_minMemoryLabel,         2, 0, 1, 1);
-    m_machineMemoryLayout->addWidget(m_maxMemorylabel,         2, 2, 1, 1);
+    m_machineMemoryLayout->setRowStretch(1, 1);
+    m_machineMemoryLayout->setRowStretch(2, 10);
+    m_machineMemoryLayout->setColumnStretch(1, 10);
+    m_machineMemoryLayout->addWidget(m_descriptionMemoryLabel, 0, 0, 1, 5, Qt::AlignTop);
+    m_machineMemoryLayout->addWidget(m_memorySlider,           1, 0, 1, 3, Qt::AlignTop);
+    m_machineMemoryLayout->addWidget(m_memorySpinBox,          1, 3, 1, 1, Qt::AlignTop);
+    m_machineMemoryLayout->addWidget(m_spinBoxMemoryLabel,     1, 4, 1, 1, Qt::AlignTop);
+    m_machineMemoryLayout->addWidget(m_minMemoryLabel,         2, 0, 1, 1, Qt::AlignTop);
+    m_machineMemoryLayout->addWidget(m_maxMemorylabel,         2, 2, 1, 1, Qt::AlignTop);
 
     this->setLayout(m_machineMemoryLayout);
 

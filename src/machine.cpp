@@ -31,15 +31,18 @@ Machine::Machine(QObject *parent) : QObject(parent)
 {
     this->m_machineProcess = new QProcess(this);
 
+#ifdef Q_OS_WIN
+    this->m_machineTcpSocket = new QTcpSocket(this);
+    connect(m_machineTcpSocket, &QTcpSocket::readyRead,
+            this, &Machine::readMachineStandardOut);
+#endif
+
     connect(m_machineProcess, &QProcess::readyReadStandardOutput,
             this, &Machine::readMachineStandardOut);
-
     connect(m_machineProcess, &QProcess::readyReadStandardError,
             this, &Machine::readMachineErrorOut);
-
     connect(m_machineProcess, &QProcess::started,
             this, &Machine::machineStarted);
-
     connect(m_machineProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &Machine::machineFinished);
 
@@ -693,9 +696,12 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
     #endif
 
     if (program.isEmpty()) {
-        // SHOW MESSAGE
+        // SHOW MESSAGE // TODO
     }
-    m_machineProcess->start(program, args);
+    this->m_machineProcess->start(program, args);
+#ifdef Q_OS_WIN
+    this->m_machineTcpSocket->connectToHost("localhost", 9999, QIODevice::ReadWrite);
+#endif
 }
 
 /**
@@ -705,7 +711,15 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
  */
 void Machine::stopMachine()
 {
-    this->m_machineProcess->write(qPrintable("system_powerdown\n"));
+#ifdef Q_OS_WIN
+    if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
+        qDebug() << "FAIL"; // TODO
+    } else {
+        this->m_machineTcpSocket->write(qPrintable("system_powerdown\n"));
+    }
+#else
+    this->m_machineProcess->write(qPrintable("system_reset\n"));
+#endif
     this->state = Machine::Stopped;
 
     emit(machineStateChangedSignal(Machine::Stopped));
@@ -718,7 +732,15 @@ void Machine::stopMachine()
  */
 void Machine::resetMachine()
 {
+#ifdef Q_OS_WIN
+    if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
+        qDebug() << "FAIL"; // TODO
+    } else {
+        this->m_machineTcpSocket->write(qPrintable("system_reset\n"));
+    }
+#else
     this->m_machineProcess->write(qPrintable("system_reset\n"));
+#endif
 }
 
 /**
@@ -730,12 +752,30 @@ void Machine::resetMachine()
 void Machine::pauseMachine()
 {
     if (state == Machine::Started) {
+
+#ifdef Q_OS_WIN
+        if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
+            qDebug() << "FAIL"; // TODO
+        } else {
+            this->m_machineTcpSocket->write(qPrintable("stop\n"));
+        }
+#else
         this->m_machineProcess->write(qPrintable("stop\n"));
+#endif
         this->state = Machine::Paused;
 
         emit(machineStateChangedSignal(Machine::Paused));
     } else if (state == Machine::Paused) {
+
+#ifdef Q_OS_WIN
+        if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
+            qDebug() << "FAIL"; // TODO
+        } else {
+            this->m_machineTcpSocket->write(qPrintable("cont\n"));
+        }
+#else
         this->m_machineProcess->write(qPrintable("cont\n"));
+#endif
         this->state = Machine::Started;
 
         emit(machineStateChangedSignal(Machine::Started));
@@ -828,9 +868,12 @@ QStringList Machine::generateMachineCommand()
     QStringList qemuCommand;
 
     #ifdef Q_OS_WIN
-    //qemuCommand << "-monitor" << QString("tcp:%1:%2,server,nowait")
-    //                             .arg(settings.value("", "localhost").toString())
-    //                             .arg(settings.value("", 6000).toInt() + Embedded_Display_Port);
+    QSettings settings;
+    settings.beginGroup("Configuration");
+    qemuCommand << "-monitor" << QString("tcp:%1:%2,server,nowait")
+                                        .arg(settings.value("qemuMonitorHost", "localhost").toString())
+                                        .arg(settings.value("qemuMonitorPort", 6000).toInt());
+    settings.endGroup();
     #else
     qemuCommand << "-monitor" << "stdio";
     #endif

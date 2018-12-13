@@ -49,7 +49,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                          QIcon(":/images/qtemu.png")));
     this->setWindowFlags(Qt::Dialog);
     this->setWindowModality(Qt::ApplicationModal);
-    this->setMinimumSize(640, 500);
+    this->setMinimumSize(700, 500);
 
     m_configGeneral  = new MachineConfigGeneral(machine, this);
     m_configHardware = new MachineConfigHardware(machine, this);

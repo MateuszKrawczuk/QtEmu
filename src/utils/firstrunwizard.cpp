@@ -38,7 +38,7 @@ FirstRunWizard::FirstRunWizard(QWidget *parent) : QWizard(parent)
     this->setStartId(Page_QEMUBinaries);
 
 #ifndef Q_OS_MAC
-    this->setWizardStyle(NStyles);
+    this->setWizardStyle(ClassicStyle);
 #endif
 #ifdef Q_OS_MAC
         this->setWizardStyle(MacStyle);

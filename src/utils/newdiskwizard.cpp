@@ -40,13 +40,12 @@ NewDiskWizard::NewDiskWizard(Machine *machine,
     this->setPage(Page_Disk, new NewDiskPage(machine, QEMUGlobalObject, media, this));
     this->setStartId(Page_Disk);
 
-    #ifndef Q_OS_MAC
+#ifndef Q_OS_MAC
         this->setWizardStyle(ClassicStyle);
-    #endif
-
-    #ifdef Q_OS_MAC
+#endif
+#ifdef Q_OS_MAC
         this->setWizardStyle(MacStyle);
-    #endif
+#endif
 
     this->setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
     this->setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));

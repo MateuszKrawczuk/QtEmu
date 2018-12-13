@@ -24,6 +24,7 @@
 // Qt
 #include <QObject>
 #include <QProcess>
+#include <QTcpSocket>
 #include <QHash>
 #include <QUuid>
 #include <QMessageBox>
@@ -282,6 +283,7 @@ class Machine: public QObject {
 
         // Process
         QProcess *m_machineProcess;
+        QTcpSocket *m_machineTcpSocket;
 
         // Messages
         QMessageBox *m_saveMachineMessageBox;
