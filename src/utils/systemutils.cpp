@@ -43,7 +43,7 @@ void SystemUtils::getTotalMemory(int &totalRAM)
         struct sysinfo sys_info;
 
         if (sysinfo(&sys_info) != -1) {
-            totalRAM = (((uint64_t)sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024;
+            totalRAM = static_cast<int>(((sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024);
         }
     #endif
     #ifdef Q_OS_WIN
