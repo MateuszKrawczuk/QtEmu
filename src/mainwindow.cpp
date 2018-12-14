@@ -413,12 +413,12 @@ void MainWindow::loadMachines()
     // Open the file with the machines
     QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
     QFile machinesFile(qtemuConfig);
-    if (!machinesFile.open(QIODevice::ReadWrite)) {
+    if (!machinesFile.open(QIODevice::ReadOnly)) {
         m_loadMachinesMessageBox = new QMessageBox();
         m_loadMachinesMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_loadMachinesMessageBox->setIcon(QMessageBox::Critical);
-        m_loadMachinesMessageBox->setText(tr("<p>Cannot save the machine</p>"
-                                             "<p>The file with the machine configuration are not writable</p>"));
+        m_loadMachinesMessageBox->setText(tr("<p>Cannot load the machines</p>"
+                                             "<p>The file with all the machines are not readable</p>"));
         m_loadMachinesMessageBox->exec();
         return;
     }

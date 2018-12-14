@@ -38,7 +38,6 @@
 #include <QSettings>
 #include <QDir>
 #include <QFileDialog>
-#include <QMessageBox>
 
 // Local
 #include "../machine.h"
@@ -142,9 +141,6 @@ class MachineNewDiskPage: public QWizardPage {
         QRadioButton *m_cloopRadioButton;
 
         QMessageBox *m_qemuImgNotFoundMessageBox;
-        QMessageBox *m_qemuImgNotFinishedMessageBox;
-        QMessageBox *m_qemuImgErrorMessageBox;
-        QMessageBox *m_qemuImgOkMessageBox;
 
         QString m_diskName;
 

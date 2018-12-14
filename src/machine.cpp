@@ -984,12 +984,14 @@ void Machine::saveMachine()
 {
     QFile machineFile(this->configPath);
     if (!machineFile.open(QFile::WriteOnly)) {
-        /*m_saveMachineMessageBox = new QMessageBox();
+        m_saveMachineMessageBox = new QMessageBox();
         m_saveMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_saveMachineMessageBox->setIcon(QMessageBox::Critical);
         m_saveMachineMessageBox->setText(tr("<p>Cannot save the machine</p>"
                                             "<p>The file with the machine configuration are not writable</p>"));
-        m_saveMachineMessageBox->exec();*/
+        m_saveMachineMessageBox->show();
+        m_saveMachineMessageBox->raise();
+        m_saveMachineMessageBox->activateWindow();
         return;
     }
 
@@ -1073,12 +1075,14 @@ void Machine::insertMachineConfigFile()
 
     QFile machinesFile(qtemuConfig);
     if (!machinesFile.open(QFile::ReadWrite)) {
-        /*m_machineConfigMessageBox = new QMessageBox();
+        m_machineConfigMessageBox = new QMessageBox();
         m_machineConfigMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_machineConfigMessageBox->setIcon(QMessageBox::Critical);
         m_machineConfigMessageBox->setText(tr("<p>Cannot save the machine</p>"
-                                              "<p>The file with the machine configuration are not writable</p>"));
-        m_machineConfigMessageBox->exec();*/
+                                              "<p>The file with all the machines configuration are not writable</p>"));
+        m_machineConfigMessageBox->show();
+        m_machineConfigMessageBox->raise();
+        m_machineConfigMessageBox->activateWindow();
         return;
     }
 

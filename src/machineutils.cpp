@@ -54,8 +54,8 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid)
         QMessageBox *m_deleteMachineMessageBox = new QMessageBox();
         m_deleteMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_deleteMachineMessageBox->setIcon(QMessageBox::Critical);
-        m_deleteMachineMessageBox->setText(tr("<p>Cannot save the machine</p>"
-                                              "<p>The file with the machine configuration are not writable</p>"));
+        m_deleteMachineMessageBox->setText(tr("<p>Cannot delete the machine</p>"
+                                              "<p>The file with the machine configuration are not readable</p>"));
         m_deleteMachineMessageBox->exec();
         return false;
     }
@@ -139,12 +139,12 @@ QString MachineUtils::getMachineConfigPath(const QUuid machineUuid)
     settings.endGroup();
     QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
     QFile machinesFile(qtemuConfig);
-    if (!machinesFile.open(QFile::ReadWrite)) {
+    if (!machinesFile.open(QFile::ReadOnly)) {
         QMessageBox *m_machinePathMessageBox = new QMessageBox();
         m_machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_machinePathMessageBox->setIcon(QMessageBox::Critical);
-        m_machinePathMessageBox->setText(tr("<p>Cannot save the machine</p>"
-                                            "<p>The file with the machine configuration are not writable</p>"));
+        m_machinePathMessageBox->setText(tr("<p>Cannot open the file</p>"
+                                            "<p>The file with the machine configuration of the machine are not readable</p>"));
         m_machinePathMessageBox->exec();
         return "";
     }

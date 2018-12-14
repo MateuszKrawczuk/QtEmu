@@ -107,11 +107,6 @@ class NewDiskPage: public QWizardPage {
         QRadioButton *m_vmdkRadioButton;
         QRadioButton *m_cloopRadioButton;
 
-        QMessageBox *m_qemuImgNotFoundMessageBox;
-        QMessageBox *m_qemuImgNotFinishedMessageBox;
-        QMessageBox *m_qemuImgErrorMessageBox;
-        QMessageBox *m_qemuImgOkMessageBox;
-
         QString m_diskFormat;
         QString m_diskPath;
 

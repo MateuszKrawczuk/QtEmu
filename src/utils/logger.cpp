@@ -50,7 +50,7 @@ void Logger::logMachineCreation(const QString &fileLocation,
         QMessageBox *m_logMachineMessageBox = new QMessageBox();
         m_logMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_logMachineMessageBox->setIcon(QMessageBox::Critical);
-        m_logMachineMessageBox->setText(tr("<p>Problem with the log</p>"));
+        m_logMachineMessageBox->setText(tr("<p>Problem writing in the log</p>"));
         m_logMachineMessageBox->exec();
         return;
     }
@@ -87,7 +87,7 @@ void Logger::logQtemuAction(const QString &message)
         QMessageBox *m_logQtEmuMessageBox = new QMessageBox();
         m_logQtEmuMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_logQtEmuMessageBox->setIcon(QMessageBox::Critical);
-        m_logQtEmuMessageBox->setText(tr("<p>Problem with the log</p>"));
+        m_logQtEmuMessageBox->setText(tr("<p>Problem writing in the log</p>"));
         m_logQtEmuMessageBox->exec();
         return;
     }
@@ -125,7 +125,7 @@ void Logger::logQtemuError(const QString &message)
         QMessageBox *m_logQtEmuErrorMessageBox = new QMessageBox();
         m_logQtEmuErrorMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_logQtEmuErrorMessageBox->setIcon(QMessageBox::Critical);
-        m_logQtEmuErrorMessageBox->setText(tr("<p>Problem with the log</p>"));
+        m_logQtEmuErrorMessageBox->setText(tr("<p>Problem writing in the log</p>"));
         m_logQtEmuErrorMessageBox->exec();
         return;
     }
