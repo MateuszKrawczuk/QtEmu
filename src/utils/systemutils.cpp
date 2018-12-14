@@ -31,6 +31,12 @@ SystemUtils::~SystemUtils()
     qDebug() << "SystemUtils destroyed";
 }
 
+/**
+ * @brief Get the total RAM installed on the system
+ * @param totalRAM, variable to store the total ram
+ *
+ * Get the total RAM installed on the system
+ */
 void SystemUtils::getTotalMemory(int &totalRAM)
 {
     #ifdef Q_OS_LINUX
@@ -55,6 +61,12 @@ void SystemUtils::getTotalMemory(int &totalRAM)
     #endif
 }
 
+/**
+ * @brief Get all the CPU types for x86
+ * @param CPUType, combobox to insert all the CPU
+ *
+ * Get all the CPU types for x86
+ */
 void SystemUtils::setCPUTypesx86(QComboBox *CPUType)
 {
     // Intel among many others...IBM, Texas Instruments, AMD, Cyrix...
@@ -113,6 +125,12 @@ void SystemUtils::setCPUTypesx86(QComboBox *CPUType)
     CPUType->addItem("Max",  QString("max"));
 }
 
+/**
+ * @brief Get all the GPU cards
+ * @param GPUType, combobox to insert all the GPU
+ *
+ * Get all the GPU cards
+ */
 void SystemUtils::setGPUTypes(QComboBox *GPUType)
 {
     GPUType->addItem("None",                         QString("none"));
@@ -126,6 +144,12 @@ void SystemUtils::setGPUTypes(QComboBox *GPUType)
     GPUType->addItem("Xen Framebuffer",              QString("xenfb"));
 }
 
+/**
+ * @brief Get the keyboard layouts
+ * @param keyboardLayout, combobox keyboard layouts
+ *
+ * Get the keyboard layouts
+ */
 void SystemUtils::setKeyboardLayout(QComboBox *keyboardLayout)
 {
     keyboardLayout->addItem("Arabic (ar)",                      QString("ar"));
@@ -163,6 +187,12 @@ void SystemUtils::setKeyboardLayout(QComboBox *keyboardLayout)
     keyboardLayout->addItem("Turkish (tr)",                     QString("tr"));
 }
 
+/**
+ * @brief Get all the audio cards
+ * @return hash with all the audio cards
+ *
+ * Get all the audio cards
+ */
 QHash<QString, QString> SystemUtils::getSoundCards()
 {
     QHash<QString, QString> soundCardsHash;
@@ -178,6 +208,12 @@ QHash<QString, QString> SystemUtils::getSoundCards()
     return soundCardsHash;
 }
 
+/**
+ * @brief Get all the accelerators
+ * @return hash with the accelerators
+ *
+ * Get all the accelerators
+ */
 QHash<QString, QString> SystemUtils::getAccelerators()
 {
     QHash<QString, QString> acceleratorsHash;
@@ -193,6 +229,13 @@ QHash<QString, QString> SystemUtils::getAccelerators()
     return acceleratorsHash;
 }
 
+/**
+ * @brief Get the media devices
+ *
+ * @return map with the media devices
+ *
+ * Get the media devices
+ */
 QMap<QString, QString> SystemUtils::getMediaDevices()
 {
     QMap<QString, QString> mediaMap;
@@ -206,6 +249,14 @@ QMap<QString, QString> SystemUtils::getMediaDevices()
     return mediaMap;
 }
 
+/**
+ * @brief Get Operating System icons
+ * @param osVersion, version of the operating system
+ *
+ * @return icon of the operating system
+ *
+ * Get Operating System icons
+ */
 QString SystemUtils::getOsIcon(const QString &osVersion)
 {
     if (osVersion.contains("Microsoft", Qt::CaseInsensitive)) {
@@ -223,6 +274,19 @@ QString SystemUtils::getOsIcon(const QString &osVersion)
     }
 }
 
+/**
+ * @brief Create the a disk
+ *
+ * @param qemuGlobalObject, QEMU global object with data about QEMU
+ * @param diskName, name of the new disk
+ * @param format, format of the new disk
+ * @param size, size of the new disk
+ * @param useEncryption, use encryption
+ *
+ * Create the a new disk
+ *
+ * @return true if the disk is successfully created
+ */
 bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
                              const QString &diskName,
                              const QString &format,

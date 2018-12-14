@@ -31,9 +31,18 @@ Logger::~Logger()
     qDebug() << "Logger destroyed";
 }
 
+/**
+ * @brief Log the machine creation actions
+ * @param fileLocation, log file location
+ * @param machineName, name of the machine
+ * @param message, message to be logged
+ *
+ * Log the machine creation actions
+ */
 void Logger::logMachineCreation(const QString &fileLocation,
-                                const QString &machineName, const QString &message) {
-
+                                const QString &machineName,
+                                const QString &message)
+{
     QString path = fileLocation + "/logs/" + machineName.toLower().replace(" ", "_") + ".log";
 
     QFile machineLogsFile(path);
@@ -56,11 +65,16 @@ void Logger::logMachineCreation(const QString &fileLocation,
     if (machineLogsFile.isOpen()) {
         machineLogsFile.close();
     }
-
 }
 
-void Logger::logQtemuAction(const QString &message) {
-
+/**
+ * @brief Log qtemu actions
+ * @param message, message to be logged
+ *
+ * Log the qtemu actions
+ */
+void Logger::logQtemuAction(const QString &message)
+{
     QSettings settings;
     settings.beginGroup("DataFolder");
     QString logDirectoryPath = settings.value("QtEmuLogs").toString();
@@ -88,11 +102,16 @@ void Logger::logQtemuAction(const QString &message) {
     if (logsFile.isOpen()) {
         logsFile.close();
     }
-
 }
 
-void Logger::logQtemuError(const QString &message) {
-
+/**
+ * @brief Log the qtemu errors
+ * @param message, message to be logged
+ *
+ * Log the qtemu errors
+ */
+void Logger::logQtemuError(const QString &message)
+{
     QSettings settings;
     settings.beginGroup("DataFolder");
 
@@ -121,5 +140,4 @@ void Logger::logQtemuError(const QString &message) {
     if (logsFile.isOpen()) {
         logsFile.close();
     }
-
 }
