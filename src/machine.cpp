@@ -678,7 +678,6 @@ QString Machine::getAcceleratorLabel()
  */
 void Machine::runMachine(QEMU *QEMUGlobalObject)
 {
-    // QEMU BEFORE COMMANDS
     QStringList args = this->generateMachineCommand();
 
     QString program;
@@ -696,7 +695,13 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
     #endif
 
     if (program.isEmpty()) {
-        // SHOW MESSAGE // TODO
+        m_machineBinaryErrorMessageBox = new QMessageBox();
+        m_machineBinaryErrorMessageBox->setWindowTitle(tr("QEMU - Binary not found"));
+        m_machineBinaryErrorMessageBox->setIcon(QMessageBox::Information);
+        m_machineBinaryErrorMessageBox->setText(tr("QEMU binary not found"));
+        m_machineBinaryErrorMessageBox->show();
+        m_machineBinaryErrorMessageBox->raise();
+        m_machineBinaryErrorMessageBox->activateWindow();
     }
     this->m_machineProcess->start(program, args);
 #ifdef Q_OS_WIN
@@ -713,7 +718,7 @@ void Machine::stopMachine()
 {
 #ifdef Q_OS_WIN
     if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
-        qDebug() << "FAIL"; // TODO
+        this->failConnectMachine();
     } else {
         this->m_machineTcpSocket->write(qPrintable("system_powerdown\n"));
     }
@@ -734,7 +739,7 @@ void Machine::resetMachine()
 {
 #ifdef Q_OS_WIN
     if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
-        qDebug() << "FAIL"; // TODO
+        this->failConnectMachine();
     } else {
         this->m_machineTcpSocket->write(qPrintable("system_reset\n"));
     }
@@ -755,7 +760,7 @@ void Machine::pauseMachine()
 
 #ifdef Q_OS_WIN
         if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
-            qDebug() << "FAIL"; // TODO
+            this->failConnectMachine();
         } else {
             this->m_machineTcpSocket->write(qPrintable("stop\n"));
         }
@@ -769,7 +774,7 @@ void Machine::pauseMachine()
 
 #ifdef Q_OS_WIN
         if (this->m_machineTcpSocket->state() != QAbstractSocket::ConnectedState) {
-            qDebug() << "FAIL"; // TODO
+            this->failConnectMachine();
         } else {
             this->m_machineTcpSocket->write(qPrintable("cont\n"));
         }
@@ -973,6 +978,22 @@ QStringList Machine::generateMachineCommand()
     qDebug() << "Command " << qemuCommand;
 
     return qemuCommand;
+}
+
+/**
+ * @brief Show a message when cannot connect to the machine
+ *
+ * Show a message when cannot connect to the machine
+ */
+void Machine::failConnectMachine()
+{
+    m_failConnectErrorMessageBox = new QMessageBox();
+    m_failConnectErrorMessageBox->setWindowTitle(tr("QEMU - Connection"));
+    m_failConnectErrorMessageBox->setIcon(QMessageBox::Critical);
+    m_failConnectErrorMessageBox->setText(tr("Fail to send command to the QEMU machine"));
+    m_failConnectErrorMessageBox->show();
+    m_failConnectErrorMessageBox->raise();
+    m_failConnectErrorMessageBox->activateWindow();
 }
 
 /**

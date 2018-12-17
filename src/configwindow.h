@@ -160,14 +160,15 @@ class ConfigWindow : public QWidget {
         QWidget *m_languagePageWidget;
 
         // Start
-        QVBoxLayout *m_startPageLayout;
+        // QtEmu 2.x
+        /*QVBoxLayout *m_startPageLayout;
         QWidget *m_startPageWidget;
 
         QPlainTextEdit *m_beforeStart;
         QPlainTextEdit *m_afterExit;
 
         QLabel *m_beforeStartLabel;
-        QLabel *m_afterExitLabel;
+        QLabel *m_afterExitLabel;*/
 
         // Proxy
         QFormLayout *m_proxyPageLayout;

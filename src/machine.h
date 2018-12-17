@@ -222,7 +222,6 @@ class Machine: public QObject {
         void stopMachine();
         void resetMachine();
         void pauseMachine();
-
         void saveMachine();
         void insertMachineConfigFile();
 
@@ -290,10 +289,13 @@ class Machine: public QObject {
         QMessageBox *m_machineConfigMessageBox;
         QMessageBox *m_machineStandardOutMessageBox;
         QMessageBox *m_machineErrorOutMessageBox;
+        QMessageBox *m_machineBinaryErrorMessageBox;
+        QMessageBox *m_failConnectErrorMessageBox;
 
         // Methods
         QProcessEnvironment buildEnvironment();
         QStringList generateMachineCommand();
+        void failConnectMachine();
 };
 
 Q_DECLARE_METATYPE(Media);

@@ -43,7 +43,7 @@ ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject, QWidget *parent) : QWidget(pa
     this->createGeneralPage();
     this->createUpdatePage();
     this->createLanguagePage();
-    this->createStartPage();
+    //this->createStartPage(); QtEmu 2.x
     this->createProxyPage();
     this->createQEMUPage();
 
@@ -68,16 +68,17 @@ ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject, QWidget *parent) : QWidget(pa
     m_optionsListWidget->item(2)->setIcon(QIcon::fromTheme("applications-education-language",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
 
-    m_optionsListWidget->addItem(tr("Start"));
-    m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("practice-start",
-                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
+    // QtEmu 2.x
+    //m_optionsListWidget->addItem(tr("Start"));
+    //m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("practice-start",
+    //                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
 
     m_optionsListWidget->addItem(tr("Proxy"));
-    m_optionsListWidget->item(4)->setIcon(QIcon::fromTheme("network-manager",
+    m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("network-manager",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     m_optionsListWidget->addItem(tr("QEMU"));
-    m_optionsListWidget->item(5)->setIcon(QIcon(QPixmap(":/images/QEMU.png")));
+    m_optionsListWidget->item(4)->setIcon(QIcon(QPixmap(":/images/QEMU.png")));
 
     // Prepare window
     m_categoriesStackedWidget = new QStackedWidget(this);
@@ -87,7 +88,7 @@ ConfigWindow::ConfigWindow(QEMU *QEMUGlobalObject, QWidget *parent) : QWidget(pa
     m_categoriesStackedWidget->addWidget(this->m_generalPageWidget);
     m_categoriesStackedWidget->addWidget(this->m_updatePageWidget);
     m_categoriesStackedWidget->addWidget(this->m_languagePageWidget);
-    m_categoriesStackedWidget->addWidget(this->m_startPageWidget);
+    //m_categoriesStackedWidget->addWidget(this->m_startPageWidget); QtEmu 2.x
     m_categoriesStackedWidget->addWidget(this->m_proxyPageWidget);
     m_categoriesStackedWidget->addWidget(this->m_QEMUPageWidget);
 
@@ -321,7 +322,8 @@ void ConfigWindow::createLanguagePage()
  * can be configured wich commands execute before and after
  * the launch of QEMU.
  */
-void ConfigWindow::createStartPage()
+// QtEmu 2.x
+/*void ConfigWindow::createStartPage()
 {
     m_beforeStartLabel = new QLabel(tr("Execute before start") + ":", this);
     m_afterExitLabel = new QLabel(tr("Execute after exit") + ":", this);
@@ -338,7 +340,7 @@ void ConfigWindow::createStartPage()
 
     m_startPageWidget = new QWidget(this);
     m_startPageWidget->setLayout(m_startPageLayout);
-}
+}*/
 
 /**
  * @brief Create the proxy page of the QtEmu configuration
@@ -697,8 +699,9 @@ void ConfigWindow::saveSettings()
     settings.setValue("languagePos", this->m_languagePos);
 
     // Start page
-    settings.setValue("startCommand", this->m_beforeStart->toPlainText());
-    settings.setValue("afterCommand", this->m_afterExit->toPlainText());
+    // QtEmu 2.x
+    //settings.setValue("startCommand", this->m_beforeStart->toPlainText());
+    //settings.setValue("afterCommand", this->m_afterExit->toPlainText());
 
     // Proxy
     settings.setValue("proxyType", this->m_proxyOptions->currentIndex());
@@ -752,8 +755,9 @@ void ConfigWindow::loadSettings()
     this->m_languagesListView->setCurrentRow(settings.value("languagePos", 0).toInt());
 
     // Start page
-    this->m_beforeStart->setPlainText(settings.value("startCommand", "").toString());
-    this->m_afterExit->setPlainText(settings.value("afterCommand", "").toString());
+    // QtEmu 2.x
+    //this->m_beforeStart->setPlainText(settings.value("startCommand", "").toString());
+    //this->m_afterExit->setPlainText(settings.value("afterCommand", "").toString());
 
     // Proxy
     this->m_proxyOptions->setCurrentIndex(settings.value("proxyType", 0).toInt());

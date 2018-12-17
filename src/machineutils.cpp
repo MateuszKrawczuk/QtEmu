@@ -108,10 +108,6 @@ QJsonObject MachineUtils::getMachineJsonObject(const QUuid machineUuid)
 {
     QString machineConfigPath = getMachineConfigPath(machineUuid);
 
-    if (machineConfigPath.isEmpty()) {
-        // TODO...
-    }
-
     QFile machineFile(machineConfigPath);
     machineFile.open(QIODevice::ReadWrite);
 
