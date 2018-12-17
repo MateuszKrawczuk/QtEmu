@@ -51,7 +51,7 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
     m_audioDescLabel = new QLabel(tr("Audio") + ":", this);
     m_RAMDescLabel = new QLabel(tr("RAM") + ":", this);
     m_acceleratorDescLabel = new QLabel(tr("Accelerator") + ":", this);
-    m_diskDescLabel = new QLabel(tr("Disk") + ":", this);
+    m_diskDescLabel = new QLabel(tr("Disk") + ":");
 
     m_machineNameLabel = new QLabel(this);
     m_machineNameLabel->setWordWrap(true);
@@ -108,12 +108,13 @@ void MachineConclusionPage::initializePage()
     this->m_RAMLabel->setText(QString::number(this->m_newMachine->getRAM()).append(" MiB"));
     this->m_audioLabel->setText(this->m_newMachine->getAudioLabel());
     this->m_acceleratorLabel->setText(this->m_newMachine->getAcceleratorLabel());
-    this->m_diskLabel->setText(diskName);
 
     if (!diskName.isEmpty()) {
+        this->m_diskLabel->setText(diskName);
         this->m_conclusionLayout->addWidget(this->m_diskDescLabel,    9, 0, 1, 1);
         this->m_conclusionLayout->addWidget(this->m_diskLabel,        9, 1, 1, 1);
     } else {
+        this->m_diskLabel->setText("");
         this->m_conclusionLayout->removeWidget(this->m_diskDescLabel);
         this->m_conclusionLayout->removeWidget(this->m_diskLabel);
     }

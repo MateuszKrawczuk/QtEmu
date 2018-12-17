@@ -47,7 +47,7 @@ class MachineUtils : public QObject {
 
         static bool deleteMachine(const QUuid machineUuid);
 
-        static QJsonObject getMachineJsonObject(const QUuid machineUuid);
+        static QJsonObject getMachineJsonObject(const QString machineUuid);
         static QString getMachineConfigPath(const QUuid machineUuid);
         static QStringList getSoundCards(QJsonArray soundCardsArray);
         static QStringList getAccelerators(QJsonArray acceleratorsArray);

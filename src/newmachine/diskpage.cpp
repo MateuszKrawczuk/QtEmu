@@ -36,8 +36,8 @@ MachineDiskPage::MachineDiskPage(Machine *machine,
     this->setTitle(tr("Machine virtual hard disk"));
     this->m_newMachine = machine;
 
-    m_machineDiskLabel = new QLabel(tr("Select a virtual hard disk to the new machine."
-                                       "You can either create a new hard disk or select an existing one."
+    m_machineDiskLabel = new QLabel(tr("Select a virtual hard disk to the new machine. "
+                                       "You can either create a new hard disk or select an existing one. "
                                        "Or leave empty"), this);
     m_machineDiskLabel->setWordWrap(true);
 

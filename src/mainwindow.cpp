@@ -427,39 +427,40 @@ void MainWindow::loadMachines()
     QByteArray machinesData = machinesFile.readAll();
     QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
     QJsonArray machines = machinesDocument["machines"].toArray();
-
     for (int i = 0; i < machines.size(); ++i) {
-        QJsonObject machineJSON = machines[i].toObject();
-
-        QListWidgetItem *machine = new QListWidgetItem(machineJSON["name"].toString(), this->m_osListWidget);
-        machine->setData(QMetaType::QUuid, machineJSON["uuid"].toString());
-        // TODO: Check if the json it's incomplete
-        machine->setIcon(QIcon(":/images/os/64x64/" +
-                                 SystemUtils::getOsIcon(machineJSON["icon"].toString())));
-
-        QUuid machineUuid = machine->data(QMetaType::QUuid).toUuid();
-        QString machineConfigPath = machineJSON["configpath"].toString();
-        this->m_machinesList.append(generateMachineObject(machineUuid, machineConfigPath));
+        this->m_machinesList.append(generateMachineObject(machines[i].toObject()));
     }
 
+    if (machinesFile.isOpen()) {
+        machinesFile.close();
+    }
 }
 
 /**
  * @brief Generate the machine object for the list
- * @param machineJSON, JSON with the machine params
+ * @param machineJsonPath, JSON with the machine uuid and location
  * @return machine object
  *
  * Generate the machine object for the list
  */
-Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QString machineConfigPath)
+Machine* MainWindow::generateMachineObject(const QJsonObject machineJsonPath)
 {
-    QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineUuid);
+    QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineJsonPath["uuid"].toString());
+
+    QListWidgetItem *machineListItem = new QListWidgetItem(machineJSON["name"].toString(), this->m_osListWidget);
+    machineListItem->setData(QMetaType::QUuid, machineJSON["uuid"].toString());
+    machineListItem->setIcon(QIcon(":/images/os/64x64/" +
+                                   SystemUtils::getOsIcon(machineJsonPath["icon"].toString())));
 
     QJsonObject gpuObject = machineJSON["gpu"].toObject();
     QJsonObject cpuObject = machineJSON["cpu"].toObject();
     QJsonObject bootObject = machineJSON["boot"].toObject();
     QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
     QJsonArray mediaArray = machineJSON["media"].toArray();
+
+    Machine *machine = new Machine(this);
+    connect(machine, &Machine::machineStateChangedSignal,
+            this, &MainWindow::machineStateChanged);
 
     Boot machineBoot;
     machineBoot.setBootMenu(bootObject["bootMenu"].toBool());
@@ -468,8 +469,6 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machineBoot.setInitrdPath(kernelObject["initrdPath"].toString());
     machineBoot.setKernelArgs(kernelObject["kernelArgs"].toString());
     machineBoot.setBootOrder(MachineUtils::getMediaDevices(bootObject["bootOrder"].toArray()));
-
-    Machine *machine = new Machine(this);
 
     for(int i = 0; i < mediaArray.size(); ++i) {
         QJsonObject mediaObject = mediaArray[i].toObject();
@@ -490,7 +489,7 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machine->setDescription(machineJSON["description"].toString());
     machine->setRAM(machineJSON["RAM"].toInt());
     machine->setUseNetwork(machineJSON["network"].toBool());
-    machine->setConfigPath(machineConfigPath);
+    machine->setConfigPath(machineJsonPath["configpath"].toString());
     machine->setPath(machineJSON["path"].toString());
     machine->setUuid(machineJSON["uuid"].toString());
     machine->setGPUType(gpuObject["GPUType"].toString());
@@ -505,9 +504,6 @@ Machine* MainWindow::generateMachineObject(const QUuid machineUuid, const QStrin
     machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
     machine->setBoot(machineBoot);
-
-    connect(machine, &Machine::machineStateChangedSignal,
-            this, &MainWindow::machineStateChanged);
 
     return machine;
 }
@@ -560,6 +556,9 @@ void MainWindow::machineOptions()
                                                     this->m_osListWidget->currentItem(),
                                                     this);
     m_machineConfigWindow->show();
+
+    connect(m_machineConfigWindow, &MachineConfigWindow::saveMachineSettingsSignal,
+            this, &MainWindow::updateMachineDetailsSection);
 }
 
 /**

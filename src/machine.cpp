@@ -705,7 +705,13 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
     }
     this->m_machineProcess->start(program, args);
 #ifdef Q_OS_WIN
-    this->m_machineTcpSocket->connectToHost("localhost", 9999, QIODevice::ReadWrite);
+    QSettings settings;
+    settings.beginGroup("Configuration");
+
+    QString monitorHostName = settings.value("qemuMonitorHost", "localhost").toString();
+    quint16 monitorSocket = static_cast<quint16>(settings.value("qemuMonitorPort", 6000).toInt());
+
+    this->m_machineTcpSocket->connectToHost(monitorHostName, monitorSocket, QIODevice::ReadWrite);
 #endif
 }
 
@@ -1075,6 +1081,11 @@ void Machine::saveMachine()
     QJsonDocument machineJSONDocument(machineJSONObject);
 
     machineFile.write(machineJSONDocument.toJson());
+    machineFile.flush();
+
+    if (machineFile.isOpen()) {
+        machineFile.close();
+    }
 
     qDebug() << "Machine saved";
 }
@@ -1118,7 +1129,6 @@ void Machine::insertMachineConfigFile()
     // Create the new machine
     QJsonObject machine;
     machine["uuid"]       = this->uuid;
-    machine["name"]       = this->name;
     machine["path"]       = this->path;
     machine["configpath"] = this->configPath;
     machine["icon"]       = this->OSVersion.toLower().replace(" ", "_");
@@ -1130,7 +1140,9 @@ void Machine::insertMachineConfigFile()
 
     machinesFile.seek(0);
     machinesFile.write(machinesJSONDocument.toJson());
-    machinesFile.close();
+    if (machinesFile.isOpen()) {
+        machinesFile.close();
+    }
 }
 
 /**
