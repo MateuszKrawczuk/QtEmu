@@ -76,5 +76,8 @@
         <file>images/icons/breeze/32x32/settings-configure.svg</file>
         <file>images/icons/breeze/32x32/tools-report-bug.svg</file>
         <file>images/icons/breeze/32x32/chronometer-reset.svg</file>
+        <file>images/icons/breeze/32x32/start.svg</file>
+        <file>images/icons/breeze/32x32/stop.svg</file>
+        <file>images/icons/breeze/32x32/pause.svg</file>
     </qresource>
 </RCC>
