@@ -80,5 +80,8 @@
         <file>images/icons/breeze/32x32/stop.svg</file>
         <file>images/icons/breeze/32x32/pause.svg</file>
         <file>images/icons/breeze/32x32/edit-find.svg</file>
+        <file>images/icons/breeze/32x32/drive-harddisk.svg</file>
+        <file>images/icons/breeze/32x32/media-optical-data.svg</file>
+        <file>images/icons/breeze/32x32/remove.svg</file>
     </qresource>
 </RCC>

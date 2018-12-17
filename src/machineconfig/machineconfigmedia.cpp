@@ -76,7 +76,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     this->fillDetailsSection();
 
     m_removeMediaAction = new QAction(QIcon::fromTheme("remove",
-                                                       QIcon(":/images/qtemu.png")),
+                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/remove.svg"))),
                                       tr("Remove media"),
                                       this);
     connect(m_removeMediaAction, &QAction::triggered,
@@ -134,7 +134,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_addFloppyPushButton = new QPushButton(this);
     m_addFloppyPushButton->setEnabled(enableFields);
     m_addFloppyPushButton->setIcon(QIcon::fromTheme("media-floppy",
-                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/document-save.svg"))));
     m_addFloppyPushButton->setToolTip(tr("Add Floppy"));
 
     connect(m_addFloppyPushButton, &QAbstractButton::clicked,
@@ -142,8 +142,8 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
 
     m_addHDDPushButton = new QPushButton(this);
     m_addHDDPushButton->setEnabled(enableFields);
-    m_addHDDPushButton->setIcon(QIcon::fromTheme("drive-harddisk",
-                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+    m_addHDDPushButton->setIcon(QIcon::fromTheme("drive-harddisk-root",
+                                                 QIcon(QPixmap(":/images/icons/breeze/32x32/drive-harddisk.svg"))));
     m_addHDDPushButton->setToolTip(tr("Add hard disk media"));
 
     connect(m_addHDDPushButton, &QAbstractButton::clicked,
@@ -152,7 +152,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_addCDROMPushButton = new QPushButton(this);
     m_addCDROMPushButton->setEnabled(enableFields);
     m_addCDROMPushButton->setIcon(QIcon::fromTheme("media-optical-data",
-                                                     QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
     m_addCDROMPushButton->setToolTip(tr("Add optical media"));
 
     connect(m_addCDROMPushButton, &QAbstractButton::clicked,
