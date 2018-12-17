@@ -70,35 +70,35 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     // Add options
     m_optionsListWidget->addItem(tr("General"));
     m_optionsListWidget->item(0)->setIcon(QIcon::fromTheme("preferences-plugin",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
 
     m_optionsListWidget->addItem(tr("Hardware"));
     m_optionsListWidget->item(1)->setIcon(QIcon::fromTheme("cpu",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))));
 
     m_optionsListWidget->addItem(tr("Boot options"));
     m_optionsListWidget->item(2)->setIcon(QIcon::fromTheme("checkmark",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/applications-education-language.svg"))));
 
     m_optionsListWidget->addItem(tr("Media"));
     m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("ntfs-config",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/practice-start.svg"))));
 
     m_optionsListWidget->addItem(tr("Network"));
     m_optionsListWidget->item(4)->setIcon(QIcon::fromTheme("network-card",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     m_optionsListWidget->addItem(tr("Audio"));
     m_optionsListWidget->item(5)->setIcon(QIcon::fromTheme("audio-card",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));// TODO
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     m_optionsListWidget->addItem(tr("Accelerator"));
     m_optionsListWidget->item(6)->setIcon(QIcon::fromTheme("mathematica",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));
 
     /*m_optionsListWidget->addItem(tr("Display"));
     m_optionsListWidget->item(7)->setIcon(QIcon::fromTheme("applications-multimedia",
-                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/network-manager.svg"))));*/
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/.svg"))));*/
 
     // Prepare window
     m_optionsStackedWidget = new QStackedWidget(this);

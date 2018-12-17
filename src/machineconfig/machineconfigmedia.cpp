@@ -152,7 +152,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_addCDROMPushButton = new QPushButton(this);
     m_addCDROMPushButton->setEnabled(enableFields);
     m_addCDROMPushButton->setIcon(QIcon::fromTheme("media-optical-data",
-                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/preferences-other.svg"))));
+                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/media-optical-data.svg"))));
     m_addCDROMPushButton->setToolTip(tr("Add optical media"));
 
     connect(m_addCDROMPushButton, &QAbstractButton::clicked,

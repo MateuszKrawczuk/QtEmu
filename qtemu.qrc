@@ -83,5 +83,12 @@
         <file>images/icons/breeze/32x32/drive-harddisk.svg</file>
         <file>images/icons/breeze/32x32/media-optical-data.svg</file>
         <file>images/icons/breeze/32x32/remove.svg</file>
+        <file>images/icons/breeze/32x32/preferences-plugin.svg</file>
+        <file>images/icons/breeze/32x32/cpu.svg</file>
+        <file>images/icons/breeze/32x32/checkmark.svg</file>
+        <file>images/icons/breeze/32x32/ntfs-config.svg</file>
+        <file>images/icons/breeze/32x32/network-card.svg</file>
+        <file>images/icons/breeze/32x32/audio-card.svg</file>
+        <file>images/icons/breeze/32x32/mathematica.svg</file>
     </qresource>
 </RCC>
