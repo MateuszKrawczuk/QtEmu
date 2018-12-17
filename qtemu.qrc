@@ -79,5 +79,6 @@
         <file>images/icons/breeze/32x32/start.svg</file>
         <file>images/icons/breeze/32x32/stop.svg</file>
         <file>images/icons/breeze/32x32/pause.svg</file>
+        <file>images/icons/breeze/32x32/edit-find.svg</file>
     </qresource>
 </RCC>

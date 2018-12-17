@@ -406,7 +406,7 @@ void ConfigWindow::createQEMUPage()
     m_binariesPathToolButton->setToolTip(tr("QEMU binaries path"));
     m_binariesPathToolButton->setToolTipDuration(3000);
     m_binariesPathToolButton->setIcon(QIcon::fromTheme("folder-symbolic",
-                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+                                                       QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
     connect(m_binariesPathToolButton, &QAbstractButton::clicked,
             this, &ConfigWindow::setPathBinaries);
 
@@ -415,7 +415,7 @@ void ConfigWindow::createQEMUPage()
     m_searchBinariesToolButton->setToolTip(tr("Find binaries"));
     m_searchBinariesToolButton->setToolTipDuration(3000);
     m_searchBinariesToolButton->setIcon(QIcon::fromTheme("edit-find",
-                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/edit-find.svg"))));
     connect(m_searchBinariesToolButton, &QAbstractButton::clicked,
             this, &ConfigWindow::findBinaries);
 
@@ -441,7 +441,7 @@ void ConfigWindow::createQEMUPage()
     m_searchQEMUImgToolButton->setToolTip(tr("Find qemu-img binary"));
     m_searchQEMUImgToolButton->setToolTipDuration(3000);
     m_searchQEMUImgToolButton->setIcon(QIcon::fromTheme("edit-find",
-                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
+                                                        QIcon(QPixmap(":/images/icons/breeze/32x32/edit-find.svg"))));
     connect(m_searchQEMUImgToolButton, &QAbstractButton::clicked,
             this, &ConfigWindow::findQemuImgBinary);
 
