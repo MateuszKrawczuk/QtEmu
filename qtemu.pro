@@ -83,7 +83,9 @@ SOURCES +=  src/main.cpp\
             src/qemu.cpp \
             src/machineconfig/machineconfiggeneraltabs.cpp \
             src/machineconfig/machineconfighardwaretabs.cpp \
-            src/utils/firstrunwizard.cpp
+            src/utils/firstrunwizard.cpp \
+    src/boot.cpp \
+    src/media.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -112,7 +114,9 @@ HEADERS  += src/mainwindow.h \
             src/qemu.h \
             src/machineconfig/machineconfiggeneraltabs.h \
             src/machineconfig/machineconfighardwaretabs.h \
-            src/utils/firstrunwizard.h
+            src/utils/firstrunwizard.h \
+    src/boot.h \
+    src/media.h
 
 OTHER_FILES += \
     CHANGELOG \

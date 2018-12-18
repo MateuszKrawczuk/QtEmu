@@ -163,7 +163,7 @@ class MainWindow : public QMainWindow {
         QEMU *qemuGlobalObject;
 
         // Methods
-        Machine* generateMachineObject(const QJsonObject machineJson);
+        void generateMachineObject(const QJsonObject machinesConfigJsonObject);
         void loadMachines();
         void controlMachineActions(Machine::States state);
         void fillMachineDetailsSection(Machine *machine);

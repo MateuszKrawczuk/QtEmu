@@ -19,44 +19,52 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef MACHINEUTILS_H
-#define MACHINEUTILS_H
+#ifndef BOOT_H
+#define BOOT_H
 
 // Qt
 #include <QObject>
-#include <QSettings>
-#include <QUuid>
-#include <QDir>
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QMutableHashIterator>
-#include <QMessageBox>
 #include <QDebug>
 
-// Local
-#include "utils/systemutils.h"
-
-class MachineUtils : public QObject {
-    Q_OBJECT
+class Boot {
 
     public:
-        explicit MachineUtils(QObject *parent = nullptr);
-        ~MachineUtils();
+        explicit Boot();
+        ~Boot();
 
-        static bool deleteMachine(const QUuid machineUuid);
+        bool bootMenu() const;
+        void setBootMenu(bool bootMenu);
 
-        static QStringList getSoundCards(QJsonArray soundCardsArray);
-        static QStringList getAccelerators(QJsonArray acceleratorsArray);
-        static QStringList getMediaDevices(QJsonArray mediaDevicesArray);
+        bool kernelBootEnabled() const;
+        void setKernelBootEnabled(bool kernelBootEnabled);
 
-    public slots:
+        QString kernelPath() const;
+        void setKernelPath(const QString &kernelPath);
+
+        QString initrdPath() const;
+        void setInitrdPath(const QString &initrdPath);
+
+        QString kernelArgs() const;
+        void setKernelArgs(const QString &kernelArgs);
+
+        QStringList bootOrder() const;
+        void setBootOrder(const QStringList &bootOrder);
+
+        // Methods
+        void addBootOrder(const QString bootOrder);
+        void removeBootOrder(const QString bootOrder);
+        void removeAllBootOrder();
 
     protected:
 
     private:
+        bool m_bootMenu;
+        bool m_kernelBootEnabled;
+        QString m_kernelPath;
+        QString m_initrdPath;
+        QString m_kernelArgs;
+        QStringList m_bootOrder;
 
 };
 
-#endif // MACHINEUTILS_H
+#endif // BOOT_H

@@ -194,7 +194,7 @@ MachineConfigMedia::~MachineConfigMedia()
  */
 void MachineConfigMedia::removeMedia(const QPoint &pos)
 {
-    this->m_menu->exec(m_mediaTree->mapToGlobal(pos));
+    this->m_menu->exec(this->m_mediaTree->mapToGlobal(pos));
 }
 
 /**

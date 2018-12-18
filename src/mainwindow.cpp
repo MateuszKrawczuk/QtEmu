@@ -111,8 +111,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->createMenusActions();
     this->createMenus();
     this->createToolBars();
-    this->loadMachines();
 
+    // Load all the machines
+    this->loadMachines();
     this->loadUI(m_osListWidget->count());
 
     // Connect
@@ -417,8 +418,11 @@ void MainWindow::loadMachines()
         m_loadMachinesMessageBox = new QMessageBox();
         m_loadMachinesMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_loadMachinesMessageBox->setIcon(QMessageBox::Critical);
-        m_loadMachinesMessageBox->setText(tr("<p>Cannot load the machines</p>"
-                                             "<p>The file with all the machines are not readable</p>"));
+        m_loadMachinesMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
+        m_loadMachinesMessageBox->setText(tr("<p><strong>Cannot load the saved machines</strong></p>"
+                                             "<p>Cannot open the <strong>qtemu.json</strong> file. "
+                                             "The saved machines cannot be loaded. "
+                                             "Please ensure that the file exists and it's readable</p>"));
         m_loadMachinesMessageBox->exec();
         return;
     }
@@ -428,7 +432,7 @@ void MainWindow::loadMachines()
     QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
     QJsonArray machines = machinesDocument["machines"].toArray();
     for (int i = 0; i < machines.size(); ++i) {
-        this->m_machinesList.append(generateMachineObject(machines[i].toObject()));
+        this->generateMachineObject(machines[i].toObject());
     }
 
     if (machinesFile.isOpen()) {
@@ -438,19 +442,37 @@ void MainWindow::loadMachines()
 
 /**
  * @brief Generate the machine object for the list
- * @param machineJsonPath, JSON with the machine uuid and location
+ * @param machinesConfigJsonObject, JSON with the machine configpath, icon, path and uuid
  * @return machine object
  *
  * Generate the machine object for the list
  */
-Machine* MainWindow::generateMachineObject(const QJsonObject machineJsonPath)
+void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObject)
 {
-    QJsonObject machineJSON = MachineUtils::getMachineJsonObject(machineJsonPath["uuid"].toString());
+    QString machinePath = machinesConfigJsonObject["configpath"].toString();
+    QFile machineFile(machinePath);
+    if (!machineFile.open(QFile::ReadOnly)) {
+        QMessageBox *m_machinePathMessageBox = new QMessageBox();
+        m_machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        m_machinePathMessageBox->setIcon(QMessageBox::Critical);
+        m_machinePathMessageBox->setText(tr(qPrintable(QString("<p>Cannot load the machine</p>"
+                                                               "<p>Cannot open the <strong>%1</strong> file. "
+                                                               "Please ensure that the file exists and it's readable</p>").arg(machinePath))));
+        m_machinePathMessageBox->exec();
+        return;
+    }
+
+    QByteArray machineData = machineFile.readAll();
+    QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
+    QJsonObject machineJSON = machineDocument.object();
+    if (machineFile.isOpen()) {
+        machineFile.close();
+    }
 
     QListWidgetItem *machineListItem = new QListWidgetItem(machineJSON["name"].toString(), this->m_osListWidget);
     machineListItem->setData(QMetaType::QUuid, machineJSON["uuid"].toString());
     machineListItem->setIcon(QIcon(":/images/os/64x64/" +
-                                   SystemUtils::getOsIcon(machineJsonPath["icon"].toString())));
+                                   SystemUtils::getOsIcon(machinesConfigJsonObject["icon"].toString())));
 
     QJsonObject gpuObject = machineJSON["gpu"].toObject();
     QJsonObject cpuObject = machineJSON["cpu"].toObject();
@@ -489,7 +511,7 @@ Machine* MainWindow::generateMachineObject(const QJsonObject machineJsonPath)
     machine->setDescription(machineJSON["description"].toString());
     machine->setRAM(machineJSON["RAM"].toInt());
     machine->setUseNetwork(machineJSON["network"].toBool());
-    machine->setConfigPath(machineJsonPath["configpath"].toString());
+    machine->setConfigPath(machinesConfigJsonObject["configpath"].toString());
     machine->setPath(machineJSON["path"].toString());
     machine->setUuid(machineJSON["uuid"].toString());
     machine->setGPUType(gpuObject["GPUType"].toString());
@@ -505,7 +527,7 @@ Machine* MainWindow::generateMachineObject(const QJsonObject machineJsonPath)
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
     machine->setBoot(machineBoot);
 
-    return machine;
+    this->m_machinesList.append(machine);
 }
 
 /**
@@ -738,7 +760,7 @@ void MainWindow::emptyMachineDetailsSection()
  */
 void MainWindow::machinesMenu(const QPoint &pos)
 {
-    qDebug() << "Machine menu, pos: " << pos;// TODO
+    this->m_machineMenu->exec(this->m_osListWidget->mapToGlobal(pos));
 }
 
 /**

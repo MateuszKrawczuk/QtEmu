@@ -55,7 +55,7 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid)
         m_deleteMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_deleteMachineMessageBox->setIcon(QMessageBox::Critical);
         m_deleteMachineMessageBox->setText(tr("<p>Cannot delete the machine</p>"
-                                              "<p>The file with the machine configuration are not readable</p>"));
+                                              "<p>The file with the machines configuration are not readable</p>"));
         m_deleteMachineMessageBox->exec();
         return false;
     }
@@ -97,74 +97,6 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid)
     bool removedDirectory = machineDirectory->removeRecursively();
 
     return removedDirectory;
-}
-
-/**
- * @brief Get the machine json object
- * @param machineUuid, uuid of the machine
- * @return machine json object
- *
- * Get the machine json object
- */
-QJsonObject MachineUtils::getMachineJsonObject(const QString machineUuid)
-{
-    QSettings settings;
-    settings.beginGroup("DataFolder");
-    QString dataDirectoryPath = settings.value("QtEmuData",
-                                               QDir::toNativeSeparators(QDir::homePath() + "/.qtemu/")).toString();
-    settings.endGroup();
-    QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
-    QFile machinesFile(qtemuConfig);
-    if (!machinesFile.open(QFile::ReadOnly)) {
-        QMessageBox *m_machinesPathMessageBox = new QMessageBox();
-        m_machinesPathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
-        m_machinesPathMessageBox->setIcon(QMessageBox::Critical);
-        m_machinesPathMessageBox->setText(tr("<p>Cannot open the file</p>"
-                                             "<p>The file with the machines location are not readable</p>"));
-        m_machinesPathMessageBox->exec();
-    }
-
-    QByteArray machinesData = machinesFile.readAll();
-    QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
-    QJsonArray machines = machinesDocument["machines"].toArray();
-
-    int machinePos = 0;
-    bool machineExists = false;
-    QString machinePath;
-    while(machinePos < machines.size() && ! machineExists) {
-        QJsonObject machineJSON = machines[machinePos].toObject();
-        if (machineUuid == machineJSON["uuid"].toVariant()) {
-            machineExists = true;
-            machinePath = machineJSON["configpath"].toString();
-        } else {
-            ++machinePos;
-        }
-    }
-
-    QFile machineFile(machinePath);
-    if (!machineFile.open(QFile::ReadOnly)) {
-        QMessageBox *m_machinePathMessageBox = new QMessageBox();
-        m_machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
-        m_machinePathMessageBox->setIcon(QMessageBox::Critical);
-        m_machinePathMessageBox->setText(tr("<p>Cannot open the file</p>"
-                                            "<p>The file with the machine configuration are not readable</p>"));
-        m_machinePathMessageBox->exec();
-    }
-
-    // Read all data included in the file
-    QByteArray machineData = machineFile.readAll();
-    QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
-    QJsonObject machineObject = machineDocument.object();
-
-    if (machinesFile.isOpen()) {
-        machinesFile.close();
-    }
-
-    if (machineFile.isOpen()) {
-        machineFile.close();
-    }
-
-    return machineObject;
 }
 
 /**

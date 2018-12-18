@@ -34,95 +34,9 @@
 
 // Local
 #include "qemu.h"
+#include "boot.h"
+#include "media.h"
 #include "machineutils.h"
-
-class Boot {
-
-    public:
-        explicit Boot();
-        ~Boot();
-
-        bool bootMenu() const;
-        void setBootMenu(bool bootMenu);
-
-        bool kernelBootEnabled() const;
-        void setKernelBootEnabled(bool kernelBootEnabled);
-
-        QString kernelPath() const;
-        void setKernelPath(const QString &kernelPath);
-
-        QString initrdPath() const;
-        void setInitrdPath(const QString &initrdPath);
-
-        QString kernelArgs() const;
-        void setKernelArgs(const QString &kernelArgs);
-
-        QStringList bootOrder() const;
-        void setBootOrder(const QStringList &bootOrder);
-
-        // Methods
-        void addBootOrder(const QString bootOrder);
-        void removeBootOrder(const QString bootOrder);
-        void removeAllBootOrder();
-
-    protected:
-
-    private:
-        bool m_bootMenu;
-        bool m_kernelBootEnabled;
-        QString m_kernelPath;
-        QString m_initrdPath;
-        QString m_kernelArgs;
-        QStringList m_bootOrder;
-
-};
-
-class Media {
-
-    public:
-        explicit Media();
-        ~Media();
-
-        QString name() const;
-        void setName(const QString &name);
-
-        QString path() const;
-        void setPath(const QString &path);
-
-        qlonglong size() const;
-        void setSize(const qlonglong &size);
-
-        QString type() const;
-        void setType(const QString &type);
-
-        QString format() const;
-        void setFormat(const QString &format);
-
-        QString driveInterface() const;
-        void setDriveInterface(const QString &driveInterface);
-
-        QString cache() const;
-        void setCache(const QString &cache);
-
-        QString IO() const;
-        void setIO(const QString &IO);
-
-        QUuid uuid() const;
-        void setUuid(const QUuid &uuid);
-
-    protected:
-
-    private:
-        QString m_name;
-        QString m_path;
-        qlonglong m_size;
-        QString m_type;
-        QString m_format;
-        QString m_driveInterface;
-        QString m_cache;
-        QString m_IO;
-        QUuid m_uuid;
-};
 
 class Machine: public QObject {
     Q_OBJECT
