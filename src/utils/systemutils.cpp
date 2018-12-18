@@ -39,26 +39,28 @@ SystemUtils::~SystemUtils()
  */
 void SystemUtils::getTotalMemory(int &totalRAM)
 {
-    #ifdef Q_OS_LINUX
-        struct sysinfo sys_info;
-
-        if (sysinfo(&sys_info) != -1) {
-            totalRAM = static_cast<int>(((sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024);
-        }
-    #endif
-    #ifdef Q_OS_WIN
-        MEMORYSTATUSEX statex;
-        statex.dwLength = sizeof (statex);
-        GlobalMemoryStatusEx (&statex);
-
-        totalRAM = static_cast<int>(statex.ullTotalPhys / (1024 * 1024));
-    #endif
-    #ifdef Q_OS_MACOS
+#ifdef Q_OS_LINUX
+    struct sysinfo sys_info;
+    if (sysinfo(&sys_info) != -1) {
+        totalRAM = static_cast<int>(((sys_info.totalram * sys_info.mem_unit) * 0.976562) / 1024 / 1024);
+    }
+#endif
+#ifdef Q_OS_WIN
+    MEMORYSTATUSEX statex;
+    statex.dwLength = sizeof (statex);
+    GlobalMemoryStatusEx (&statex);
+    totalRAM = static_cast<int>(statex.ullTotalPhys / (1024 * 1024));
+#endif
+#ifdef Q_OS_MACOS
     // TODO
-    #endif
-    #ifdef Q_OS_FREEBSD
-    // TODO
-    #endif
+#endif
+#ifdef Q_OS_FREEBSD
+    size_t len;
+    unsigned long memory;
+    len = sizeof(memory);
+    sysctlbyname("hw.physmem", &memory, &len, NULL, 0);
+    totalRAM = static_cast<int>(((memory) * 0.976562) / 1024 / 1024);
+#endif
 }
 
 /**

@@ -48,6 +48,13 @@
 #include <windows.h>
 #endif
 
+// FreeBSD
+#ifdef Q_OS_FREEBSD
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <sys/utsname.h>
+#endif
+
 class SystemUtils {
 
     public:

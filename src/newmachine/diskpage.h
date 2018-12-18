@@ -62,7 +62,7 @@ class MachineDiskPage: public QWizardPage {
 
     private:
         int nextId() const override;
-        bool validatePage();
+        bool validatePage() override;
 
         QVBoxLayout *m_machineDiskLayout;
         QHBoxLayout *m_useOldDiskLayout;
