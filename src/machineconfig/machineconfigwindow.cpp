@@ -179,7 +179,7 @@ void MachineConfigWindow::saveMachineSettings()
     this->m_machine->saveMachine();
 
     this->m_osWidget->setText(this->m_machine->getName());
-    emit(saveMachineSettingsSignal()); // For reload labels in mainwindow ;)
+    emit(saveMachineSettingsSignal(this->m_machine->getUuid())); // For reload labels in mainwindow ;)
 
     this->hide();
     delete this;

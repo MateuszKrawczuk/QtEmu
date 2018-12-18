@@ -69,7 +69,7 @@ class MachineConfigWindow : public QWidget {
         ~MachineConfigWindow();
 
     signals:
-        void saveMachineSettingsSignal();
+        void saveMachineSettingsSignal(QUuid machineUuid);
 
     public slots:
 

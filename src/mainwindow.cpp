@@ -583,7 +583,7 @@ void MainWindow::machineOptions()
     m_machineConfigWindow->show();
 
     connect(m_machineConfigWindow, &MachineConfigWindow::saveMachineSettingsSignal,
-            this, &MainWindow::updateMachineDetailsSection);
+            this, &MainWindow::updateMachineDetailsConfig);
 }
 
 /**
@@ -812,8 +812,25 @@ void MainWindow::controlMachineActions(Machine::States state)
 void MainWindow::updateMachineDetailsSection()
 {
     if (this->m_machinesList.size() > 0) {
-        fillMachineDetailsSection(this->m_machinesList[0]);
+        this->fillMachineDetailsSection(this->m_machinesList[0]);
     } else {
         this->emptyMachineDetailsSection();
+    }
+}
+
+/**
+ * @brief Update the machine details
+ * @param machineUuid, uuid of the selected machine
+ *
+ * Update the machine details after finish the
+ * configuration of a machine
+ */
+void MainWindow::updateMachineDetailsConfig(const QUuid machineUuid)
+{
+    foreach (Machine *machine, this->m_machinesList) {
+        if (machine->getUuid() == machineUuid.toString()){
+            this->fillMachineDetailsSection(machine);
+            break;
+        }
     }
 }

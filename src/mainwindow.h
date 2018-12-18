@@ -83,6 +83,7 @@ class MainWindow : public QMainWindow {
         void changeMachine(QListWidgetItem *machineItem);
         void machineStateChanged(Machine::States newState);
         void machinesMenu(const QPoint &pos);
+        void updateMachineDetailsConfig(const QUuid machineUuid);
 
     protected:
 
