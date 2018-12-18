@@ -416,6 +416,11 @@ void MainWindow::loadMachines()
     // Open the file with the machines
     QString qtemuConfig = dataDirectoryPath.append("qtemu.json");
     QFile machinesFile(qtemuConfig);
+    // If file don't exists I asume that there's no machines
+    if (!machinesFile.exists()) {
+        return;
+    }
+
     if (!machinesFile.open(QIODevice::ReadOnly)) {
         m_loadMachinesMessageBox = new QMessageBox();
         m_loadMachinesMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
