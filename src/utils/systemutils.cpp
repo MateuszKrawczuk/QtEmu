@@ -316,6 +316,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
         QMessageBox *qemuImgNotFoundMessageBox = new QMessageBox();
         qemuImgNotFoundMessageBox->setWindowTitle(QObject::tr("Qtemu - Critical error"));
         qemuImgNotFoundMessageBox->setIcon(QMessageBox::Critical);
+        qemuImgNotFoundMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         qemuImgNotFoundMessageBox->setText(QObject::tr("<p>Cannot start qemu-img</p>"
                                                          "<p><strong>Image isn't created</strong></p>"
                                                          "<p>Ensure that you have installed qemu-img in your "
@@ -329,6 +330,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
         QMessageBox *qemuImgNotFinishedMessageBox = new QMessageBox();
         qemuImgNotFinishedMessageBox->setWindowTitle(QObject::tr("Qtemu - Critical error"));
         qemuImgNotFinishedMessageBox->setIcon(QMessageBox::Critical);
+        qemuImgNotFinishedMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         qemuImgNotFinishedMessageBox->setText(QObject::tr("<p>Cannot finish qemu-img</p>"
                                                             "<p><strong>Image isn't created</strong></p>"
                                                             "<p>There's a problem with qemu-img, the process "
@@ -344,6 +346,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
             QMessageBox *qemuImgErrorMessageBox = new QMessageBox();
             qemuImgErrorMessageBox->setWindowTitle(QObject::tr("Qtemu - Critical error"));
             qemuImgErrorMessageBox->setIcon(QMessageBox::Critical);
+            qemuImgErrorMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
             qemuImgErrorMessageBox->setText(QObject::tr("<p>Cannot finish qemu-img</p>"
                                                           "<p><strong>Image isn't created</strong></p>"
                                                           "<p>Error: " + err + "</p>"));
@@ -356,6 +359,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
             QMessageBox *qemuImgOkMessageBox = new QMessageBox();
             qemuImgOkMessageBox->setWindowTitle(QObject::tr("Qtemu - Image created"));
             qemuImgOkMessageBox->setIcon(QMessageBox::Information);
+            qemuImgOkMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
             qemuImgOkMessageBox->setText(QObject::tr("<p><strong>Image created</strong></p>"
                                                        "<p>" + out + "</p>"));
             qemuImgOkMessageBox->exec();

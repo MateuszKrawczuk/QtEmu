@@ -148,6 +148,7 @@ bool MachineNamePage::validatePage()
         m_createMachineMessageBox = new QMessageBox();
         m_createMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_createMachineMessageBox->setIcon(QMessageBox::Critical);
+        m_createMachineMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_createMachineMessageBox->setText(tr("<p>Cannot create the machine folder <strong>%1</strong> "
                                               "in the parent folder <strong>%2<strong></p>"
                                               "<p>This folder alredy exists and possibly belongs to another machine.</p>")
@@ -162,6 +163,7 @@ bool MachineNamePage::validatePage()
         m_createMachineMessageBox = new QMessageBox();
         m_createMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_createMachineMessageBox->setIcon(QMessageBox::Critical);
+        m_createMachineMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_createMachineMessageBox->setText(tr("<p>Cannot create the machine folder <strong>%1</strong> "
                                               "in the parent folder <strong>%2<strong></p>"
                                               "<p>Please check that the parent really exists and that "

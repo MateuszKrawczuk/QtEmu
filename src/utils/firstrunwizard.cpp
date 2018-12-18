@@ -61,6 +61,7 @@ FirstRunWizard::FirstRunWizard(QWidget *parent) : QWizard(parent)
     m_warningFinishMessageBox->setWindowIcon(QIcon::fromTheme("quickwizard",
                                                               QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
     m_warningFinishMessageBox->setIcon(QMessageBox::Warning);
+    m_warningFinishMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_warningFinishMessageBox->setText("<p>If you don't finish the Wizard QtEmu will not work correctly.</p>"
                                        "<p>You can make the configuration later from the QtEmu menu</p>");
 

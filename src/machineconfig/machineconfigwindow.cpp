@@ -178,6 +178,7 @@ void MachineConfigWindow::saveMachineSettings()
     this->m_configAccel->saveAccelData();
     this->m_machine->saveMachine();
 
+    this->m_osWidget->setText(this->m_machine->getName());
     emit(saveMachineSettingsSignal()); // For reload labels in mainwindow ;)
 
     this->hide();

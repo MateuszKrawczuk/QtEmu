@@ -28,6 +28,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QIcon>
 #include <QDebug>
 
 class Logger : public QObject {

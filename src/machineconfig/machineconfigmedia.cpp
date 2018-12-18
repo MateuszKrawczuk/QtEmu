@@ -229,6 +229,7 @@ void MachineConfigMedia::addFloppyMedia()
         m_maxFloppyMessageBox = new QMessageBox();
         m_maxFloppyMessageBox->setWindowTitle(tr("Qtemu - floppy"));
         m_maxFloppyMessageBox->setIcon(QMessageBox::Critical);
+        m_maxFloppyMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_maxFloppyMessageBox->setText(tr("<p>Maximum number of floppy reached</p>"));
         m_maxFloppyMessageBox->exec();
         return;
@@ -265,6 +266,7 @@ void MachineConfigMedia::addHddMedia()
         m_maxHddDiskMessageBox = new QMessageBox();
         m_maxHddDiskMessageBox->setWindowTitle(tr("Qtemu - hard disk"));
         m_maxHddDiskMessageBox->setIcon(QMessageBox::Critical);
+        m_maxHddDiskMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_maxHddDiskMessageBox->setText(tr("<p>Maximum number of hard disks reached</p>"));
         m_maxHddDiskMessageBox->exec();
         return;
@@ -273,6 +275,7 @@ void MachineConfigMedia::addHddMedia()
     m_addHddDiskMessageBox = new QMessageBox(this);
     m_addHddDiskMessageBox->setWindowTitle(tr("QtEmu - Add Hard Disk"));
     m_addHddDiskMessageBox->setIcon(QMessageBox::Question);
+    m_addHddDiskMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_addHddDiskMessageBox->setText(tr("<p>Add a new Hard Disk</p>"));
 
     QPushButton *newDiskButton = m_addHddDiskMessageBox->addButton(tr("Create new disk"),
@@ -333,6 +336,7 @@ void MachineConfigMedia::addOpticalMedia()
         m_maxOpticalMessageBox = new QMessageBox();
         m_maxOpticalMessageBox->setWindowTitle(tr("Qtemu - cdrom"));
         m_maxOpticalMessageBox->setIcon(QMessageBox::Critical);
+        m_maxOpticalMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_maxOpticalMessageBox->setText(tr("<p>Only one cdrom can be added</p>"));
         m_maxOpticalMessageBox->exec();
         return;
@@ -342,6 +346,7 @@ void MachineConfigMedia::addOpticalMedia()
         m_hdcOpticalConflictMessageBox = new QMessageBox();
         m_hdcOpticalConflictMessageBox->setWindowTitle(tr("Qtemu - cdrom"));
         m_hdcOpticalConflictMessageBox->setIcon(QMessageBox::Critical);
+        m_hdcOpticalConflictMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_hdcOpticalConflictMessageBox->setText(tr("<p>You cannot use hdc and cdrom at the same time</p>"));
         m_hdcOpticalConflictMessageBox->exec();
         return;

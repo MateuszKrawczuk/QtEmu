@@ -353,6 +353,7 @@ void MainWindow::checkVersions()
         m_networkErrorMessageBox = new QMessageBox();
         m_networkErrorMessageBox->setWindowTitle(tr("QtEmu - Network problem"));
         m_networkErrorMessageBox->setIcon(QMessageBox::Question);
+        m_networkErrorMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_networkErrorMessageBox->setText(tr("<p>There's a network problem</p>"));
         m_networkErrorMessageBox->exec();
         return;
@@ -369,6 +370,7 @@ void MainWindow::checkVersions()
     m_versionMessageBox = new QMessageBox();
     m_versionMessageBox->setWindowTitle(tr("QtEmu - Versions"));
     m_versionMessageBox->setIcon(QMessageBox::Question);
+    m_versionMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_versionMessageBox->setText(tr("<p><strong>QtEmu installed version: </strong>") + installedQtEmuVersion + "</p>" +
                                  tr("<p><strong>Last QtEmu version: </strong>") + qtemuVersion + "</p>");
     m_versionMessageBox->exec();
@@ -455,6 +457,7 @@ void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObjec
         QMessageBox *m_machinePathMessageBox = new QMessageBox();
         m_machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_machinePathMessageBox->setIcon(QMessageBox::Critical);
+        m_machinePathMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_machinePathMessageBox->setText(tr(qPrintable(QString("<p>Cannot load the machine</p>"
                                                                "<p>Cannot open the <strong>%1</strong> file. "
                                                                "Please ensure that the file exists and it's readable</p>").arg(machinePath))));

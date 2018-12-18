@@ -697,6 +697,7 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
         m_machineBinaryErrorMessageBox = new QMessageBox();
         m_machineBinaryErrorMessageBox->setWindowTitle(tr("QEMU - Binary not found"));
         m_machineBinaryErrorMessageBox->setIcon(QMessageBox::Information);
+        m_machineBinaryErrorMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_machineBinaryErrorMessageBox->setText(tr("QEMU binary not found"));
         m_machineBinaryErrorMessageBox->show();
         m_machineBinaryErrorMessageBox->raise();
@@ -819,6 +820,7 @@ void Machine::readMachineStandardOut()
 
     m_machineStandardOutMessageBox = new QMessageBox();
     m_machineStandardOutMessageBox->setWindowTitle(tr("QEMU - Standard Out"));
+    m_machineStandardOutMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_machineStandardOutMessageBox->setIcon(QMessageBox::Information);
     m_machineStandardOutMessageBox->setText(cleanStandardOut);
     m_machineStandardOutMessageBox->show();
@@ -848,6 +850,7 @@ void Machine::readMachineErrorOut()
     m_machineErrorOutMessageBox = new QMessageBox();
     m_machineErrorOutMessageBox->setWindowTitle(tr("QEMU - Error Out"));
     m_machineErrorOutMessageBox->setIcon(QMessageBox::Critical);
+    m_machineErrorOutMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_machineErrorOutMessageBox->setText(errorOutput);
     m_machineErrorOutMessageBox->show();
     m_machineErrorOutMessageBox->raise();
@@ -1005,6 +1008,7 @@ void Machine::failConnectMachine()
     m_failConnectErrorMessageBox = new QMessageBox();
     m_failConnectErrorMessageBox->setWindowTitle(tr("QEMU - Connection"));
     m_failConnectErrorMessageBox->setIcon(QMessageBox::Critical);
+    m_failConnectErrorMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_failConnectErrorMessageBox->setText(tr("Fail to send command to the QEMU machine"));
     m_failConnectErrorMessageBox->show();
     m_failConnectErrorMessageBox->raise();
@@ -1023,6 +1027,7 @@ void Machine::saveMachine()
         m_saveMachineMessageBox = new QMessageBox();
         m_saveMachineMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_saveMachineMessageBox->setIcon(QMessageBox::Critical);
+        m_saveMachineMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_saveMachineMessageBox->setText(tr("<p>Cannot save the machine</p>"
                                             "<p>The file with the machine configuration are not writable</p>"));
         m_saveMachineMessageBox->show();
@@ -1119,6 +1124,7 @@ void Machine::insertMachineConfigFile()
         m_machineConfigMessageBox = new QMessageBox();
         m_machineConfigMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
         m_machineConfigMessageBox->setIcon(QMessageBox::Critical);
+        m_machineConfigMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_machineConfigMessageBox->setText(tr("<p>Cannot save the machine</p>"
                                               "<p>The file with all the machines configuration are not writable</p>"));
         m_machineConfigMessageBox->show();

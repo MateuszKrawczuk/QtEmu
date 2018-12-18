@@ -154,6 +154,7 @@ bool MachineDiskPage::validatePage()
         m_notDiskMessageBox = new QMessageBox(this);
         m_notDiskMessageBox->setWindowTitle(tr("Qtemu - Disk not selected"));
         m_notDiskMessageBox->setIcon(QMessageBox::Warning);
+        m_notDiskMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
         m_notDiskMessageBox->setText(tr("<p>Select a disk or another option</p>"));
         m_notDiskMessageBox->exec();
         return false;
