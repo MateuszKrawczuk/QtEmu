@@ -90,5 +90,6 @@
         <file>images/icons/breeze/32x32/network-card.svg</file>
         <file>images/icons/breeze/32x32/audio-card.svg</file>
         <file>images/icons/breeze/32x32/mathematica.svg</file>
+        <file>images/icons/breeze/32x32/quickwizard.svg</file>
     </qresource>
 </RCC>

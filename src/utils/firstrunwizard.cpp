@@ -33,15 +33,16 @@ FirstRunWizard::FirstRunWizard(QWidget *parent) : QWizard(parent)
 {
     this->setWindowTitle(tr("First Run Wizard"));
     this->setWindowIcon(QIcon::fromTheme("quickwizard",
-                                         QIcon(QPixmap(":/images/icons/breeze/32x32/window-close.svg"))));
-    this->setPage(Page_QEMUBinaries, new QEMUBinariesPage(this));
+                                         QIcon(QPixmap(":/images/icons/breeze/32x32/quickwizard.svg"))));
+    m_qemuBinariesPage = new QEMUBinariesPage(this);
+    this->setPage(Page_QEMUBinaries, m_qemuBinariesPage);
     this->setStartId(Page_QEMUBinaries);
 
 #ifndef Q_OS_MAC
     this->setWizardStyle(ClassicStyle);
 #endif
 #ifdef Q_OS_MAC
-        this->setWizardStyle(MacStyle);
+    this->setWizardStyle(MacStyle);
 #endif
 
     this->setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
@@ -86,7 +87,10 @@ void FirstRunWizard::closeEvent(QCloseEvent *event)
     settings.endGroup();
     settings.sync();
 
-    this->m_warningFinishMessageBox->exec();
+    if (!this->m_qemuBinariesPage->isWizardComplete()) {
+        this->m_warningFinishMessageBox->exec();
+    }
+
     event->accept();
 }
 
@@ -97,8 +101,19 @@ void FirstRunWizard::closeEvent(QCloseEvent *event)
  */
 void FirstRunWizard::hideEvent(QHideEvent *event)
 {
-    this->close();
-    event->accept();
+    event->ignore();
+}
+
+/**
+ * @brief Ignore ESC key
+ *
+ * Ignore ESC key
+ */
+void FirstRunWizard::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape){
+        event->ignore();
+    }
 }
 
 /**
@@ -199,6 +214,25 @@ QEMUBinariesPage::QEMUBinariesPage(QWidget *parent) : QWizardPage(parent)
 QEMUBinariesPage::~QEMUBinariesPage()
 {
     qDebug() << "QEMUBinariesPage destroyed";
+}
+
+/**
+ * @brief Check if all the fields are completed
+ * @return true if the wizard is completed
+ *
+ * Check if all the fields are completed
+ */
+bool QEMUBinariesPage::isWizardComplete()
+{
+    bool complete = false;
+
+    if (!this->m_qemuBinariesPathLineEdit->text().isEmpty() &&
+        !this->m_qemuImgPathLineEdit->text().isEmpty() &&
+        !this->m_qemuMachinesPathLineEdit->text().isEmpty()) {
+        complete = true;
+    }
+
+    return complete;
 }
 
 /**

@@ -37,6 +37,8 @@
 #include <QFileDialog>
 #include <QDebug>
 
+class QEMUBinariesPage;
+
 class FirstRunWizard : public QWizard {
     Q_OBJECT
 
@@ -56,9 +58,11 @@ class FirstRunWizard : public QWizard {
     protected:
         virtual void closeEvent(QCloseEvent *event);
         virtual void hideEvent(QHideEvent *event);
+        virtual void keyPressEvent(QKeyEvent *event);
 
     private:
         QMessageBox *m_warningFinishMessageBox;
+        QEMUBinariesPage *m_qemuBinariesPage;
 };
 
 class QEMUBinariesPage: public QWizardPage {
@@ -68,6 +72,7 @@ class QEMUBinariesPage: public QWizardPage {
         explicit QEMUBinariesPage(QWidget *parent = nullptr);
         ~QEMUBinariesPage();
 
+        bool isWizardComplete();
     signals:
 
     private slots:
