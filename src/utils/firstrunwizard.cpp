@@ -256,8 +256,10 @@ void QEMUBinariesPage::setQemuBinariesPath()
  */
 void QEMUBinariesPage::setQemuImgPath()
 {
-    QString qemuImgPath = QFileDialog::getExistingDirectory(this, tr("Select qemu-img path"),
-                                                            QDir::homePath());
+    QString qemuImgPath = QFileDialog::getOpenFileName(this,
+                                                       tr("Select the qemu-img binary"),
+                                                       QDir::homePath()
+                                                       );
     if (!qemuImgPath.isEmpty()) {
         this->m_qemuImgPathLineEdit->setText(QDir::toNativeSeparators(qemuImgPath));
     }

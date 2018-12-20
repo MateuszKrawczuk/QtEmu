@@ -714,6 +714,8 @@ void ConfigWindow::saveSettings()
     // QEMU
     settings.setValue("qemuBinaryPath", this->m_binaryPathLineEdit->text());
     settings.setValue("qemuImgBinaryPath", this->m_QEMUImgPathLineEdit->text());
+    this->m_QEMUObject->setQEMUBinaries(this->m_binaryPathLineEdit->text());
+    this->m_QEMUObject->setQEMUImgPath(this->m_QEMUImgPathLineEdit->text());
 
     settings.endGroup();
     settings.sync();

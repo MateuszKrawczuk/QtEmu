@@ -90,7 +90,9 @@ class MachineConclusionPage: public QWizardPage {
         bool validatePage();
         void insertVMList();
         void generateMachineFiles();
-        void addMedia(const QString name, const QString paths);
+        void addMedia(const QString name,
+                      const QString format,
+                      const QString paths);
         void generateBoot();
 };
 

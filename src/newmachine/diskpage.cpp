@@ -296,7 +296,7 @@ MachineNewDiskPage::~MachineNewDiskPage()
  */
 void MachineNewDiskPage::initializePage()
 {
-    m_fileNameLineEdit->setText(field("machine.name").toString());
+    m_fileNameLineEdit->setText(field("machine.name").toString().toLower());
     this->m_qcow2RadioButton->setChecked(true);
 }
 

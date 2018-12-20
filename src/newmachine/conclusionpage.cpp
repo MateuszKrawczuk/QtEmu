@@ -99,6 +99,7 @@ MachineConclusionPage::~MachineConclusionPage()
 void MachineConclusionPage::initializePage()
 {
     QString diskName = field("machine.diskname").toString();
+    QString diskFormat = field("machine.diskFormat").toString();
 
     this->m_machineNameLabel->setText(this->m_newMachine->getName());
     this->m_OSTypeLabel->setText(this->m_newMachine->getOSType());
@@ -110,7 +111,7 @@ void MachineConclusionPage::initializePage()
     this->m_acceleratorLabel->setText(this->m_newMachine->getAcceleratorLabel());
 
     if (!diskName.isEmpty()) {
-        this->m_diskLabel->setText(diskName);
+        this->m_diskLabel->setText(diskName.toLower()+"."+diskFormat);
         this->m_conclusionLayout->addWidget(this->m_diskDescLabel,    9, 0, 1, 1);
         this->m_conclusionLayout->addWidget(this->m_diskLabel,        9, 1, 1, 1);
     } else {
@@ -118,7 +119,6 @@ void MachineConclusionPage::initializePage()
         this->m_conclusionLayout->removeWidget(this->m_diskDescLabel);
         this->m_conclusionLayout->removeWidget(this->m_diskLabel);
     }
-
 }
 
 bool MachineConclusionPage::validatePage()
@@ -156,7 +156,7 @@ bool MachineConclusionPage::validatePage()
                                                      diskSize,
                                                      false);
         if (isDiskCreated) {
-            this->addMedia(diskName.toLower().replace(" ", "_"), diskPathName);
+            this->addMedia(diskName.toLower().replace(" ", "_"), diskFormat, diskPathName);
         } else {
             // If the creation of the disk fails
             return false;
@@ -165,7 +165,7 @@ bool MachineConclusionPage::validatePage()
         if (!existingDiskPath.isEmpty()) {
             // Add the existing media to the machine media
             QFileInfo existingDisk(existingDiskPath);
-            this->addMedia(existingDisk.fileName(), existingDisk.filePath());
+            this->addMedia(existingDisk.baseName(), existingDisk.completeSuffix(), existingDisk.filePath());
         }
     }
 
@@ -210,14 +210,17 @@ void MachineConclusionPage::insertVMList()
 /**
  * @brief Add media
  * @param name, name for the new media
+ * @param format, format of the new media
  * @param path, path where the media is located
  *
  * Add media to the machine
  */
-void MachineConclusionPage::addMedia(const QString name, const QString path)
+void MachineConclusionPage::addMedia(const QString name,
+                                     const QString format,
+                                     const QString path)
 {
     Media disk;
-    disk.setName(name);
+    disk.setName(name+"."+format);
     disk.setPath(path);
     disk.setType("hdd");
     disk.setDriveInterface("hda");

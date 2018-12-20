@@ -138,9 +138,11 @@ int main(int argc, char *argv[])
     settings.sync(); // sync settings
 
     if (runFirstRunWizard) {
-        FirstRunWizard firstRunWizard(nullptr);
-        firstRunWizard.show();
-        firstRunWizard.exec();
+        FirstRunWizard *firstRunWizard = new FirstRunWizard(nullptr);
+        firstRunWizard->show();
+        firstRunWizard->exec();
+
+        delete firstRunWizard;
     }
 
     // Load Logger
