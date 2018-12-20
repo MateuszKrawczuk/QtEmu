@@ -65,7 +65,6 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
     m_acceleratorLabel = new QLabel(this);
     m_acceleratorLabel->setWordWrap(true);
     m_diskLabel        = new QLabel(this);
-    m_diskLabel->setWordWrap(true);
 
     m_conclusionLayout = new QGridLayout();
     m_conclusionLayout->addWidget(m_conclusionLabel,      0, 0, 1, 4);
@@ -98,6 +97,9 @@ MachineConclusionPage::~MachineConclusionPage()
 
 void MachineConclusionPage::initializePage()
 {
+    bool createNewDisk = field("createDisk").toBool();
+    bool useDisk = field("useDisk").toBool();
+    QString existingDiskPath = field("machine.diskPath").toString();
     QString diskName = field("machine.diskname").toString();
     QString diskFormat = field("machine.diskFormat").toString();
 
@@ -110,8 +112,12 @@ void MachineConclusionPage::initializePage()
     this->m_audioLabel->setText(this->m_newMachine->getAudioLabel());
     this->m_acceleratorLabel->setText(this->m_newMachine->getAcceleratorLabel());
 
-    if (!diskName.isEmpty()) {
+    if (createNewDisk && !diskName.isEmpty()) {
         this->m_diskLabel->setText(diskName.toLower()+"."+diskFormat);
+        this->m_conclusionLayout->addWidget(this->m_diskDescLabel,    9, 0, 1, 1);
+        this->m_conclusionLayout->addWidget(this->m_diskLabel,        9, 1, 1, 1);
+    } else if (useDisk && !existingDiskPath.isEmpty()) {
+        this->m_diskLabel->setText(existingDiskPath);
         this->m_conclusionLayout->addWidget(this->m_diskDescLabel,    9, 0, 1, 1);
         this->m_conclusionLayout->addWidget(this->m_diskLabel,        9, 1, 1, 1);
     } else {

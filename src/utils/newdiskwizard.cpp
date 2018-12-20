@@ -41,10 +41,10 @@ NewDiskWizard::NewDiskWizard(Machine *machine,
     this->setStartId(Page_Disk);
 
 #ifndef Q_OS_MAC
-        this->setWizardStyle(ClassicStyle);
+    this->setWizardStyle(ClassicStyle);
 #endif
 #ifdef Q_OS_MAC
-        this->setWizardStyle(MacStyle);
+    this->setWizardStyle(MacStyle);
 #endif
 
     this->setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
