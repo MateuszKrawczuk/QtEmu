@@ -938,6 +938,34 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-soundhw";
     qemuCommand << audioCards;
 
+    QString bootOrder;
+    QStringListIterator bootIterator(this->m_boot.bootOrder());
+    while (bootIterator.hasNext()) {
+        bootOrder.append(bootIterator.next());
+    }
+
+    QString bootMenu = this->m_boot.bootMenu() ? "on" : "off";
+
+    qemuCommand << "-boot";
+    qemuCommand << "order=" + bootOrder + ",menu=" + bootMenu;
+
+    if (this->m_boot.kernelBootEnabled()) {
+        if (!this->m_boot.kernelPath().isEmpty()) {
+            qemuCommand << "-kernel";
+            qemuCommand << this->m_boot.kernelPath();
+        }
+
+        if (!this->m_boot.initrdPath().isEmpty()) {
+            qemuCommand << "-initrd";
+            qemuCommand << this->m_boot.initrdPath();
+        }
+
+        if (!this->m_boot.kernelArgs().isEmpty()) {
+            qemuCommand << "-append";
+            qemuCommand << this->m_boot.kernelArgs();
+        }
+    }
+
     qemuCommand << "-m";
     qemuCommand << QString::number(this->RAM);
 

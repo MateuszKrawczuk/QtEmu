@@ -46,7 +46,9 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     }
 
     m_mediaNameLabel = new QLabel(this);
+    m_mediaNameLabel->setWordWrap(true);
     m_mediaPathLabel = new QLabel(this);
+    m_mediaPathLabel->setWordWrap(true);
 
     m_mediaTree = new QTreeWidget(this);
     m_mediaTree->setEnabled(enableFields);
@@ -57,12 +59,10 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaTree->setRootIsDecorated(false);
     m_mediaTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     m_mediaTree->setContextMenuPolicy(Qt::CustomContextMenu);
-
     connect(m_mediaTree, &QTreeWidget::itemPressed,
             this, &MachineConfigMedia::fillDetailsSection);
-
     connect(m_mediaTree, &QTreeWidget::customContextMenuRequested,
-            this, &MachineConfigMedia::removeMedia);
+            this, &MachineConfigMedia::removeMediaMenu);
 
     this->fillMaps();
 
@@ -86,8 +86,8 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
     m_mediaDetailsLayout = new QFormLayout();
     m_mediaDetailsLayout->setAlignment(Qt::AlignTop);
     m_mediaDetailsLayout->setLabelAlignment(Qt::AlignLeft);
-    m_mediaDetailsLayout->setHorizontalSpacing(20);
-    m_mediaDetailsLayout->setVerticalSpacing(10);
+    //m_mediaDetailsLayout->setHorizontalSpacing(20);
+    //m_mediaDetailsLayout->setVerticalSpacing(10);
     m_mediaDetailsLayout->addRow(tr("Name") + ":", m_mediaNameLabel);
     m_mediaDetailsLayout->addRow(tr("Path") + ":", m_mediaPathLabel);
 
@@ -190,7 +190,7 @@ MachineConfigMedia::~MachineConfigMedia()
  *
  * Remove the selected media
  */
-void MachineConfigMedia::removeMedia(const QPoint &pos)
+void MachineConfigMedia::removeMediaMenu(const QPoint &pos)
 {
     this->m_menu->exec(this->m_mediaTree->mapToGlobal(pos));
 }
@@ -428,7 +428,10 @@ void MachineConfigMedia::removeMediaFromTree()
     QVariant mediaVariant = this->m_mediaTree->currentItem()->data(0, Qt::UserRole);
     Media selectedMedia = mediaVariant.value<Media>();
 
-    this->m_mediaTree->takeTopLevelItem(this->m_mediaTree->currentColumn());
+    this->addInterface(selectedMedia.driveInterface());
+
+    this->m_mediaTree->removeItemWidget(this->m_mediaTree->currentItem(), 0);
+    delete this->m_mediaTree->currentItem();
     this->fillDetailsSection();
 }
 

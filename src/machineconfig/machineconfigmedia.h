@@ -62,7 +62,7 @@ class MachineConfigMedia : public QWidget {
     public slots:
 
     private slots:
-        void removeMedia(const QPoint &pos);
+        void removeMediaMenu(const QPoint &pos);
         void removeMediaFromTree();
 
     protected:
