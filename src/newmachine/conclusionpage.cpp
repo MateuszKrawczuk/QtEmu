@@ -225,12 +225,12 @@ void MachineConclusionPage::addMedia(const QString name,
                                      const QString format,
                                      const QString path)
 {
-    Media disk;
-    disk.setName(name+"."+format);
-    disk.setPath(path);
-    disk.setType("hdd");
-    disk.setDriveInterface("hda");
-    disk.setUuid(QUuid::createUuid().toString());
+    Media *disk = new Media(this->m_newMachine);
+    disk->setName(name+"."+format);
+    disk->setPath(path);
+    disk->setType("hdd");
+    disk->setDriveInterface("hda");
+    disk->setUuid(QUuid::createUuid().toString());
 
     this->m_newMachine->addMedia(disk);
 }
@@ -243,13 +243,13 @@ void MachineConclusionPage::addMedia(const QString name,
  */
 void MachineConclusionPage::generateBoot()
 {
-    Boot boot;
-    boot.setBootMenu(false);
-    boot.setKernelBootEnabled(false);
-    boot.setKernelPath("");
-    boot.setInitrdPath("");
-    boot.setKernelArgs("");
-    boot.addBootOrder("c"); // Boot from HDD
+    Boot *boot = new Boot(this->m_newMachine);
+    boot->setBootMenu(false);
+    boot->setKernelBootEnabled(false);
+    boot->setKernelPath("");
+    boot->setInitrdPath("");
+    boot->setKernelArgs("");
+    boot->addBootOrder("c"); // Boot from HDD
 
     this->m_newMachine->setBoot(boot);
 }

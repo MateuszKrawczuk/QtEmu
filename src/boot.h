@@ -26,10 +26,11 @@
 #include <QObject>
 #include <QDebug>
 
-class Boot {
+class Boot: public QObject {
+    Q_OBJECT
 
     public:
-        explicit Boot();
+        explicit Boot(QObject *parent = nullptr);
         ~Boot();
 
         bool bootMenu() const;

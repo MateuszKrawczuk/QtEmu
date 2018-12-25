@@ -64,6 +64,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_optionsListWidget->setIconSize(QSize(32, 32));
     m_optionsListWidget->setMovement(QListView::Static);
     m_optionsListWidget->setMaximumWidth(170);
+    m_optionsListWidget->setMinimumWidth(120);
     m_optionsListWidget->setSpacing(7);
     m_optionsListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 

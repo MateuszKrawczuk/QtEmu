@@ -79,7 +79,7 @@ class MainWindow : public QMainWindow {
         void resetMachine();
         void pauseMachine();
         void deleteMachine();
-        void loadUI(const int itemCount);
+        void loadUI(const int machineCount);
         void changeMachine(QListWidgetItem *machineItem);
         void machineStateChanged(Machine::States newState);
         void machinesMenu(const QPoint &pos);
@@ -164,12 +164,11 @@ class MainWindow : public QMainWindow {
         QEMU *qemuGlobalObject;
 
         // Methods
-        void generateMachineObject(const QJsonObject machinesConfigJsonObject);
+        void generateMachineObject(const QJsonObject machinesConfigJsonObject, int pos);
         void loadMachines();
         void controlMachineActions(Machine::States state);
         void fillMachineDetailsSection(Machine *machine);
         void emptyMachineDetailsSection();
-        void updateMachineDetailsSection();
 
 };
 #endif // MAINWINDOW_H

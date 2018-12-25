@@ -66,7 +66,7 @@ MachineConfigMedia::MachineConfigMedia(Machine *machine,
 
     this->fillMaps();
 
-    QList<Media> machineMedia = machine->getMedia();
+    QList<Media *> machineMedia = machine->getMedia();
     for(int i = 0; i < machineMedia.size(); ++i) {
         this->addMediaToTree(machineMedia[i]);
     }
@@ -209,10 +209,10 @@ void MachineConfigMedia::fillDetailsSection()
     }
 
     QVariant mediaVariant = this->m_mediaTree->currentItem()->data(0, Qt::UserRole);
-    Media selectedMedia = mediaVariant.value<Media>();
+    Media *selectedMedia = mediaVariant.value<Media *>();
 
-    this->m_mediaNameLabel->setText(selectedMedia.name());
-    this->m_mediaPathLabel->setText(selectedMedia.path());
+    this->m_mediaNameLabel->setText(selectedMedia->name());
+    this->m_mediaPathLabel->setText(selectedMedia->path());
 }
 
 /**
@@ -241,12 +241,12 @@ void MachineConfigMedia::addFloppyMedia()
 
     QFileInfo floppyInfo(floppyPath);
 
-    Media media;
-    media.setName(floppyInfo.fileName());
-    media.setPath(QDir::toNativeSeparators(floppyInfo.absoluteFilePath()));
-    media.setType("fdd");
-    media.setDriveInterface(this->m_floppyMap->first());
-    media.setUuid(QUuid::createUuid().toString());
+    Media *media = new Media(this->m_machineOptions);
+    media->setName(floppyInfo.fileName());
+    media->setPath(QDir::toNativeSeparators(floppyInfo.absoluteFilePath()));
+    media->setType("fdd");
+    media->setDriveInterface(this->m_floppyMap->first());
+    media->setUuid(QUuid::createUuid().toString());
 
     this->addMediaToTree(media);
     this->fillDetailsSection();
@@ -286,15 +286,15 @@ void MachineConfigMedia::addHddMedia()
     m_addHddDiskMessageBox->exec();
 
     if (m_addHddDiskMessageBox->clickedButton() == newDiskButton) {
-        Media newMedia;
-        newMedia.setDriveInterface(this->m_diskMap->first());
+        Media *newMedia = new Media(this->m_machineOptions);
+        newMedia->setDriveInterface(this->m_diskMap->first());
 
-        NewDiskWizard newDiskWizard(this->m_machineOptions, this->m_qemuGlobalObject, &newMedia, this);
+        NewDiskWizard newDiskWizard(this->m_machineOptions, this->m_qemuGlobalObject, newMedia, this);
 
         newDiskWizard.show();
         newDiskWizard.exec();
 
-        if (!newMedia.name().isEmpty() && !newMedia.path().isEmpty()){
+        if (!newMedia->name().isEmpty() && !newMedia->path().isEmpty()){
             this->addMediaToTree(newMedia);
         }
     } else if (m_addHddDiskMessageBox->clickedButton() == existingDiskButton) {
@@ -306,12 +306,12 @@ void MachineConfigMedia::addHddMedia()
 
        QFileInfo hddInfo(diskPath);
 
-       Media existingMedia;
-       existingMedia.setName(hddInfo.fileName());
-       existingMedia.setPath(QDir::toNativeSeparators(hddInfo.absoluteFilePath()));
-       existingMedia.setType("hdd");
-       existingMedia.setDriveInterface(this->m_diskMap->first());
-       existingMedia.setUuid(QUuid::createUuid().toString());
+       Media *existingMedia = new Media(this->m_machineOptions);
+       existingMedia->setName(hddInfo.fileName());
+       existingMedia->setPath(QDir::toNativeSeparators(hddInfo.absoluteFilePath()));
+       existingMedia->setType("hdd");
+       existingMedia->setDriveInterface(this->m_diskMap->first());
+       existingMedia->setUuid(QUuid::createUuid().toString());
 
        this->addMediaToTree(existingMedia);
 
@@ -358,12 +358,12 @@ void MachineConfigMedia::addOpticalMedia()
 
     QFileInfo cdromInfo(cdromPath);
 
-    Media media;
-    media.setName(cdromInfo.fileName());
-    media.setPath(QDir::toNativeSeparators(cdromInfo.absoluteFilePath()));
-    media.setType("cdrom");
-    media.setDriveInterface(this->m_cdromMap->first());
-    media.setUuid(QUuid::createUuid().toString());
+    Media *media = new Media(this->m_machineOptions);
+    media->setName(cdromInfo.fileName());
+    media->setPath(QDir::toNativeSeparators(cdromInfo.absoluteFilePath()));
+    media->setType("cdrom");
+    media->setDriveInterface(this->m_cdromMap->first());
+    media->setUuid(QUuid::createUuid().toString());
 
     this->removeInterface("hdc");
     this->addMediaToTree(media);
@@ -398,13 +398,13 @@ void MachineConfigMedia::fillMaps()
  * Add the media to the tree and removes
  * all the interfaces
  */
-void MachineConfigMedia::addMediaToTree(Media media)
+void MachineConfigMedia::addMediaToTree(Media *media)
 {
     QString mediaName;
     mediaName.append("(")
-             .append(media.driveInterface().toUpper())
+             .append(media->driveInterface().toUpper())
              .append(") ")
-             .append(media.name());
+             .append(media->name());
 
     QVariant mediaVariant;
     mediaVariant.setValue(media);
@@ -415,7 +415,7 @@ void MachineConfigMedia::addMediaToTree(Media media)
 
     // To prevent undefined behavior :'(
     this->m_mediaTree->setCurrentItem(m_mediaItem);
-    this->removeInterface(media.driveInterface());
+    this->removeInterface(media->driveInterface());
 }
 
 /**
@@ -426,9 +426,9 @@ void MachineConfigMedia::addMediaToTree(Media media)
 void MachineConfigMedia::removeMediaFromTree()
 {
     QVariant mediaVariant = this->m_mediaTree->currentItem()->data(0, Qt::UserRole);
-    Media selectedMedia = mediaVariant.value<Media>();
+    Media *selectedMedia = mediaVariant.value<Media *>();
 
-    this->addInterface(selectedMedia.driveInterface());
+    this->addInterface(selectedMedia->driveInterface());
 
     this->m_mediaTree->removeItemWidget(this->m_mediaTree->currentItem(), 0);
     delete this->m_mediaTree->currentItem();
@@ -496,7 +496,7 @@ void MachineConfigMedia::saveMediaData()
     QTreeWidgetItemIterator it(this->m_mediaTree);
     while (*it) {
         QVariant mediaVariant = (*it)->data(0, Qt::UserRole);
-        Media media = mediaVariant.value<Media>();
+        Media *media = mediaVariant.value<Media *>();
         this->m_machineOptions->addMedia(media);
         ++it;
     }

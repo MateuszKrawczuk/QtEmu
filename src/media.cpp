@@ -26,7 +26,7 @@
  *
  * Media object for hdd, cdrom and floppy
  */
-Media::Media()
+Media::Media(QObject *parent) : QObject(parent)
 {
     qDebug() << "Media object created";
 }

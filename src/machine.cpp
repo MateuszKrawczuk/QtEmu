@@ -469,7 +469,7 @@ void Machine::setUseNetwork(bool value)
  *
  * Get the list of media of the machine
  */
-QList<Media> Machine::getMedia() const
+QList<Media *> Machine::getMedia() const
 {
     return media;
 }
@@ -480,9 +480,9 @@ QList<Media> Machine::getMedia() const
  *
  * Add media to the media list
  */
-void Machine::addMedia(const Media value)
+void Machine::addMedia(Media *media)
 {
-    this->media.append(value);
+    this->media.append(media);
 }
 
 /**
@@ -512,8 +512,9 @@ void Machine::setAccelerator(const QStringList &value)
  *
  * Get the machine boot
  */
-Boot Machine::getBoot() const {
-    return m_boot;
+Boot *Machine::getBoot() const
+{
+    return boot;
 }
 
 /**
@@ -521,8 +522,9 @@ Boot Machine::getBoot() const {
  *
  * Set the machine boot
  */
-void Machine::setBoot(const Boot &boot) {
-    m_boot = boot;
+void Machine::setBoot(Boot *value)
+{
+    boot = value;
 }
 
 /**
@@ -939,30 +941,30 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << audioCards;
 
     QString bootOrder;
-    QStringListIterator bootIterator(this->m_boot.bootOrder());
+    QStringListIterator bootIterator(this->boot->bootOrder());
     while (bootIterator.hasNext()) {
         bootOrder.append(bootIterator.next());
     }
 
-    QString bootMenu = this->m_boot.bootMenu() ? "on" : "off";
+    QString bootMenu = this->boot->bootMenu() ? "on" : "off";
 
     qemuCommand << "-boot";
     qemuCommand << "order=" + bootOrder + ",menu=" + bootMenu;
 
-    if (this->m_boot.kernelBootEnabled()) {
-        if (!this->m_boot.kernelPath().isEmpty()) {
+    if (this->boot->kernelBootEnabled()) {
+        if (!this->boot->kernelPath().isEmpty()) {
             qemuCommand << "-kernel";
-            qemuCommand << this->m_boot.kernelPath();
+            qemuCommand << this->boot->kernelPath();
         }
 
-        if (!this->m_boot.initrdPath().isEmpty()) {
+        if (!this->boot->initrdPath().isEmpty()) {
             qemuCommand << "-initrd";
-            qemuCommand << this->m_boot.initrdPath();
+            qemuCommand << this->boot->initrdPath();
         }
 
-        if (!this->m_boot.kernelArgs().isEmpty()) {
+        if (!this->boot->kernelArgs().isEmpty()) {
             qemuCommand << "-append";
-            qemuCommand << this->m_boot.kernelArgs();
+            qemuCommand << this->boot->kernelArgs();
         }
     }
 
@@ -1015,10 +1017,10 @@ QStringList Machine::generateMachineCommand()
 
     for (int i = 0; i < media.size(); ++i) {
         QString driveInterface("-");
-        driveInterface.append(media.at(i).driveInterface());
+        driveInterface.append(media.at(i)->driveInterface());
 
         qemuCommand << driveInterface;
-        qemuCommand << media.at(i).path();
+        qemuCommand << media.at(i)->path();
     }
 
     qDebug() << "Command " << qemuCommand;
@@ -1093,10 +1095,10 @@ void Machine::saveMachine()
     QJsonArray media;
     for (int i = 0; i < this->media.size(); ++i) {
         QJsonObject disk;
-        disk["name"] = this->media.at(i).name();
-        disk["path"] = this->media.at(i).path();
-        disk["type"] = this->media.at(i).type();
-        disk["interface"] = this->media.at(i).driveInterface();
+        disk["name"] = this->media.at(i)->name();
+        disk["path"] = this->media.at(i)->path();
+        disk["type"] = this->media.at(i)->type();
+        disk["interface"] = this->media.at(i)->driveInterface();
         disk["uuid"] = QUuid::createUuid().toString();
 
         media.append(disk);
@@ -1105,15 +1107,15 @@ void Machine::saveMachine()
     machineJSONObject["media"] = media;
 
     QJsonObject kernelBoot;
-    kernelBoot["enabled"] = this->m_boot.kernelBootEnabled();
-    kernelBoot["kernelPath"] = this->m_boot.kernelPath();
-    kernelBoot["initrdPath"] = this->m_boot.initrdPath();
-    kernelBoot["kernelArgs"] = this->m_boot.kernelArgs();
+    kernelBoot["enabled"] = this->boot->kernelBootEnabled();
+    kernelBoot["kernelPath"] = this->boot->kernelPath();
+    kernelBoot["initrdPath"] = this->boot->initrdPath();
+    kernelBoot["kernelArgs"] = this->boot->kernelArgs();
 
     QJsonObject boot;
-    boot["bootMenu"] = this->m_boot.bootMenu();
+    boot["bootMenu"] = this->boot->bootMenu();
     boot["kernelBoot"] = kernelBoot;
-    boot["bootOrder"] = QJsonArray::fromStringList(this->m_boot.bootOrder());
+    boot["bootOrder"] = QJsonArray::fromStringList(this->boot->bootOrder());
 
     machineJSONObject["boot"] = boot;
 

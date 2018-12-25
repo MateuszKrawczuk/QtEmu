@@ -109,14 +109,14 @@ class Machine: public QObject {
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
 
-        QList<Media> getMedia() const;
-        void addMedia(const Media value);
+        QList<Media *> getMedia() const;
+        void addMedia(Media *media);
 
         QStringList getAccelerator() const;
         void setAccelerator(const QStringList &value);
 
-        Boot getBoot() const;
-        void setBoot(const Boot &boot);
+        Boot *getBoot() const;
+        void setBoot(Boot *value);
 
         // Methods
         void addAudio(const QString audio);
@@ -186,13 +186,13 @@ class Machine: public QObject {
         bool useNetwork;
 
         // Hardware - media
-        QList<Media> media;
+        QList<Media *> media;
 
         // Accelerator
         QStringList accelerator;
 
         // Boot
-        Boot m_boot;
+        Boot *boot;
 
         // Process
         QProcess *m_machineProcess;
@@ -211,7 +211,4 @@ class Machine: public QObject {
         QStringList generateMachineCommand();
         void failConnectMachine();
 };
-
-Q_DECLARE_METATYPE(Media);
-
 #endif // MACHINE_H

@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->createToolBars();
 
     // Load all the machines
+    this->m_osListWidget->setCurrentRow(0);
     this->loadMachines();
     this->loadUI(m_osListWidget->count());
 
@@ -439,7 +440,7 @@ void MainWindow::loadMachines()
     QJsonDocument machinesDocument(QJsonDocument::fromJson(machinesData));
     QJsonArray machines = machinesDocument["machines"].toArray();
     for (int i = 0; i < machines.size(); ++i) {
-        this->generateMachineObject(machines[i].toObject());
+        this->generateMachineObject(machines[i].toObject(), i);
     }
 
     if (machinesFile.isOpen()) {
@@ -450,11 +451,12 @@ void MainWindow::loadMachines()
 /**
  * @brief Generate the machine object for the list
  * @param machinesConfigJsonObject, JSON with the machine configpath, icon, path and uuid
+ * @param pos, pos of the machine in the list
  * @return machine object
  *
  * Generate the machine object for the list
  */
-void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObject)
+void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObject, int pos)
 {
     QString machinePath = machinesConfigJsonObject["configpath"].toString();
     QFile machineFile(machinePath);
@@ -482,6 +484,11 @@ void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObjec
     machineListItem->setIcon(QIcon(":/images/os/64x64/" +
                                    SystemUtils::getOsIcon(machinesConfigJsonObject["icon"].toString())));
 
+    // To prevent undefined behavior :'(
+    if (pos == 0){
+        this->m_osListWidget->setCurrentItem(machineListItem);
+    }
+
     QJsonObject gpuObject = machineJSON["gpu"].toObject();
     QJsonObject cpuObject = machineJSON["cpu"].toObject();
     QJsonObject bootObject = machineJSON["boot"].toObject();
@@ -492,23 +499,23 @@ void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObjec
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);
 
-    Boot machineBoot;
-    machineBoot.setBootMenu(bootObject["bootMenu"].toBool());
-    machineBoot.setKernelBootEnabled(kernelObject["enabled"].toBool());
-    machineBoot.setKernelPath(kernelObject["kernelPath"].toString());
-    machineBoot.setInitrdPath(kernelObject["initrdPath"].toString());
-    machineBoot.setKernelArgs(kernelObject["kernelArgs"].toString());
-    machineBoot.setBootOrder(MachineUtils::getMediaDevices(bootObject["bootOrder"].toArray()));
+    Boot *machineBoot = new Boot(machine);
+    machineBoot->setBootMenu(bootObject["bootMenu"].toBool());
+    machineBoot->setKernelBootEnabled(kernelObject["enabled"].toBool());
+    machineBoot->setKernelPath(kernelObject["kernelPath"].toString());
+    machineBoot->setInitrdPath(kernelObject["initrdPath"].toString());
+    machineBoot->setKernelArgs(kernelObject["kernelArgs"].toString());
+    machineBoot->setBootOrder(MachineUtils::getMediaDevices(bootObject["bootOrder"].toArray()));
 
     for(int i = 0; i < mediaArray.size(); ++i) {
         QJsonObject mediaObject = mediaArray[i].toObject();
 
-        Media media;
-        media.setName(mediaObject["name"].toString());
-        media.setPath(mediaObject["path"].toString());
-        media.setType(mediaObject["type"].toString());
-        media.setDriveInterface(mediaObject["interface"].toString());
-        media.setUuid(mediaObject["uuid"].toVariant().toUuid());
+        Media *media = new Media(machine);
+        media->setName(mediaObject["name"].toString());
+        media->setPath(mediaObject["path"].toString());
+        media->setType(mediaObject["type"].toString());
+        media->setDriveInterface(mediaObject["interface"].toString());
+        media->setUuid(mediaObject["uuid"].toVariant().toUuid());
         machine->addMedia(media);
     }
 
@@ -554,6 +561,9 @@ void MainWindow::createNewMachine()
     m_machine->setMaxHotCPU(0);
     m_machine->setState(Machine::Stopped);
 
+    connect(m_machine, &Machine::machineStateChangedSignal,
+            this, &MainWindow::machineStateChanged);
+
     MachineWizard newMachineWizard(m_machine, this->m_osListWidget, this->qemuGlobalObject, this);
 
     newMachineWizard.show();
@@ -561,6 +571,30 @@ void MainWindow::createNewMachine()
 
     if (!m_machine->getUuid().isEmpty()) {
         m_machinesList.append(m_machine);
+        this->loadUI(this->m_osListWidget->count());
+    }
+}
+
+/**
+ * @brief Delete the selected machine
+ *
+ * Delete the selected machine and its associated files
+ */
+void MainWindow::deleteMachine()
+{
+    QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
+    bool isMachineDeleted = MachineUtils::deleteMachine(machineUuid);
+    if (isMachineDeleted) {
+        this->m_osListWidget->takeItem(this->m_osListWidget->currentRow());
+        bool machineRemovedList = false;
+        QMutableListIterator<Machine*> machines(this->m_machinesList);
+        while (machines.hasNext() && !machineRemovedList) {
+            if (machines.next()->getUuid() == machineUuid.toString()) {
+                machines.remove();
+                machineRemovedList = true;
+            }
+        }
+        this->m_osListWidget->setCurrentRow(0);
         this->loadUI(this->m_osListWidget->count());
     }
 }
@@ -643,55 +677,39 @@ void MainWindow::pauseMachine()
 }
 
 /**
- * @brief Delete the selected machine
- *
- * Delete the selected machine and its associated files
- */
-void MainWindow::deleteMachine()
-{
-    QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
-    bool isMachineDeleted = MachineUtils::deleteMachine(machineUuid);
-    if (isMachineDeleted) {
-        this->m_osListWidget->takeItem(this->m_osListWidget->currentRow());
-        this->loadUI(this->m_osListWidget->count());
-
-        bool machineRemovedList = false;
-        QMutableListIterator<Machine*> machines(this->m_machinesList);
-        while (machines.hasNext() && !machineRemovedList) {
-            if (machines.next()->getUuid() == machineUuid.toString()) {
-                machines.remove();
-            }
-        }
-        this->updateMachineDetailsSection();
-    }
-}
-
-/**
  * @brief Enable/Disable buttons
  *
  * Enable/Disable the buttons in the menubar and in the main ui
  * If the osListWidget item doesn't have elements, elements
  * related to the VM actions are disabled. If the osListWidget have
  * at least one element, elements are enabled
+ *
+ * @param machineCount, number of machines
  */
-void MainWindow::loadUI(const int itemCount)
+void MainWindow::loadUI(const int machineCount)
 {
-    this->m_stopMachineAction ->setEnabled(false);
-    this->m_resetMachineAction->setEnabled(false);
-    this->m_pauseMachineAction->setEnabled(false);
-
-    if (itemCount == 0) {
+    if (machineCount == 0) {
+        // Disable all options
+        this->m_startMachineAction->setEnabled(false);
+        this->m_stopMachineAction->setEnabled(false);
+        this->m_resetMachineAction->setEnabled(false);
+        this->m_pauseMachineAction->setEnabled(false);
         this->m_settingsMachineAction->setEnabled(false);
         this->m_removeMachineAction->setEnabled(false);
-        this->m_startMachineAction->setEnabled(false);
-    } else {
-        this->m_osListWidget->setCurrentRow(0);
 
-        this->m_settingsMachineAction->setEnabled(true);
-        this->m_removeMachineAction->setEnabled(true);
-        this->m_startMachineAction->setEnabled(true);
+        this->emptyMachineDetailsSection();
+    } else {
+        QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
+        foreach (Machine *machine, this->m_machinesList) {
+            if (machine->getUuid() == machineUuid.toString()){
+                this->m_settingsMachineAction->setEnabled(true);
+                this->m_removeMachineAction->setEnabled(true);
+                this->controlMachineActions(machine->getState());
+                this->fillMachineDetailsSection(machine);
+                break;
+            }
+        }
     }
-    this->updateMachineDetailsSection();
 }
 
 /**
@@ -732,9 +750,9 @@ void MainWindow::fillMachineDetailsSection(Machine *machine)
     QString mediaLabel;
     for (int i = 0; i < machine->getMedia().size(); ++i) {
          mediaLabel.append("(")
-                   .append(machine->getMedia().at(i).driveInterface().toUpper())
+                   .append(machine->getMedia().at(i)->driveInterface().toUpper())
                    .append(") ")
-                   .append(machine->getMedia().at(i).name())
+                   .append(machine->getMedia().at(i)->name())
                    .append("\n");
     }
     this->m_machineMediaLabel->setText(mediaLabel);
@@ -806,20 +824,6 @@ void MainWindow::controlMachineActions(Machine::States state)
         this->m_stopMachineAction->setEnabled(false);
         this->m_resetMachineAction->setEnabled(false);
         this->m_pauseMachineAction->setEnabled(true);
-    }
-}
-
-/**
- * @brief Show the machine data in the labels
- *
- * Show the machine data in the labels
- */
-void MainWindow::updateMachineDetailsSection()
-{
-    if (this->m_machinesList.size() > 0) {
-        this->fillMachineDetailsSection(this->m_machinesList[0]);
-    } else {
-        this->emptyMachineDetailsSection();
     }
 }
 

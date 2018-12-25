@@ -26,10 +26,11 @@
 #include <QUuid>
 #include <QDebug>
 
-class Media {
+class Media: public QObject {
+    Q_OBJECT
 
     public:
-        explicit Media();
+        explicit Media(QObject *parent = nullptr);
         ~Media();
 
         QString name() const;

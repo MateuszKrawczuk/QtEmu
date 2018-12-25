@@ -118,7 +118,7 @@ class MachineConfigMedia : public QWidget {
         void addHddMedia();
         void addOpticalMedia();
         void fillMaps();
-        void addMediaToTree(Media media);
+        void addMediaToTree(Media *media);
         void addInterface(const QString driveInterface);
         void removeInterface(const QString driveInterface);
         int countMedia();

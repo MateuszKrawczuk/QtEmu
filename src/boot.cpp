@@ -26,7 +26,7 @@
  *
  * Boot object
  */
-Boot::Boot()
+Boot::Boot(QObject *parent) : QObject(parent)
 {
     qDebug() << "Boot object created";
 }
