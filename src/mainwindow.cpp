@@ -204,7 +204,7 @@ void MainWindow::createMenusActions()
     connect(m_newMachineAction, &QAction::triggered,
             this, &MainWindow::createNewMachine);
 
-    m_settingsMachineAction = new QAction(QIcon::fromTheme("settings-configure",
+    m_settingsMachineAction = new QAction(QIcon::fromTheme("configure",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/settings-configure.svg"))),
                                           tr("Machine Settings"),
                                           this);
@@ -257,14 +257,14 @@ void MainWindow::createMenusActions()
 
     // Actions for Machine toolbar
     m_startMachineAction = new QAction(this);
-    m_startMachineAction->setIcon(QIcon::fromTheme("kt-start",
+    m_startMachineAction->setIcon(QIcon::fromTheme("media-playback-start",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/start.svg"))));
     m_startMachineAction->setToolTip(tr("Start machine"));
     connect(m_startMachineAction, &QAction::triggered,
             this, &MainWindow::runMachine);
 
     m_stopMachineAction = new QAction(this);
-    m_stopMachineAction->setIcon(QIcon::fromTheme("kt-stop",
+    m_stopMachineAction->setIcon(QIcon::fromTheme("media-playback-stop",
                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/stop.svg"))));
     m_stopMachineAction->setToolTip(tr("Stop machine"));
 
@@ -276,7 +276,7 @@ void MainWindow::createMenusActions()
             this, &MainWindow::resetMachine);
 
     m_pauseMachineAction = new QAction(this);
-    m_pauseMachineAction->setIcon(QIcon::fromTheme("kt-pause",
+    m_pauseMachineAction->setIcon(QIcon::fromTheme("media-playback-pause",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/pause.svg"))));
     m_pauseMachineAction->setToolTip(tr("Pause machine"));
     connect(m_pauseMachineAction, &QAction::triggered,
