@@ -32,15 +32,21 @@
 MachineConfigHardware::MachineConfigHardware(Machine *machine,
                                              QWidget *parent) : QWidget(parent)
 {
+    bool enableFields = true;
+
+    if (machine->getState() != Machine::Stopped) {
+        enableFields = false;
+    }
+
     this->m_machine = machine;
 
     m_hardwareTabWidget = new QTabWidget(this);
     m_hardwareTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
                                        QSizePolicy::MinimumExpanding);
 
-    m_processorConfigTab = new ProcessorConfigTab(machine, this);
-    m_graphicsConfigTab = new GraphicsConfigTab(machine, this);
-    m_ramConfigTab = new RamConfigTab(machine, this);
+    m_processorConfigTab = new ProcessorConfigTab(machine, enableFields, this);
+    m_graphicsConfigTab = new GraphicsConfigTab(machine, enableFields, this);
+    m_ramConfigTab = new RamConfigTab(machine, enableFields, this);
 
     m_hardwareTabWidget->addTab(this->m_processorConfigTab, tr("CPU"));
     m_hardwareTabWidget->addTab(this->m_graphicsConfigTab, tr("Graphics"));

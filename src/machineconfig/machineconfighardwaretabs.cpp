@@ -24,17 +24,20 @@
 /**
  * @brief Tab with informacion about the machine CPU options
  * @param machine, machine to be configured
+ * @param enableFields, fields enabled or disabled
  * @param parent, parent widget
  *
  * Tab with informacion about the machine CPU options
  */
 ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
+                                       bool enableFields,
                                        QWidget *parent) : QWidget(parent)
 {
     m_CPUTypeLabel = new QLabel(tr("CPU Type") + ":", this);
     m_CPUTypeLabel->setWordWrap(true);
 
     m_CPUType = new QComboBox(this);
+    m_CPUType->setEnabled(enableFields);
     SystemUtils::setCPUTypesx86(m_CPUType);
     int cpuTypeIndex = m_CPUType->findData(machine->getCPUType());
     if (cpuTypeIndex != -1) {
@@ -54,6 +57,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_CPUCountSpinBox->setMinimum(1);
     m_CPUCountSpinBox->setMaximum(255);
     m_CPUCountSpinBox->setValue(machine->getCPUCount());
+    m_CPUCountSpinBox->setEnabled(enableFields);
 
     m_coresSocketLabel = new QLabel(tr("Cores per socket") + ":", this);
     m_coresSocketLabel->setWordWrap(true);
@@ -62,6 +66,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_coresSocketSpinBox->setMinimum(0);
     m_coresSocketSpinBox->setMaximum(255);
     m_coresSocketSpinBox->setValue(machine->getCoresSocket());
+    m_coresSocketSpinBox->setEnabled(enableFields);
 
     m_CPUCountLayout = new QHBoxLayout();
     m_CPUCountLayout->setAlignment(Qt::AlignVCenter);
@@ -78,6 +83,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_socketCountSpinBox->setMinimum(0);
     m_socketCountSpinBox->setMaximum(255);
     m_socketCountSpinBox->setValue(machine->getSocketCount());
+    m_socketCountSpinBox->setEnabled(enableFields);
 
     m_threadsCoreLabel = new QLabel(tr("Threads per core") + ":", this);
     m_threadsCoreLabel->setWordWrap(true);
@@ -86,6 +92,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_threadsCoreSpinBox->setMinimum(0);
     m_threadsCoreSpinBox->setMaximum(255);
     m_threadsCoreSpinBox->setValue(machine->getThreadsCore());
+    m_threadsCoreSpinBox->setEnabled(enableFields);
 
     m_socketLayout = new QHBoxLayout();
     m_socketLayout->setAlignment(Qt::AlignVCenter);
@@ -102,6 +109,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_maxHotCPUSpinBox->setMinimum(0);
     m_maxHotCPUSpinBox->setMaximum(255);
     m_maxHotCPUSpinBox->setValue(machine->getMaxHotCPU());
+    m_maxHotCPUSpinBox->setEnabled(enableFields);
 
     m_maxHotCPUsLayout = new QHBoxLayout();
     m_maxHotCPUsLayout->setAlignment(Qt::AlignVCenter);
@@ -202,16 +210,19 @@ int ProcessorConfigTab::getMaxHotCPU()
 /**
  * @brief Tab with the GPU and keyboard
  * @param machine, machine to be configured
+ * @param enableFields, fields enabled or disabled
  * @param parent, parent widget
  *
  * Tab with the GPU and keyboard
  */
 GraphicsConfigTab::GraphicsConfigTab(Machine *machine,
+                                     bool enableFields,
                                      QWidget *parent) : QWidget(parent)
 {
     m_GPUTypeLabel = new QLabel(tr("GPU Type") + ":", this);
     m_GPUTypeLabel->setWordWrap(true);
     m_GPUType = new QComboBox(this);
+    m_GPUType->setEnabled(enableFields);
     SystemUtils::setGPUTypes(m_GPUType);
     int gpuIndex = m_GPUType->findData(machine->getGPUType());
     if (gpuIndex != -1) {
@@ -225,6 +236,7 @@ GraphicsConfigTab::GraphicsConfigTab(Machine *machine,
     m_keyboardLabel = new QLabel(tr("Keyboard layout") + ":", this);
     m_keyboardLabel->setWordWrap(true);
     m_keyboard = new QComboBox(this);
+    m_keyboard->setEnabled(enableFields);
     SystemUtils::setKeyboardLayout(m_keyboard);
     int keyboardIndex = m_keyboard->findData(machine->getKeyboard());
     if (keyboardIndex != -1) {
@@ -275,11 +287,13 @@ QString GraphicsConfigTab::getKeyboardLayout()
 /**
  * @brief Tab with the amount of RAM
  * @param machine, machine to be configured
+ * @param enableFields, fields enabled or disabled
  * @param parent, parent widget
  *
  * Tab with the amount of RAM
  */
 RamConfigTab::RamConfigTab(Machine *machine,
+                           bool enableFields,
                            QWidget *parent) : QWidget(parent)
 {
     m_descriptionMemoryLabel = new QLabel(tr("Select the amount of base memory (RAM) in "
@@ -295,6 +309,7 @@ RamConfigTab::RamConfigTab(Machine *machine,
     m_memorySpinBox->setMinimum(1);
     m_memorySpinBox->setMaximum(totalRAM);
     m_memorySpinBox->setValue(static_cast<int>(machine->getRAM()));
+    m_memorySpinBox->setEnabled(enableFields);
 
     m_memorySlider = new QSlider(Qt::Horizontal, this);
     m_memorySlider->setTickPosition(QSlider::TicksBelow);
@@ -302,6 +317,7 @@ RamConfigTab::RamConfigTab(Machine *machine,
     m_memorySlider->setMinimum(1);
     m_memorySlider->setMaximum(totalRAM);
     m_memorySlider->setValue(static_cast<int>(machine->getRAM()));
+    m_memorySlider->setEnabled(enableFields);
 
     connect(m_memorySpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             m_memorySlider, &QSlider::setValue);

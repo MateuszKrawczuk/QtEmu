@@ -211,6 +211,7 @@ void MachineConclusionPage::insertVMList()
     // TODO: Check if the json it's incomplete and the image not exits
     machine->setIcon(QIcon(":/images/os/64x64/" +
                              SystemUtils::getOsIcon(this->m_newMachine->getOSVersion())));
+    this->m_osList->setCurrentItem(machine);
 }
 
 /**

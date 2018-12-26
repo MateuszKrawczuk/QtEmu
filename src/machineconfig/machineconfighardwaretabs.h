@@ -35,6 +35,7 @@ class ProcessorConfigTab: public QWidget {
 
     public:
         explicit ProcessorConfigTab(Machine *machine,
+                                    bool enableFields,
                                     QWidget *parent = nullptr);
         ~ProcessorConfigTab();
 
@@ -84,6 +85,7 @@ class GraphicsConfigTab: public QWidget {
 
     public:
         explicit GraphicsConfigTab(Machine *machine,
+                                   bool enableFields,
                                    QWidget *parent = nullptr);
         ~GraphicsConfigTab();
 
@@ -115,6 +117,7 @@ class RamConfigTab: public QWidget {
 
     public:
         explicit RamConfigTab(Machine *machine,
+                              bool enableFields,
                               QWidget *parent = nullptr);
         ~RamConfigTab();
 
