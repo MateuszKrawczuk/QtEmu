@@ -444,6 +444,7 @@ void MachineConfigMedia::removeMediaFromTree()
 void MachineConfigMedia::addInterface(const QString driveInterface)
 {
     if (driveInterface == "cdrom") {
+        this->m_diskMap->insert("hdc", "hdc");
         this->m_cdromMap->insert(driveInterface, driveInterface);
     } else if (driveInterface.contains("hd")) {
         this->m_diskMap->insert(driveInterface, driveInterface);
