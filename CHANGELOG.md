@@ -1,4 +1,14 @@
-## Version 2.0-alpha (UNRELEASED)
+## Version 2.0 (UNRELEASED)
+
+QtEmu 2.0 is a complete rewrite of QtEmu.
+
+Features:
+* Ported to Qt5
+* Complete redesing of the UI.
+* Support for GNU/Linux, FreeBSD and Windows. Port to MacOS in progress.
+* Support for versions 2.x and 3.x of QEMU
+* Support to X11 and Wayland on GNU/Linux
+
 
 ## Version 1.0.5
 
