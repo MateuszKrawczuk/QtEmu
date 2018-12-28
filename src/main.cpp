@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 {
     QApplication qtemuApp(argc, argv);
     qtemuApp.setApplicationName("QtEmu");
-    qtemuApp.setApplicationVersion("2.0-beta");
+    qtemuApp.setApplicationVersion("2.0");
     qtemuApp.setOrganizationName("QtEmu");
     qtemuApp.setOrganizationDomain("https://www.qtemu.org");
 
