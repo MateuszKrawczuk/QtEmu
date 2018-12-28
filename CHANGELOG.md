@@ -1,4 +1,11 @@
-## Version 2.0 (UNRELEASED)
+## Version 2.1
+
+Features:
+
+Bugs:
+
+
+## Version 2.0
 
 QtEmu 2.0 is a complete rewrite of QtEmu.
 

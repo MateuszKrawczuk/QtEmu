@@ -1,10 +1,9 @@
 
- QtEmu - A front-end written in Qt for the QEMU emulator
- Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
- Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
+ # QtEmu - A front-end written in Qt for the QEMU emulator
+ ###### Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
+ ###### Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
 
-===============================================================================
-
+---
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
@@ -21,18 +20,21 @@
    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 
    Or visit http://www.gnu.org/licenses/
+---
 
-===============================================================================
+# General runtime dependencies
 
-General runtime dependencies
-===============================================================================
+* Qt 5.10 or later
+* QEMU
 
-Dependencies for building
-===============================================================================
+# Dependencies for building
 
+  - Archlinux and Parabola (runtime deps include build-time deps):
+    **qt5-base**
 
-Build process
-===============================================================================
+    **Build tools: gcc, make**
+
+# Build process
 
 From QtEmu's main directory, where qtemu.pro is located, execute:
 
@@ -42,4 +44,3 @@ From QtEmu's main directory, where qtemu.pro is located, execute:
         make                      # Run Make to compile the project
 
 [*]you might need to use the command 'qmake-qt5' instead
-===============================================================================

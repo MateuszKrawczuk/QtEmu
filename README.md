@@ -1,7 +1,7 @@
 # QtEmu &ndash; Qt-based front-end for QEMU emulator
 
-Stable version: 1.0.5 <br />
-Development version: 2.0-alpha <br />
+Stable version: 2.0 <br />
+Development version: 2.1 <br />
 
 Website: https://qtemu.org/ <br />
 Source: https://gitlab.com/carlavilla/Qtemu
@@ -23,7 +23,7 @@ See [CHANGELOG](https://gitlab.com/carlavilla/Qtemu/blob/master/CHANGELOG.md) fi
 
 ## Installation
 
-See [INSTALL]() file.
+See [INSTALL](https://gitlab.com/carlavilla/Qtemu/blob/master/INSTALL.md) file.
 
 ## Development
 
@@ -38,7 +38,7 @@ VirtualBox OSE and Virt-manager.
 QtEmu version 1.0.5 is available in English, Czech, German, Russian, Spanish, Turkish, French, Italian,
 Brazilian Portuguese and Polish.
 
-QtEmu version 2.0-alpha is only available in English.
+QtEmu version 2.x is only available in English.
 
 If you want to translate to another language be free to do it :D
 
