@@ -84,8 +84,8 @@ SOURCES +=  src/main.cpp\
             src/machineconfig/machineconfiggeneraltabs.cpp \
             src/machineconfig/machineconfighardwaretabs.cpp \
             src/utils/firstrunwizard.cpp \
-    src/boot.cpp \
-    src/media.cpp
+            src/boot.cpp \
+            src/media.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -115,8 +115,8 @@ HEADERS  += src/mainwindow.h \
             src/machineconfig/machineconfiggeneraltabs.h \
             src/machineconfig/machineconfighardwaretabs.h \
             src/utils/firstrunwizard.h \
-    src/boot.h \
-    src/media.h
+            src/boot.h \
+            src/media.h
 
 OTHER_FILES += \
     CHANGELOG \
@@ -127,4 +127,4 @@ OTHER_FILES += \
     
 RESOURCES += qtemu.qrc
 
-
+RC_ICONS += qtemu.ico
