@@ -29,7 +29,7 @@ See [INSTALL](https://gitlab.com/carlavilla/Qtemu/blob/master/INSTALL.md) file.
 
 Prebuild binaries and installers
 
-# Windows
+- Windows
 
 * [QtEmu installer for Windows x86_64](www.carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
 * [QtEmu portable for Windows x86_64](www.carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
