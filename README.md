@@ -25,6 +25,15 @@ See [CHANGELOG](https://gitlab.com/carlavilla/Qtemu/blob/master/CHANGELOG.md) fi
 
 See [INSTALL](https://gitlab.com/carlavilla/Qtemu/blob/master/INSTALL.md) file.
 
+## Downloads
+
+Prebuild binaries and installers
+
+# Windows
+
+* [QtEmu installer for Windows x86_64](www.carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
+* [QtEmu portable for Windows x86_64](www.carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
+
 ## Development
 
 Urs Wolfer started QtEmu as school project. Ben Klopfenstein began adding some features that he wanted.
