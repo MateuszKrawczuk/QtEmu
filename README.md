@@ -4,7 +4,7 @@ Stable version: 2.0 <br />
 Development version: 2.1 <br />
 
 Website: https://qtemu.org/ <br />
-Source: https://gitlab.com/carlavilla/Qtemu
+Source: https://gitlab.com/qtemu/gui
 
 ## License
 
