@@ -39,10 +39,10 @@
  */
 alpha::alpha(QObject *parent) : QObject(parent)
 {
-    qDebug() << "QEMU object created";
+    qDebug() << "alpha object created";
 }
 
 alpha::~alpha()
 {
-    qDebug() << "QEMU object destroyed";
+    qDebug() << "alpha object destroyed";
 }
