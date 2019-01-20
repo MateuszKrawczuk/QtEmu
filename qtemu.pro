@@ -2,7 +2,7 @@
 ## QtEmu - A front-end for qemu emulator
 ##
 ## Copyright (C) 2006-2008 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
-## Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
+## Copyright (C) 2017-2019 Sergio Carlavilla <carlavilla @ mailbox.org>
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -85,7 +85,8 @@ SOURCES +=  src/main.cpp\
             src/machineconfig/machineconfighardwaretabs.cpp \
             src/utils/firstrunwizard.cpp \
             src/boot.cpp \
-            src/media.cpp
+            src/media.cpp \
+    src/platforms/alpha.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -116,7 +117,8 @@ HEADERS  += src/mainwindow.h \
             src/machineconfig/machineconfighardwaretabs.h \
             src/utils/firstrunwizard.h \
             src/boot.h \
-            src/media.h
+            src/media.h \
+    src/platforms/alpha.h
 
 OTHER_FILES += \
     CHANGELOG \
