@@ -149,6 +149,7 @@ void MainWindow::createMenus()
     m_machineMenu = new QMenu(tr("&Machine"), this);
     m_machineMenu->addAction(m_newMachineAction);
     m_machineMenu->addAction(m_settingsMachineAction);
+    m_machineMenu->addAction(m_exportMachineAction);
     m_machineMenu->addAction(m_removeMachineAction);
 
     // Help
@@ -210,6 +211,13 @@ void MainWindow::createMenusActions()
                                           this);
     connect(m_settingsMachineAction, &QAction::triggered,
             this, &MainWindow::machineOptions);
+
+    m_exportMachineAction = new QAction(QIcon::fromTheme("document-export",
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/settings-configure.svg"))),
+                                        tr("Export machine"),
+                                        this);
+    connect(m_exportMachineAction, &QAction::triggered,
+            this, &MainWindow::exportMachine);
 
     m_removeMachineAction = new QAction(QIcon::fromTheme("project-development-close",
                                                          QIcon(QPixmap(":/images/icons/breeze/32x32/project-development-close.svg"))),
@@ -626,6 +634,16 @@ void MainWindow::machineOptions()
 }
 
 /**
+ * @brief Export the selected machine
+ *
+ * Export the selected machine
+ */
+void MainWindow::exportMachine()
+{
+
+}
+
+/**
  * @brief Start the selected machine
  *
  * Start the selected machine
@@ -695,6 +713,7 @@ void MainWindow::loadUI(const int machineCount)
         this->m_resetMachineAction->setEnabled(false);
         this->m_pauseMachineAction->setEnabled(false);
         this->m_settingsMachineAction->setEnabled(false);
+        this->m_exportMachineAction->setEnabled(false);
         this->m_removeMachineAction->setEnabled(false);
 
         this->emptyMachineDetailsSection();
@@ -703,6 +722,7 @@ void MainWindow::loadUI(const int machineCount)
         foreach (Machine *machine, this->m_machinesList) {
             if (machine->getUuid() == machineUuid.toString()){
                 this->m_settingsMachineAction->setEnabled(true);
+                this->m_exportMachineAction->setEnabled(true);
                 this->m_removeMachineAction->setEnabled(true);
                 this->controlMachineActions(machine->getState());
                 this->fillMachineDetailsSection(machine);

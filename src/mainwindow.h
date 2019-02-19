@@ -75,6 +75,7 @@ class MainWindow : public QMainWindow {
         void quitApp();
         void createNewMachine();
         void machineOptions();
+        void exportMachine();
         void runMachine();
         void resetMachine();
         void pauseMachine();
@@ -100,6 +101,7 @@ class MainWindow : public QMainWindow {
         QAction *m_newMachineAction;
         QAction *m_addMachineAction;
         QAction *m_settingsMachineAction;
+        QAction *m_exportMachineAction;
         QAction *m_removeMachineAction;
         QAction *m_groupMachineAction;
 

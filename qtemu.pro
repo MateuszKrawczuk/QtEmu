@@ -86,7 +86,8 @@ SOURCES +=  src/main.cpp\
             src/utils/firstrunwizard.cpp \
             src/boot.cpp \
             src/media.cpp \
-    src/platforms/alpha.cpp
+    src/platforms/alpha.cpp \
+    src/export-import/export.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -118,7 +119,8 @@ HEADERS  += src/mainwindow.h \
             src/utils/firstrunwizard.h \
             src/boot.h \
             src/media.h \
-    src/platforms/alpha.h
+    src/platforms/alpha.h \
+    src/export-import/export.h
 
 OTHER_FILES += \
     CHANGELOG \

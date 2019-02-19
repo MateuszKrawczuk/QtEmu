@@ -1,6 +1,5 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
  * Copyright (C) 2017-2019 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,41 +17,26 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-
-#ifndef MACHINEWIZARD_H
-#define MACHINEWIZARD_H
+#ifndef EXPORT_H
+#define EXPORT_H
 
 // Qt
 #include <QWizard>
-#include <QListWidget>
-#include <QFile>
 
 #include <QDebug>
 
 // Local
-#include "machine.h"
-#include "qemu.h"
-#include "utils/systemutils.h"
+#include "../machine.h"
 
-#include "newmachine/generalpage.h"
-#include "newmachine/hardwarepage.h"
-#include "newmachine/acceleratorpage.h"
-#include "newmachine/memorypage.h"
-#include "newmachine/diskpage.h"
-#include "newmachine/conclusionpage.h"
-
-class MachineWizard : public QWizard {
+class ExportWizard : public QWizard {
     Q_OBJECT
 
     public:
-        explicit MachineWizard(Machine *machine,
-                               QListWidget *osListWidget,
-                               QEMU *QEMUGlobalObject,
-                               QWidget *parent = nullptr);
-        ~MachineWizard();
+        explicit ExportWizard(Machine *machine,
+                              QWidget *parent = nullptr);
+        ~ExportWizard();
 
-        enum { Page_Name, Page_Hardware, Page_Accelerator,
-               Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
+        enum { Page_General, Page_Details, Page_Media };
 
     signals:
 
@@ -64,4 +48,4 @@ class MachineWizard : public QWizard {
 
 };
 
-#endif // MACHINEWIZARD_H
+#endif // EXPORT_H
