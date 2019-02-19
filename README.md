@@ -9,7 +9,7 @@ Source: https://gitlab.com/qtemu/gui
 ## License
 
 This program is licensed under the GNU General Public License version 2.
-See the [LICENSE](https://gitlab.com/carlavilla/Qtemu/blob/master/LICENSE.md) file for more information
+See the [LICENSE](https://gitlab.com/Qtemu/gui/blob/master/LICENSE.md) file for more information
 
 ## Description
 
@@ -19,11 +19,11 @@ This way you can easily test a new operating system or try a Live CD on your sys
 
 ## Versions history
 
-See [CHANGELOG](https://gitlab.com/carlavilla/Qtemu/blob/master/CHANGELOG.md) file.
+See [CHANGELOG](https://gitlab.com/Qtemu/gui/blob/master/CHANGELOG.md) file.
 
 ## Installation
 
-See [INSTALL](https://gitlab.com/carlavilla/Qtemu/blob/master/INSTALL.md) file.
+See [INSTALL](https://gitlab.com//Qtemu/gui/blob/master/INSTALL.md) file.
 
 ## Downloads
 
@@ -31,8 +31,8 @@ Prebuild binaries and installers
 
 - Windows
 
-* [QtEmu installer for Windows x86_64](www.carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
-* [QtEmu portable for Windows x86_64](www.carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
+* [QtEmu installer for Windows x86_64](https://www.carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
+* [QtEmu portable for Windows x86_64](https://www.carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
 
 ## Development
 
@@ -59,7 +59,7 @@ If you want to translate to another language be free to do it :D
 
 ## Contributing
 
-If you want to contribute to the project, please see [CONTRIBUTING](https://gitlab.com/carlavilla/Qtemu/blob/master/CONTRIBUTING.md) file.
+If you want to contribute to the project, please see [CONTRIBUTING](https://gitlab.com/Qtemu/gui/blob/master/CONTRIBUTING.md) file.
 
 ## Extra links
 
