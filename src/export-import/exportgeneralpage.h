@@ -18,34 +18,46 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef EXPORTGENERALPAGE_H
+#define EXPORTGENERALPAGE_H
+
+// Qt
+#include <QWizardPage>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QFileDialog>
+
 // Local
-#include "export.h"
+#include "../machine.h"
 
-ExportWizard::ExportWizard(Machine *machine,
-                           QWidget *parent) : QWizard(parent)
-{
-    this->setWindowTitle(tr("Export the Machine"));
+class ExportGeneralPage: public QWizardPage {
+    Q_OBJECT
 
-    this->setPage(Page_General, new ExportGeneralPage(machine, this));
+    public:
+        explicit ExportGeneralPage(Machine *machine,
+                                   QWidget *parent = nullptr);
+        ~ExportGeneralPage();
 
-    this->setStartId(Page_General);
+    signals:
 
-    #ifndef Q_OS_MAC
-        this->setWizardStyle(ClassicStyle);
-    #endif
-    #ifdef Q_OS_MAC
-        this->setWizardStyle(MacStyle);
-    #endif
+    public slots:
 
-    this->setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
-    this->setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));
+    private slots:
+        void selectExportDestination();
 
-    this->setMinimumSize(600, 400);
+    protected:
 
-    qDebug() << "ExportWizard created";
-}
+    private:
+        QHBoxLayout *m_destinationLayout;
+        QVBoxLayout *m_mainLayout;
 
-ExportWizard::~ExportWizard()
-{
-    qDebug() << "ExportWizard destroyed";
-}
+        QLabel *m_machineNameLabel;
+
+        QLineEdit *m_destinationLineEdit;
+
+        QPushButton *m_destinationButton;
+};
+
+#endif // EXPORTGENERALPAGE_H

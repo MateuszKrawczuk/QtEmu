@@ -640,7 +640,20 @@ void MainWindow::machineOptions()
  */
 void MainWindow::exportMachine()
 {
+    // TODO: Move that code to a function...
+    QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
+    Machine *exportMachine = nullptr;
+    foreach (Machine *machine, this->m_machinesList) {
+        if (machine->getUuid() == machineUuid.toString()){
+            exportMachine = machine;
+            break;
+        }
+    }
 
+    ExportWizard machineExport(exportMachine, this);
+
+    machineExport.show();
+    machineExport.exec();
 }
 
 /**

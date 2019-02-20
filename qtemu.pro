@@ -87,7 +87,8 @@ SOURCES +=  src/main.cpp\
             src/boot.cpp \
             src/media.cpp \
     src/platforms/alpha.cpp \
-    src/export-import/export.cpp
+    src/export-import/export.cpp \
+    src/export-import/exportgeneralpage.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -120,7 +121,8 @@ HEADERS  += src/mainwindow.h \
             src/boot.h \
             src/media.h \
     src/platforms/alpha.h \
-    src/export-import/export.h
+    src/export-import/export.h \
+    src/export-import/exportgeneralpage.h
 
 OTHER_FILES += \
     CHANGELOG \

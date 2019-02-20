@@ -53,6 +53,7 @@
 #include "configwindow.h"
 #include "machinewizard.h"
 #include "qemu.h"
+#include "export-import/export.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
