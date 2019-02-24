@@ -18,38 +18,45 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef EXPORT_H
-#define EXPORT_H
+#ifndef EXPORTMEDIAPAGE_H
+#define EXPORTMEDIAPAGE_H
 
 // Qt
-#include <QWizard>
-
-#include <QDebug>
+#include <QWizardPage>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QTreeWidget>
 
 // Local
 #include "../machine.h"
-#include "exportgeneralpage.h"
-#include "exportdetailspage.h"
-#include "exportmediapage.h"
 
-class ExportWizard : public QWizard {
+class ExportMediaPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit ExportWizard(Machine *machine,
-                              QWidget *parent = nullptr);
-        ~ExportWizard();
-
-        enum { Page_General, Page_Details, Page_Media };
+        explicit ExportMediaPage(Machine *machine,
+                                 QWidget *parent = nullptr);
+        ~ExportMediaPage();
 
     signals:
 
     public slots:
 
+    private slots:
+
     protected:
 
     private:
+        QVBoxLayout *m_mainLayout;
+        QHBoxLayout *m_mediaLayout;
+
+        QTreeWidget *m_machineMediaTree;
+        QTreeWidgetItem *m_mediaItem;
+
+        QLabel *m_mediaTitleLabel;
+
+        bool validatePage();
 
 };
 
-#endif // EXPORT_H
+#endif // EXPORTMEDIAPAGE_H

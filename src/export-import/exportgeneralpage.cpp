@@ -41,6 +41,8 @@ ExportGeneralPage::ExportGeneralPage(Machine *machine,
     m_destinationLayout->addWidget(m_destinationLineEdit);
     m_destinationLayout->addWidget(m_destinationButton);
 
+    this->registerField("destination*", m_destinationLineEdit);
+
     m_mainLayout = new QVBoxLayout();
     m_mainLayout->setAlignment(Qt::AlignCenter);
     m_mainLayout->addWidget(m_machineNameLabel);

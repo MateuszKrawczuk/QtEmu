@@ -27,6 +27,8 @@ ExportWizard::ExportWizard(Machine *machine,
     this->setWindowTitle(tr("Export the Machine"));
 
     this->setPage(Page_General, new ExportGeneralPage(machine, this));
+    this->setPage(Page_Details, new ExportDetailsPage(machine, this));
+    this->setPage(Page_Media, new ExportMediaPage(machine, this));
 
     this->setStartId(Page_General);
 

@@ -18,38 +18,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef EXPORT_H
-#define EXPORT_H
-
-// Qt
-#include <QWizard>
-
-#include <QDebug>
-
 // Local
-#include "../machine.h"
-#include "exportgeneralpage.h"
 #include "exportdetailspage.h"
-#include "exportmediapage.h"
 
-class ExportWizard : public QWizard {
-    Q_OBJECT
+ExportDetailsPage::ExportDetailsPage(Machine *machine,
+                                     QWidget *parent) : QWizardPage(parent)
+{
+    this->setTitle(tr("Machine details"));
 
-    public:
-        explicit ExportWizard(Machine *machine,
-                              QWidget *parent = nullptr);
-        ~ExportWizard();
+    m_machineDetailsTree = new QTreeWidget(this);
+    m_machineDetailsTree->setColumnCount(1);
+    m_machineDetailsTree->setHeaderHidden(true);
+    m_machineDetailsTree->setRootIsDecorated(false);
+    m_machineDetailsTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        enum { Page_General, Page_Details, Page_Media };
+    m_mainLayout = new QHBoxLayout();
+    m_mainLayout->addWidget(m_machineDetailsTree);
 
-    signals:
+    this->setLayout(m_mainLayout);
 
-    public slots:
+    qDebug() << "ExportDetailsPage created";
+}
 
-    protected:
-
-    private:
-
-};
-
-#endif // EXPORT_H
+ExportDetailsPage::~ExportDetailsPage()
+{
+    qDebug() << "ExportDetailsPage destroyed";
+}
