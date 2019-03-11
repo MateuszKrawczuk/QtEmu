@@ -26,14 +26,52 @@ ExportDetailsPage::ExportDetailsPage(Machine *machine,
 {
     this->setTitle(tr("Machine details"));
 
-    m_machineDetailsTree = new QTreeWidget(this);
-    m_machineDetailsTree->setColumnCount(1);
-    m_machineDetailsTree->setHeaderHidden(true);
-    m_machineDetailsTree->setRootIsDecorated(false);
-    m_machineDetailsTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_machineDescLabel = new QLabel(tr("Name") + ":", this);
+    m_OSTypeDescLabel = new QLabel(tr("Operating system") + ":", this);
+    m_OSVersionDescLabel = new QLabel(tr("Operating system version") + ":", this);
+    m_processorDescLabel = new QLabel(tr("Processor") + ":", this);
+    m_graphicsDescLabel = new QLabel(tr("Graphics") + ":", this);
+    m_audioDescLabel = new QLabel(tr("Audio") + ":", this);
+    m_RAMDescLabel = new QLabel(tr("RAM") + ":", this);
+    m_acceleratorDescLabel = new QLabel(tr("Accelerator") + ":", this);
 
-    m_mainLayout = new QHBoxLayout();
-    m_mainLayout->addWidget(m_machineDetailsTree);
+    m_machineNameLabel = new QLabel(this);
+    m_machineNameLabel->setWordWrap(true);
+    m_machineNameLabel->setText(machine->getName());
+    m_OSTypeLabel      = new QLabel(this);
+    m_OSTypeLabel->setText(machine->getOSType());
+    m_OSVersionLabel   = new QLabel(this);
+    m_OSVersionLabel->setText(machine->getOSVersion());
+    m_processorLabel   = new QLabel(this);
+    m_processorLabel->setText(machine->getCPUType());
+    m_graphicsLabel    = new QLabel(this);
+    m_graphicsLabel->setText(machine->getGPUType());
+    m_audioLabel       = new QLabel(this);
+    m_audioLabel->setText(QString::number(machine->getRAM()).append(" MiB"));
+    m_audioLabel->setWordWrap(true);
+    m_RAMLabel         = new QLabel(this);
+    m_RAMLabel->setText(machine->getAudioLabel());
+    m_acceleratorLabel = new QLabel(this);
+    m_acceleratorLabel->setWordWrap(true);
+    m_acceleratorLabel->setText(machine->getAcceleratorLabel());
+
+    m_mainLayout = new QGridLayout();
+    m_mainLayout->addWidget(m_machineDescLabel,     0, 0, 1, 1);
+    m_mainLayout->addWidget(m_machineNameLabel,     0, 1, 1, 1);
+    m_mainLayout->addWidget(m_OSTypeDescLabel,      1, 0, 1, 1);
+    m_mainLayout->addWidget(m_OSTypeLabel,          1, 1, 1, 1);
+    m_mainLayout->addWidget(m_OSVersionDescLabel,   2, 0, 1, 1);
+    m_mainLayout->addWidget(m_OSVersionLabel,       2, 1, 1, 1);
+    m_mainLayout->addWidget(m_processorDescLabel,   3, 0, 1, 1);
+    m_mainLayout->addWidget(m_processorLabel,       3, 1, 1, 1);
+    m_mainLayout->addWidget(m_graphicsDescLabel,    4, 0, 1, 1);
+    m_mainLayout->addWidget(m_graphicsLabel,        4, 1, 1, 1);
+    m_mainLayout->addWidget(m_audioDescLabel,       5, 0, 1, 1);
+    m_mainLayout->addWidget(m_audioLabel,           5, 1, 1, 3);
+    m_mainLayout->addWidget(m_RAMDescLabel,         6, 0, 1, 1);
+    m_mainLayout->addWidget(m_RAMLabel,             6, 1, 1, 1);
+    m_mainLayout->addWidget(m_acceleratorDescLabel, 7, 0, 1, 1);
+    m_mainLayout->addWidget(m_acceleratorLabel,     7, 1, 1, 1);
 
     this->setLayout(m_mainLayout);
 

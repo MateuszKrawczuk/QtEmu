@@ -18,47 +18,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef EXPORTMEDIAPAGE_H
-#define EXPORTMEDIAPAGE_H
-
-// Qt
-#include <QWizardPage>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QTreeWidget>
-
 // Local
-#include "../machine.h"
+#include "import.h"
 
-class ExportMediaPage: public QWizardPage {
-    Q_OBJECT
+ImportWizard::ImportWizard(QWidget *parent) : QWizard(parent)
+{
+    this->setWindowTitle(tr("Import the Machine"));
 
-    public:
-        explicit ExportMediaPage(Machine *machine,
-                                 QWidget *parent = nullptr);
-        ~ExportMediaPage();
+    this->setPage(Page_General, new ImportGeneralPage(this));
 
-    signals:
+    this->setStartId(Page_General);
 
-    public slots:
+    #ifndef Q_OS_MAC
+        this->setWizardStyle(ClassicStyle);
+    #endif
+    #ifdef Q_OS_MAC
+        this->setWizardStyle(MacStyle);
+    #endif
 
-    private slots:
+    this->setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/banner.png"));
+    this->setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/banner.png"));
 
-    protected:
+    this->setMinimumSize(600, 400);
 
-    private:
-        QVBoxLayout *m_mainLayout;
-        QHBoxLayout *m_mediaLayout;
+    qDebug() << "ImportWizard created";
+}
 
-        QTreeWidget *m_machineMediaTree;
-        QTreeWidgetItem *m_mediaItem;
-
-        QLabel *m_mediaTitleLabel;
-
-        Machine *m_machineExport;
-
-        bool validatePage();
-
-};
-
-#endif // EXPORTMEDIAPAGE_H
+ImportWizard::~ImportWizard()
+{
+    qDebug() << "ImportWizard destroyed";
+}

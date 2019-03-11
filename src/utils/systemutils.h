@@ -61,6 +61,8 @@ class SystemUtils {
         SystemUtils();
         ~SystemUtils();
 
+        static void showMessage(QString title, QString text, QMessageBox::Icon severityLevel);
+
         static void getTotalMemory(int &totalRAM);
 
         static void setCPUTypesx86(QComboBox *CPUType);

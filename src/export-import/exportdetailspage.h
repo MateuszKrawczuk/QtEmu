@@ -22,9 +22,9 @@
 #define EXPORTDETAILSPAGE_H
 
 // Qt
-#include <QWizardPage>
-#include <QTreeWidget>
-#include <QHBoxLayout>
+#include <QWizard>
+#include <QGridLayout>
+#include <QLabel>
 
 // Local
 #include "../machine.h"
@@ -46,9 +46,26 @@ class ExportDetailsPage: public QWizardPage {
     protected:
 
     private:
-        QHBoxLayout *m_mainLayout;
+        QGridLayout *m_mainLayout;
 
-        QTreeWidget *m_machineDetailsTree;
+        QLabel *m_machineDescLabel;
+        QLabel *m_OSTypeDescLabel;
+        QLabel *m_OSVersionDescLabel;
+        QLabel *m_processorDescLabel;
+        QLabel *m_graphicsDescLabel;
+        QLabel *m_audioDescLabel;
+        QLabel *m_RAMDescLabel;
+        QLabel *m_acceleratorDescLabel;
+
+        QLabel *m_conclusionLabel;
+        QLabel *m_machineNameLabel;
+        QLabel *m_OSTypeLabel;
+        QLabel *m_OSVersionLabel;
+        QLabel *m_processorLabel;
+        QLabel *m_graphicsLabel;
+        QLabel *m_audioLabel;
+        QLabel *m_RAMLabel;
+        QLabel *m_acceleratorLabel;
 
 };
 

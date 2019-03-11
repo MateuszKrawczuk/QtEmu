@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Local
+// Localz
 #include "machineutils.h"
 
 MachineUtils::MachineUtils(QObject *parent) : QObject(parent)

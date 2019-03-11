@@ -90,7 +90,9 @@ SOURCES +=  src/main.cpp\
             src/export-import/export.cpp \
             src/export-import/exportgeneralpage.cpp \
             src/export-import/exportdetailspage.cpp \
-            src/export-import/exportmediapage.cpp
+            src/export-import/exportmediapage.cpp \
+            src/export-import/import.cpp \
+            src/export-import/importgeneralpage.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -126,7 +128,9 @@ HEADERS  += src/mainwindow.h \
             src/export-import/export.h \
             src/export-import/exportgeneralpage.h \
             src/export-import/exportdetailspage.h \
-            src/export-import/exportmediapage.h
+            src/export-import/exportmediapage.h \
+            src/export-import/import.h \
+            src/export-import/importgeneralpage.h
 
 OTHER_FILES += \
     CHANGELOG \

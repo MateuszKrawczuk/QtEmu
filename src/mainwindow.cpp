@@ -139,6 +139,8 @@ void MainWindow::createMenus()
 {
     // File
     m_fileMenu = new QMenu(tr("&File"), this);
+    m_fileMenu->addAction(m_importMachineAction);
+    m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_preferencesAppAction);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_checkUpdateAppAction);
@@ -176,6 +178,13 @@ void MainWindow::createMenus()
 void MainWindow::createMenusActions()
 {
     // Actions for File menu
+    m_importMachineAction = new QAction(QIcon::fromTheme("configure",
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/configure.svg"))),
+                                         tr("Import machine"),
+                                         this);
+    connect(m_importMachineAction, &QAction::triggered,
+            this, &MainWindow::importMachine);
+
     m_preferencesAppAction = new QAction(QIcon::fromTheme("configure",
                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/configure.svg"))),
                                          tr("Preferences"),
@@ -457,16 +466,17 @@ void MainWindow::loadMachines()
 }
 
 /**
- * @brief Generate the machine object for the list
- * @param machinesConfigJsonObject, JSON with the machine configpath, icon, path and uuid
- * @param pos, pos of the machine in the list
- * @return machine object
+ * @brief Read the machine file and inform the machineJSON
  *
- * Generate the machine object for the list
+ * @param machinePath, path of the machine config
+ *
+ * @return QByteArray with the data
  */
-void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObject, int pos)
+QJsonObject MainWindow::readMachineFile(QString machinePath)
 {
-    QString machinePath = machinesConfigJsonObject["configpath"].toString();
+    QJsonObject machineJSON;
+
+    // TODO: Move all to generic function to check if file can be opened or readed
     QFile machineFile(machinePath);
     if (!machineFile.open(QFile::ReadOnly)) {
         QMessageBox *m_machinePathMessageBox = new QMessageBox();
@@ -477,26 +487,62 @@ void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObjec
                                                                "<p>Cannot open the <strong>%1</strong> file. "
                                                                "Please ensure that the file exists and it's readable</p>").arg(machinePath))));
         m_machinePathMessageBox->exec();
-        return;
+        return machineJSON;
     }
 
     QByteArray machineData = machineFile.readAll();
     QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
-    QJsonObject machineJSON = machineDocument.object();
+    machineJSON = machineDocument.object();
+
     if (machineFile.isOpen()) {
         machineFile.close();
+    }
+
+    return machineJSON;
+}
+
+/**
+ * @brief Generate the machine object for the list
+ * @param machineConfigJsonObject, JSON with the machine configpath, icon, path and uuid
+ * @param pos, pos of the machine in the list
+ * @return machine object
+ *
+ * Generate the machine object for the list
+ */
+void MainWindow::generateMachineObject(const QJsonObject machineConfigJsonObject, int pos)
+{
+    QString machineConfigPath = machineConfigJsonObject["configpath"].toString();
+    QJsonObject machineJSON = this->readMachineFile(machineConfigPath);
+
+    if (machineJSON.isEmpty()) {
+        return;
     }
 
     QListWidgetItem *machineListItem = new QListWidgetItem(machineJSON["name"].toString(), this->m_osListWidget);
     machineListItem->setData(QMetaType::QUuid, machineJSON["uuid"].toString());
     machineListItem->setIcon(QIcon(":/images/os/64x64/" +
-                                   SystemUtils::getOsIcon(machinesConfigJsonObject["icon"].toString())));
+                                   SystemUtils::getOsIcon(machineConfigJsonObject["icon"].toString())));
 
     // To prevent undefined behavior :'(
-    if (pos == 0){
+    if (pos == 0) {
         this->m_osListWidget->setCurrentItem(machineListItem);
     }
 
+    Machine *machine =
+            this->fillMachineObject(machineJSON, machineConfigJsonObject["configpath"].toString());
+
+    this->m_machinesList.append(machine);
+}
+
+/**
+ * @brief Fill the machine object
+ *
+ * Fill the machine object with the values from the json
+ *
+ * @return machine object
+ */
+Machine* MainWindow::fillMachineObject(QJsonObject machineJSON, QString machineConfigPath)
+{
     QJsonObject gpuObject = machineJSON["gpu"].toObject();
     QJsonObject cpuObject = machineJSON["cpu"].toObject();
     QJsonObject bootObject = machineJSON["boot"].toObject();
@@ -534,7 +580,7 @@ void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObjec
     machine->setDescription(machineJSON["description"].toString());
     machine->setRAM(machineJSON["RAM"].toInt());
     machine->setUseNetwork(machineJSON["network"].toBool());
-    machine->setConfigPath(machinesConfigJsonObject["configpath"].toString());
+    machine->setConfigPath(machineConfigPath);
     machine->setPath(machineJSON["path"].toString());
     machine->setUuid(machineJSON["uuid"].toString());
     machine->setGPUType(gpuObject["GPUType"].toString());
@@ -550,7 +596,7 @@ void MainWindow::generateMachineObject(const QJsonObject machinesConfigJsonObjec
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
     machine->setBoot(machineBoot);
 
-    this->m_machinesList.append(machine);
+    return machine;
 }
 
 /**
@@ -642,18 +688,37 @@ void MainWindow::exportMachine()
 {
     // TODO: Move that code to a function...
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
-    Machine *exportMachine = nullptr;
+    QString machineConfigPath;
     foreach (Machine *machine, this->m_machinesList) {
         if (machine->getUuid() == machineUuid.toString()){
-            exportMachine = machine;
+            machineConfigPath = machine->getConfigPath();
             break;
         }
     }
 
-    ExportWizard machineExport(exportMachine, this);
+    if (!machineConfigPath.isEmpty()) {
+        QJsonObject machineJSON = this->readMachineFile(machineConfigPath);
+        Machine *exportMachine = this->fillMachineObject(machineJSON, machineConfigPath);
+        ExportWizard exportWizard(exportMachine, this);
 
-    machineExport.show();
-    machineExport.exec();
+        exportWizard.show();
+        exportWizard.exec();
+
+        delete exportMachine;
+    }
+}
+
+/**
+ * @brief Import machine wizard
+ *
+ * Import machine wizard
+ */
+void MainWindow::importMachine()
+{
+    ImportWizard importWizard(this);
+
+    importWizard.show();
+    importWizard.exec();
 }
 
 /**

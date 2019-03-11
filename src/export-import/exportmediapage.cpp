@@ -26,6 +26,8 @@ ExportMediaPage::ExportMediaPage(Machine *machine,
 {
     this->setTitle(tr("Machine media"));
 
+    this->m_machineExport = machine;
+
     m_mediaTitleLabel = new QLabel(tr("Select the media to be exported"));
 
     QList<QString> header;
@@ -37,12 +39,21 @@ ExportMediaPage::ExportMediaPage(Machine *machine,
     m_machineMediaTree->setHeaderLabels(header);
     m_machineMediaTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
+    QString destination = field("destination").toString();
+
     QList<Media *> machineMedia = machine->getMedia();
     for(int i = 0; i < machineMedia.size(); ++i) {
         m_mediaItem = new QTreeWidgetItem(this->m_machineMediaTree, QTreeWidgetItem::Type);
         m_mediaItem->setText(0, machineMedia[i]->name());
         m_mediaItem->setText(1, machineMedia[i]->path());
         m_mediaItem->setData(0, Qt::UserRole, machineMedia[i]->path());
+
+        machineMedia[i]->setPath(QDir::toNativeSeparators(destination));
+
+        QVariant mediaVariant;
+        mediaVariant.setValue(machineMedia[i]);
+
+        m_mediaItem->setData(1, Qt::UserRole, mediaVariant);
         m_mediaItem->setCheckState(0, Qt::Checked);
     }
 
@@ -66,6 +77,35 @@ ExportMediaPage::~ExportMediaPage()
 bool ExportMediaPage::validatePage()
 {
     QString destination = field("destination").toString();
+
+    this->m_machineExport->removeAllMedia();
+
+    QTreeWidgetItemIterator it(this->m_machineMediaTree);
+    while (*it) {
+        if ((*it)->checkState(0) == Qt::Checked) {
+            QString oldMediaPath = QDir::toNativeSeparators((*it)->data(0, Qt::UserRole).toString());
+            QString newMediaPath = QDir::toNativeSeparators(destination + "/" + (*it)->text(0));
+
+            QVariant mediaVariant = (*it)->data(1, Qt::UserRole);
+            Media *media = mediaVariant.value<Media *>();
+            media->setPath(newMediaPath);
+
+            this->m_machineExport->addMedia(media);
+
+            if (!QFile::copy(oldMediaPath, newMediaPath)) {
+                SystemUtils::showMessage(tr("Qtemu - Critical error"),
+                                         tr("<p>Cannot export the media: </p>") + media->name(),
+                                         QMessageBox::Critical);
+            }
+        }
+        ++it;
+    }
+
+    QString machineDestionation =
+            QDir::toNativeSeparators(destination + "/" + this->m_machineExport->getName() + ".json");
+
+    this->m_machineExport->setConfigPath(machineDestionation);
+    this->m_machineExport->saveMachine();
 
     return true;
 }

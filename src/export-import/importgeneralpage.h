@@ -18,47 +18,43 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef EXPORTMEDIAPAGE_H
-#define EXPORTMEDIAPAGE_H
+#ifndef IMPORTGENERALPAGE_H
+#define IMPORTGENERALPAGE_H
 
 // Qt
 #include <QWizardPage>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QTreeWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QFileDialog>
 
 // Local
 #include "../machine.h"
 
-class ExportMediaPage: public QWizardPage {
+class ImportGeneralPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit ExportMediaPage(Machine *machine,
-                                 QWidget *parent = nullptr);
-        ~ExportMediaPage();
+        explicit ImportGeneralPage(QWidget *parent = nullptr);
+        ~ImportGeneralPage();
 
     signals:
 
     public slots:
 
     private slots:
+        void selectMachineConfigFile();
 
     protected:
 
     private:
+        QHBoxLayout *m_machineConfigLayout;
         QVBoxLayout *m_mainLayout;
-        QHBoxLayout *m_mediaLayout;
 
-        QTreeWidget *m_machineMediaTree;
-        QTreeWidgetItem *m_mediaItem;
+        QLineEdit *m_machineConfigLineEdit;
 
-        QLabel *m_mediaTitleLabel;
-
-        Machine *m_machineExport;
-
-        bool validatePage();
-
+        QPushButton *m_machineConfigButton;
 };
 
-#endif // EXPORTMEDIAPAGE_H
+#endif // IMPORTGENERALPAGE_H

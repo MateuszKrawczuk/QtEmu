@@ -32,6 +32,23 @@ SystemUtils::~SystemUtils()
 }
 
 /**
+ * @brief SystemUtils::checkFileAccess
+ * @param filePath
+ * @param fileMode
+ * @return
+ */
+void SystemUtils::showMessage(QString title, QString text,
+                              QMessageBox::Icon severityLevel)
+{
+    QMessageBox *qemuImgNotFoundMessageBox = new QMessageBox();
+    qemuImgNotFoundMessageBox->setWindowTitle(title);
+    qemuImgNotFoundMessageBox->setIcon(severityLevel);
+    qemuImgNotFoundMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
+    qemuImgNotFoundMessageBox->setText(text);
+    qemuImgNotFoundMessageBox->exec();
+}
+
+/**
  * @brief Get the total RAM installed on the system
  * @param totalRAM, variable to store the total ram
  *

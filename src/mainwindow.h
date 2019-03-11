@@ -54,6 +54,7 @@
 #include "machinewizard.h"
 #include "qemu.h"
 #include "export-import/export.h"
+#include "export-import/import.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -77,6 +78,7 @@ class MainWindow : public QMainWindow {
         void createNewMachine();
         void machineOptions();
         void exportMachine();
+        void importMachine();
         void runMachine();
         void resetMachine();
         void pauseMachine();
@@ -103,6 +105,7 @@ class MainWindow : public QMainWindow {
         QAction *m_addMachineAction;
         QAction *m_settingsMachineAction;
         QAction *m_exportMachineAction;
+        QAction *m_importMachineAction;
         QAction *m_removeMachineAction;
         QAction *m_groupMachineAction;
 
@@ -167,7 +170,9 @@ class MainWindow : public QMainWindow {
         QEMU *qemuGlobalObject;
 
         // Methods
+        QJsonObject readMachineFile(QString machinePath);
         void generateMachineObject(const QJsonObject machinesConfigJsonObject, int pos);
+        Machine* fillMachineObject(QJsonObject machineJSON, QString machineConfigPath);
         void loadMachines();
         void controlMachineActions(Machine::States state);
         void fillMachineDetailsSection(Machine *machine);
