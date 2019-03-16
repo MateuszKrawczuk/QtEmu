@@ -19,7 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Localz
+// Local
+#include "machine.h"
 #include "machineutils.h"
 
 MachineUtils::MachineUtils(QObject *parent) : QObject(parent)
@@ -30,6 +31,104 @@ MachineUtils::MachineUtils(QObject *parent) : QObject(parent)
 MachineUtils::~MachineUtils()
 {
     qDebug() << "MachineUtils object destroyed";
+}
+
+/**
+ * @brief Read the machine file and inform the machineJSON
+ *
+ * @param machinePath, path of the machine config
+ *
+ * @return QByteArray with the data
+ */
+QJsonObject MachineUtils::readMachineFile(QString machinePath)
+{
+    QJsonObject machineJSON;
+
+    // TODO: Move all to generic function to check if file can be opened or readed
+    QFile machineFile(machinePath);
+    if (!machineFile.open(QFile::ReadOnly)) {
+        QMessageBox *machinePathMessageBox = new QMessageBox();
+        machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
+        machinePathMessageBox->setIcon(QMessageBox::Critical);
+        machinePathMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
+        machinePathMessageBox->setText(tr(qPrintable(QString("<p>Cannot load the machine</p>"
+                                                               "<p>Cannot open the <strong>%1</strong> file. "
+                                                               "Please ensure that the file exists and it's readable</p>").arg(machinePath))));
+        machinePathMessageBox->exec();
+        return machineJSON;
+    }
+
+    QByteArray machineData = machineFile.readAll();
+    QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
+    machineJSON = machineDocument.object();
+
+    if (machineFile.isOpen()) {
+        machineFile.close();
+    }
+
+    return machineJSON;
+}
+
+/**
+ * @brief Fill the machine object with the data
+ *
+ * @param machine, machine object
+ * @param machineJSON, JSON with the machine data
+ * @param machineConfigPath, path of the machine
+ *
+ * Fill the machine object with the data
+ */
+void MachineUtils::fillMachineObject(Machine *machine,
+                                     QJsonObject machineJSON, QString machineConfigPath)
+{
+    QJsonObject gpuObject = machineJSON["gpu"].toObject();
+    QJsonObject cpuObject = machineJSON["cpu"].toObject();
+    QJsonObject bootObject = machineJSON["boot"].toObject();
+    QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
+    QJsonArray mediaArray = machineJSON["media"].toArray();
+
+    Boot *machineBoot = new Boot(machine);
+    machineBoot->setBootMenu(bootObject["bootMenu"].toBool());
+    machineBoot->setKernelBootEnabled(kernelObject["enabled"].toBool());
+    machineBoot->setKernelPath(kernelObject["kernelPath"].toString());
+    machineBoot->setInitrdPath(kernelObject["initrdPath"].toString());
+    machineBoot->setKernelArgs(kernelObject["kernelArgs"].toString());
+    machineBoot->setBootOrder(MachineUtils::getMediaDevices(bootObject["bootOrder"].toArray()));
+
+    for(int i = 0; i < mediaArray.size(); ++i) {
+        QJsonObject mediaObject = mediaArray[i].toObject();
+
+        Media *media = new Media(machine);
+        media->setName(mediaObject["name"].toString());
+        media->setPath(mediaObject["path"].toString());
+        media->setType(mediaObject["type"].toString());
+        media->setDriveInterface(mediaObject["interface"].toString());
+        media->setUuid(mediaObject["uuid"].toVariant().toUuid());
+        machine->addMedia(media);
+    }
+
+    machine->setState(Machine::Stopped);
+    machine->setName(machineJSON["name"].toString());
+    machine->setOSType(machineJSON["OSType"].toString());
+    machine->setOSVersion(machineJSON["OSVersion"].toString());
+    machine->setDescription(machineJSON["description"].toString());
+    machine->setRAM(machineJSON["RAM"].toInt());
+    machine->setUseNetwork(machineJSON["network"].toBool());
+    machine->setConfigPath(machineConfigPath);
+    machine->setPath(machineJSON["path"].toString());
+    machine->setUuid(machineJSON["uuid"].toString());
+    machine->setGPUType(gpuObject["GPUType"].toString());
+    machine->setKeyboard(gpuObject["keyboard"].toString());
+    machine->setCPUType(cpuObject["CPUType"].toString());
+    machine->setCPUCount(cpuObject["CPUCount"].toInt());
+    machine->setCoresSocket(cpuObject["coresSocket"].toInt());
+    machine->setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
+    machine->setSocketCount(cpuObject["socketCount"].toInt());
+    machine->setThreadsCore(cpuObject["threadsCore"].toInt());
+    machine->setHostSoundSystem(machineJSON["hostsoundsystem"].toString());
+    machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
+    machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
+    machine->setBoot(machineBoot);
 }
 
 /**

@@ -29,15 +29,13 @@
 #include <QPushButton>
 #include <QFileDialog>
 
-// Local
-#include "../machine.h"
+#include <QDebug>
 
 class ExportGeneralPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit ExportGeneralPage(Machine *machine,
-                                   QWidget *parent = nullptr);
+        explicit ExportGeneralPage(QWidget *parent = nullptr);
         ~ExportGeneralPage();
 
     signals:
@@ -53,7 +51,7 @@ class ExportGeneralPage: public QWizardPage {
         QHBoxLayout *m_destinationLayout;
         QVBoxLayout *m_mainLayout;
 
-        QLabel *m_machineNameLabel;
+        QLabel *m_infoLabel;
 
         QLineEdit *m_destinationLineEdit;
 

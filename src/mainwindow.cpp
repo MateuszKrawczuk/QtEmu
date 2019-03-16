@@ -367,13 +367,10 @@ void MainWindow::checkVersions()
         qApp->processEvents();
     }
 
-    if (reply->error()) {
-        m_networkErrorMessageBox = new QMessageBox();
-        m_networkErrorMessageBox->setWindowTitle(tr("QtEmu - Network problem"));
-        m_networkErrorMessageBox->setIcon(QMessageBox::Question);
-        m_networkErrorMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-        m_networkErrorMessageBox->setText(tr("<p>There's a network problem</p>"));
-        m_networkErrorMessageBox->exec();
+    if (reply->error()) {        
+        SystemUtils::showMessage(tr("QtEmu - Network problem"),
+                                 tr("<p>There's a network problem</p>"),
+                                 QMessageBox::Critical);
         return;
     }
 
@@ -385,13 +382,10 @@ void MainWindow::checkVersions()
 
     reply->deleteLater();
 
-    m_versionMessageBox = new QMessageBox();
-    m_versionMessageBox->setWindowTitle(tr("QtEmu - Versions"));
-    m_versionMessageBox->setIcon(QMessageBox::Question);
-    m_versionMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-    m_versionMessageBox->setText(tr("<p><strong>QtEmu installed version: </strong>") + installedQtEmuVersion + "</p>" +
-                                 tr("<p><strong>Last QtEmu version: </strong>") + qtemuVersion + "</p>");
-    m_versionMessageBox->exec();
+    SystemUtils::showMessage(tr("QtEmu - versions"),
+                             tr("<p><strong>QtEmu installed version: </strong>") + installedQtEmuVersion + "</p>" +
+                             tr("<p><strong>Last QtEmu version: </strong>") + qtemuVersion + "</p>",
+                             QMessageBox::Critical);
 }
 
 /**
@@ -439,16 +433,13 @@ void MainWindow::loadMachines()
         return;
     }
 
-    if (!machinesFile.open(QIODevice::ReadOnly)) {
-        m_loadMachinesMessageBox = new QMessageBox();
-        m_loadMachinesMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
-        m_loadMachinesMessageBox->setIcon(QMessageBox::Critical);
-        m_loadMachinesMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-        m_loadMachinesMessageBox->setText(tr("<p><strong>Cannot load the saved machines</strong></p>"
-                                             "<p>Cannot open the <strong>qtemu.json</strong> file. "
-                                             "The saved machines cannot be loaded. "
-                                             "Please ensure that the file exists and it's readable</p>"));
-        m_loadMachinesMessageBox->exec();
+    if (!machinesFile.open(QIODevice::ReadOnly)) {        
+        SystemUtils::showMessage(tr("QtEmu - Critical error"),
+                                 tr("<p><strong>Cannot load the saved machines</strong></p>"
+                                    "<p>Cannot open the <strong>qtemu.json</strong> file. "
+                                    "The saved machines cannot be loaded. "
+                                    "Please ensure that the file exists and it's readable</p>"),
+                                 QMessageBox::Critical);
         return;
     }
 
@@ -466,42 +457,6 @@ void MainWindow::loadMachines()
 }
 
 /**
- * @brief Read the machine file and inform the machineJSON
- *
- * @param machinePath, path of the machine config
- *
- * @return QByteArray with the data
- */
-QJsonObject MainWindow::readMachineFile(QString machinePath)
-{
-    QJsonObject machineJSON;
-
-    // TODO: Move all to generic function to check if file can be opened or readed
-    QFile machineFile(machinePath);
-    if (!machineFile.open(QFile::ReadOnly)) {
-        QMessageBox *m_machinePathMessageBox = new QMessageBox();
-        m_machinePathMessageBox->setWindowTitle(tr("Qtemu - Critical error"));
-        m_machinePathMessageBox->setIcon(QMessageBox::Critical);
-        m_machinePathMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-        m_machinePathMessageBox->setText(tr(qPrintable(QString("<p>Cannot load the machine</p>"
-                                                               "<p>Cannot open the <strong>%1</strong> file. "
-                                                               "Please ensure that the file exists and it's readable</p>").arg(machinePath))));
-        m_machinePathMessageBox->exec();
-        return machineJSON;
-    }
-
-    QByteArray machineData = machineFile.readAll();
-    QJsonDocument machineDocument(QJsonDocument::fromJson(machineData));
-    machineJSON = machineDocument.object();
-
-    if (machineFile.isOpen()) {
-        machineFile.close();
-    }
-
-    return machineJSON;
-}
-
-/**
  * @brief Generate the machine object for the list
  * @param machineConfigJsonObject, JSON with the machine configpath, icon, path and uuid
  * @param pos, pos of the machine in the list
@@ -512,7 +467,7 @@ QJsonObject MainWindow::readMachineFile(QString machinePath)
 void MainWindow::generateMachineObject(const QJsonObject machineConfigJsonObject, int pos)
 {
     QString machineConfigPath = machineConfigJsonObject["configpath"].toString();
-    QJsonObject machineJSON = this->readMachineFile(machineConfigPath);
+    QJsonObject machineJSON = MachineUtils::readMachineFile(machineConfigPath);
 
     if (machineJSON.isEmpty()) {
         return;
@@ -528,75 +483,15 @@ void MainWindow::generateMachineObject(const QJsonObject machineConfigJsonObject
         this->m_osListWidget->setCurrentItem(machineListItem);
     }
 
-    Machine *machine =
-            this->fillMachineObject(machineJSON, machineConfigJsonObject["configpath"].toString());
-
-    this->m_machinesList.append(machine);
-}
-
-/**
- * @brief Fill the machine object
- *
- * Fill the machine object with the values from the json
- *
- * @return machine object
- */
-Machine* MainWindow::fillMachineObject(QJsonObject machineJSON, QString machineConfigPath)
-{
-    QJsonObject gpuObject = machineJSON["gpu"].toObject();
-    QJsonObject cpuObject = machineJSON["cpu"].toObject();
-    QJsonObject bootObject = machineJSON["boot"].toObject();
-    QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
-    QJsonArray mediaArray = machineJSON["media"].toArray();
-
     Machine *machine = new Machine(this);
     connect(machine, &Machine::machineStateChangedSignal,
             this, &MainWindow::machineStateChanged);
 
-    Boot *machineBoot = new Boot(machine);
-    machineBoot->setBootMenu(bootObject["bootMenu"].toBool());
-    machineBoot->setKernelBootEnabled(kernelObject["enabled"].toBool());
-    machineBoot->setKernelPath(kernelObject["kernelPath"].toString());
-    machineBoot->setInitrdPath(kernelObject["initrdPath"].toString());
-    machineBoot->setKernelArgs(kernelObject["kernelArgs"].toString());
-    machineBoot->setBootOrder(MachineUtils::getMediaDevices(bootObject["bootOrder"].toArray()));
+    MachineUtils::fillMachineObject(machine,
+                                    machineJSON,
+                                    machineConfigPath);
 
-    for(int i = 0; i < mediaArray.size(); ++i) {
-        QJsonObject mediaObject = mediaArray[i].toObject();
-
-        Media *media = new Media(machine);
-        media->setName(mediaObject["name"].toString());
-        media->setPath(mediaObject["path"].toString());
-        media->setType(mediaObject["type"].toString());
-        media->setDriveInterface(mediaObject["interface"].toString());
-        media->setUuid(mediaObject["uuid"].toVariant().toUuid());
-        machine->addMedia(media);
-    }
-
-    machine->setState(Machine::Stopped);
-    machine->setName(machineJSON["name"].toString());
-    machine->setOSType(machineJSON["OSType"].toString());
-    machine->setOSVersion(machineJSON["OSVersion"].toString());
-    machine->setDescription(machineJSON["description"].toString());
-    machine->setRAM(machineJSON["RAM"].toInt());
-    machine->setUseNetwork(machineJSON["network"].toBool());
-    machine->setConfigPath(machineConfigPath);
-    machine->setPath(machineJSON["path"].toString());
-    machine->setUuid(machineJSON["uuid"].toString());
-    machine->setGPUType(gpuObject["GPUType"].toString());
-    machine->setKeyboard(gpuObject["keyboard"].toString());
-    machine->setCPUType(cpuObject["CPUType"].toString());
-    machine->setCPUCount(cpuObject["CPUCount"].toInt());
-    machine->setCoresSocket(cpuObject["coresSocket"].toInt());
-    machine->setMaxHotCPU(cpuObject["maxHotCPU"].toInt());
-    machine->setSocketCount(cpuObject["socketCount"].toInt());
-    machine->setThreadsCore(cpuObject["threadsCore"].toInt());
-    machine->setHostSoundSystem(machineJSON["hostsoundsystem"].toString());
-    machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
-    machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
-    machine->setBoot(machineBoot);
-
-    return machine;
+    this->m_machinesList.append(machine);
 }
 
 /**
@@ -697,10 +592,11 @@ void MainWindow::exportMachine()
     }
 
     if (!machineConfigPath.isEmpty()) {
-        QJsonObject machineJSON = this->readMachineFile(machineConfigPath);
-        Machine *exportMachine = this->fillMachineObject(machineJSON, machineConfigPath);
-        ExportWizard exportWizard(exportMachine, this);
+        QJsonObject machineJSON = MachineUtils::readMachineFile(machineConfigPath);
+        Machine *exportMachine = new Machine(this);
+        MachineUtils::fillMachineObject(exportMachine, machineJSON, machineConfigPath);
 
+        ExportWizard exportWizard(exportMachine, this);
         exportWizard.show();
         exportWizard.exec();
 

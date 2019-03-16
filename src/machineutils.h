@@ -38,6 +38,8 @@
 // Local
 #include "utils/systemutils.h"
 
+class Machine; // Forward declaration :'(
+
 class MachineUtils : public QObject {
     Q_OBJECT
 
@@ -45,6 +47,9 @@ class MachineUtils : public QObject {
         explicit MachineUtils(QObject *parent = nullptr);
         ~MachineUtils();
 
+        static QJsonObject readMachineFile(QString machinePath);
+        static void fillMachineObject(Machine *machine,
+                                      QJsonObject machineJSON, QString machineConfigPath);
         static bool deleteMachine(const QUuid machineUuid);
 
         static QStringList getSoundCards(QJsonArray soundCardsArray);

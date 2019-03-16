@@ -161,18 +161,11 @@ class MainWindow : public QMainWindow {
         QLabel *m_machineNetworkLabel;
         QLabel *m_machineMediaLabel;
 
-        // Messages
-        QMessageBox *m_networkErrorMessageBox;
-        QMessageBox *m_versionMessageBox;
-        QMessageBox *m_loadMachinesMessageBox;
-
         // QEMU
         QEMU *qemuGlobalObject;
 
         // Methods
-        QJsonObject readMachineFile(QString machinePath);
         void generateMachineObject(const QJsonObject machinesConfigJsonObject, int pos);
-        Machine* fillMachineObject(QJsonObject machineJSON, QString machineConfigPath);
         void loadMachines();
         void controlMachineActions(Machine::States state);
         void fillMachineDetailsSection(Machine *machine);

@@ -223,13 +223,10 @@ void MachineConfigMedia::fillDetailsSection()
  */
 void MachineConfigMedia::addFloppyMedia()
 {
-    if (this->m_floppyMap->size() == 0) {
-        m_maxFloppyMessageBox = new QMessageBox();
-        m_maxFloppyMessageBox->setWindowTitle(tr("Qtemu - floppy"));
-        m_maxFloppyMessageBox->setIcon(QMessageBox::Critical);
-        m_maxFloppyMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-        m_maxFloppyMessageBox->setText(tr("<p>Maximum number of floppy reached</p>"));
-        m_maxFloppyMessageBox->exec();
+    if (this->m_floppyMap->size() == 0) {        
+        SystemUtils::showMessage(tr("Qtemu - floppy"),
+                                 tr("<p>Maximum number of floppy reached</p>"),
+                                 QMessageBox::Critical);
         return;
     }
 
@@ -260,13 +257,10 @@ void MachineConfigMedia::addFloppyMedia()
  */
 void MachineConfigMedia::addHddMedia()
 {
-    if (this->m_diskMap->size() == 0) {
-        m_maxHddDiskMessageBox = new QMessageBox();
-        m_maxHddDiskMessageBox->setWindowTitle(tr("Qtemu - hard disk"));
-        m_maxHddDiskMessageBox->setIcon(QMessageBox::Critical);
-        m_maxHddDiskMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
-        m_maxHddDiskMessageBox->setText(tr("<p>Maximum number of hard disks reached</p>"));
-        m_maxHddDiskMessageBox->exec();
+    if (this->m_diskMap->size() == 0) {        
+        SystemUtils::showMessage(tr("Qtemu - hard disk"),
+                                 tr("<p>Maximum number of hard disks reached</p>"),
+                                 QMessageBox::Critical);
         return;
     }
 

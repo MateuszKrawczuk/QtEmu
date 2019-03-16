@@ -21,12 +21,11 @@
 // Local
 #include "exportgeneralpage.h"
 
-ExportGeneralPage::ExportGeneralPage(Machine *machine,
-                                     QWidget *parent) : QWizardPage(parent)
+ExportGeneralPage::ExportGeneralPage(QWidget *parent) : QWizardPage(parent)
 {
     this->setTitle(tr("Machine export wizard"));
 
-    m_machineNameLabel = new QLabel(machine->getName());
+    m_infoLabel = new QLabel(tr("Select the folder where the machine has to be exported."));
 
     m_destinationLineEdit = new QLineEdit();
     m_destinationButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
@@ -45,7 +44,7 @@ ExportGeneralPage::ExportGeneralPage(Machine *machine,
 
     m_mainLayout = new QVBoxLayout();
     m_mainLayout->setAlignment(Qt::AlignCenter);
-    m_mainLayout->addWidget(m_machineNameLabel);
+    m_mainLayout->addWidget(m_infoLabel);
     m_mainLayout->addItem(m_destinationLayout);
 
     this->setLayout(m_mainLayout);
