@@ -28,7 +28,7 @@ ExportMediaPage::ExportMediaPage(Machine *machine,
 
     this->m_machineExport = machine;
 
-    m_mediaTitleLabel = new QLabel(tr("Select the media to be exported"));
+    m_mediaTitleLabel = new QLabel(tr("Select the media to be exported."));
 
     QList<QString> header;
     header << tr("Name") << tr("Path");
@@ -102,7 +102,7 @@ bool ExportMediaPage::validatePage()
     }
 
     QString machineDestionation =
-            QDir::toNativeSeparators(destination + "/" + this->m_machineExport->getName() + ".json");
+            QDir::toNativeSeparators(destination + "/" + this->m_machineExport->getName().toLower() + ".json");
 
     this->m_machineExport->setConfigPath(machineDestionation);
     this->m_machineExport->saveMachine();

@@ -210,7 +210,7 @@ void MachineConclusionPage::insertVMList()
     machine->setData(QMetaType::QUuid, this->m_newMachine->getUuid());
     // TODO: Check if the json it's incomplete and the image not exits
     machine->setIcon(QIcon(":/images/os/64x64/" +
-                             SystemUtils::getOsIcon(this->m_newMachine->getOSVersion())));
+                           SystemUtils::getOsIcon(this->m_newMachine->getOSVersion())));
     this->m_osList->setCurrentItem(machine);
 }
 

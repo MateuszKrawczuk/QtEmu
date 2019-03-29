@@ -18,41 +18,55 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef IMPORT_H
-#define IMPORT_H
+#ifndef IMPORTMEDIAPAGE_H
+#define IMPORTMEDIAPAGE_H
 
 // Qt
-#include <QWizard>
+#include <QWizardPage>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QTreeWidget>
 #include <QListWidget>
 
 #include <QDebug>
 
 // Local
 #include "../machine.h"
-#include "importgeneralpage.h"
-#include "importdestinationpage.h"
-#include "importdetailspage.h"
-#include "importmediapage.h"
 
-class ImportWizard : public QWizard {
+class ImportMediaPage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit ImportWizard(Machine *machine,
-                              QListWidget *osListWidget,
-                              QWidget *parent = nullptr);
-        ~ImportWizard();
-
-        enum { Page_General, Page_Destination, Page_Details, Page_Media };
+        explicit ImportMediaPage(Machine *machine,
+                                 QListWidget *osListWidget,
+                                 QWidget *parent = nullptr);
+        ~ImportMediaPage();
 
     signals:
 
     public slots:
 
+    private slots:
+
     protected:
 
     private:
+        QHBoxLayout *m_mediaLayout;
+        QVBoxLayout *m_mainLayout;
 
+        QTreeWidget *m_machineMediaTree;
+        QTreeWidgetItem *m_mediaItem;
+
+        QLabel *m_infoLabel;
+
+        QListWidget *m_osList;
+
+        Machine *m_machine;
+
+        // Methods
+        void initializePage();
+        bool validatePage();
+        void insertVMList();
 };
 
-#endif // IMPORT_H
+#endif // IMPORTMEDIAPAGE_H

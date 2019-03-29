@@ -89,10 +89,13 @@ SOURCES +=  src/main.cpp\
             src/platforms/alpha.cpp \
             src/export-import/export.cpp \
             src/export-import/exportgeneralpage.cpp \
-            src/export-import/exportdetailspage.cpp \
             src/export-import/exportmediapage.cpp \
             src/export-import/import.cpp \
-            src/export-import/importgeneralpage.cpp
+            src/export-import/importgeneralpage.cpp \
+    src/export-import/importdestinationpage.cpp \
+    src/export-import/exportdetailspage.cpp \
+    src/export-import/importdetailspage.cpp \
+    src/export-import/importmediapage.cpp
 
 HEADERS  += src/mainwindow.h \
             src/helpwidget.h \
@@ -127,10 +130,13 @@ HEADERS  += src/mainwindow.h \
             src/platforms/alpha.h \
             src/export-import/export.h \
             src/export-import/exportgeneralpage.h \
-            src/export-import/exportdetailspage.h \
             src/export-import/exportmediapage.h \
             src/export-import/import.h \
-            src/export-import/importgeneralpage.h
+            src/export-import/importgeneralpage.h \
+    src/export-import/importdestinationpage.h \
+    src/export-import/exportdetailspage.h \
+    src/export-import/importdetailspage.h \
+    src/export-import/importmediapage.h
 
 OTHER_FILES += \
     CHANGELOG \

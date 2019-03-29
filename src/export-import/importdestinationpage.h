@@ -18,41 +18,46 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef IMPORT_H
-#define IMPORT_H
+#ifndef IMPORTDESTINATIONPAGE_H
+#define IMPORTDESTINATIONPAGE_H
 
 // Qt
 #include <QWizard>
-#include <QListWidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QFileDialog>
 
 #include <QDebug>
 
 // Local
-#include "../machine.h"
-#include "importgeneralpage.h"
-#include "importdestinationpage.h"
-#include "importdetailspage.h"
-#include "importmediapage.h"
 
-class ImportWizard : public QWizard {
+class ImportDestinationPage : public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit ImportWizard(Machine *machine,
-                              QListWidget *osListWidget,
-                              QWidget *parent = nullptr);
-        ~ImportWizard();
-
-        enum { Page_General, Page_Destination, Page_Details, Page_Media };
+        explicit ImportDestinationPage(QWidget *parent = nullptr);
+        ~ImportDestinationPage();
 
     signals:
 
     public slots:
 
+    private slots:
+        void selectMachineDestination();
+
     protected:
 
     private:
+        QHBoxLayout *m_machineDestinationLayout;
+        QVBoxLayout *m_mainLayout;
 
+        QLabel *m_infoLabel;
+
+        QLineEdit *m_machineDestinationLineEdit;
+
+        QPushButton *m_machineDestinationButton;
 };
 
-#endif // IMPORT_H
+#endif // IMPORTDESTINATIONPAGE_H

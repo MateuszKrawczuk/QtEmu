@@ -25,6 +25,8 @@ ImportGeneralPage::ImportGeneralPage(QWidget *parent) : QWizardPage(parent)
 {
     this->setTitle(tr("Machine import wizard"));
 
+    m_infoLabel = new QLabel(tr("Select the machine configuration file."));
+
     m_machineConfigLineEdit = new QLineEdit();
     m_machineConfigButton = new QPushButton(QIcon::fromTheme("folder-symbolic",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))),
@@ -38,10 +40,11 @@ ImportGeneralPage::ImportGeneralPage(QWidget *parent) : QWizardPage(parent)
     m_machineConfigLayout->addWidget(m_machineConfigLineEdit);
     m_machineConfigLayout->addWidget(m_machineConfigButton);
 
-    this->registerField("destination*", m_machineConfigLineEdit);
+    this->registerField("configFilePath*", m_machineConfigLineEdit);
 
     m_mainLayout = new QVBoxLayout();
     m_mainLayout->setAlignment(Qt::AlignCenter);
+    m_mainLayout->addWidget(m_infoLabel);
     m_mainLayout->addItem(m_machineConfigLayout);
 
     this->setLayout(m_mainLayout);

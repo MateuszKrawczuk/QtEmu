@@ -21,11 +21,16 @@
 // Local
 #include "import.h"
 
-ImportWizard::ImportWizard(QWidget *parent) : QWizard(parent)
+ImportWizard::ImportWizard(Machine *machine,
+                           QListWidget *osListWidget,
+                           QWidget *parent) : QWizard(parent)
 {
     this->setWindowTitle(tr("Import the Machine"));
 
     this->setPage(Page_General, new ImportGeneralPage(this));
+    this->setPage(Page_Destination, new ImportDestinationPage(this));
+    this->setPage(Page_Details, new ImportDetailsPage(machine, this));
+    this->setPage(Page_Media, new ImportMediaPage(machine, osListWidget, this));
 
     this->setStartId(Page_General);
 

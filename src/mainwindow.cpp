@@ -611,10 +611,22 @@ void MainWindow::exportMachine()
  */
 void MainWindow::importMachine()
 {
-    ImportWizard importWizard(this);
+    Machine *machine = new Machine(this);
+    connect(machine, &Machine::machineStateChangedSignal,
+            this, &MainWindow::machineStateChanged);
+
+    ImportWizard importWizard(machine, this->m_osListWidget, this);
 
     importWizard.show();
     importWizard.exec();
+
+    if (machine->getConfigPath().isEmpty()) {
+        delete machine;
+        return;
+    } else {
+        this->m_machinesList.append(machine);
+        this->loadUI(this->m_osListWidget->count());
+    }
 }
 
 /**

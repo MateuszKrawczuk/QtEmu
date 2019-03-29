@@ -29,8 +29,9 @@
 #include <QPushButton>
 #include <QFileDialog>
 
+#include <QDebug>
+
 // Local
-#include "../machine.h"
 
 class ImportGeneralPage: public QWizardPage {
     Q_OBJECT
@@ -51,6 +52,8 @@ class ImportGeneralPage: public QWizardPage {
     private:
         QHBoxLayout *m_machineConfigLayout;
         QVBoxLayout *m_mainLayout;
+
+        QLabel *m_infoLabel;
 
         QLineEdit *m_machineConfigLineEdit;
 
