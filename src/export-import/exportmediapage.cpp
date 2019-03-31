@@ -76,7 +76,7 @@ ExportMediaPage::~ExportMediaPage()
 
 bool ExportMediaPage::validatePage()
 {
-    QString destination = field("destination").toString();
+    QString machineDestinationPath = field("destination").toString();
 
     this->m_machineExport->removeAllMedia();
 
@@ -84,7 +84,7 @@ bool ExportMediaPage::validatePage()
     while (*it) {
         if ((*it)->checkState(0) == Qt::Checked) {
             QString oldMediaPath = QDir::toNativeSeparators((*it)->data(0, Qt::UserRole).toString());
-            QString newMediaPath = QDir::toNativeSeparators(destination + "/" + (*it)->text(0));
+            QString newMediaPath = QDir::toNativeSeparators(machineDestinationPath + "/" + (*it)->text(0));
 
             QVariant mediaVariant = (*it)->data(1, Qt::UserRole);
             Media *media = mediaVariant.value<Media *>();
@@ -102,8 +102,9 @@ bool ExportMediaPage::validatePage()
     }
 
     QString machineDestionation =
-            QDir::toNativeSeparators(destination + "/" + this->m_machineExport->getName().toLower() + ".json");
+            QDir::toNativeSeparators(machineDestinationPath + "/" + this->m_machineExport->getName().toLower().replace(" ", "_") + ".json");
 
+    this->m_machineExport->setPath(machineDestinationPath);
     this->m_machineExport->setConfigPath(machineDestionation);
     this->m_machineExport->saveMachine();
 

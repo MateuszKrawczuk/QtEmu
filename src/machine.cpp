@@ -1039,7 +1039,7 @@ void Machine::failConnectMachine()
  *
  * Save the machine data in the file of the machine
  */
-void Machine::saveMachine()
+bool Machine::saveMachine()
 {
     QFile machineFile(this->configPath);
     if (!machineFile.open(QFile::WriteOnly)) {
@@ -1047,7 +1047,7 @@ void Machine::saveMachine()
                                  tr("<p>Cannot save the machine</p>"
                                     "<p>The file with the machine configuration are not writable</p>"),
                                  QMessageBox::Critical);
-        return;
+        return false;
     }
 
     QJsonObject machineJSONObject;
@@ -1116,6 +1116,8 @@ void Machine::saveMachine()
     }
 
     qDebug() << "Machine saved";
+
+    return true;
 }
 
 /**

@@ -92,6 +92,8 @@ bool ImportMediaPage::validatePage()
     // Move the selected media
     this->m_machine->removeAllMedia();
 
+    bool machineImported = true;
+
     QTreeWidgetItemIterator it(this->m_machineMediaTree);
     while (*it) {
         if ((*it)->checkState(0) == Qt::Checked) {
@@ -106,6 +108,7 @@ bool ImportMediaPage::validatePage()
             this->m_machine->addMedia(media);
 
             if (!QFile::copy(oldMediaPath, newMediaPath)) {
+                machineImported = false;
                 SystemUtils::showMessage(tr("Qtemu - Critical error"),
                                          tr("<p>Cannot import the media: </p>") + media->name(),
                                          QMessageBox::Critical);
@@ -114,23 +117,22 @@ bool ImportMediaPage::validatePage()
         ++it;
     }
 
-    // Move the machine config data
-    if (!QFile::copy(machineConfigFilePath, machineConfigFilePathNew)) {
-        SystemUtils::showMessage(tr("Qtemu - Critical error"),
-                                 tr("<p>Cannot import the machine configuration file</p>"),
-                                 QMessageBox::Critical);
+    if (!machineImported) {
+        return false;
     }
 
     this->m_machine->setPath(machineDestinationPath);
     this->m_machine->setConfigPath(machineConfigFilePathNew);
     this->m_machine->setUuid(QUuid::createUuid().toString());
 
+    machineImported = this->m_machine->saveMachine();
+
     // Write the new machine in machines file (the file with all the machines)
     this->m_machine->insertMachineConfigFile();
 
     this->insertVMList();
 
-    return true;
+    return machineImported;
 }
 
 void ImportMediaPage::insertVMList()
