@@ -91,5 +91,7 @@
         <file>images/icons/breeze/32x32/audio-card.svg</file>
         <file>images/icons/breeze/32x32/mathematica.svg</file>
         <file>images/icons/breeze/32x32/quickwizard.svg</file>
+        <file>images/icons/breeze/32x32/document-export.svg</file>
+        <file>images/icons/breeze/32x32/document-import.svg</file>
     </qresource>
 </RCC>

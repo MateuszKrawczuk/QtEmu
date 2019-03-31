@@ -178,8 +178,8 @@ void MainWindow::createMenus()
 void MainWindow::createMenusActions()
 {
     // Actions for File menu
-    m_importMachineAction = new QAction(QIcon::fromTheme("configure",
-                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/configure.svg"))),
+    m_importMachineAction = new QAction(QIcon::fromTheme("document-import",
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/document-import.svg"))),
                                          tr("Import machine"),
                                          this);
     connect(m_importMachineAction, &QAction::triggered,
@@ -222,7 +222,7 @@ void MainWindow::createMenusActions()
             this, &MainWindow::machineOptions);
 
     m_exportMachineAction = new QAction(QIcon::fromTheme("document-export",
-                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/settings-configure.svg"))),
+                                                         QIcon(QPixmap(":/images/icons/breeze/32x32/document-export.svg"))),
                                         tr("Export machine"),
                                         this);
     connect(m_exportMachineAction, &QAction::triggered,
