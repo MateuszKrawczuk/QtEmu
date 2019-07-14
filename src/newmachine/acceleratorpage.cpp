@@ -40,13 +40,13 @@ MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
 
     m_acceleratorTabWidget = new QTabWidget();
 
-    #ifdef Q_OS_LINUX
+#ifdef Q_OS_LINUX
     m_acceleratorTabWidget->addTab(new KVMTab(machine, this), tr("KVM"));
     m_acceleratorTabWidget->addTab(new XENTab(machine, this), tr("XEN"));
-    #endif
-    #ifdef Q_OS_WIN
+#endif
+#ifdef Q_OS_WIN
     m_acceleratorTabWidget->addTab(new HAXMTab(machine, this), tr("HAXM"));
-    #endif
+#endif
 
     m_acceleratorTabWidget->addTab(new TCGTab(machine, this), tr("TCG"));
 
@@ -184,6 +184,11 @@ TCGTab::TCGTab(Machine *machine, QWidget *parent) : QWidget(parent)
     this->m_newMachine = machine;
 
     m_tcgRadioButton = new QRadioButton("Tiny Code Generator (TCG)", this);
+
+#ifdef Q_OS_FREEBSD
+    this->addTCGAccelerator(true);
+    m_tcgRadioButton->setChecked(true);
+#endif
 
     connect(m_tcgRadioButton, &QAbstractButton::toggled,
                 this, &TCGTab::addTCGAccelerator);

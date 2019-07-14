@@ -48,8 +48,8 @@ QEMU::QEMU(QObject *parent) : QObject(parent)
     qemuImgPath = QDir::toNativeSeparators("");
     #endif
     #ifdef Q_OS_FREEBSD
-    qemuBinariesPath = QDir::toNativeSeparators("");
-    qemuImgPath = QDir::toNativeSeparators("");
+    qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
+    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
     #endif
     settings.endGroup();
     settings.sync();
