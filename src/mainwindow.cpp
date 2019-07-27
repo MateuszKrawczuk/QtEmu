@@ -63,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_machineAudioLabel    = new QLabel(this);
     m_machineAudioLabel->setWordWrap(true);
     m_machineAccelLabel    = new QLabel(this);
-    m_machineAccelLabel->setWordWrap(true);
     m_machineNetworkLabel  = new QLabel(this);
     m_machineMediaLabel    = new QLabel(this);
     m_machineMediaLabel->setWordWrap(true);

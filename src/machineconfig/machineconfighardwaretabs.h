@@ -26,8 +26,12 @@
 #include <QTabWidget>
 #include <QGroupBox>
 #include <QSpinBox>
+#include <QTreeView>
+#include <QStandardItemModel>
+#include <QLineEdit>
 
 // Local
+#include "../components/customfilter.h"
 #include "../machine.h"
 
 class ProcessorConfigTab: public QWidget {
@@ -140,6 +144,46 @@ class RamConfigTab: public QWidget {
         QLabel *m_spinBoxMemoryLabel;
         QLabel *m_minMemoryLabel;
         QLabel *m_maxMemorylabel;
+};
+
+class MachineTypeTab : public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit MachineTypeTab(Machine *machine,
+                                bool enableFields,
+                                QWidget *parent = nullptr);
+        ~MachineTypeTab();
+
+        // Methods
+        QString getMachineType();
+
+    signals:
+
+    public slots:
+
+    private slots:
+        void textFilterChanged();
+
+    protected:
+
+    private:
+        QGridLayout *machinePageLayout;
+
+        CustomFilter *customFilter;
+
+        QTreeView *machinesTypesTreeView;
+
+        QLabel *filterLabel;
+
+        QLineEdit *filterLineEdit;
+
+        Machine *m_machine;
+
+        // Methods
+
+        void setMachines();
+        void addMachine(QAbstractItemModel *model, const QString &machine, const QString &description);
 };
 
 #endif // MACHINECONFIGHARDWARETABS_H

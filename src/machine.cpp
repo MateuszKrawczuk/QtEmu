@@ -118,6 +118,30 @@ void Machine::setOSVersion(const QString &value)
 }
 
 /**
+ * @brief Get the machine type
+ * @return type of the machine
+ *
+ * Get the machine type
+ * Ex: pc-i440fx-3.0, pc-q35-2.12...
+ */
+QString Machine::getType() const
+{
+    return type;
+}
+
+/**
+ * @brief Set the machine type
+ * @param type of the machine
+ *
+ * Set the machine type
+ * Ex: pc-i440fx-3.0, pc-q35-2.12...
+ */
+void Machine::setType(const QString &value)
+{
+    type = value;
+}
+
+/**
  * @brief Get the machine path
  *
  * Get the machine path
@@ -891,6 +915,11 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-name";
     qemuCommand << this->name;
 
+    if (!this->type.isEmpty()) {
+        qemuCommand << "-machine";
+        qemuCommand << this->type;
+    }
+
     QString uuid(this->uuid);
     qemuCommand << "-uuid";
     qemuCommand << uuid.remove("{").remove("}");
@@ -1054,6 +1083,7 @@ bool Machine::saveMachine()
     machineJSONObject["name"]        = this->name;
     machineJSONObject["OSType"]      = this->OSType;
     machineJSONObject["OSVersion"]   = this->OSVersion;
+    machineJSONObject["type"]        = this->type;
     machineJSONObject["description"] = this->description;
     machineJSONObject["RAM"]         = this->RAM;
     machineJSONObject["network"]     = this->useNetwork;

@@ -47,10 +47,12 @@ MachineConfigHardware::MachineConfigHardware(Machine *machine,
     m_processorConfigTab = new ProcessorConfigTab(machine, enableFields, this);
     m_graphicsConfigTab = new GraphicsConfigTab(machine, enableFields, this);
     m_ramConfigTab = new RamConfigTab(machine, enableFields, this);
+    m_machineTypeTab = new MachineTypeTab(machine, enableFields, this);
 
     m_hardwareTabWidget->addTab(this->m_processorConfigTab, tr("CPU"));
     m_hardwareTabWidget->addTab(this->m_graphicsConfigTab, tr("Graphics"));
     m_hardwareTabWidget->addTab(this->m_ramConfigTab, tr("RAM"));
+    m_hardwareTabWidget->addTab(this->m_machineTypeTab, tr("Type"));
 
     m_hardwarePageLayout = new QVBoxLayout();
     m_hardwarePageLayout->setAlignment(Qt::AlignCenter);
@@ -74,6 +76,7 @@ MachineConfigHardware::~MachineConfigHardware()
  */
 void MachineConfigHardware::saveHardwareData()
 {
+    this->m_machine->setType(this->m_machineTypeTab->getMachineType());
     this->m_machine->setCPUType(this->m_processorConfigTab->getCPUType());
     this->m_machine->setCPUCount(this->m_processorConfigTab->getCPUCount());
     this->m_machine->setCoresSocket(this->m_processorConfigTab->getCoresSocket());

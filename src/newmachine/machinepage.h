@@ -18,24 +18,55 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef ALPHA_H
-#define ALPHA_H
+#ifndef MACHINEPAGE_H
+#define MACHINEPAGE_H
 
 // Qt
-#include <QObject>
+#include <QWizard>
+#include <QTreeView>
+#include <QStandardItemModel>
+#include <QLineEdit>
+#include <QGridLayout>
 
-#include <QDebug>
+// Local
+#include "../components/customfilter.h"
+#include "../machine.h"
 
-class alpha : public QObject {
+class MachinePage: public QWizardPage {
     Q_OBJECT
 
     public:
-        explicit alpha(QObject *parent = nullptr);
-        ~alpha();
+        explicit MachinePage(Machine *machine,
+                             QWidget *parent = nullptr);
+        ~MachinePage();
+
+    signals:
+
+    public slots:
+
+    private slots:
+        void textFilterChanged();
 
     protected:
 
     private:
+        QGridLayout *machinePageLayout;
+
+        CustomFilter *customFilter;
+
+        QTreeView *machinesTypesTreeView;
+
+        QLabel *filterLabel;
+
+        QLineEdit *filterLineEdit;
+
+        Machine *m_newMachine;
+
+        // Methods
+        bool validatePage();
+
+        void setMachines();
+        void addMachine(QAbstractItemModel *model, const QString &machine, const QString &description);
 };
 
-#endif // ALPHA_H
+#endif // MACHINEPAGE_H

@@ -58,6 +58,9 @@ class Machine: public QObject {
         QString getOSVersion() const;
         void setOSVersion(const QString &value);
 
+        QString getType() const;
+        void setType(const QString &value);
+
         QString getPath() const;
         void setPath(const QString &value);
 
@@ -157,6 +160,7 @@ class Machine: public QObject {
         QString name;
         QString OSType;
         QString OSVersion;
+        QString type;
         QString path;
         QString configPath;
         QString uuid;

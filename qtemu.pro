@@ -56,12 +56,14 @@ CONFIG += c++14
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES +=  src/main.cpp\
+            src/components/customfilter.cpp \
             src/mainwindow.cpp \
             src/helpwidget.cpp \
             src/aboutwidget.cpp \
             src/configwindow.cpp \
             src/machinewizard.cpp \
             src/machine.cpp \
+            src/newmachine/machinepage.cpp \
             src/utils/systemutils.cpp \
             src/newmachine/generalpage.cpp \
             src/newmachine/hardwarepage.cpp \
@@ -86,18 +88,18 @@ SOURCES +=  src/main.cpp\
             src/utils/firstrunwizard.cpp \
             src/boot.cpp \
             src/media.cpp \
-            src/platforms/alpha.cpp \
             src/export-import/export.cpp \
             src/export-import/exportgeneralpage.cpp \
             src/export-import/exportmediapage.cpp \
             src/export-import/import.cpp \
             src/export-import/importgeneralpage.cpp \
-    src/export-import/importdestinationpage.cpp \
-    src/export-import/exportdetailspage.cpp \
-    src/export-import/importdetailspage.cpp \
-    src/export-import/importmediapage.cpp
+            src/export-import/importdestinationpage.cpp \
+            src/export-import/exportdetailspage.cpp \
+            src/export-import/importdetailspage.cpp \
+            src/export-import/importmediapage.cpp
 
 HEADERS  += src/mainwindow.h \
+            src/components/customfilter.h \
             src/helpwidget.h \
             src/aboutwidget.h \
             src/configwindow.h \
@@ -105,6 +107,7 @@ HEADERS  += src/mainwindow.h \
             src/machine.h \
             src/utils/systemutils.h \
             src/newmachine/generalpage.h \
+            src/newmachine/machinepage.h \
             src/newmachine/hardwarepage.h \
             src/newmachine/acceleratorpage.h \
             src/newmachine/memorypage.h \
@@ -127,16 +130,15 @@ HEADERS  += src/mainwindow.h \
             src/utils/firstrunwizard.h \
             src/boot.h \
             src/media.h \
-            src/platforms/alpha.h \
             src/export-import/export.h \
             src/export-import/exportgeneralpage.h \
             src/export-import/exportmediapage.h \
             src/export-import/import.h \
             src/export-import/importgeneralpage.h \
-    src/export-import/importdestinationpage.h \
-    src/export-import/exportdetailspage.h \
-    src/export-import/importdetailspage.h \
-    src/export-import/importmediapage.h
+            src/export-import/importdestinationpage.h \
+            src/export-import/exportdetailspage.h \
+            src/export-import/importdetailspage.h \
+            src/export-import/importmediapage.h
 
 OTHER_FILES += \
     CHANGELOG \

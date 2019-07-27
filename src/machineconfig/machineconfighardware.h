@@ -59,6 +59,7 @@ class MachineConfigHardware : public QWidget {
         ProcessorConfigTab *m_processorConfigTab;
         GraphicsConfigTab *m_graphicsConfigTab;
         RamConfigTab *m_ramConfigTab;
+        MachineTypeTab *m_machineTypeTab;
 
         Machine *m_machine;
 

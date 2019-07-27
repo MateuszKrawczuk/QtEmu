@@ -18,31 +18,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "alpha.h"
+// Local
+#include "customfilter.h"
 
-// Cpus
-/*
-  ev4-alpha-cpu
-  ev5-alpha-cpu
-  ev56-alpha-cpu
-  ev6-alpha-cpu
-  ev67-alpha-cpu
-  ev68-alpha-cpu
-  pca56-alpha-cpu
-*/
 
-/**
- * @brief Alpha platforms
- * @param parent, parent widget
- *
- * Alpha object with properties of the Alpha platform
- */
-alpha::alpha(QObject *parent) : QObject(parent)
+CustomFilter::CustomFilter(QObject *parent) : QSortFilterProxyModel(parent)
 {
-    qDebug() << "alpha object created";
+    qDebug() << "CustomFilter created";
 }
 
-alpha::~alpha()
+CustomFilter::~CustomFilter()
 {
-    qDebug() << "alpha object destroyed";
+    qDebug() << "CustomFilter destroyed";
+}
+
+/**
+ * @brief Override the flags function to disable the edition
+ *
+ * Override the flags function to disable the edition
+ */
+Qt::ItemFlags CustomFilter::flags(const QModelIndex &index) const
+{
+    return Qt::NoItemFlags | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsEnabled;
+}
+
+bool CustomFilter::filterAcceptsRow(int row, const QModelIndex &sourceParent) const
+{
+    QModelIndex code = sourceModel()->index(row, 0, sourceParent);
+    QModelIndex description = sourceModel()->index(row, 1, sourceParent);
+
+    return (sourceModel()->data(code).toString().contains(filterRegExp()) ||
+            sourceModel()->data(description).toString().contains(filterRegExp()));
 }

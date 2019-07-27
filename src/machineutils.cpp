@@ -111,6 +111,7 @@ void MachineUtils::fillMachineObject(Machine *machine,
     machine->setName(machineJSON["name"].toString());
     machine->setOSType(machineJSON["OSType"].toString());
     machine->setOSVersion(machineJSON["OSVersion"].toString());
+    machine->setType(machineJSON["type"].toString());
     machine->setDescription(machineJSON["description"].toString());
     machine->setRAM(machineJSON["RAM"].toInt());
     machine->setUseNetwork(machineJSON["network"].toBool());

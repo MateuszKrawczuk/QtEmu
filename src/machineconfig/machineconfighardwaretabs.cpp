@@ -359,3 +359,170 @@ int RamConfigTab::getAmountRam()
 {
     return this->m_memorySpinBox->value();
 }
+
+/**
+ * @brief Machine type configuration tab
+ * @param machine, machine to be configured
+ * @param enableFields, fields enabled or disabled
+ * @param parent, parent widget
+ *
+ * In this window the user can select the machine type
+ */
+MachineTypeTab::MachineTypeTab(Machine *machine,
+                               bool enableFields,
+                               QWidget *parent) : QWidget(parent)
+{
+    this->m_machine = machine;
+
+    customFilter = new CustomFilter(this);
+    this->setMachines();
+
+    filterLabel = new QLabel(tr("Filter:"));
+
+    filterLineEdit = new QLineEdit();
+    filterLineEdit->setEnabled(enableFields);
+    connect(filterLineEdit, &QLineEdit::textChanged,
+            this, &MachineTypeTab::textFilterChanged);
+
+    machinesTypesTreeView = new QTreeView;
+    machinesTypesTreeView->setEnabled(enableFields);
+    machinesTypesTreeView->setRootIsDecorated(false);
+    machinesTypesTreeView->setModel(customFilter);
+
+    // Select the machine type
+    bool machineTypeFound = false;
+    int machineIndex = 0;
+    for(int i = 0; i < machinesTypesTreeView->model()->rowCount() && !machineTypeFound; ++i) {
+
+
+        QModelIndex index = machinesTypesTreeView->model()->index(i, 0);
+        QString machineType = index.data().toString();
+
+        if (this->m_machine->getType() == machineType) {
+            machineTypeFound = true;
+            machineIndex = i;
+        }
+    }
+
+    QModelIndex nIndex = machinesTypesTreeView->model()->index(machineIndex, 1);
+    machinesTypesTreeView->setCurrentIndex(nIndex);
+
+    machinePageLayout = new QGridLayout;
+    machinePageLayout->addWidget(filterLabel, 0, 0);
+    machinePageLayout->addWidget(filterLineEdit, 0, 1);
+    machinePageLayout->addWidget(machinesTypesTreeView, 1, 0, 1, 3);
+
+    this->setLayout(machinePageLayout);
+
+    qDebug() << "MachineTypeTab created";
+}
+
+MachineTypeTab::~MachineTypeTab()
+{
+    qDebug() << "MachineTypeTab destroyed";
+}
+
+void MachineTypeTab::textFilterChanged()
+{
+    QRegExp regExp(this->filterLineEdit->text());
+    customFilter->setFilterRegExp(regExp);
+}
+
+/**
+ * @brief Add the machines to the model
+ *
+ * Add all the machines to the model
+ */
+void MachineTypeTab::setMachines()
+{
+    QStandardItemModel *model = new QStandardItemModel(0, 2, this);
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Machine"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Description"));
+
+    this->addMachine(model, "pc-q35-2.4", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.5", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.6", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.7", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.8", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.9", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.10", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.11", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-2.12", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc-q35-3.0", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "q35", "Standard PC (Q35 + ICH9, 2009) (alias of pc-q35-3.0)");
+    this->addMachine(model, "pc-0.10", "Standard PC (i440FX + PIIX, 1996) (deprecated)");
+    this->addMachine(model, "pc-0.11", "Standard PC (i440FX + PIIX, 1996) (deprecated)");
+    this->addMachine(model, "pc-0.12", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-0.13", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-0.14", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-0.15", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-1.0", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-1.1", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-1.2", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-1.3", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-1.4", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-1.5", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-1.6", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-1.7", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.0", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.1", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.2", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.3", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.4", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.5", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.6", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.7", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.8", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.9", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.10", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.11", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-2.12", "Standard PC (i440FX + PIIX, 1996)");
+    this->addMachine(model, "pc-i440fx-3.0", "Standard PC (i440FX + PIIX, 1996) (default)");
+    this->addMachine(model, "pc", "Standard PC (i440FX + PIIX, 1996) (alias of pc-i440fx-3.0)");
+    this->addMachine(model, "isapc", "ISA-only PC");
+    this->addMachine(model, "none", "empty machine");
+
+    customFilter->setSourceModel(model);
+}
+
+/**
+ * @brief Add the machine to the model
+ * @param model, model list with the machines
+ * @param machine, code of the machine
+ * @param description, description of the machine
+ *
+ * Add the machine to the model
+ */
+void MachineTypeTab::addMachine(QAbstractItemModel *model,
+                                const QString &machine,
+                                const QString &description)
+{    
+    model->insertRow(0);
+    model->setData(model->index(0, 0), machine);
+    model->setData(model->index(0, 1), description);
+}
+
+/**
+ * @brief Get the selected machine type
+ * @return selected machine type
+ *
+ * Get the selected machine type
+ */
+QString MachineTypeTab::getMachineType()
+{
+    QString machineType;
+
+    QModelIndexList indexes = this->machinesTypesTreeView->selectionModel()->selectedIndexes();
+    if (indexes.size() > 0) {
+        QModelIndex selectedIndex = indexes.at(0);
+
+        QString type = selectedIndex.data().toString();
+
+        if (!type.isEmpty() && type != "none") {
+            machineType = type;
+        }
+    }
+
+    return machineType;
+}

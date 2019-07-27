@@ -35,6 +35,7 @@
 #include "utils/systemutils.h"
 
 #include "newmachine/generalpage.h"
+#include "newmachine/machinepage.h"
 #include "newmachine/hardwarepage.h"
 #include "newmachine/acceleratorpage.h"
 #include "newmachine/memorypage.h"
@@ -51,7 +52,7 @@ class MachineWizard : public QWizard {
                                QWidget *parent = nullptr);
         ~MachineWizard();
 
-        enum { Page_Name, Page_Hardware, Page_Accelerator,
+        enum { Page_Name, Page_Machine, Page_Hardware, Page_Accelerator,
                Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
 
     signals:
