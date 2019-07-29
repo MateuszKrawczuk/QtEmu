@@ -1,7 +1,7 @@
 # QtEmu &ndash; Qt-based front-end for QEMU emulator
 
-Stable version: 2.0 <br />
-Development version: 2.1 <br />
+Stable version: 2.1 <br />
+Development version: 2.2 <br />
 
 Website: https://qtemu.org/ <br />
 Source: https://gitlab.com/qtemu/gui
