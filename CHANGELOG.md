@@ -1,8 +1,12 @@
 ## Version 2.1
 
 Features:
+* The machine type can be selected in the machine wizard and configured later in the machine config window
+* Improve FreeBSD support
+* Update the meson.build
 
 Bugs:
+* Minor bug fixes
 
 
 ## Version 2.0
