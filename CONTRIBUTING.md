@@ -14,14 +14,14 @@
 
 Select Open Project
 
-![Image](https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_1.png)
+![Image](https://gitlab.com/qtemu/gui/raw/master/images/qt_creator_manual/qt_creator_1.png)
 
 Navigate to the QtEmu folder and open qtemu.pro
 
-![Image](https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_2.png)
+![Image](https://gitlab.com/qtemu/gui/raw/master/images/qt_creator_manual/qt_creator_2.png)
 
 Hack
 
-![Image](https://gitlab.com/carlavilla/Qtemu/blob/master/images/qt_creator_manual/qt_creator_3.png)
+![Image](https://gitlab.com/qtemu/gui/raw/master/images/qt_creator_manual/qt_creator_3.png)
 
 ### Translations

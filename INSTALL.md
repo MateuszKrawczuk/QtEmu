@@ -1,6 +1,6 @@
 
  # QtEmu - A front-end written in Qt for the QEMU emulator
- ###### Copyright (C) 2017-2018 Sergio Carlavilla <carlavilla @ mailbox.org>
+ ###### Copyright (C) 2017-2019 Sergio Carlavilla <carlavilla @ mailbox.org>
  ###### Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
 
 ---
