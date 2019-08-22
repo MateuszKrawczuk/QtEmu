@@ -44,8 +44,8 @@ QEMU::QEMU(QObject *parent) : QObject(parent)
     qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
     #endif
     #ifdef Q_OS_MACOS
-    qemuBinariesPath = QDir::toNativeSeparators("");
-    qemuImgPath = QDir::toNativeSeparators("");
+    qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
+    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
     #endif
     #ifdef Q_OS_FREEBSD
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();

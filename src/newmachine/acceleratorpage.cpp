@@ -190,6 +190,11 @@ TCGTab::TCGTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_tcgRadioButton->setChecked(true);
 #endif
 
+#ifdef Q_OS_MACOS
+    this->addTCGAccelerator(true);
+    m_tcgRadioButton->setChecked(true);
+#endif
+
     connect(m_tcgRadioButton, &QAbstractButton::toggled,
                 this, &TCGTab::addTCGAccelerator);
 
