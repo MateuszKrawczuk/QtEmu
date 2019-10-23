@@ -244,6 +244,9 @@ QHash<QString, QString> SystemUtils::getAccelerators()
     acceleratorsHash.insert("kvm", "Kernel-based Virtual Machine (KVM)");
     acceleratorsHash.insert("xen", "Xen Hypervisor");
 #endif
+#ifdef Q_OS_MACOS
+    acceleratorsHash.insert("hvf", "Hypervisor Framework (HVF)");
+#endif
     acceleratorsHash.insert("tcg", "Tiny Code Generator (TCG)");
 #ifdef Q_OS_WIN
     acceleratorsHash.insert("hax", "Hardware Accelerated Execution Manager (HAXM)");
