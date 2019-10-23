@@ -57,11 +57,8 @@
 
 // MacOS
 #ifdef Q_OS_MAC
+#include <sys/types.h>
 #include <sys/sysctl.h>
-#include <mach/host_info.h>
-#include <mach/mach_host.h>
-#include <mach/task_info.h>
-#include <mach/task.h>
 #endif
 
 class SystemUtils {
