@@ -154,4 +154,29 @@ class HAXMTab: public QWidget {
         Machine *m_newMachine;
 };
 
+class HVFTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit HVFTab(Machine *machine,
+                         QWidget *parent = nullptr);
+        ~HVFTab();
+    signals:
+
+    public slots:
+        void addHVFAccelerator(bool hvfAccelerator);
+
+    protected:
+
+    private:
+        QVBoxLayout *m_hvfLayout;
+
+        QRadioButton *m_hvfRadioButton;
+
+        QLabel *m_hvfDescriptionLabel;
+        QLabel *m_hvfURLLabel;
+
+        Machine *m_newMachine;
+};
+
 #endif // ACCELERATORPAGE_H

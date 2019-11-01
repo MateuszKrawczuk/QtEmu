@@ -47,7 +47,9 @@ MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
 #ifdef Q_OS_WIN
     m_acceleratorTabWidget->addTab(new HAXMTab(machine, this), tr("HAXM"));
 #endif
-
+#ifdef Q_OS_MACOS
+    m_acceleratorTabWidget->addTab(new HVFTab(machine, this), tr("HVF"));
+#endif
     m_acceleratorTabWidget->addTab(new TCGTab(machine, this), tr("TCG"));
 
     m_acceleratorLayout = new QVBoxLayout();
@@ -190,11 +192,6 @@ TCGTab::TCGTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_tcgRadioButton->setChecked(true);
 #endif
 
-#ifdef Q_OS_MACOS
-    this->addTCGAccelerator(true);
-    m_tcgRadioButton->setChecked(true);
-#endif
-
     connect(m_tcgRadioButton, &QAbstractButton::toggled,
                 this, &TCGTab::addTCGAccelerator);
 
@@ -292,5 +289,62 @@ void HAXMTab::addHAXAccelerator(bool haxAccelerator)
         this->m_newMachine->addAccelerator("hax");
     } else {
         this->m_newMachine->removeAccelerator("hax");
+    }
+}
+
+/**
+ * @brief HVFTab tab
+ * @param machine, new machine object
+ * @param parent, widget parent
+ *
+ * HVFTab tab. In this tab you can add or remove the hvf accelerator
+ */
+HVFTab::HVFTab(Machine *machine, QWidget *parent) : QWidget(parent)
+{
+    this->m_newMachine = machine;
+    #ifdef Q_OS_MACOS
+    this->addHVFAccelerator(true);
+    #endif
+
+    m_hvfRadioButton = new QRadioButton("Hypervisor Framework (HVF)", this);
+    m_hvfRadioButton->setChecked(true);
+
+    connect(m_hvfRadioButton, &QAbstractButton::toggled,
+                this, &HVFTab::addHVFAccelerator);
+
+    m_hvfDescriptionLabel = new QLabel("Apple® Hypervisor Framework"
+                                        " Build virtualization solutions on top of a lightweight hypervisor,"
+                                        " without the need for third-party kernel extensions.", this);
+    m_hvfDescriptionLabel->setWordWrap(true);
+
+    m_hvfURLLabel = new QLabel("<a href=\"https://developer.apple.com/documentation/hypervisor#overview\">developer.apple.com</a>", this);
+
+    m_hvfLayout = new QVBoxLayout();
+    m_hvfLayout->addWidget(m_hvfRadioButton);
+    m_hvfLayout->addWidget(m_hvfDescriptionLabel);
+    m_hvfLayout->addWidget(m_hvfURLLabel, 0, Qt::AlignCenter);
+
+    this->setLayout(m_hvfLayout);
+
+    qDebug() << "HVFTab created";
+}
+
+HVFTab::~HVFTab()
+{
+    qDebug() << "HVFTab destroyed";
+}
+
+/**
+ * @brief Add or remove the hax accelerator
+ * @param hvfAccelerator, true add the accelerator
+ *
+ * Add or remove the hvf accelerator
+ */
+void HVFTab::addHVFAccelerator(bool hvfAccelerator)
+{
+    if (hvfAccelerator) {
+        this->m_newMachine->addAccelerator("hvf");
+    } else {
+        this->m_newMachine->removeAccelerator("hvf");
     }
 }

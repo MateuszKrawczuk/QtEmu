@@ -69,31 +69,11 @@ void SystemUtils::getTotalMemory(int &totalRAM)
     totalRAM = static_cast<int>(statex.ullTotalPhys / (1024 * 1024));
 #endif
 #ifdef Q_OS_MACOS
-    int mib[6];
-    mib[0] = CTL_HW;
-    mib[1] = HW_PAGESIZE;
-
-    int page_size;
-    size_t length;
-    length = sizeof (page_size);
-    if (sysctl(mib, 2, &page_size, &length, NULL, 0) < 0) {
-        totalRAM = 8192; // If can't get the page_size, put 8GiB as default
-        return;
-    }
-
-    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
-
-    vm_statistics_data_t vmstat;
-    if (host_statistics(mach_host_self (), HOST_VM_INFO, (host_info_t) &vmstat, &count) != KERN_SUCCESS) {
-        totalRAM = 8192; // If can't information memory, put 8GiB as default
-        return;
-    }
-
-    double all_ram = vmstat.wire_count + vmstat.active_count + vmstat.inactive_count + vmstat.free_count;
-
-    all_ram *= page_size;
-
-    totalRAM = (int)(all_ram / 1024.0 / 1024.0);
+    size_t len;
+    unsigned long memory;
+    len = sizeof(memory);
+    sysctlbyname("hw.memsize", &memory, &len, NULL, 0);
+    totalRAM = static_cast<int>(((memory) * 0.976562) / 1024 / 1024);
 #endif
 #ifdef Q_OS_FREEBSD
     size_t len;
@@ -263,6 +243,9 @@ QHash<QString, QString> SystemUtils::getAccelerators()
 #ifdef Q_OS_LINUX
     acceleratorsHash.insert("kvm", "Kernel-based Virtual Machine (KVM)");
     acceleratorsHash.insert("xen", "Xen Hypervisor");
+#endif
+#ifdef Q_OS_MACOS
+    acceleratorsHash.insert("hvf", "Hypervisor Framework (HVF)");
 #endif
     acceleratorsHash.insert("tcg", "Tiny Code Generator (TCG)");
 #ifdef Q_OS_WIN
