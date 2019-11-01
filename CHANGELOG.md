@@ -1,3 +1,10 @@
+## Version 2.2
+
+Features:
+* Add support to MacOS
+
+Bugs:
+
 ## Version 2.1
 
 Features:
