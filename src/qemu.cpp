@@ -37,19 +37,19 @@ QEMU::QEMU(QObject *parent) : QObject(parent)
     QString qemuImgPath;
     #ifdef Q_OS_LINUX
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
-    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
+    qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
     #endif
     #ifdef Q_OS_WIN
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
-    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
+    qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
     #endif
     #ifdef Q_OS_MACOS
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
-    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
+    qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
     #endif
     #ifdef Q_OS_FREEBSD
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
-    qemuImgPath = settings.value("qemuImgBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
+    qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
     #endif
     settings.endGroup();
     settings.sync();
@@ -83,8 +83,21 @@ QString QEMU::QEMUImgPath() const
  * Set the path of the qemu-img binary
  */
 void QEMU::setQEMUImgPath(const QString path)
-{
-    this->m_QEMUImgPath = path;
+{    
+#ifdef Q_OS_LINUX
+    QString qemuImgPath = QDir::toNativeSeparators(path + "/qemu-img");
+#endif
+#ifdef Q_OS_WIN
+    QString qemuImgPath = QDir::toNativeSeparators(path + "/qemu-img.exe");
+#endif
+#ifdef Q_OS_MACOS
+    QString qemuImgPath = QDir::toNativeSeparators(path + "/qemu-img");
+#endif
+#ifdef Q_OS_FREEBSD
+    QString qemuImgPath = QDir::toNativeSeparators(path + "/qemu-img");
+#endif
+
+    this->m_QEMUImgPath = qemuImgPath;
 }
 
 /**

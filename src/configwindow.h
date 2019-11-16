@@ -85,7 +85,6 @@ class ConfigWindow : public QWidget {
         void setPathBinaries();
         void findBinaries();
         void binaryPathChanged(const QString binaryPath);
-        void findQemuImgBinary();
 
     protected:
 
@@ -186,7 +185,6 @@ class ConfigWindow : public QWidget {
         // QEMU
         QHBoxLayout *m_binaryLabelLayout;
         QHBoxLayout *m_binaryLayout;
-        QVBoxLayout *m_QEMUImgLayout;
         QHBoxLayout *m_QEMUPathLayout;
         QVBoxLayout *m_QEMULayout;
         QWidget *m_QEMUPageWidget;
@@ -195,13 +193,11 @@ class ConfigWindow : public QWidget {
         QLineEdit *m_binaryPathLineEdit;
 
         QLabel *m_QEMUImgLabel;
-        QLineEdit *m_QEMUImgPathLineEdit;
 
         QTableWidget *m_binariesTableWidget;
 
         QToolButton *m_binariesPathToolButton;
         QToolButton *m_searchBinariesToolButton;
-        QToolButton *m_searchQEMUImgToolButton;
 
         QEMU *m_QEMUObject;
 

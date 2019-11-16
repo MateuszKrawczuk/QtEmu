@@ -434,17 +434,6 @@ void ConfigWindow::createQEMUPage()
     m_binariesTableWidget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
     m_binariesTableWidget->setHorizontalHeaderLabels(labels);
 
-    m_QEMUImgLabel = new QLabel(tr("QEMU img binary path"), this);
-    m_QEMUImgPathLineEdit = new QLineEdit(this);
-
-    m_searchQEMUImgToolButton = new QToolButton(this);
-    m_searchQEMUImgToolButton->setToolTip(tr("Find qemu-img binary"));
-    m_searchQEMUImgToolButton->setToolTipDuration(3000);
-    m_searchQEMUImgToolButton->setIcon(QIcon::fromTheme("edit-find",
-                                                        QIcon(QPixmap(":/images/icons/breeze/32x32/edit-find.svg"))));
-    connect(m_searchQEMUImgToolButton, &QAbstractButton::clicked,
-            this, &ConfigWindow::findQemuImgBinary);
-
     m_binaryLabelLayout = new QHBoxLayout();
     m_binaryLabelLayout->setAlignment(Qt::AlignLeft);
     m_binaryLabelLayout->addWidget(m_findBinaryLabel);
@@ -455,21 +444,10 @@ void ConfigWindow::createQEMUPage()
     m_binaryLayout->addWidget(m_binariesPathToolButton);
     m_binaryLayout->addWidget(m_searchBinariesToolButton);
 
-    m_QEMUPathLayout = new QHBoxLayout();
-    m_QEMUPathLayout->setAlignment(Qt::AlignCenter);
-    m_QEMUPathLayout->addWidget(m_QEMUImgPathLineEdit);
-    m_QEMUPathLayout->addWidget(m_searchQEMUImgToolButton);
-
-    m_QEMUImgLayout = new QVBoxLayout();
-    m_QEMUImgLayout->setAlignment(Qt::AlignLeft);
-    m_QEMUImgLayout->addWidget(m_QEMUImgLabel);
-    m_QEMUImgLayout->addItem(m_QEMUPathLayout);
-
     m_QEMULayout = new QVBoxLayout();
     m_QEMULayout->addItem(m_binaryLabelLayout);
     m_QEMULayout->addItem(m_binaryLayout);
     m_QEMULayout->addWidget(m_binariesTableWidget);
-    m_QEMULayout->addItem(m_QEMUImgLayout);
 
     m_QEMUPageWidget = new QWidget(this);
     m_QEMUPageWidget->setLayout(m_QEMULayout);
@@ -713,9 +691,8 @@ void ConfigWindow::saveSettings()
 
     // QEMU
     settings.setValue("qemuBinaryPath", this->m_binaryPathLineEdit->text());
-    settings.setValue("qemuImgBinaryPath", this->m_QEMUImgPathLineEdit->text());
     this->m_QEMUObject->setQEMUBinaries(this->m_binaryPathLineEdit->text());
-    this->m_QEMUObject->setQEMUImgPath(this->m_QEMUImgPathLineEdit->text());
+    this->m_QEMUObject->setQEMUImgPath(this->m_binaryPathLineEdit->text());
 
     settings.endGroup();
     settings.sync();
@@ -774,7 +751,6 @@ void ConfigWindow::loadSettings()
     // QEMU
     this->binaryPathChanged(settings.value("qemuBinaryPath", "").toString());
     this->m_binaryPathLineEdit->setText(settings.value("qemuBinaryPath", "").toString());
-    this->m_QEMUImgPathLineEdit->setText(settings.value("qemuImgBinaryPath", "").toString());
     this->insertBinariesInTree();
 
     settings.endGroup();
@@ -822,22 +798,4 @@ void ConfigWindow::binaryPathChanged(const QString binaryPath)
     this->m_binariesTableWidget->clearContents();
     this->m_binariesTableWidget->setRowCount(0);
     this->m_searchBinariesToolButton->setEnabled(!binaryPath.isEmpty());
-}
-
-/**
- * @brief Find qemu-img binary
- *
- * Find qemu-img binary in the specific folder
- */
-void ConfigWindow::findQemuImgBinary() {
-    this->m_QEMUImgPathLineEdit->clear();
-
-    QString qemuImgPath = QFileDialog::getOpenFileName(this,
-                                                       tr("Select the qemu-img binary"),
-                                                       QDir::homePath()
-                                                       );
-
-    if (!qemuImgPath.isEmpty()) {
-        this->m_QEMUImgPathLineEdit->setText(qemuImgPath);
-    }
 }

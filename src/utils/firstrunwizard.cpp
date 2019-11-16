@@ -64,7 +64,7 @@ FirstRunWizard::FirstRunWizard(QWidget *parent) : QWizard(parent)
     m_warningFinishMessageBox->setIcon(QMessageBox::Warning);
     m_warningFinishMessageBox->setWindowIcon(QIcon::fromTheme("qtemu", QIcon(":/images/qtemu.png")));
     m_warningFinishMessageBox->setText("<p>If you don't finish the Wizard QtEmu will not work correctly.</p>"
-                                       "<p>You can make the configuration later from the QtEmu menu</p>");
+                                       "<p>You can make the configuration later from the QtEmu menu.</p>");
 
     qDebug() << "FirstRunWizard created";
 }
@@ -137,27 +137,21 @@ QEMUBinariesPage::QEMUBinariesPage(QWidget *parent) : QWizardPage(parent)
 {
     this->setTitle(tr("QEMU options"));
 
-    m_descriptionLabel = new QLabel(tr("Select QEMU binaries folder and qemu-img folder"), this);
+    m_descriptionLabel = new QLabel(tr("Select the folder where the QEMU binaries are located and the folder where the machines you create will be stored."), this);
     m_descriptionLabel->setWordWrap(true);
 
     m_qemuBinariesPathLabel = new QLabel(tr("QEMU binaries path") + ":", this);
     m_qemuBinariesPathLineEdit = new QLineEdit(this);
+    this->setDefaultQemuBinariesPath();
     m_qemuBinariesPushButton = new QPushButton(this);
     m_qemuBinariesPushButton->setIcon(QIcon::fromTheme("folder-symbolic",
                                                        QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
     connect(m_qemuBinariesPushButton, &QAbstractButton::clicked,
             this, &QEMUBinariesPage::setQemuBinariesPath);
 
-    m_qemuImgPathLabel = new QLabel(tr("QEMU img path") + ":", this);
-    m_qemuImgPathLineEdit = new QLineEdit(this);
-    m_qemuImgPathPushButton = new QPushButton(this);
-    m_qemuImgPathPushButton->setIcon(QIcon::fromTheme("folder-symbolic",
-                                                      QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
-    connect(m_qemuImgPathPushButton, &QAbstractButton::clicked,
-            this, &QEMUBinariesPage::setQemuImgPath);
-
     m_vmsPathLabel = new QLabel(tr("QEMU machines path") + ":", this);
     m_qemuMachinesPathLineEdit = new QLineEdit(this);
+    m_qemuMachinesPathLineEdit->setPlaceholderText(QDir::homePath() + QDir::toNativeSeparators("/") + "VMs");
     m_qemuMachinesPathPushButton = new QPushButton(this);
     m_qemuMachinesPathPushButton->setIcon(QIcon::fromTheme("folder-symbolic",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));
@@ -183,7 +177,6 @@ QEMUBinariesPage::QEMUBinariesPage(QWidget *parent) : QWizardPage(parent)
 #endif
 
     this->registerField("qemuBinaries*", m_qemuBinariesPathLineEdit);
-    this->registerField("qemuImg*", m_qemuImgPathLineEdit);
     this->registerField("qemuMachinesPath*", m_qemuMachinesPathLineEdit);
 
     m_mainLayout = new QGridLayout();
@@ -192,9 +185,6 @@ QEMUBinariesPage::QEMUBinariesPage(QWidget *parent) : QWizardPage(parent)
     m_mainLayout->addWidget(m_qemuBinariesPathLabel,      1, 0, 1, 1);
     m_mainLayout->addWidget(m_qemuBinariesPathLineEdit,   1, 1, 1, 2);
     m_mainLayout->addWidget(m_qemuBinariesPushButton,     1, 2, 1, 1);
-    m_mainLayout->addWidget(m_qemuImgPathLabel,           2, 0, 1, 1);
-    m_mainLayout->addWidget(m_qemuImgPathLineEdit,        2, 1, 1, 2);
-    m_mainLayout->addWidget(m_qemuImgPathPushButton,      2, 2, 1, 1);
     m_mainLayout->addWidget(m_vmsPathLabel,               3, 0, 1, 1);
     m_mainLayout->addWidget(m_qemuMachinesPathLineEdit,   3, 1, 1, 2);
     m_mainLayout->addWidget(m_qemuMachinesPathPushButton, 3, 2, 1, 1);
@@ -227,7 +217,6 @@ bool QEMUBinariesPage::isWizardComplete()
     bool complete = false;
 
     if (!this->m_qemuBinariesPathLineEdit->text().isEmpty() &&
-        !this->m_qemuImgPathLineEdit->text().isEmpty() &&
         !this->m_qemuMachinesPathLineEdit->text().isEmpty()) {
         complete = true;
     }
@@ -242,27 +231,46 @@ bool QEMUBinariesPage::isWizardComplete()
  */
 void QEMUBinariesPage::setQemuBinariesPath()
 {
-    QString qemuBinariesPath = QFileDialog::getExistingDirectory(this, tr("Select QEMU binaries path"),
-                                                                 QDir::homePath());
+#ifdef Q_OS_LINUX
+    QString qemuDefaultBinariesPath = QDir::toNativeSeparators("/usr/bin");
+#endif
+#ifdef Q_OS_WIN
+    QString qemuDefaultBinariesPath = QDir::toNativeSeparators("C:/Program Files/qemu");
+#endif
+#ifdef Q_OS_MACOS
+    QString qemuDefaultBinariesPath = QDir::toNativeSeparators("/usr/local/bin/");
+#endif
+#ifdef Q_OS_FREEBSD
+    QString qemuDefaultBinariesPath = QDir::toNativeSeparators("/usr/local/bin/");
+#endif
+
+    QString qemuBinariesPath = QFileDialog::getExistingDirectory(this,
+                                                                 tr("Select QEMU binaries path"),
+                                                                 qemuDefaultBinariesPath);
     if (!qemuBinariesPath.isEmpty()) {
         this->m_qemuBinariesPathLineEdit->setText(QDir::toNativeSeparators(qemuBinariesPath));
     }
 }
 
 /**
- * @brief Set the qemu-img path
+ * @brief Show a placeholder to help the user to understand what value goes in the field
  *
- * Set the qemu-img path
+ * Show a placeholder to help the user to understand what value goes in the field
  */
-void QEMUBinariesPage::setQemuImgPath()
+void QEMUBinariesPage::setDefaultQemuBinariesPath()
 {
-    QString qemuImgPath = QFileDialog::getOpenFileName(this,
-                                                       tr("Select the qemu-img binary"),
-                                                       QDir::homePath()
-                                                       );
-    if (!qemuImgPath.isEmpty()) {
-        this->m_qemuImgPathLineEdit->setText(QDir::toNativeSeparators(qemuImgPath));
-    }
+#ifdef Q_OS_LINUX
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText("/usr/bin");
+#endif
+#ifdef Q_OS_WIN
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText("C:\Program Files\qemu");
+#endif
+#ifdef Q_OS_MACOS
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText("/usr/local/bin/");
+#endif
+#ifdef Q_OS_FREEBSD
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText("/usr/local/bin/");
+#endif
 }
 
 /**
@@ -272,7 +280,8 @@ void QEMUBinariesPage::setQemuImgPath()
  */
 void QEMUBinariesPage::setQemuMachinesPath()
 {
-    QString qemuMachinesPath = QFileDialog::getExistingDirectory(this, tr("Select machines path"),
+    QString qemuMachinesPath = QFileDialog::getExistingDirectory(this,
+                                                                 tr("Select machines path"),
                                                                  QDir::homePath());
     if (!qemuMachinesPath.isEmpty()) {
         this->m_qemuMachinesPathLineEdit->setText(QDir::toNativeSeparators(qemuMachinesPath));
@@ -291,7 +300,6 @@ bool QEMUBinariesPage::validatePage()
     settings.beginGroup("Configuration");
     settings.setValue("firstrunwizard", false);
     settings.setValue("qemuBinaryPath", this->m_qemuBinariesPathLineEdit->text());
-    settings.setValue("qemuImgBinaryPath", this->m_qemuImgPathLineEdit->text());
     settings.setValue("machinePath", this->m_qemuMachinesPathLineEdit->text());
 #ifdef Q_OS_WIN
     settings.setValue("qemuMonitorHost", this->m_monitorHostnameComboBox->currentText());

@@ -35,6 +35,7 @@
 #include <QSettings>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QDir>
 #include <QDebug>
 
 class QEMUBinariesPage;
@@ -77,7 +78,7 @@ class QEMUBinariesPage: public QWizardPage {
 
     private slots:
         void setQemuBinariesPath();
-        void setQemuImgPath();
+        void setDefaultQemuBinariesPath();
         void setQemuMachinesPath();
 
     protected:
@@ -87,14 +88,12 @@ class QEMUBinariesPage: public QWizardPage {
 
         QLabel *m_descriptionLabel;
         QLabel *m_qemuBinariesPathLabel;
-        QLabel *m_qemuImgPathLabel;
         QLabel *m_vmsPathLabel;
         QLabel *m_descriptionHostPortLabel;
         QLabel *m_monitorHostnameLabel;
         QLabel *m_monitorSocketPathLabel;
 
         QLineEdit *m_qemuBinariesPathLineEdit;
-        QLineEdit *m_qemuImgPathLineEdit;
         QLineEdit *m_qemuMachinesPathLineEdit;
 
         QComboBox *m_monitorHostnameComboBox;
@@ -102,7 +101,6 @@ class QEMUBinariesPage: public QWizardPage {
         QSpinBox *m_monitorSocketSpinBox;
 
         QPushButton *m_qemuBinariesPushButton;
-        QPushButton *m_qemuImgPathPushButton;
         QPushButton *m_qemuMachinesPathPushButton;
 
         // Methods
