@@ -124,7 +124,7 @@ void MachineDiskPage::useExistingDiskToggle(bool toggled)
  */
 void MachineDiskPage::useExistingDiskPath()
 {
-    this->m_existingDiskPath = QFileDialog::getSaveFileName(this,
+    this->m_existingDiskPath = QFileDialog::getOpenFileName(this,
                                                             tr("Select an existing disk"),
                                                             QDir::homePath(),
                                                             tr("All Files (*);;Images Files (*.img *.qcow *.qcow2 *.vmdk)"));
