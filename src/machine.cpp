@@ -710,7 +710,7 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
     program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
     #endif
     #ifdef Q_OS_WIN
-    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64.exe"));
+    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64w.exe"));
     #endif
     #ifdef Q_OS_MACOS
     program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));

@@ -136,7 +136,11 @@ void QEMU::setQEMUBinaries(const QString path)
     QDirIterator it(path, QStringList() << "qemu-system-*", QDir::NoFilter, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         it.next();
+#ifdef Q_OS_WIN
+        if (it.fileName().contains("w")) {
+#else
         if (!it.fileName().contains("w")) {
+#endif
             this->m_QEMUBinaries.insert(it.fileName(), it.filePath());
         }
     }
