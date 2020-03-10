@@ -1,6 +1,6 @@
 /*
  * This file is part of QtEmu project.
- * Copyright (C) 2017-2019 Sergio Carlavilla <carlavilla @ mailbox.org>
+ * Copyright (C) 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -260,16 +260,16 @@ void QEMUBinariesPage::setQemuBinariesPath()
 void QEMUBinariesPage::setDefaultQemuBinariesPath()
 {
 #ifdef Q_OS_LINUX
-    this->m_qemuBinariesPathLineEdit->setPlaceholderText("/usr/bin");
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText(QDir::toNativeSeparators("/usr/bin"));
 #endif
 #ifdef Q_OS_WIN
-    this->m_qemuBinariesPathLineEdit->setPlaceholderText("C:\Program Files\qemu");
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText(QDir::toNativeSeparators("C:/Program Files/qemu"));
 #endif
 #ifdef Q_OS_MACOS
-    this->m_qemuBinariesPathLineEdit->setPlaceholderText("/usr/local/bin/");
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText(QDir::toNativeSeparators("/usr/local/bin/"));
 #endif
 #ifdef Q_OS_FREEBSD
-    this->m_qemuBinariesPathLineEdit->setPlaceholderText("/usr/local/bin/");
+    this->m_qemuBinariesPathLineEdit->setPlaceholderText(QDir::toNativeSeparators("/usr/local/bin/"));
 #endif
 }
 

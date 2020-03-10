@@ -1,7 +1,7 @@
 /*
  * This file is part of QtEmu project.
  * Copyright (C) 2006-2009 Urs Wolfer <uwolfer @ fwo.ch> and Ben Klopfenstein <benklop gmail com>
- * Copyright (C) 2017-2019 Sergio Carlavilla <carlavilla @ mailbox.org>
+ * Copyright (C) 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
