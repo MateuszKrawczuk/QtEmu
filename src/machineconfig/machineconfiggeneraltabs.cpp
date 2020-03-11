@@ -42,8 +42,6 @@ BasicTab::BasicTab(Machine *machine,
     m_machineNameLineEdit->setEnabled(enableFields);
 
     m_OSType = new QComboBox(this);
-    m_OSType->setSizePolicy(QSizePolicy::Expanding,
-                              QSizePolicy::MinimumExpanding);
     m_OSType->setEnabled(enableFields);
 
     m_OSType->addItem("GNU/Linux");
@@ -56,8 +54,6 @@ BasicTab::BasicTab(Machine *machine,
            this, &BasicTab::selectOS);
 
     m_OSVersion = new QComboBox(this);
-    m_OSVersion->setSizePolicy(QSizePolicy::Expanding,
-                               QSizePolicy::MinimumExpanding);
     m_OSVersion->setEnabled(enableFields);
     this->selectOS(machine->getOSType());
     m_OSVersion->setCurrentText(machine->getOSVersion());

@@ -37,6 +37,7 @@
 #include "boot.h"
 #include "media.h"
 #include "machineutils.h"
+#include "utils/logger.h"
 
 class Machine: public QObject {
     Q_OBJECT

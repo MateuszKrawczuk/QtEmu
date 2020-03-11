@@ -141,8 +141,10 @@ void MainWindow::createMenus()
     m_fileMenu->addAction(m_importMachineAction);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_preferencesAppAction);
+#ifndef Q_OS_WIN
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_checkUpdateAppAction);
+#endif
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_exitAppAction);
 
@@ -190,14 +192,14 @@ void MainWindow::createMenusActions()
                                          this);
     connect(m_preferencesAppAction, &QAction::triggered,
             m_configWindow, &QWidget::show);
-
+#ifndef Q_OS_WIN
     m_checkUpdateAppAction = new QAction(QIcon::fromTheme("update-none",
                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/update-none.svg"))),
                                          tr("Check for updates"),
                                          this);
     connect(m_checkUpdateAppAction, &QAction::triggered,
             this, &MainWindow::checkVersions);
-
+#endif
     m_exitAppAction = new QAction(QIcon::fromTheme("application-exit",
                                                    QIcon(QPixmap(":/images/icons/breeze/32x32/application-exit.svg"))),
                                   tr("Exit"),
@@ -336,7 +338,7 @@ void MainWindow::visitQtEmuWebsite()
  */
 void MainWindow::visitQtEmuBugTracker()
 {
-    QDesktopServices::openUrl(QUrl("https://gitlab.com/carlavilla/Qtemu/issues"));
+    QDesktopServices::openUrl(QUrl("https://gitlab.com/qtemu/gui/-/issues"));
 }
 
 /**

@@ -149,7 +149,7 @@ void Machine::setType(const QString &value)
  */
 QString Machine::getPath() const
 {
-    return path;
+    return QDir::toNativeSeparators(path);
 }
 
 /**
@@ -170,7 +170,7 @@ void Machine::setPath(const QString &value)
  */
 QString Machine::getConfigPath() const
 {
-    return configPath;
+    return QDir::toNativeSeparators(configPath);
 }
 
 /**
@@ -725,6 +725,9 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
                                  QMessageBox::Information);
     }
 
+    // Log QEMU command in the logs file to help the debug process
+    Logger::logQtemuAction(program + ' ' + args.join(' '));
+
     this->m_machineProcess->start(program, args);
 #ifdef Q_OS_WIN
     QSettings settings;
@@ -1012,8 +1015,8 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
-    QString pipe = this->path;
-    pipe.append(QDir::toNativeSeparators("/")).append(this->name).append(".pid");
+    QString pipe = QDir::toNativeSeparators(this->path.append("/").append(this->name).append(".pid"));
+
     qemuCommand << "-pidfile";
     qemuCommand << pipe;
 
@@ -1034,7 +1037,7 @@ QStringList Machine::generateMachineCommand()
         driveInterface.append(media.at(i)->driveInterface());
 
         qemuCommand << driveInterface;
-        qemuCommand << media.at(i)->path();
+        qemuCommand << QDir::toNativeSeparators(media.at(i)->path());
     }
 
     qDebug() << "Command " << qemuCommand;
@@ -1087,7 +1090,7 @@ bool Machine::saveMachine()
     machineJSONObject["description"] = this->description;
     machineJSONObject["RAM"]         = this->RAM;
     machineJSONObject["network"]     = this->useNetwork;
-    machineJSONObject["path"]        = this->path;
+    machineJSONObject["path"]        = QDir::toNativeSeparators(this->path);
     machineJSONObject["uuid"]        = this->uuid;
     machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;
     machineJSONObject["binary"] = "qemu-system-x86_64";
@@ -1110,7 +1113,7 @@ bool Machine::saveMachine()
     for (int i = 0; i < this->media.size(); ++i) {
         QJsonObject disk;
         disk["name"] = this->media.at(i)->name();
-        disk["path"] = this->media.at(i)->path();
+        disk["path"] = QDir::toNativeSeparators(this->media.at(i)->path());
         disk["type"] = this->media.at(i)->type();
         disk["interface"] = this->media.at(i)->driveInterface();
         disk["uuid"] = QUuid::createUuid().toString();
@@ -1122,8 +1125,8 @@ bool Machine::saveMachine()
 
     QJsonObject kernelBoot;
     kernelBoot["enabled"] = this->boot->kernelBootEnabled();
-    kernelBoot["kernelPath"] = this->boot->kernelPath();
-    kernelBoot["initrdPath"] = this->boot->initrdPath();
+    kernelBoot["kernelPath"] = QDir::toNativeSeparators(this->boot->kernelPath());
+    kernelBoot["initrdPath"] = QDir::toNativeSeparators(this->boot->initrdPath());
     kernelBoot["kernelArgs"] = this->boot->kernelArgs();
 
     QJsonObject boot;
@@ -1185,8 +1188,8 @@ void Machine::insertMachineConfigFile()
     // Create the new machine
     QJsonObject machine;
     machine["uuid"]       = this->uuid;
-    machine["path"]       = this->path;
-    machine["configpath"] = this->configPath;
+    machine["path"]       = QDir::toNativeSeparators(this->path);
+    machine["configpath"] = QDir::toNativeSeparators(this->configPath);
     machine["icon"]       = this->OSVersion.toLower().replace(" ", "_");
 
     machines.append(machine);

@@ -78,8 +78,8 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/cpu.svg"))));
 
     m_optionsListWidget->addItem(tr("Boot options"));
-    m_optionsListWidget->item(2)->setIcon(QIcon::fromTheme("checkmark",
-                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/checkmark.svg"))));
+    m_optionsListWidget->item(2)->setIcon(QIcon::fromTheme("drive-multidisk",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/boot-order.svg"))));
 
     m_optionsListWidget->addItem(tr("Media"));
     m_optionsListWidget->item(3)->setIcon(QIcon::fromTheme("ntfs-config",

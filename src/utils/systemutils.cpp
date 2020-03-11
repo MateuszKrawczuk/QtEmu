@@ -250,6 +250,7 @@ QHash<QString, QString> SystemUtils::getAccelerators()
     acceleratorsHash.insert("tcg", "Tiny Code Generator (TCG)");
 #ifdef Q_OS_WIN
     acceleratorsHash.insert("hax", "Hardware Accelerated Execution Manager (HAXM)");
+    acceleratorsHash.insert("whpx", "Windows Hypervisor Platform (WHPX)");
 #endif
 
     return acceleratorsHash;
@@ -330,7 +331,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
 
     args << "-f";
     args << format;
-    args << diskName;
+    args << QDir::toNativeSeparators(diskName);
     args << QString::number(size) + "G"; // TODO: Implement other sizes, K, M, T
 
     QString program;

@@ -30,7 +30,7 @@
  * Accelerator page section. In this page you can add or remove the accelerators
  * to the new machine
  *
- * Supported: KVM, XEN, HAXM and TCG
+ * Supported: KVM, XEN, HAXM, WHPX and TCG
  */
 MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
                                                QWidget *parent) : QWizardPage(parent)
@@ -46,6 +46,7 @@ MachineAcceleratorPage::MachineAcceleratorPage(Machine *machine,
 #endif
 #ifdef Q_OS_WIN
     m_acceleratorTabWidget->addTab(new HAXMTab(machine, this), tr("HAXM"));
+    m_acceleratorTabWidget->addTab(new WHPXTab(machine, this), tr("WHPX"));
 #endif
 #ifdef Q_OS_MACOS
     m_acceleratorTabWidget->addTab(new HVFTab(machine, this), tr("HVF"));
@@ -78,10 +79,10 @@ KVMTab::KVMTab(Machine *machine, QWidget *parent) : QWidget(parent)
     this->m_newMachine = machine;
     this->addKVMAccelerator(true);
 
-    m_kvmRadioButton = new QRadioButton("Kernel-based Virtual Machine (KVM)", this);
-    m_kvmRadioButton->setChecked(true);
+    m_kvmCheck = new QCheckBox("Kernel-based Virtual Machine (KVM)", this);
+    m_kvmCheck->setChecked(true);
 
-    connect(m_kvmRadioButton, &QAbstractButton::toggled,
+    connect(m_kvmCheck, &QAbstractButton::toggled,
                 this, &KVMTab::addKVMAccelerator);
 
     m_kvmDescriptionLabel = new QLabel("KVM (for Kernel-based Virtual Machine) is a full virtualization solution"
@@ -91,7 +92,7 @@ KVMTab::KVMTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_kvmURLLabel = new QLabel("<a href=\"https://www.linux-kvm.org\">www.linux-kvm.org</a>", this);
 
     m_kvmLayout = new QVBoxLayout();
-    m_kvmLayout->addWidget(m_kvmRadioButton);
+    m_kvmLayout->addWidget(m_kvmCheck);
     m_kvmLayout->addWidget(m_kvmDescriptionLabel);
     m_kvmLayout->addWidget(m_kvmURLLabel, 0, Qt::AlignCenter);
 
@@ -131,9 +132,9 @@ XENTab::XENTab(Machine *machine, QWidget *parent) : QWidget(parent)
 {
     this->m_newMachine = machine;
 
-    m_xenRadioButton = new QRadioButton("Xen Hypervisor", this);
+    m_xenCheck = new QCheckBox("Xen Hypervisor", this);
 
-    connect(m_xenRadioButton, &QAbstractButton::toggled,
+    connect(m_xenCheck, &QAbstractButton::toggled,
                 this, &XENTab::addXENAccelerator);
 
     m_xenDescriptionLabel = new QLabel("The Xen Project hypervisor is an open-source type-1 or "
@@ -145,7 +146,7 @@ XENTab::XENTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_xenURLLabel = new QLabel("<a href=\"https://https://www.xenproject.org/\">www.xenproject.org</a>", this);
 
     m_xenLayout = new QVBoxLayout();
-    m_xenLayout->addWidget(m_xenRadioButton);
+    m_xenLayout->addWidget(m_xenCheck);
     m_xenLayout->addWidget(m_xenDescriptionLabel);
     m_xenLayout->addWidget(m_xenURLLabel, 0, Qt::AlignCenter);
 
@@ -185,14 +186,14 @@ TCGTab::TCGTab(Machine *machine, QWidget *parent) : QWidget(parent)
 {
     this->m_newMachine = machine;
 
-    m_tcgRadioButton = new QRadioButton("Tiny Code Generator (TCG)", this);
+    m_tcgCheck = new QCheckBox("Tiny Code Generator (TCG)", this);
 
 #ifdef Q_OS_FREEBSD
     this->addTCGAccelerator(true);
-    m_tcgRadioButton->setChecked(true);
+    m_tcgCheck->setChecked(true);
 #endif
 
-    connect(m_tcgRadioButton, &QAbstractButton::toggled,
+    connect(m_tcgCheck, &QAbstractButton::toggled,
                 this, &TCGTab::addTCGAccelerator);
 
     m_tcgDescriptionLabel = new QLabel("The Tiny Code Generator (TCG) exists to transform"
@@ -205,7 +206,7 @@ TCGTab::TCGTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_tcgURLLabel = new QLabel("<a href=\"https://https://wiki.qemu.org/Documentation/TCG\">wiki.qemu.org</a>", this);
 
     m_tcgLayout = new QVBoxLayout();
-    m_tcgLayout->addWidget(m_tcgRadioButton);
+    m_tcgLayout->addWidget(m_tcgCheck);
     m_tcgLayout->addWidget(m_tcgDescriptionLabel);
     m_tcgLayout->addWidget(m_tcgURLLabel, 0, Qt::AlignCenter);
 
@@ -248,10 +249,10 @@ HAXMTab::HAXMTab(Machine *machine, QWidget *parent) : QWidget(parent)
     this->addHAXAccelerator(true);
     #endif
 
-    m_haxmRadioButton = new QRadioButton("Hardware Accelerated Execution Manager (HAXM)", this);
-    m_haxmRadioButton->setChecked(true);
+    m_haxmCheck = new QCheckBox("Hardware Accelerated Execution Manager (HAXM)", this);
+    m_haxmCheck->setChecked(true);
 
-    connect(m_haxmRadioButton, &QAbstractButton::toggled,
+    connect(m_haxmCheck, &QAbstractButton::toggled,
                 this, &HAXMTab::addHAXAccelerator);
 
     m_haxmDescriptionLabel = new QLabel("Intel® Hardware Accelerated Execution Manager"
@@ -263,7 +264,7 @@ HAXMTab::HAXMTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_haxmURLLabel = new QLabel("<a href=\"https://software.intel.com/en-us/articles/intel-hardware-accelerated-execution-manager-intel-haxm\">software.intel.com</a>", this);
 
     m_haxmLayout = new QVBoxLayout();
-    m_haxmLayout->addWidget(m_haxmRadioButton);
+    m_haxmLayout->addWidget(m_haxmCheck);
     m_haxmLayout->addWidget(m_haxmDescriptionLabel);
     m_haxmLayout->addWidget(m_haxmURLLabel, 0, Qt::AlignCenter);
 
@@ -306,10 +307,10 @@ HVFTab::HVFTab(Machine *machine, QWidget *parent) : QWidget(parent)
     this->addHVFAccelerator(true);
     #endif
 
-    m_hvfRadioButton = new QRadioButton("Hypervisor Framework (HVF)", this);
-    m_hvfRadioButton->setChecked(true);
+    m_hvfCheck = new QCheckBox("Hypervisor Framework (HVF)", this);
+    m_hvfCheck->setChecked(true);
 
-    connect(m_hvfRadioButton, &QAbstractButton::toggled,
+    connect(m_hvfCheck, &QAbstractButton::toggled,
                 this, &HVFTab::addHVFAccelerator);
 
     m_hvfDescriptionLabel = new QLabel("Apple® Hypervisor Framework"
@@ -320,7 +321,7 @@ HVFTab::HVFTab(Machine *machine, QWidget *parent) : QWidget(parent)
     m_hvfURLLabel = new QLabel("<a href=\"https://developer.apple.com/documentation/hypervisor#overview\">developer.apple.com</a>", this);
 
     m_hvfLayout = new QVBoxLayout();
-    m_hvfLayout->addWidget(m_hvfRadioButton);
+    m_hvfLayout->addWidget(m_hvfCheck);
     m_hvfLayout->addWidget(m_hvfDescriptionLabel);
     m_hvfLayout->addWidget(m_hvfURLLabel, 0, Qt::AlignCenter);
 
@@ -346,5 +347,59 @@ void HVFTab::addHVFAccelerator(bool hvfAccelerator)
         this->m_newMachine->addAccelerator("hvf");
     } else {
         this->m_newMachine->removeAccelerator("hvf");
+    }
+}
+
+/**
+ * @brief WHPXTab tab
+ * @param machine, new machine object
+ * @param parent, widget parent
+ *
+ * WHPXTab tab. In this tab you can add or remove the WHPX accelerator
+ */
+WHPXTab::WHPXTab(Machine *machine, QWidget *parent) : QWidget(parent)
+{
+    this->m_newMachine = machine;
+
+    m_whpxCheck = new QCheckBox("Windows Hypervisor Platform (WHPX)", this);
+
+    connect(m_whpxCheck, &QAbstractButton::toggled,
+                this, &WHPXTab::addWHPXAccelerator);
+
+    m_whpxDescriptionLabel = new QLabel("Windows Hypervisor Platform"
+                                        " The Windows Hypervisor Platform adds an extended user-mode API for third-party virtualization stacks"
+                                        " and applications to create and manage partitions at the hypervisor level, configure memory mappings"
+                                        "for the partition, and create and control execution of virtual processors.", this);
+    m_whpxDescriptionLabel->setWordWrap(true);
+
+    m_whpxURLLabel = new QLabel("<a href=\"https://docs.microsoft.com/en-us/virtualization/api/\">docs.microsoft.com</a>", this);
+
+    m_whpxLayout = new QVBoxLayout();
+    m_whpxLayout->addWidget(m_whpxCheck);
+    m_whpxLayout->addWidget(m_whpxDescriptionLabel);
+    m_whpxLayout->addWidget(m_whpxURLLabel, 0, Qt::AlignCenter);
+
+    this->setLayout(m_whpxLayout);
+
+    qDebug() << "WHPXTab created";
+}
+
+WHPXTab::~WHPXTab()
+{
+    qDebug() << "WHPXTab destroyed";
+}
+
+/**
+ * @brief Add or remove the WHPX accelerator
+ * @param WHPXAccelerator, true add the accelerator
+ *
+ * Add or remove the WHPX accelerator
+ */
+void WHPXTab::addWHPXAccelerator(bool hvfAccelerator)
+{
+    if (hvfAccelerator) {
+        this->m_newMachine->addAccelerator("whpx");
+    } else {
+        this->m_newMachine->removeAccelerator("whpx");
     }
 }

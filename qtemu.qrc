@@ -93,5 +93,6 @@
         <file>images/icons/breeze/32x32/quickwizard.svg</file>
         <file>images/icons/breeze/32x32/document-export.svg</file>
         <file>images/icons/breeze/32x32/document-import.svg</file>
+		<file>images/icons/breeze/32x32/boot-order.svg</file>
     </qresource>
 </RCC>

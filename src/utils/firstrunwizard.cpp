@@ -151,7 +151,7 @@ QEMUBinariesPage::QEMUBinariesPage(QWidget *parent) : QWizardPage(parent)
 
     m_vmsPathLabel = new QLabel(tr("QEMU machines path") + ":", this);
     m_qemuMachinesPathLineEdit = new QLineEdit(this);
-    m_qemuMachinesPathLineEdit->setPlaceholderText(QDir::homePath() + QDir::toNativeSeparators("/") + "VMs");
+    m_qemuMachinesPathLineEdit->setPlaceholderText(QDir::toNativeSeparators(QDir::homePath() + "/" + "VMs"));
     m_qemuMachinesPathPushButton = new QPushButton(this);
     m_qemuMachinesPathPushButton->setIcon(QIcon::fromTheme("folder-symbolic",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/folder-symbolic.svg"))));

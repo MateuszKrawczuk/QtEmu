@@ -26,7 +26,7 @@
 #include <QWizard>
 #include <QVBoxLayout>
 #include <QTabWidget>
-#include <QRadioButton>
+#include <QCheckBox>
 #include <QLabel>
 
 // Local
@@ -71,7 +71,7 @@ class KVMTab: public QWidget {
     private:
         QVBoxLayout *m_kvmLayout;
 
-        QRadioButton *m_kvmRadioButton;
+        QCheckBox *m_kvmCheck;
 
         QLabel *m_kvmDescriptionLabel;
         QLabel *m_kvmURLLabel;
@@ -96,7 +96,7 @@ class XENTab: public QWidget {
     private:
         QVBoxLayout *m_xenLayout;
 
-        QRadioButton *m_xenRadioButton;
+        QCheckBox *m_xenCheck;
 
         QLabel *m_xenDescriptionLabel;
         QLabel *m_xenURLLabel;
@@ -121,7 +121,7 @@ class TCGTab: public QWidget {
     private:
         QVBoxLayout *m_tcgLayout;
 
-        QRadioButton *m_tcgRadioButton;
+        QCheckBox *m_tcgCheck;
 
         QLabel *m_tcgDescriptionLabel;
         QLabel *m_tcgURLLabel;
@@ -146,7 +146,7 @@ class HAXMTab: public QWidget {
     private:
         QVBoxLayout *m_haxmLayout;
 
-        QRadioButton *m_haxmRadioButton;
+        QCheckBox *m_haxmCheck;
 
         QLabel *m_haxmDescriptionLabel;
         QLabel *m_haxmURLLabel;
@@ -159,7 +159,7 @@ class HVFTab: public QWidget {
 
     public:
         explicit HVFTab(Machine *machine,
-                         QWidget *parent = nullptr);
+                        QWidget *parent = nullptr);
         ~HVFTab();
     signals:
 
@@ -171,10 +171,36 @@ class HVFTab: public QWidget {
     private:
         QVBoxLayout *m_hvfLayout;
 
-        QRadioButton *m_hvfRadioButton;
+        QCheckBox *m_hvfCheck;
 
         QLabel *m_hvfDescriptionLabel;
         QLabel *m_hvfURLLabel;
+
+        Machine *m_newMachine;
+};
+
+class WHPXTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit WHPXTab(Machine *machine,
+                         QWidget *parent = nullptr);
+
+        ~WHPXTab();
+    signals:
+
+    public slots:
+        void addWHPXAccelerator(bool whpxAccelerator);
+
+    protected:
+
+    private:
+        QVBoxLayout *m_whpxLayout;
+
+        QCheckBox *m_whpxCheck;
+
+        QLabel *m_whpxDescriptionLabel;
+        QLabel *m_whpxURLLabel;
 
         Machine *m_newMachine;
 };

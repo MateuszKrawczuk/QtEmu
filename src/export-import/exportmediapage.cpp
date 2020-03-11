@@ -45,8 +45,8 @@ ExportMediaPage::ExportMediaPage(Machine *machine,
     for(int i = 0; i < machineMedia.size(); ++i) {
         m_mediaItem = new QTreeWidgetItem(this->m_machineMediaTree, QTreeWidgetItem::Type);
         m_mediaItem->setText(0, machineMedia[i]->name());
-        m_mediaItem->setText(1, machineMedia[i]->path());
-        m_mediaItem->setData(0, Qt::UserRole, machineMedia[i]->path());
+        m_mediaItem->setText(1, QDir::toNativeSeparators(machineMedia[i]->path()));
+        m_mediaItem->setData(0, Qt::UserRole, QDir::toNativeSeparators(machineMedia[i]->path()));
 
         machineMedia[i]->setPath(QDir::toNativeSeparators(destination));
 
