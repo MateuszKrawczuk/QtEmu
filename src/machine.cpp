@@ -1015,7 +1015,8 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
-    QString pipe = QDir::toNativeSeparators(this->path.append("/").append(this->name).append(".pid"));
+    QString machinePath = this->path;
+    QString pipe = QDir::toNativeSeparators(machinePath.append("/").append(this->name).append(".pid"));
 
     qemuCommand << "-pidfile";
     qemuCommand << pipe;
