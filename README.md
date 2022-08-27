@@ -31,8 +31,8 @@ Prebuild binaries and installers
 
 - Windows
 
-* [QtEmu installer for Windows x86_64](https://www.carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
-* [QtEmu portable for Windows x86_64](https://www.carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
+* [QtEmu installer for Windows x86_64](https://web.archive.org/web/20210417194244/https://carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
+* [QtEmu portable for Windows x86_64](https://web.archive.org/web/20210417194244/https://carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
 
 ## Development
 
