@@ -84,8 +84,8 @@ bool MachinePage::validatePage()
 
 void MachinePage::textFilterChanged()
 {
-    QRegExp regExp(this->filterLineEdit->text());
-    customFilter->setFilterRegExp(regExp);
+    QRegularExpression regExp(this->filterLineEdit->text());
+    customFilter->setFilterRegularExpression(regExp);
 }
 
 /**

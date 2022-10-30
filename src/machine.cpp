@@ -833,7 +833,7 @@ void Machine::readMachineStandardOut()
 #endif
     QString standardOut = rawStandardOut;
     QStringList splitStandardOut = standardOut.split("[K");
-    QString cleanStandardOut = splitStandardOut.last().remove(QRegExp("\\[[KD]."));
+    QString cleanStandardOut = splitStandardOut.last().remove(QRegularExpression("\\[[KD]."));
     // Remove space characters, included \r \t \n
     cleanStandardOut = cleanStandardOut.simplified();
 
