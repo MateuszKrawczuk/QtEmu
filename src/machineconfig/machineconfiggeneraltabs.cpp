@@ -59,7 +59,7 @@ BasicTab::BasicTab(Machine *machine,
     m_OSVersion->setCurrentText(machine->getOSVersion());
 
     m_machineUuidLabel = new QLabel(this);
-    m_machineUuidLabel->setText(machine->getUuid());
+    m_machineUuidLabel->setText(machine->getUuid().toString());
     m_machineStatusLabel = new QLabel(this);
     m_machineStatusLabel->setText(BasicTab::getStatusLabel(machine->getState()));
 

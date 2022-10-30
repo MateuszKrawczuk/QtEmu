@@ -243,7 +243,7 @@ void MachineConfigMedia::addFloppyMedia()
     media->setPath(QDir::toNativeSeparators(floppyInfo.absoluteFilePath()));
     media->setType("fdd");
     media->setDriveInterface(this->m_floppyMap->first());
-    media->setUuid(QUuid::createUuid().toString());
+    media->setUuid(QUuid::createUuid());
 
     this->addMediaToTree(media);
     this->fillDetailsSection();
@@ -305,7 +305,7 @@ void MachineConfigMedia::addHddMedia()
        existingMedia->setPath(QDir::toNativeSeparators(hddInfo.absoluteFilePath()));
        existingMedia->setType("hdd");
        existingMedia->setDriveInterface(this->m_diskMap->first());
-       existingMedia->setUuid(QUuid::createUuid().toString());
+       existingMedia->setUuid(QUuid::createUuid());
 
        this->addMediaToTree(existingMedia);
 
@@ -357,7 +357,7 @@ void MachineConfigMedia::addOpticalMedia()
     media->setPath(QDir::toNativeSeparators(cdromInfo.absoluteFilePath()));
     media->setType("cdrom");
     media->setDriveInterface(this->m_cdromMap->first());
-    media->setUuid(QUuid::createUuid().toString());
+    media->setUuid(QUuid::createUuid());
 
     this->removeInterface("hdc");
     this->addMediaToTree(media);

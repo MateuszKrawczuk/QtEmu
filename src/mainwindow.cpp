@@ -519,7 +519,7 @@ void MainWindow::createNewMachine()
     newMachineWizard.show();
     newMachineWizard.exec();
 
-    if (!m_machine->getUuid().isEmpty()) {
+    if (!m_machine->getUuid().isNull()) {
         m_machinesList.append(m_machine);
         this->loadUI(this->m_osListWidget->count());
     }
@@ -539,7 +539,7 @@ void MainWindow::deleteMachine()
         bool machineRemovedList = false;
         QMutableListIterator<Machine*> machines(this->m_machinesList);
         while (machines.hasNext() && !machineRemovedList) {
-            if (machines.next()->getUuid() == machineUuid.toString()) {
+            if (machines.next()->getUuid() == machineUuid) {
                 machines.remove();
                 machineRemovedList = true;
             }
@@ -559,7 +559,7 @@ void MainWindow::machineOptions()
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     Machine *machineOptions = nullptr;
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()){
+        if (machine->getUuid() == machineUuid){
             machineOptions = machine;
             break;
         }
@@ -586,7 +586,7 @@ void MainWindow::exportMachine()
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     QString machineConfigPath;
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()){
+        if (machine->getUuid() == machineUuid){
             machineConfigPath = machine->getConfigPath();
             break;
         }
@@ -639,7 +639,7 @@ void MainWindow::runMachine()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()){
+        if (machine->getUuid() == machineUuid){
             machine->runMachine(this->qemuGlobalObject);
             break;
         }
@@ -655,7 +655,7 @@ void MainWindow::resetMachine()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()){
+        if (machine->getUuid() == machineUuid){
             machine->resetMachine();
             break;
         }
@@ -674,7 +674,7 @@ void MainWindow::pauseMachine()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()){
+        if (machine->getUuid() == machineUuid){
             machine->pauseMachine();
             break;
         }
@@ -707,7 +707,7 @@ void MainWindow::loadUI(const int machineCount)
     } else {
         QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
         foreach (Machine *machine, this->m_machinesList) {
-            if (machine->getUuid() == machineUuid.toString()){
+            if (machine->getUuid() == machineUuid){
                 this->m_settingsMachineAction->setEnabled(true);
                 this->m_exportMachineAction->setEnabled(true);
                 this->m_removeMachineAction->setEnabled(true);
@@ -730,7 +730,7 @@ void MainWindow::changeMachine(QListWidgetItem *machineItem)
 {
     QUuid machineUuid = machineItem->data(QMetaType::QUuid).toUuid();
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()) {
+        if (machine->getUuid() == machineUuid) {
             controlMachineActions(machine->getState());
             fillMachineDetailsSection(machine);
         }
@@ -844,7 +844,7 @@ void MainWindow::controlMachineActions(Machine::States state)
 void MainWindow::updateMachineDetailsConfig(const QUuid machineUuid)
 {
     foreach (Machine *machine, this->m_machinesList) {
-        if (machine->getUuid() == machineUuid.toString()){
+        if (machine->getUuid() == machineUuid){
             this->fillMachineDetailsSection(machine);
             break;
         }

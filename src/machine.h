@@ -29,7 +29,6 @@
 #include <QUuid>
 #include <QMessageBox>
 #include <QSettings>
-#include <QTextCodec>
 #include <QDebug>
 
 // Local
@@ -68,8 +67,8 @@ class Machine: public QObject {
         QString getConfigPath() const;
         void setConfigPath(const QString &value);
 
-        QString getUuid() const;
-        void setUuid(const QString &value);
+        QUuid getUuid() const;
+        void setUuid(const QUuid &value);
 
         QString getDescription() const;
         void setDescription(const QString &value);
@@ -164,7 +163,7 @@ class Machine: public QObject {
         QString type;
         QString path;
         QString configPath;
-        QString uuid;
+        QUuid uuid;
         QString description;
         States state;
 

@@ -244,7 +244,7 @@ bool NewDiskPage::validatePage()
         this->m_newMedia->setName(newDiskInfo.fileName());
         this->m_newMedia->setPath(QDir::toNativeSeparators(newDiskInfo.absoluteFilePath()));
         this->m_newMedia->setType("hdd");
-        this->m_newMedia->setUuid(QUuid::createUuid().toString());
+        this->m_newMedia->setUuid(QUuid::createUuid());
     }
 
     return isDiskCreated;
