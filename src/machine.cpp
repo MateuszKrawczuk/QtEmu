@@ -946,16 +946,9 @@ QStringList Machine::generateMachineCommand()
     bool firstAudio = true;
     QStringListIterator audioIterator(this->audio);
     while (audioIterator.hasNext()) {
-        if(firstAudio) {
-            firstAudio = false;
-        } else {
-            audioCards.append(", ");
-        }
-        audioCards.append(audioIterator.next());
+        qemuCommand << "-device";
+        qemuCommand << audioIterator.next();
     }
-
-    qemuCommand << "-soundhw";
-    qemuCommand << audioCards;
 
     QString bootOrder;
     QStringListIterator bootIterator(this->boot->bootOrder());

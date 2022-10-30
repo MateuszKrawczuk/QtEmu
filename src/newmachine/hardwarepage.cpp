@@ -483,9 +483,11 @@ void AudioTab::selectCS4231ACard(bool selectCS4231A)
 void AudioTab::selectIntelHDCard(bool selectIntelHD)
 {
     if (selectIntelHD) {
-        this->m_newMachine->addAudio("hda");
+        this->m_newMachine->addAudio("intel-hda");
+        this->m_newMachine->addAudio("hda-duplex");
     } else {
-        this->m_newMachine->removeAudio("hda");
+        this->m_newMachine->addAudio("intel-hda");
+        this->m_newMachine->removeAudio("hda-duplex");
     }
 }
 

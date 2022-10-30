@@ -222,7 +222,8 @@ QHash<QString, QString> SystemUtils::getSoundCards()
     soundCardsHash.insert("sb16", "Creative Sound Blaster 16");
     soundCardsHash.insert("ac97", "Intel AC97(82801AA)");
     soundCardsHash.insert("gus", "Gravis Ultrasound GF1");
-    soundCardsHash.insert("hda", "Intel HD Audio");
+    soundCardsHash.insert("intel-hda", "Intel HD Audio");
+    soundCardsHash.insert("hda-duplex", "HDA Codec");
     soundCardsHash.insert("es1370", "ENSONIQ AudioPCI ES1370");
     soundCardsHash.insert("adlib", "Yamaha YM3812");
     soundCardsHash.insert("cs4231a", "CS4231A");
