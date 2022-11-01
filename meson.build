@@ -1,9 +1,9 @@
 # meson.build is a fast and furious build system
 
-project('QtEmu', 'cpp', default_options : ['cpp_std=c++14', 'warning_level=3'], version: '2.0')
+project('QtEmu', 'cpp', default_options : ['cpp_std=c++14', 'warning_level=3'], version: '2.1.1')
 
-qt5 = import('qt5')
-qt5dep = dependency('qt5', modules : ['Core', 'Gui', 'Widgets', 'Network'])
+qt5 = import('qt6')
+qt5dep = dependency('qt6', modules : ['Core', 'Gui', 'Widgets', 'Network', 'Svg'])
 
 incdir = include_directories('src')
 
@@ -102,7 +102,7 @@ QtEmu_resources = [
                     'qtemu.qrc'
                 ]
 
-prep = qt5.preprocess(
+prep = qt6.preprocess(
                     moc_headers : QtEmu_headers,
                     qresources : QtEmu_resources,
                     include_directories : incdir)
