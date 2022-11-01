@@ -826,11 +826,7 @@ void Machine::pauseMachine()
 void Machine::readMachineStandardOut()
 {
     QByteArray rawStandardOut;
-#ifdef Q_OS_WIN
-    rawStandardOut = this->m_machineTcpSocket->readAll();
-#else
     rawStandardOut = this->m_machineProcess->readAllStandardOutput();
-#endif
     QString standardOut = rawStandardOut;
     QStringList splitStandardOut = standardOut.split("[K");
     QString cleanStandardOut = splitStandardOut.last().remove(QRegularExpression("\\[[KD]."));
@@ -857,11 +853,7 @@ void Machine::readMachineErrorOut()
 {
     QByteArray rawErrorOutput;
 
-#ifdef Q_OS_WIN
-    rawErrorOutput = this->m_machineTcpSocket->readAll();
-#else
     rawErrorOutput = this->m_machineProcess->readAllStandardError();
-#endif
     QString errorOutput = rawErrorOutput;
     if (errorOutput.isEmpty()) {
         return;
