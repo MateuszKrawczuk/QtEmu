@@ -1,16 +1,10 @@
-## Version 2.2
+## Version 2.1.1
 
 Features:
-* Add support to MacOS
-
-Bugs:
-
-## Version 2.1
-
-Features:
-* The machine type can be selected in the machine wizard and configured later in the machine config window
-* Improve FreeBSD support
-* Update the meson.build
+* Ported to Qt6
+* Added Cmake support
+* Fixed Intel-Hda support on newer version of Qemu
+* Simplified CPU configuration
 
 Bugs:
 * Minor bug fixes
@@ -34,7 +28,7 @@ Features:
 * Option for custom network settings. Patch by Dawit Alemayehu <adawit at kde dot org>. Thanks!
 * Possibility to set additional options which are not covered by QtEmu (e.g. "--kernel-kqemu"). Patch by Dawit Alemayehu <adawit at kde dot org>. Thanks!
 * Sound configuration.
-* Poslish translation by Milosz Galazka <milosz at sleeplessbeastie dot eu> and Grzegorz Gibas <amigib at wp dot pl>. Thanks!
+* Polish translation by Milosz Galazka <milosz at sleeplessbeastie dot eu> and Grzegorz Gibas <amigib at wp dot pl>. Thanks!
 * Brazilian Portuguese translation by Jackson Miliszewski <jackwski at brturbo dot com dot br>. Thanks!
 Fixes:
 * Code optimization (Mosty detected by KDE Krazy check).

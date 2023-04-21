@@ -1,15 +1,15 @@
 # QtEmu &ndash; Qt-based front-end for QEMU emulator
 
-Stable version: 2.1 <br />
-Development version: 2.2 <br />
+Stable version: 2.1.1 <br />
+Development version: 2.1.2 <br />
 
-Website: https://qtemu.org/ <br />
-Source: https://gitlab.com/qtemu/gui
+Website: https://github.com/MateuszKrawczuk/QtEmu/ <br />
+Source: https://github.com/MateuszKrawczuk/QtEmu/
 
 ## License
 
 This program is licensed under the GNU General Public License version 2.
-See the [LICENSE](https://gitlab.com/Qtemu/gui/blob/master/LICENSE.md) file for more information
+See the [LICENSE](https://github.com/MateuszKrawczuk/QtEmu/blob/master/LICENSE.md) file for more information
 
 ## Description
 
@@ -19,11 +19,11 @@ This way you can easily test a new operating system or try a Live CD on your sys
 
 ## Versions history
 
-See [CHANGELOG](https://gitlab.com/Qtemu/gui/blob/master/CHANGELOG.md) file.
+See [CHANGELOG](https://github.com/MateuszKrawczuk/QtEmu/blob/master/CHANGELOG.md) file.
 
 ## Installation
 
-See [INSTALL](https://gitlab.com//Qtemu/gui/blob/master/INSTALL.md) file.
+See [INSTALL](https://github.com/MateuszKrawczuk/QtEmu/blob/master/INSTALL.md) file.
 
 ## Downloads
 
@@ -31,16 +31,17 @@ Prebuild binaries and installers
 
 - Windows
 
-* [QtEmu installer for Windows x86_64](https://web.archive.org/web/20210417194244/https://carlavilla.es/qtemu/qtemu_setup_x86_64.exe)
-* [QtEmu portable for Windows x86_64](https://web.archive.org/web/20210417194244/https://carlavilla.es/qtemu/qtemu_portable_x86_64.zip)
+* [QtEmu installer for Windows x86_64](https://github.com/MateuszKrawczuk/QtEmu/releases/download/2.1.1/qtemu.exe)
 
 ## Development
 
 Urs Wolfer started QtEmu as school project. Ben Klopfenstein began adding some features that he wanted.
 And in 2009 the project stoped its development.
 
-In 2017 Sergio Carlavilla started from scrach the development of the 2.0 version. The new UI has based on
+In 2017 Sergio Carlavilla started from scratch the development of the 2.0 version. The new UI has based on
 VirtualBox OSE and Virt-manager.
+
+In 2022 Mateusz Krawczuk started bugfixing 2.0 version. Application was ported to Qt 6.
 
 ## Languages
 
@@ -53,17 +54,18 @@ If you want to translate to another language be free to do it :D
 
 ## Developers
 
-* 2017-now, [Sergio Carlavilla](https://www.carlavilla.es) <sergio.carlavilla91@gmail.com>
+* 2022-now, Mateusz Krawczuk <mat krawczuk gmail com>
+* 2017-2022, Sergio Carlavilla (https://www.carlavilla.es) <sergio.carlavilla91 gmail com>
 * 2006-2009, Ben Klopfenstein <benklop gmail com>
 * 2006-2009, Urs Wolfer <uwolfer fwo ch> 
 
 ## Contributing
 
-If you want to contribute to the project, please see [CONTRIBUTING](https://gitlab.com/Qtemu/gui/blob/master/CONTRIBUTING.md) file.
+If you want to contribute to the project, please see [CONTRIBUTING](https://github.com/MateuszKrawczuk/QtEmu/blob/master/CONTRIBUTING.md) file.
 
 ## Extra links
 
 * [QEMU Web Page](https://www.qemu.org/)
 * [QEMU Wiki](https://wiki.qemu.org/Main_Page)
-* [Qt Docs](http://doc.qt.io/qt-5/index.html)
-* [Qt Linguist](https://doc.qt.io/qt-5/qtlinguist-index.html)
+* [Qt Docs](http://doc.qt.io/qt-6/index.html)
+* [Qt Linguist](https://doc.qt.io/qt-6/qtlinguist-index.html)
