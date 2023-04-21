@@ -72,18 +72,12 @@ class ProcessorTab: public QWidget {
     public slots:
         void selectProcessor(int index);
         void selectCPUCount(int CPUCount);
-        void selectSocketCount(int socketCount);
-        void selectCoresSocket(int coresSocket);
-        void selectThreadsCore(int threadsCore);
-        void selectMaxHotCPU(int maxCPU);
 
     protected:
 
     private:
         QHBoxLayout *m_CPUTypeLayout;
         QHBoxLayout *m_CPUCountLayout;
-        QHBoxLayout *m_socketLayout;
-        QHBoxLayout *m_maxHotCPUsLayout;
         QVBoxLayout *m_CPUSettingsLayout;
         QVBoxLayout *m_processorLayout;
 
@@ -93,16 +87,8 @@ class ProcessorTab: public QWidget {
 
         QLabel *m_CPUTypeLabel;
         QLabel *m_CPUCountLabel;
-        QLabel *m_coresSocketLabel;
-        QLabel *m_socketCountLabel;
-        QLabel *m_threadsCoreLabel;
-        QLabel *m_maxHotCPULabel;
 
         QSpinBox *m_CPUCountSpinBox;
-        QSpinBox *m_coresSocketSpinBox;
-        QSpinBox *m_socketCountSpinBox;
-        QSpinBox *m_threadsCoreSpinBox;
-        QSpinBox *m_maxHotCPUSpinBox;
 
         Machine *m_newMachine;
 };

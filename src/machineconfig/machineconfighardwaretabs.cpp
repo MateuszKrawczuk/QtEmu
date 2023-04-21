@@ -50,7 +50,7 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_CPUTypeLayout->addWidget(m_CPUTypeLabel);
     m_CPUTypeLayout->addWidget(m_CPUType);
 
-    m_CPUCountLabel = new QLabel(tr("CPU Count") + ":", this);
+    m_CPUCountLabel = new QLabel(tr("SMP Core count") + ":", this);
     m_CPUCountLabel->setWordWrap(true);
 
     m_CPUCountSpinBox = new QSpinBox(this);
@@ -59,69 +59,15 @@ ProcessorConfigTab::ProcessorConfigTab(Machine *machine,
     m_CPUCountSpinBox->setValue(machine->getCPUCount());
     m_CPUCountSpinBox->setEnabled(enableFields);
 
-    m_coresSocketLabel = new QLabel(tr("Cores per socket") + ":", this);
-    m_coresSocketLabel->setWordWrap(true);
-
-    m_coresSocketSpinBox = new QSpinBox(this);
-    m_coresSocketSpinBox->setMinimum(0);
-    m_coresSocketSpinBox->setMaximum(255);
-    m_coresSocketSpinBox->setValue(machine->getCoresSocket());
-    m_coresSocketSpinBox->setEnabled(enableFields);
-
     m_CPUCountLayout = new QHBoxLayout();
     m_CPUCountLayout->setAlignment(Qt::AlignVCenter);
     m_CPUCountLayout->setSpacing(5);
     m_CPUCountLayout->addWidget(m_CPUCountLabel);
     m_CPUCountLayout->addWidget(m_CPUCountSpinBox);
-    m_CPUCountLayout->addWidget(m_coresSocketLabel);
-    m_CPUCountLayout->addWidget(m_coresSocketSpinBox);
-
-    m_socketCountLabel = new QLabel(tr("Socket count") + ":", this);
-    m_socketCountLabel->setWordWrap(true);
-
-    m_socketCountSpinBox = new QSpinBox(this);
-    m_socketCountSpinBox->setMinimum(0);
-    m_socketCountSpinBox->setMaximum(255);
-    m_socketCountSpinBox->setValue(machine->getSocketCount());
-    m_socketCountSpinBox->setEnabled(enableFields);
-
-    m_threadsCoreLabel = new QLabel(tr("Threads per core") + ":", this);
-    m_threadsCoreLabel->setWordWrap(true);
-
-    m_threadsCoreSpinBox = new QSpinBox(this);
-    m_threadsCoreSpinBox->setMinimum(0);
-    m_threadsCoreSpinBox->setMaximum(255);
-    m_threadsCoreSpinBox->setValue(machine->getThreadsCore());
-    m_threadsCoreSpinBox->setEnabled(enableFields);
-
-    m_socketLayout = new QHBoxLayout();
-    m_socketLayout->setAlignment(Qt::AlignVCenter);
-    m_socketLayout->setSpacing(5);
-    m_socketLayout->addWidget(m_socketCountLabel);
-    m_socketLayout->addWidget(m_socketCountSpinBox);
-    m_socketLayout->addWidget(m_threadsCoreLabel);
-    m_socketLayout->addWidget(m_threadsCoreSpinBox);
-
-    m_maxHotCPULabel = new QLabel(tr("Maximum number of hotpluggable CPUs") + ":", this);
-    m_maxHotCPULabel->setWordWrap(false);
-
-    m_maxHotCPUSpinBox = new QSpinBox(this);
-    m_maxHotCPUSpinBox->setMinimum(0);
-    m_maxHotCPUSpinBox->setMaximum(255);
-    m_maxHotCPUSpinBox->setValue(machine->getMaxHotCPU());
-    m_maxHotCPUSpinBox->setEnabled(enableFields);
-
-    m_maxHotCPUsLayout = new QHBoxLayout();
-    m_maxHotCPUsLayout->setAlignment(Qt::AlignVCenter);
-    m_maxHotCPUsLayout->setSpacing(5);
-    m_maxHotCPUsLayout->addWidget(m_maxHotCPULabel);
-    m_maxHotCPUsLayout->addWidget(m_maxHotCPUSpinBox);
 
     m_CPUSettingsLayout = new QVBoxLayout();
     m_CPUSettingsLayout->setAlignment(Qt::AlignVCenter);
     m_CPUSettingsLayout->addItem(m_CPUCountLayout);
-    m_CPUSettingsLayout->addItem(m_socketLayout);
-    m_CPUSettingsLayout->addItem(m_maxHotCPUsLayout);
 
     m_CPUSettings = new QGroupBox(tr("CPU Settings"), this);
     m_CPUSettings->setLayout(m_CPUSettingsLayout);
@@ -163,49 +109,6 @@ int ProcessorConfigTab::getCPUCount()
     return this->m_CPUCountSpinBox->value();
 }
 
-/**
- * @brief Get the cores per socket
- * @return cores per socket
- *
- * Get the cores per socket
- */
-int ProcessorConfigTab::getCoresSocket()
-{
-    return this->m_coresSocketSpinBox->value();
-}
-
-/**
- * @brief Get the socket count
- * @return socket count
- *
- * Get the socket count
- */
-int ProcessorConfigTab::getSocketCount()
-{
-    return this->m_socketCountSpinBox->value();
-}
-
-/**
- * @brief Get number of threads per core
- * @return threads per core
- *
- * Get number of threads per core
- */
-int ProcessorConfigTab::getThreadsCore()
-{
-    return this->m_threadsCoreSpinBox->value();
-}
-
-/**
- * @brief Get the maximum number of hotpluggable CPUs
- * @return maximum number of hotpluggable CPUs
- *
- * Get the maximum number of hotpluggable CPUs
- */
-int ProcessorConfigTab::getMaxHotCPU()
-{
-    return this->m_maxHotCPUSpinBox->value();
-}
 
 /**
  * @brief Tab with the GPU and keyboard

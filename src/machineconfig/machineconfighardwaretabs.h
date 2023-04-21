@@ -46,10 +46,6 @@ class ProcessorConfigTab: public QWidget {
         // Methods
         QString getCPUType();
         int getCPUCount();
-        int getCoresSocket();
-        int getSocketCount();
-        int getThreadsCore();
-        int getMaxHotCPU();
 
     signals:
 
@@ -60,8 +56,6 @@ class ProcessorConfigTab: public QWidget {
     private:
         QHBoxLayout *m_CPUTypeLayout;
         QHBoxLayout *m_CPUCountLayout;
-        QHBoxLayout *m_socketLayout;
-        QHBoxLayout *m_maxHotCPUsLayout;
         QVBoxLayout *m_CPUSettingsLayout;
         QVBoxLayout *m_processorLayout;
 
@@ -71,16 +65,8 @@ class ProcessorConfigTab: public QWidget {
 
         QLabel *m_CPUTypeLabel;
         QLabel *m_CPUCountLabel;
-        QLabel *m_coresSocketLabel;
-        QLabel *m_socketCountLabel;
-        QLabel *m_threadsCoreLabel;
-        QLabel *m_maxHotCPULabel;
 
         QSpinBox *m_CPUCountSpinBox;
-        QSpinBox *m_coresSocketSpinBox;
-        QSpinBox *m_socketCountSpinBox;
-        QSpinBox *m_threadsCoreSpinBox;
-        QSpinBox *m_maxHotCPUSpinBox;
 
 };
 

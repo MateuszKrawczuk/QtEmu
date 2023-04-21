@@ -984,26 +984,6 @@ QStringList Machine::generateMachineCommand()
 
     QString cpuArgs(QString::number(this->CPUCount));
 
-    if(this->coresSocket > 0) {
-        cpuArgs.append(",cores=");
-        cpuArgs.append(QString::number(this->coresSocket));
-    }
-
-    if(this->threadsCore > 0) {
-        cpuArgs.append(",threads=");
-        cpuArgs.append(QString::number(this->threadsCore));
-    }
-
-    if(this->socketCount > 0) {
-        cpuArgs.append(",sockets=");
-        cpuArgs.append(QString::number(this->socketCount));
-    }
-
-    if(this->maxHotCPU > 0) {
-        cpuArgs.append(",maxcpus=");
-        cpuArgs.append(QString::number(this->maxHotCPU));
-    }
-
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
 
