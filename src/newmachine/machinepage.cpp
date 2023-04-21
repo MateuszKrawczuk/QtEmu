@@ -84,8 +84,8 @@ bool MachinePage::validatePage()
 
 void MachinePage::textFilterChanged()
 {
-    QRegExp regExp(this->filterLineEdit->text());
-    customFilter->setFilterRegExp(regExp);
+    QRegularExpression regExp(this->filterLineEdit->text());
+    customFilter->setFilterRegularExpression(regExp);
 }
 
 /**
@@ -100,49 +100,15 @@ void MachinePage::setMachines()
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("Machine"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Description"));
 
+
+    //Better reduce number of version machine
+    //Later it should parse result from qemu-system-x86_64.exe
+
     this->addMachine(model, "none", "empty machine");
     this->addMachine(model, "isapc", "ISA-only PC");
-    this->addMachine(model, "pc", "Standard PC (i440FX + PIIX, 1996) (alias of pc-i440fx-3.0)");
-    this->addMachine(model, "pc-i440fx-3.0", "Standard PC (i440FX + PIIX, 1996) (default)");
-    this->addMachine(model, "pc-i440fx-2.12", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.11", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.10", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.9", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.8", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.7", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.6", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.5", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.4", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.3", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.2", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.1", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.0", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.7", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.6", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.5", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.4", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.3", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.2", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.1", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.1", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.0", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.15", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.14", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.13", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.12", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.11", "Standard PC (i440FX + PIIX, 1996) (deprecated)");
-    this->addMachine(model, "pc-0.10", "Standard PC (i440FX + PIIX, 1996) (deprecated)");
-    this->addMachine(model, "q35", "Standard PC (Q35 + ICH9, 2009) (alias of pc-q35-3.0)");
-    this->addMachine(model, "pc-q35-3.0", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.12", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.11", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.10", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.9", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.8", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.7", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.6", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.5", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.4", "Standard PC (Q35 + ICH9, 2009)");
+    this->addMachine(model, "pc", "Standard PC (i440FX + PIIX, 1996) (alias of pc-i440fx-7.1)");
+    this->addMachine(model, "q35", "Standard PC (Q35 + ICH9, 2009) (alias of pc-q35-7.1)");
+    this->addMachine(model, "microvm", "microvm (i386)");
 
     customFilter->setSourceModel(model);
 }

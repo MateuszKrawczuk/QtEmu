@@ -117,7 +117,7 @@ void MachineUtils::fillMachineObject(Machine *machine,
     machine->setUseNetwork(machineJSON["network"].toBool());
     machine->setConfigPath(machineConfigPath);
     machine->setPath(machineJSON["path"].toString());
-    machine->setUuid(machineJSON["uuid"].toString());
+    machine->setUuid(QUuid(machineJSON["uuid"].toString()));
     machine->setGPUType(gpuObject["GPUType"].toString());
     machine->setKeyboard(gpuObject["keyboard"].toString());
     machine->setCPUType(cpuObject["CPUType"].toString());
@@ -171,7 +171,7 @@ bool MachineUtils::deleteMachine(const QUuid machineUuid)
     QString machinePath;
     while(machinePos < machines.size() && ! machineExists) {
         QJsonObject machineJSON = machines[machinePos].toObject();
-        if (machineUuid == machineJSON["uuid"].toVariant()) {
+        if (machineUuid.toString() == machineJSON["uuid"].toVariant()) {
             machineExists = true;
             machinePath = machineJSON["path"].toString();
         } else {

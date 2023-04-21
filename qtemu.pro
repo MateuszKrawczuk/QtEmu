@@ -150,3 +150,8 @@ OTHER_FILES += \
 RESOURCES += qtemu.qrc
 
 RC_ICONS += qtemu.ico
+
+win32 {
+DESTDIR = $$PWD/bin
+QMAKE_POST_LINK =  windeployqt $$shell_path($$DESTDIR/$${TARGET}.exe)
+}

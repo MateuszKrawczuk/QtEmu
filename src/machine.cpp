@@ -190,7 +190,7 @@ void Machine::setConfigPath(const QString &value)
  * with QUuid
  * Ex: {fc6a2dd5-3c31-401f-a9c7-86ad6190a77f}
  */
-QString Machine::getUuid() const
+QUuid Machine::getUuid() const
 {
     return uuid;
 }
@@ -202,7 +202,7 @@ QString Machine::getUuid() const
  * with QUuid
  * Ex: {fc6a2dd5-3c31-401f-a9c7-86ad6190a77f}
  */
-void Machine::setUuid(const QString &value)
+void Machine::setUuid(const QUuid &value)
 {
     uuid = value;
 }
@@ -826,14 +826,10 @@ void Machine::pauseMachine()
 void Machine::readMachineStandardOut()
 {
     QByteArray rawStandardOut;
-#ifdef Q_OS_WIN
-    rawStandardOut = this->m_machineTcpSocket->readAll();
-#else
     rawStandardOut = this->m_machineProcess->readAllStandardOutput();
-#endif
     QString standardOut = rawStandardOut;
     QStringList splitStandardOut = standardOut.split("[K");
-    QString cleanStandardOut = splitStandardOut.last().remove(QRegExp("\\[[KD]."));
+    QString cleanStandardOut = splitStandardOut.last().remove(QRegularExpression("\\[[KD]."));
     // Remove space characters, included \r \t \n
     cleanStandardOut = cleanStandardOut.simplified();
 
@@ -857,11 +853,7 @@ void Machine::readMachineErrorOut()
 {
     QByteArray rawErrorOutput;
 
-#ifdef Q_OS_WIN
-    rawErrorOutput = this->m_machineTcpSocket->readAll();
-#else
     rawErrorOutput = this->m_machineProcess->readAllStandardError();
-#endif
     QString errorOutput = rawErrorOutput;
     if (errorOutput.isEmpty()) {
         return;
@@ -923,9 +915,9 @@ QStringList Machine::generateMachineCommand()
         qemuCommand << this->type;
     }
 
-    QString uuid(this->uuid);
+    QUuid uuid(this->uuid);
     qemuCommand << "-uuid";
-    qemuCommand << uuid.remove("{").remove("}");
+    qemuCommand << uuid.toString(QUuid::WithoutBraces);
 
     QString accelerators;
     bool firstAccel = true;
@@ -946,16 +938,9 @@ QStringList Machine::generateMachineCommand()
     bool firstAudio = true;
     QStringListIterator audioIterator(this->audio);
     while (audioIterator.hasNext()) {
-        if(firstAudio) {
-            firstAudio = false;
-        } else {
-            audioCards.append(", ");
-        }
-        audioCards.append(audioIterator.next());
+        qemuCommand << "-device";
+        qemuCommand << audioIterator.next();
     }
-
-    qemuCommand << "-soundhw";
-    qemuCommand << audioCards;
 
     QString bootOrder;
     QStringListIterator bootIterator(this->boot->bootOrder());
@@ -998,19 +983,6 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << this->CPUType;
 
     QString cpuArgs(QString::number(this->CPUCount));
-
-    cpuArgs.append(",cores=");
-    cpuArgs.append(QString::number(this->coresSocket));
-
-    cpuArgs.append(",threads=");
-    cpuArgs.append(QString::number(this->threadsCore));
-
-
-    cpuArgs.append(",sockets=");
-    cpuArgs.append(QString::number(this->socketCount));
-
-    cpuArgs.append(",maxcpus=");
-    cpuArgs.append(QString::number(this->maxHotCPU));
 
     qemuCommand << "-smp";
     qemuCommand << cpuArgs;
@@ -1092,7 +1064,7 @@ bool Machine::saveMachine()
     machineJSONObject["RAM"]         = this->RAM;
     machineJSONObject["network"]     = this->useNetwork;
     machineJSONObject["path"]        = QDir::toNativeSeparators(this->path);
-    machineJSONObject["uuid"]        = this->uuid;
+    machineJSONObject["uuid"]        = this->uuid.toString(QUuid::WithoutBraces);
     machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;
     machineJSONObject["binary"] = "qemu-system-x86_64";
 
@@ -1188,7 +1160,7 @@ void Machine::insertMachineConfigFile()
 
     // Create the new machine
     QJsonObject machine;
-    machine["uuid"]       = this->uuid;
+    machine["uuid"]       = this->uuid.toString();
     machine["path"]       = QDir::toNativeSeparators(this->path);
     machine["configpath"] = QDir::toNativeSeparators(this->configPath);
     machine["icon"]       = this->OSVersion.toLower().replace(" ", "_");

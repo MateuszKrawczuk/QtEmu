@@ -177,7 +177,7 @@ bool MachineConclusionPage::validatePage()
 
     // Set the uuid in this point to control the LoadUI in the mainwindow
     // don't move from here
-    this->m_newMachine->setUuid(QUuid::createUuid().toString());
+    this->m_newMachine->setUuid(QUuid::createUuid());
     this->generateMachineFiles();
     return true;
 }
@@ -231,7 +231,7 @@ void MachineConclusionPage::addMedia(const QString name,
     disk->setPath(path);
     disk->setType("hdd");
     disk->setDriveInterface("hda");
-    disk->setUuid(QUuid::createUuid().toString());
+    disk->setUuid(QUuid::createUuid());
 
     this->m_newMachine->addMedia(disk);
 }

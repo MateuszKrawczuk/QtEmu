@@ -79,10 +79,6 @@ void MachineConfigHardware::saveHardwareData()
     this->m_machine->setType(this->m_machineTypeTab->getMachineType());
     this->m_machine->setCPUType(this->m_processorConfigTab->getCPUType());
     this->m_machine->setCPUCount(this->m_processorConfigTab->getCPUCount());
-    this->m_machine->setCoresSocket(this->m_processorConfigTab->getCoresSocket());
-    this->m_machine->setSocketCount(this->m_processorConfigTab->getSocketCount());
-    this->m_machine->setThreadsCore(this->m_processorConfigTab->getThreadsCore());
-    this->m_machine->setMaxHotCPU(this->m_processorConfigTab->getMaxHotCPU());
     this->m_machine->setGPUType(this->m_graphicsConfigTab->getGPUType());
     this->m_machine->setKeyboard(this->m_graphicsConfigTab->getKeyboardLayout());
     this->m_machine->setRAM(this->m_ramConfigTab->getAmountRam());

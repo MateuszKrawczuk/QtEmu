@@ -103,7 +103,7 @@ bool ImportMediaPage::validatePage()
             QVariant mediaVariant = (*it)->data(1, Qt::UserRole);
             Media *media = mediaVariant.value<Media *>();
             media->setPath(newMediaPath);
-            media->setUuid(QUuid::createUuid().toString());
+            media->setUuid(QUuid::createUuid());
 
             this->m_machine->addMedia(media);
 
@@ -123,7 +123,7 @@ bool ImportMediaPage::validatePage()
 
     this->m_machine->setPath(machineDestinationPath);
     this->m_machine->setConfigPath(machineConfigFilePathNew);
-    this->m_machine->setUuid(QUuid::createUuid().toString());
+    this->m_machine->setUuid(QUuid::createUuid());
 
     machineImported = this->m_machine->saveMachine();
 

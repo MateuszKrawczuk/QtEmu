@@ -57,7 +57,7 @@ void Logger::logMachineCreation(const QString &fileLocation,
     }
 
     QTextStream fileStream(&machineLogsFile);
-    fileStream.setCodec("UTF-8");
+    fileStream.setEncoding(QStringConverter::Utf8);
 
     if (machineLogsFile.isWritable()) {
         fileStream << message;
@@ -95,7 +95,7 @@ void Logger::logQtemuAction(const QString &message)
     }
 
     QTextStream fileStream(&logsFile);
-    fileStream.setCodec("UTF-8");
+    fileStream.setEncoding(QStringConverter::Utf8);
 
     if (logsFile.isWritable()) {
         fileStream << logMessage;
@@ -134,7 +134,7 @@ void Logger::logQtemuError(const QString &message)
     }
 
     QTextStream fileStream(&logsFile);
-    fileStream.setCodec("UTF-8");
+    fileStream.setEncoding(QStringConverter::Utf8);
 
     if (logsFile.isWritable()) {
         fileStream << logMessage;

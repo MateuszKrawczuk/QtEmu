@@ -47,6 +47,6 @@ bool CustomFilter::filterAcceptsRow(int row, const QModelIndex &sourceParent) co
     QModelIndex code = sourceModel()->index(row, 0, sourceParent);
     QModelIndex description = sourceModel()->index(row, 1, sourceParent);
 
-    return (sourceModel()->data(code).toString().contains(filterRegExp()) ||
-            sourceModel()->data(description).toString().contains(filterRegExp()));
+    return (sourceModel()->data(code).toString().contains(filterRegularExpression()) ||
+            sourceModel()->data(description).toString().contains(filterRegularExpression()));
 }

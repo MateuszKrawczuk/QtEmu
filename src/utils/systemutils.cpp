@@ -107,7 +107,17 @@ void SystemUtils::setCPUTypesx86(QComboBox *CPUType)
     CPUType->addItem("Broadwell no TSX", QString("Broadwell-noTSX"));
     CPUType->addItem("Broadwell, IBRS",  QString("Broadwell-IBRS"));
     CPUType->addItem("Broadwell, no TSX, IBRS", QString("Broadwell-noTSX-IBRS"));
+
+
+    CPUType->addItem("Intel Xeon Processor (Cascadelake)", QString("Cascadelake-Server"));
+    CPUType->addItem("Intel Xeon Processor (Cascadelake) noTSX", QString("Cascadelake-Server-noTSX"));
+    CPUType->addItem("Intel Xeon Processor (Cooperlake)", QString("Cooperlake"));
+    CPUType->addItem("Intel Xeon Processor (Icelake)", QString("Icelake-Server"));
+    CPUType->addItem("Intel Xeon Processor (Icelake) noTSX", QString("Icelake-Server-noTSX"));
+
     CPUType->addItem("Conroe", QString("Conroe"));
+    CPUType->addItem("Denverton", QString("Denverton"));
+
     CPUType->addItem("Haswell", QString("Haswell"));
     CPUType->addItem("Haswell no TSX", QString("Haswell-noTSX"));
     CPUType->addItem("Haswell, IBRS", QString("Haswell-IBRS"));
@@ -134,8 +144,10 @@ void SystemUtils::setCPUTypesx86(QComboBox *CPUType)
     CPUType->addItem("AMD Phenom 9550",      QString("phenom"));
     CPUType->addItem("AMD Athlon",           QString("athlon"));
     CPUType->addItem("AMD EPYC",             QString("EPYC"));
+    CPUType->addItem("AMD EPYC-Milan",             QString("EPYC-Milan"));
+    CPUType->addItem("AMD EPYC-Rome",             QString("EPYC-Rome"));
     CPUType->addItem("AMD EPYC (with IBPB)", QString("EPYC-IBPB"));
-
+    CPUType->addItem("Hygon Dhyana", QString("Dhyana"));
     // QEMU
     CPUType->addItem("qemu32 Virtual CPU version 2.5+",   QString("qemu32"));
     CPUType->addItem("qemu64 Virtual CPU version 2.5+",   QString("qemu64"));
@@ -222,7 +234,8 @@ QHash<QString, QString> SystemUtils::getSoundCards()
     soundCardsHash.insert("sb16", "Creative Sound Blaster 16");
     soundCardsHash.insert("ac97", "Intel AC97(82801AA)");
     soundCardsHash.insert("gus", "Gravis Ultrasound GF1");
-    soundCardsHash.insert("hda", "Intel HD Audio");
+    soundCardsHash.insert("intel-hda", "Intel HD Audio");
+    soundCardsHash.insert("hda-duplex", "HDA Codec");
     soundCardsHash.insert("es1370", "ENSONIQ AudioPCI ES1370");
     soundCardsHash.insert("adlib", "Yamaha YM3812");
     soundCardsHash.insert("cs4231a", "CS4231A");
