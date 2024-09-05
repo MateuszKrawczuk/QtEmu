@@ -20,7 +20,7 @@
 
 // Local
 #include "machine.h"
-
+#include <QtCore/QSysInfo>
 /**
  * @brief Machine object
  * @param parent, parent widget
@@ -710,10 +710,20 @@ void Machine::runMachine(QEMU *QEMUGlobalObject)
     program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
     #endif
     #ifdef Q_OS_WIN
-    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64w.exe"));
+    if( QSysInfo::currentCpuArchitecture() == "arm64") {
+        program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-aarch64w.exe"));
+    }
+    else {
+        program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64w.exe"));
+    }
     #endif
     #ifdef Q_OS_MACOS
-    program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
+    if( QSysInfo::currentCpuArchitecture() == "arm64") {
+      program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-aarch64"));
+    }
+    else {
+        program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
+    }
     #endif
     #ifdef Q_OS_FREEBSD
     program.append(QEMUGlobalObject->getQEMUBinary("qemu-system-x86_64"));
