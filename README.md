@@ -55,7 +55,7 @@ If you want to translate to another language be free to do it :D
 ## Developers
 
 * 2022-now, Mateusz Krawczuk <mat krawczuk gmail com>
-* 2017-2022, Sergio Carlavilla (https://www.carlavilla.es) <sergio.carlavilla91 gmail com>
+* 2017-now, Sergio Carlavilla (https://www.carlavilla.es) <sergio.carlavilla91 gmail com>
 * 2006-2009, Ben Klopfenstein <benklop gmail com>
 * 2006-2009, Urs Wolfer <uwolfer fwo ch> 
 
