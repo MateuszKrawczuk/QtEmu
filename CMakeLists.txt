@@ -1,7 +1,7 @@
 # Generated from qtemu.pro.
 
 cmake_minimum_required(VERSION 3.20)
-project(QtEmu VERSION 1.0 LANGUAGES CXX)
+project(QtEmu VERSION 2.2.0 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)

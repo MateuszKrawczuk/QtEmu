@@ -1,6 +1,6 @@
 # meson.build is a fast and furious build system
 
-project('QtEmu', 'cpp', default_options : ['cpp_std=c++17', 'warning_level=3'], version: '2.1.1')
+project('QtEmu', 'cpp', default_options : ['cpp_std=c++17', 'warning_level=3'], version: '2.2.0')
 
 qt6 = import('qt6')
 qt6_dep = dependency('qt6', modules : ['Core', 'Gui', 'Widgets', 'Network', 'Svg'])
