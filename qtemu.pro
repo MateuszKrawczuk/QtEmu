@@ -51,7 +51,7 @@ TARGET = qtemu
 
 TEMPLATE = app
 
-CONFIG += c++14
+CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS
 

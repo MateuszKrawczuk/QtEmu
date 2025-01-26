@@ -1,6 +1,6 @@
 
  # QtEmu - A front-end written in Qt for the QEMU emulator
- ###### Copyright (C) 2022-2023 Mateusz Krawczuk <mat krawczuk gmail com>
+ ###### Copyright (C) 2022-2025 Mateusz Krawczuk <mat krawczuk gmail com>
  ###### Copyright (C) 2017-2022 Sergio Carlavilla <carlavilla  mailbox org>
  ###### Copyright (C) 2006-2009 Urs Wolfer <uwolfer at fwo ch> and Ben Klopfenstein <benklop gmail com>
 
@@ -25,7 +25,7 @@
 
 # General runtime dependencies
 
-* Qt 6.3 or later
+* Qt 6.5 or later
 * QEMU
 
 # Dependencies for building
