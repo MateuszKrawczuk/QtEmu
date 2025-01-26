@@ -151,20 +151,37 @@ bool MachineConclusionPage::validatePage()
                                       .append(".json"));
 
     if (createNewDisk) {
+        // Use machine name as base for disk name
+        QString diskBaseName = this->m_newMachine->getName().toLower().replace(" ", "_");
+        
+        // Remove any file extension from diskBaseName if present
+        if (diskBaseName.contains(".")) {
+            diskBaseName = diskBaseName.section(".", 0, 0);
+        }
+        
+        // Ensure machinesPath ends with exactly one separator
         QString diskPathName = machinesPath;
-        diskPathName.append(diskName.toLower().replace(" ", "_"))
-                    .append(QDir::toNativeSeparators("."))
-                    .append(diskFormat);
+        if (!diskPathName.endsWith(QDir::separator())) {
+            diskPathName += QDir::separator();
+        }
+        
+        QString finalDiskPath = diskPathName + diskBaseName + "." + diskFormat;
+        
+        // Check if file exists and append number if needed
+        int counter = 1;
+        while (QFile::exists(finalDiskPath)) {
+            finalDiskPath = diskPathName + diskBaseName + QString("_%1.").arg(counter) + diskFormat;
+            counter++;
+        }
 
         bool isDiskCreated = SystemUtils::createDisk(this->m_QEMUGlobalObject,
-                                                     diskPathName,
-                                                     diskFormat,
-                                                     diskSize,
-                                                     false);
+                                                    finalDiskPath,
+                                                    diskFormat,
+                                                    diskSize,
+                                                    false);
         if (isDiskCreated) {
-            this->addMedia(diskName.toLower().replace(" ", "_"), diskFormat, diskPathName);
+            this->addMedia(QFileInfo(finalDiskPath).baseName(), diskFormat, finalDiskPath);
         } else {
-            // If the creation of the disk fails
             return false;
         }
     } else if (useDisk) {
