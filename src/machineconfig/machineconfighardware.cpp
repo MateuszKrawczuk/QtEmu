@@ -30,7 +30,8 @@
  * In this window the user can configure the hardware data
  */
 MachineConfigHardware::MachineConfigHardware(Machine *machine,
-                                             QWidget *parent) : QWidget(parent)
+                                           QEMU *qemuObject,
+                                           QWidget *parent) : QWidget(parent)
 {
     bool enableFields = true;
 
@@ -39,15 +40,16 @@ MachineConfigHardware::MachineConfigHardware(Machine *machine,
     }
 
     this->m_machine = machine;
+    this->m_qemuObject = qemuObject;
 
     m_hardwareTabWidget = new QTabWidget(this);
     m_hardwareTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
-                                       QSizePolicy::MinimumExpanding);
+                                     QSizePolicy::MinimumExpanding);
 
     m_processorConfigTab = new ProcessorConfigTab(machine, enableFields, this);
     m_graphicsConfigTab = new GraphicsConfigTab(machine, enableFields, this);
     m_ramConfigTab = new RamConfigTab(machine, enableFields, this);
-    m_machineTypeTab = new MachineTypeTab(machine, enableFields, this);
+    m_machineTypeTab = new MachineTypeTab(machine, enableFields, m_qemuObject, this);
 
     m_hardwareTabWidget->addTab(this->m_processorConfigTab, tr("CPU"));
     m_hardwareTabWidget->addTab(this->m_graphicsConfigTab, tr("Graphics"));

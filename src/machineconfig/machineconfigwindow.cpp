@@ -52,7 +52,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     this->setMinimumSize(700, 500);
 
     m_configGeneral  = new MachineConfigGeneral(machine, this);
-    m_configHardware = new MachineConfigHardware(machine, this);
+    m_configHardware = new MachineConfigHardware(machine, QEMUGlobalObject, this);
     m_configBoot     = new MachineConfigBoot(machine, this);
     m_configMedia    = new MachineConfigMedia(machine, QEMUGlobalObject, this);
     m_configNetwork  = new MachineConfigNetwork(machine, this);
