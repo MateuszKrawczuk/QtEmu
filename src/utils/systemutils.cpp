@@ -382,7 +382,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
         QByteArray err = qemuImgProcess->readAllStandardError();
         QByteArray out = qemuImgProcess->readAllStandardOutput();
 
-        if (err.count() > 0) {
+        if (err.length() > 0) {
             QMessageBox *qemuImgErrorMessageBox = new QMessageBox();
             qemuImgErrorMessageBox->setWindowTitle(QObject::tr("Qtemu - Critical error"));
             qemuImgErrorMessageBox->setIcon(QMessageBox::Critical);
@@ -395,7 +395,7 @@ bool SystemUtils::createDisk(QEMU *qemuGlobalObject,
             return false;
         }
 
-        if (out.count() > 0) {
+        if (out.length() > 0) {
             QMessageBox *qemuImgOkMessageBox = new QMessageBox();
             qemuImgOkMessageBox->setWindowTitle(QObject::tr("Qtemu - Image created"));
             qemuImgOkMessageBox->setIcon(QMessageBox::Information);
