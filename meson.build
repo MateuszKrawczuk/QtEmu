@@ -1,9 +1,9 @@
 # meson.build is a fast and furious build system
 
-project('QtEmu', 'cpp', default_options : ['cpp_std=c++14', 'warning_level=3'], version: '2.1.1')
+project('QtEmu', 'cpp', default_options : ['cpp_std=c++17', 'warning_level=3'], version: '2.1.1')
 
-qt5 = import('qt6')
-qt5dep = dependency('qt6', modules : ['Core', 'Gui', 'Widgets', 'Network', 'Svg'])
+qt6 = import('qt6')
+qt6_dep = dependency('qt6', modules : ['Core', 'Gui', 'Widgets', 'Network', 'Svg'])
 
 incdir = include_directories('src')
 
@@ -102,10 +102,37 @@ QtEmu_resources = [
                     'qtemu.qrc'
                 ]
 
-prep = qt6.preprocess(
-                    moc_headers : QtEmu_headers,
-                    qresources : QtEmu_resources,
-                    include_directories : incdir)
+preprocessed = qt6.preprocess(
+    moc_headers: QtEmu_headers,
+    qresources: QtEmu_resources,
+    include_directories: incdir
+)
 
-install_data('qtemu.png', install_dir : 'share/pixmaps')
-install_data('qtemu.desktop', install_dir : 'share/applications')
+# Dodanie ikony dla Windows
+if host_machine.system() == 'windows'
+    windows = import('windows')
+    win_resources = windows.compile_resources('qtemu.rc')
+else
+    win_resources = []
+endif
+
+if host_machine.system() == 'windows' and meson.get_compiler('cpp').get_id() == 'msvc'
+    add_project_link_arguments('/ENTRY:mainCRTStartup', language: 'cpp')
+endif
+
+# Utworzenie aplikacji
+executable('qtemu',
+           QtEmu_sources,
+           preprocessed,
+           win_resources,
+           dependencies: qt6_dep,
+           include_directories: incdir,
+           install: true,
+           win_subsystem: 'windows'  # Odpowiednik WIN32 z CMake
+)
+
+# Instalacja plików desktopowych dla Linuxa
+if host_machine.system() == 'linux'
+    install_data('qtemu.desktop', install_dir: get_option('datadir') / 'applications')
+    install_data('qtemu.png', install_dir: get_option('datadir') / 'pixmaps')
+endif
