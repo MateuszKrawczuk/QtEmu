@@ -42,21 +42,26 @@ MachineMemoryPage::MachineMemoryPage(Machine *machine,
 
     int totalRAM = 0;
     SystemUtils::getTotalMemory(totalRAM);
+    int defaultRAM = totalRAM / 4;
     m_spinBoxMemoryLabel = new QLabel("MiB", this);
 
     m_memorySpinBox = new QSpinBox(this);
     m_memorySpinBox->setMinimum(1);
     m_memorySpinBox->setMaximum(totalRAM);
 
+    m_memorySpinBox->setValue(defaultRAM);
     this->registerField("machine.ram", m_memorySpinBox, "value", "valueChanged");
 
     m_memorySlider = new QSlider(Qt::Horizontal, this);
     m_memorySlider->setTickPosition(QSlider::TicksBelow);
-    m_memorySlider->setTickInterval(500);
+    m_memorySlider->setTickInterval(totalRAM / 8); // Set tick interval to 1/8 of total RAM
+    m_memorySlider->setSingleStep(128); // Set slider step to 128 MiB
     m_memorySlider->setMinimum(1);
     m_memorySlider->setMaximum(totalRAM);
 
-    connect(m_memorySpinBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    m_memorySlider->setValue(defaultRAM);
+
+    connect(m_memorySpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
             m_memorySlider, &QSlider::setValue);
 
     connect(m_memorySlider, &QSlider::valueChanged,
