@@ -22,6 +22,8 @@
 // Local
 #include "machineconfigaccel.h"
 
+#include <QRadioButton>
+
 /**
  * @brief Accelerator configuration window
  * @param machine, machine to be configured
@@ -41,59 +43,71 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
 
     this->m_machine = machine;
 
-    m_moveUpAccelToolButton = new QToolButton(this);
-    m_moveUpAccelToolButton->setArrowType(Qt::UpArrow);
-    m_moveUpAccelToolButton->setEnabled(enableFields);
-    connect(m_moveUpAccelToolButton, &QAbstractButton::clicked,
-            this, &MachineConfigAccel::moveUpButton);
+    m_acceleratorGroup = new QButtonGroup(this);
+    
+    m_tcgRadio = new QRadioButton(tr("TCG (default)"), this);
+    m_acceleratorGroup->addButton(m_tcgRadio);
 
-    m_moveDownAccelToolButton = new QToolButton(this);
-    m_moveDownAccelToolButton->setArrowType(Qt::DownArrow);
-    m_moveDownAccelToolButton->setEnabled(enableFields);
-    connect(m_moveDownAccelToolButton, &QAbstractButton::clicked,
-            this, &MachineConfigAccel::moveDownButton);
+    #ifdef Q_OS_LINUX
+    m_kvmRadio = new QRadioButton(tr("KVM"), this);
+    m_xenRadio = new QRadioButton(tr("XEN"), this);
+    m_acceleratorGroup->addButton(m_kvmRadio);
+    m_acceleratorGroup->addButton(m_xenRadio);
+    #endif
 
-    QStringList accelList = machine->getAccelerator();
+    #ifdef Q_OS_WIN
+    m_whpxRadio = new QRadioButton(tr("WHPX"), this);
+    m_haxmRadio = new QRadioButton(tr("HAXM (deprecated)"), this);
+    m_acceleratorGroup->addButton(m_whpxRadio);
+    m_acceleratorGroup->addButton(m_haxmRadio);
+    m_haxmRadio->setEnabled(false);
+    m_haxmRadio->setToolTip(tr("HAXM is deprecated and not recommended for use"));
+    #endif
 
-    QHash<QString, QString> accelHash = SystemUtils::getAccelerators();
-    QHashIterator<QString, QString> i(accelHash);
-    while (i.hasNext()) {
-        i.next();
-        if ( ! accelList.contains(i.key())) {
-            accelList.append(i.key());
-        }
-    }
+    #ifdef Q_OS_MACOS
+    m_hvfRadio = new QRadioButton(tr("HVF"), this);
+    m_acceleratorGroup->addButton(m_hvfRadio);
+    #endif
 
-    m_acceleratorTree = new QTreeWidget(this);
-    m_acceleratorTree->setMaximumHeight(150);
-    m_acceleratorTree->setMaximumWidth(200);
-    m_acceleratorTree->setColumnCount(1);
-    m_acceleratorTree->setHeaderHidden(true);
-    m_acceleratorTree->setRootIsDecorated(false);
-    m_acceleratorTree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    m_acceleratorTree->setEnabled(enableFields);
+    QString currentAccel = machine->getAccelerator().isEmpty() ? 
+                          "tcg" : machine->getAccelerator().first();
+    
+    // Default to TCG
+    m_tcgRadio->setChecked(true);
+    
+    // Then check platform-specific options
+    #ifdef Q_OS_LINUX
+    if (currentAccel == "kvm" && m_kvmRadio != nullptr)
+        m_kvmRadio->setChecked(true);
+    else if (currentAccel == "xen" && m_xenRadio != nullptr)
+        m_xenRadio->setChecked(true);
+    #endif
+    #ifdef Q_OS_WIN
+    if (currentAccel == "whpx" && m_whpxRadio != nullptr)
+        m_whpxRadio->setChecked(true);
+    #endif
+    #ifdef Q_OS_MACOS
+    if (currentAccel == "hvf" && m_hvfRadio != nullptr)
+        m_hvfRadio->setChecked(true);
+    #endif
 
-    for(int i = 0; i < accelList.size(); ++i) {
-        m_treeItem = new QTreeWidgetItem(this->m_acceleratorTree, QTreeWidgetItem::Type);
-        m_treeItem->setText(0, accelHash.value(accelList.at(i)));
-        m_treeItem->setData(0, Qt::UserRole, accelList.at(i));
-        if (machine->getAccelerator().contains(accelList.at(i))) {
-            m_treeItem->setCheckState(0, Qt::Checked);
-        } else {
-            m_treeItem->setCheckState(0, Qt::Unchecked);
-        }
-    }
-
-    m_accelTreeLayout = new QHBoxLayout();
-    m_accelTreeLayout->setAlignment(Qt::AlignTop);
-    m_accelTreeLayout->setSpacing(5);
-    m_accelTreeLayout->addWidget(m_acceleratorTree);
-    m_accelTreeLayout->addWidget(m_moveUpAccelToolButton);
-    m_accelTreeLayout->addWidget(m_moveDownAccelToolButton);
+    QVBoxLayout *radioLayout = new QVBoxLayout();
+    radioLayout->addWidget(m_tcgRadio);
+    #ifdef Q_OS_LINUX
+    radioLayout->addWidget(m_kvmRadio);
+    radioLayout->addWidget(m_xenRadio);
+    #endif
+    #ifdef Q_OS_WIN
+    radioLayout->addWidget(m_whpxRadio);
+    radioLayout->addWidget(m_haxmRadio);
+    #endif
+    #ifdef Q_OS_MACOS
+    radioLayout->addWidget(m_hvfRadio);
+    #endif
 
     m_acceleratorLayout = new QVBoxLayout();
     m_acceleratorLayout->setAlignment(Qt::AlignTop);
-    m_acceleratorLayout->addItem(m_accelTreeLayout);
+    m_acceleratorLayout->addLayout(radioLayout);
 
     m_acceleratorPageWidget = new QWidget();
     m_acceleratorPageWidget->setLayout(m_acceleratorLayout);
@@ -147,13 +161,39 @@ void MachineConfigAccel::moveDownButton()
  */
 void MachineConfigAccel::saveAccelData()
 {
-    this->m_machine->removeAllAccelerators();
+    m_machine->removeAllAccelerators();
 
-    QTreeWidgetItemIterator it(this->m_acceleratorTree);
-    while (*it) {
-        if ((*it)->checkState(0) == Qt::Checked) {
-            this->m_machine->addAccelerator((*it)->data(0, Qt::UserRole).toString());
-        }
-        ++it;
+    // Default to TCG if no other accelerator is selected
+    if (!m_acceleratorGroup->checkedButton() || m_tcgRadio->isChecked()) {
+        m_machine->addAccelerator("tcg");
+        return;
     }
+
+    #ifdef Q_OS_LINUX
+    if (m_kvmRadio && m_kvmRadio->isChecked()) {
+        m_machine->addAccelerator("kvm");
+        return;
+    }
+    if (m_xenRadio && m_xenRadio->isChecked()) {
+        m_machine->addAccelerator("xen");
+        return;
+    }
+    #endif
+
+    #ifdef Q_OS_WIN
+    if (m_whpxRadio && m_whpxRadio->isChecked()) {
+        m_machine->addAccelerator("whpx");
+        return;
+    }
+    #endif
+
+    #ifdef Q_OS_MACOS
+    if (m_hvfRadio && m_hvfRadio->isChecked()) {
+        m_machine->addAccelerator("hvf");
+        return;
+    }
+    #endif
+
+    // Fallback to TCG if somehow no valid accelerator was selected
+    m_machine->addAccelerator("tcg");
 }

@@ -27,6 +27,8 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 #include <QTreeWidget>
+#include <QButtonGroup>
+#include <QRadioButton>
 
 // Local
 #include "../machine.h"
@@ -39,10 +41,12 @@ class MachineConfigAccel : public QWidget {
         explicit MachineConfigAccel(Machine *machine,
                                     QWidget *parent = nullptr);
         ~MachineConfigAccel();
-        QWidget *m_acceleratorPageWidget;
 
         // Methods
         void saveAccelData();
+
+    // Make this public so it can be accessed from outside
+    QWidget *m_acceleratorPageWidget;
 
     signals:
 
@@ -56,13 +60,27 @@ class MachineConfigAccel : public QWidget {
         QHBoxLayout *m_accelTreeLayout;
         QVBoxLayout *m_acceleratorLayout;
 
+        QButtonGroup *m_acceleratorGroup;
+        QRadioButton *m_tcgRadio;
+        
+        #ifdef Q_OS_LINUX
+        QRadioButton *m_kvmRadio;
+        QRadioButton *m_xenRadio;
+        #endif
+
+        #ifdef Q_OS_WIN
+        QRadioButton *m_whpxRadio;
+        QRadioButton *m_haxmRadio;
+        #endif
+
+        #ifdef Q_OS_MACOS
+        QRadioButton *m_hvfRadio;
+        #endif
+
         QToolButton *m_moveUpAccelToolButton;
         QToolButton *m_moveDownAccelToolButton;
-
         QTreeWidget *m_acceleratorTree;
-
         QTreeWidgetItem *m_treeItem;
-
         Machine *m_machine;
 
         // Methods
