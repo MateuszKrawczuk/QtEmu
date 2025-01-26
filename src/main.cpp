@@ -101,12 +101,12 @@ int main(int argc, char *argv[])
 
     std::cout << "\n"
               << "Using Qt translation "
-              << QLibraryInfo::location(QLibraryInfo::TranslationsPath).toStdString()
+              << QLibraryInfo::path(QLibraryInfo::TranslationsPath).toStdString()
               << "/"
               << languageFile.toStdString()
               << "\n";
 
-    languageLoaded = translatorQt.load(languageFile, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    languageLoaded = translatorQt.load(languageFile, QLibraryInfo::path(QLibraryInfo::TranslationsPath));
 
     if (languageLoaded) {
         std::cout << "Language loaded";
