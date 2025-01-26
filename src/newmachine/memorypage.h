@@ -30,6 +30,8 @@
 #include <QGridLayout>
 
 // Local
+#include <QGroupBox>
+
 #include "../machine.h"
 #include "../utils/systemutils.h"
 

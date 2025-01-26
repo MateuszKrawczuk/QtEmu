@@ -41,6 +41,7 @@ MachineHardwarePage::MachineHardwarePage(Machine *machine,
     m_hardwareTabWidget->addTab(new GraphicsTab(machine, this), tr("Graphics"));
     m_hardwareTabWidget->addTab(new AudioTab(machine, this), tr("Audio"));
     m_hardwareTabWidget->addTab(new NetworkTab(machine, this), tr("Network"));
+    m_hardwareTabWidget->addTab(new OthersTab(machine, this), tr("Others"));
 
     m_hardwareLayout = new QVBoxLayout();
     m_hardwareLayout->setAlignment(Qt::AlignCenter);
@@ -205,23 +206,10 @@ GraphicsTab::GraphicsTab(Machine *machine,
     connect(m_GPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GraphicsTab::selectGraphics);
 
-    m_keyboardLabel = new QLabel(tr("Keyboard layout") + ":", this);
-    m_keyboardLabel->setWordWrap(true);
-    m_keyboard = new QComboBox(this);
-    SystemUtils::setKeyboardLayout(m_keyboard);
-    m_keyboard->setCurrentIndex(5);
-    this->selectKeyboard(5);
-
-    connect(m_keyboard, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &GraphicsTab::selectKeyboard);
-
     m_graphicsLayout = new QGridLayout();
     m_graphicsLayout->setColumnStretch(1, 10);
-    m_graphicsLayout->setColumnStretch(2, 10);
     m_graphicsLayout->addWidget(m_GPUTypeLabel, 1, 0, 1, 1);
     m_graphicsLayout->addWidget(m_GPUType, 1, 1, 1, 3);
-    m_graphicsLayout->addWidget(m_keyboardLabel, 2, 0, 1, 1);
-    m_graphicsLayout->addWidget(m_keyboard, 2, 1, 1, 3);
 
     this->setLayout(m_graphicsLayout);
 
@@ -249,11 +237,6 @@ void GraphicsTab::selectGraphics(int index) {
  *
  * Select the keyboard layout
  */
-void GraphicsTab::selectKeyboard(int index) {
-    QString keyboard = this->m_keyboard->itemData(index).toString();
-    this->m_newMachine->setKeyboard(keyboard);
-}
-
 /**
  * @brief AudioTab tab
  * @param machine, new machine object
@@ -474,4 +457,44 @@ NetworkTab::~NetworkTab() {
  */
 void NetworkTab::networkState(bool network) {
     this->m_newMachine->setUseNetwork(network);
+}
+
+/**
+ * @brief OthersTab tab
+ * @param machine, new machine object
+ * @param parent, widget parent
+ *
+ * OthersTab tab. In this tab you can configure additional settings like keyboard layout
+ */
+OthersTab::OthersTab(Machine *machine,
+                     QWidget *parent) : QWidget(parent) {
+    this->m_newMachine = machine;
+
+    m_keyboardLabel = new QLabel(tr("Keyboard layout") + ":", this);
+    m_keyboardLabel->setWordWrap(true);
+    m_keyboard = new QComboBox(this);
+    SystemUtils::setKeyboardLayout(m_keyboard);
+    m_keyboard->setCurrentIndex(5);
+    this->selectKeyboard(5);
+
+    connect(m_keyboard, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &OthersTab::selectKeyboard);
+
+    m_othersLayout = new QGridLayout();
+    m_othersLayout->setColumnStretch(1, 10);
+    m_othersLayout->addWidget(m_keyboardLabel, 0, 0, 1, 1);
+    m_othersLayout->addWidget(m_keyboard, 0, 1, 1, 3);
+
+    this->setLayout(m_othersLayout);
+
+    qDebug() << "OthersTab created";
+}
+
+OthersTab::~OthersTab() {
+    qDebug() << "OthersTab destroyed";
+}
+
+void OthersTab::selectKeyboard(int index) {
+    QString keyboard = this->m_keyboard->itemData(index).toString();
+    this->m_newMachine->setKeyboard(keyboard);
 }
