@@ -3,8 +3,8 @@ IDI_ICON1               ICON    "qtemu.ico"
 #include <windows.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION     2,1,1,0
-PRODUCTVERSION  2,1,1,0
+FILEVERSION     2,2,0,0
+PRODUCTVERSION  2,2,0,0
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
@@ -12,12 +12,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      ""
             VALUE "FileDescription",  "QtEmu - QEMU virtual machines manager"
-            VALUE "FileVersion",      "2.1.1.0"
+            VALUE "FileVersion",      "2.2.0.0"
             VALUE "InternalName",     "qtemu"
             VALUE "LegalCopyright",   "Copyright (C) 2006-2024"
             VALUE "OriginalFilename", "qtemu.exe"
             VALUE "ProductName",      "QtEmu"
-            VALUE "ProductVersion",   "2.1.1.0"
+            VALUE "ProductVersion",   "2.2.0.0"
         END
     END
 
