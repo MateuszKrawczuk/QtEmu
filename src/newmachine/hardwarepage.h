@@ -107,19 +107,13 @@ class GraphicsTab: public QWidget {
 
     public slots:
         void selectGraphics(int index);
-        void selectKeyboard(int index);
 
     protected:
 
     private:
         QGridLayout *m_graphicsLayout;
-
         QComboBox *m_GPUType;
-        QComboBox *m_keyboard;
-
         QLabel *m_GPUTypeLabel;
-        QLabel *m_keyboardLabel;
-
         Machine *m_newMachine;
 };
 
@@ -179,6 +173,28 @@ class NetworkTab: public QWidget {
         QRadioButton *m_withNetworkRadio;
         QRadioButton *m_withoutNetworkRadio;
 
+        Machine *m_newMachine;
+};
+
+class OthersTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit OthersTab(Machine *machine,
+                          QWidget *parent = nullptr);
+        ~OthersTab();
+
+    signals:
+
+    public slots:
+        void selectKeyboard(int index);
+
+    protected:
+
+    private:
+        QGridLayout *m_othersLayout;
+        QComboBox *m_keyboard;
+        QLabel *m_keyboardLabel;
         Machine *m_newMachine;
 };
 
