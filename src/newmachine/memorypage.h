@@ -59,6 +59,7 @@ class MachineMemoryPage: public QWizardPage {
         QLabel *m_spinBoxMemoryLabel;
         QLabel *m_minMemoryLabel;
         QLabel *m_maxMemorylabel;
+        QGroupBox *m_memorySettings;
 
         Machine *m_newMachine;
 };

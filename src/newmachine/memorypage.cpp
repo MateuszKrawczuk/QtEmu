@@ -70,14 +70,26 @@ MachineMemoryPage::MachineMemoryPage(Machine *machine,
     m_minMemoryLabel = new QLabel("1 MiB", this);
     m_maxMemorylabel = new QLabel(QString("%1 MiB").arg(totalRAM), this);
 
+    // Create memory settings group
+    m_memorySettings = new QGroupBox(tr("RAM Settings"), this);
+    
+    // Create layout for the group box contents
+    QGridLayout *memorySettingsLayout = new QGridLayout();
+    memorySettingsLayout->setColumnStretch(1, 50);
+    memorySettingsLayout->addWidget(m_memorySlider,       0, 0, 1, 3);
+    memorySettingsLayout->addWidget(m_memorySpinBox,      0, 3, 1, 1);
+    memorySettingsLayout->addWidget(m_spinBoxMemoryLabel, 0, 4, 1, 1);
+    memorySettingsLayout->addWidget(m_minMemoryLabel,     1, 0, 1, 1);
+    memorySettingsLayout->addWidget(m_maxMemorylabel,     1, 2, 1, 1);
+    
+    // Set the layout for the group box
+    m_memorySettings->setLayout(memorySettingsLayout);
+    
+    // Update main layout
     m_machineMemoryLayout = new QGridLayout();
     m_machineMemoryLayout->setColumnStretch(1, 50);
     m_machineMemoryLayout->addWidget(m_descriptionMemoryLabel, 0, 0, 1, 5);
-    m_machineMemoryLayout->addWidget(m_memorySlider,           1, 0, 1, 3);
-    m_machineMemoryLayout->addWidget(m_memorySpinBox,          1, 3, 1, 1);
-    m_machineMemoryLayout->addWidget(m_spinBoxMemoryLabel,     1, 4, 1, 1);
-    m_machineMemoryLayout->addWidget(m_minMemoryLabel,         2, 0, 1, 1);
-    m_machineMemoryLayout->addWidget(m_maxMemorylabel,         2, 2, 1, 1);
+    m_machineMemoryLayout->addWidget(m_memorySettings,         1, 0, 1, 5);
 
     this->setLayout(m_machineMemoryLayout);
 
