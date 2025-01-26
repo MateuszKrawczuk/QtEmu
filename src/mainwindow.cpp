@@ -122,13 +122,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     connect(m_osListWidget, &QListWidget::customContextMenuRequested,
             this, &MainWindow::machinesMenu);
-}
 
+
+}
 MainWindow::~MainWindow()
 {
     qDebug() << "MainWindow destroyed";
 }
-
 /**
  * @brief Create the menus
  *
@@ -154,6 +154,14 @@ void MainWindow::createMenus()
     m_machineMenu->addAction(m_settingsMachineAction);
     m_machineMenu->addAction(m_exportMachineAction);
     m_machineMenu->addAction(m_removeMachineAction);
+    m_killMachineAction = new QAction(QIcon::fromTheme("process-stop",
+                                                   QIcon(QPixmap(":/images/icons/breeze/32x32/process-stop.svg"))),
+                                  tr("Kill machine"),
+                                  this);
+    m_killMachineAction->setToolTip(tr("Force stop selected virutal machine"));
+    connect(m_killMachineAction, &QAction::triggered,
+            this, &MainWindow::killMachine);
+    m_machineMenu->addAction(m_killMachineAction);
 
     // Help
     m_helpMenu = new QMenu(tr("&Help"), this);
@@ -169,6 +177,17 @@ void MainWindow::createMenus()
     this->menuBar()->addMenu(m_fileMenu);
     this->menuBar()->addMenu(m_machineMenu);
     this->menuBar()->addMenu(m_helpMenu);
+}
+
+void MainWindow::killMachine()
+{
+    QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
+    for (Machine *machine : this->m_machinesList) {
+        if (machine->getUuid() == machineUuid){
+            machine->killMachine();
+            break;
+        }
+    }
 }
 
 /**
@@ -319,6 +338,8 @@ void MainWindow::createToolBars()
     m_mainToolBar->addAction(this->m_stopMachineAction);
     m_mainToolBar->addAction(this->m_resetMachineAction);
     m_mainToolBar->addAction(this->m_pauseMachineAction);
+    m_mainToolBar->addAction(this->m_killMachineAction);
+
 }
 
 /**
@@ -558,7 +579,7 @@ void MainWindow::machineOptions()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     Machine *machineOptions = nullptr;
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid){
             machineOptions = machine;
             break;
@@ -585,7 +606,7 @@ void MainWindow::exportMachine()
     // TODO: Move that code to a function...
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
     QString machineConfigPath;
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid){
             machineConfigPath = machine->getConfigPath();
             break;
@@ -638,7 +659,7 @@ void MainWindow::importMachine()
 void MainWindow::runMachine()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid){
             machine->runMachine(this->qemuGlobalObject);
             break;
@@ -654,7 +675,7 @@ void MainWindow::runMachine()
 void MainWindow::resetMachine()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid){
             machine->resetMachine();
             break;
@@ -673,7 +694,7 @@ void MainWindow::resetMachine()
 void MainWindow::pauseMachine()
 {
     QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid){
             machine->pauseMachine();
             break;
@@ -706,7 +727,7 @@ void MainWindow::loadUI(const int machineCount)
         this->emptyMachineDetailsSection();
     } else {
         QUuid machineUuid = this->m_osListWidget->currentItem()->data(QMetaType::QUuid).toUuid();
-        foreach (Machine *machine, this->m_machinesList) {
+        for (Machine *machine : this->m_machinesList) {
             if (machine->getUuid() == machineUuid){
                 this->m_settingsMachineAction->setEnabled(true);
                 this->m_exportMachineAction->setEnabled(true);
@@ -729,7 +750,7 @@ void MainWindow::loadUI(const int machineCount)
 void MainWindow::changeMachine(QListWidgetItem *machineItem)
 {
     QUuid machineUuid = machineItem->data(QMetaType::QUuid).toUuid();
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid) {
             controlMachineActions(machine->getState());
             fillMachineDetailsSection(machine);
@@ -821,7 +842,8 @@ void MainWindow::controlMachineActions(Machine::States state)
         this->m_stopMachineAction->setEnabled(true);
         this->m_resetMachineAction->setEnabled(true);
         this->m_pauseMachineAction->setEnabled(true);
-    } else if(state == Machine::Stopped) {
+        this->m_killMachineAction->setEnabled(true);
+    } else if (state == Machine::Stopped) {
         this->m_startMachineAction->setEnabled(true);
         this->m_stopMachineAction->setEnabled(false);
         this->m_resetMachineAction->setEnabled(false);
@@ -843,7 +865,7 @@ void MainWindow::controlMachineActions(Machine::States state)
  */
 void MainWindow::updateMachineDetailsConfig(const QUuid machineUuid)
 {
-    foreach (Machine *machine, this->m_machinesList) {
+    for (Machine *machine : this->m_machinesList) {
         if (machine->getUuid() == machineUuid){
             this->fillMachineDetailsSection(machine);
             break;

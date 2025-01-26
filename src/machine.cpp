@@ -48,6 +48,20 @@ Machine::Machine(QObject *parent) : QObject(parent)
     qDebug() << "Machine object created";
 }
 
+/**
+ * @brief Kill the QEMU process
+ *
+ * Forcefully terminate the QEMU process
+ */
+void Machine::killMachine()
+{
+    if (m_machineProcess->state() == QProcess::Running) {
+        m_machineProcess->kill();
+        this->state = Machine::Stopped;
+        emit(machineStateChangedSignal(Machine::Stopped));
+    }
+}
+
 Machine::~Machine()
 {
     qDebug() << "Machine object destroyed";
