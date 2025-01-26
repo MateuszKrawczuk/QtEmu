@@ -1,3 +1,31 @@
+## Version 2.2.0
+
+Features:
+* Tested with QEMU up to version 9.2
+* Added support for ARM64 QEMU binaries on macOS and Windows
+* Added new "Others" tab for keyboard layout configuration
+* Improved CPU configuration with side-by-side slider and spinbox layout
+* Implemented dynamic QEMU machine type retrieval
+* Added killMachine functionality to terminate QEMU process from UI
+* Set default RAM to 1/4 of total available memory
+* Set default CPU type to "max" and disk size to 8GB
+
+Improvements:
+* Improved disk image creation with better naming handling
+* Fixed disk path handling during VM creation
+* Better handling of disk name conflicts
+* Simplified accelerator selection with radio buttons
+* Optimized machine type selection logic
+* Improved RAM slider configuration
+* Better CPU core count selection logic
+
+Bugs:
+* Fixed disk creation issues when VM name contains special characters
+* Fixed potential double extension issues in disk names
+* Fixed building on Windows with Qt6 and MSVC
+* Updated deprecated Qt API calls
+* Fixed QEMU binary detection on Windows systems
+
 ## Version 2.1.1
 
 Features:
