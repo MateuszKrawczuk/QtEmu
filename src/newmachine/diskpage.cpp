@@ -206,20 +206,21 @@ MachineNewDiskPage::MachineNewDiskPage(Machine *machine,
     m_diskSpinBox->setMinimum(1);
     m_diskSpinBox->setMaximum(1000000);
     m_diskSpinBox->stepBy(1);
-
+    m_diskSpinBox->setValue(8);
 
     m_diskSlider = new QSlider(Qt::Horizontal, this);
     m_diskSlider->setTickPosition(QSlider::TicksBelow);
     m_diskSlider->setTickInterval(10);
     m_diskSlider->setMinimum(1);
     m_diskSlider->setMaximum(100);
+    m_diskSlider->setValue(8);
 
     connect(m_diskSlider, &QSlider::valueChanged,
             m_diskSpinBox, &QDoubleSpinBox::setValue);
 
     this->registerField("machine.diskSize", m_diskSpinBox, "value", "valueChanged");
 
-    connect(m_diskSpinBox, static_cast<void(QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+    connect(m_diskSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
             m_diskSlider, &QSlider::setValue);
 
     m_minDiskLabel = new QLabel("1 GiB", this);

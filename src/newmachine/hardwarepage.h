@@ -77,7 +77,7 @@ class ProcessorTab: public QWidget {
 
     private:
         QHBoxLayout *m_CPUTypeLayout;
-        QHBoxLayout *m_CPUCountLayout;
+        QVBoxLayout *m_CPUCountLayout;
         QVBoxLayout *m_CPUSettingsLayout;
         QVBoxLayout *m_processorLayout;
 
@@ -87,8 +87,11 @@ class ProcessorTab: public QWidget {
 
         QLabel *m_CPUTypeLabel;
         QLabel *m_CPUCountLabel;
+        QLabel *m_minCPULabel;
+        QLabel *m_maxCPULabel;
 
         QSpinBox *m_CPUCountSpinBox;
+        QSlider *m_CPUCountSlider;
 
         Machine *m_newMachine;
 };

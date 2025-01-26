@@ -73,7 +73,8 @@ ProcessorTab::ProcessorTab(Machine *machine,
     SystemUtils::setCPUTypesx86(m_CPUType);
     auto core_count = std::thread::hardware_concurrency();
 
-    this->selectProcessor(0);
+    m_CPUType->setCurrentText("Max");
+    this->selectProcessor(m_CPUType->currentIndex());
 
     connect(m_CPUType, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &ProcessorTab::selectProcessor);
@@ -86,24 +87,61 @@ ProcessorTab::ProcessorTab(Machine *machine,
 
     m_CPUCountLabel = new QLabel(tr("SMP Core Count") + ":", this);
     m_CPUCountLabel->setWordWrap(true);
+
+    // Create and configure CPU count spinbox
     m_CPUCountSpinBox = new QSpinBox(this);
     m_CPUCountSpinBox->setMinimum(1);
     m_CPUCountSpinBox->setMaximum(core_count);
 
-    if (core_count == 1)
-        this->selectCPUCount(1);
-    else
-        this->selectCPUCount(core_count / 2);
+    // Create and configure CPU count slider
+    m_CPUCountSlider = new QSlider(Qt::Horizontal, this);
+    m_CPUCountSlider->setTickPosition(QSlider::TicksBelow);
+    m_CPUCountSlider->setTickInterval(1);
+    m_CPUCountSlider->setMinimum(1);
+    m_CPUCountSlider->setMaximum(core_count);
 
+    // Set initial values
+    if (core_count >= 3) {
+        m_CPUCountSpinBox->setValue(core_count / 2);
+        m_CPUCountSlider->setValue(core_count / 2);
+    } else {
+        m_CPUCountSpinBox->setValue(1);
+        m_CPUCountSlider->setValue(1);
+    }
 
-    connect(m_CPUCountSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    // Connect slider and spinbox for synchronization
+    connect(m_CPUCountSlider, &QSlider::valueChanged,
+            m_CPUCountSpinBox, &QSpinBox::setValue);
+    connect(m_CPUCountSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+            m_CPUCountSlider, &QSlider::setValue);
+    connect(m_CPUCountSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &ProcessorTab::selectCPUCount);
 
-    m_CPUCountLayout = new QHBoxLayout();
+    // Update CPU count in machine
+    this->selectCPUCount(m_CPUCountSpinBox->value());
+
+    // Create min/max CPU labels
+    m_minCPULabel = new QLabel("1 Core", this);
+    m_maxCPULabel = new QLabel(QString::number(core_count) + " Cores", this);
+
+    // Update layout to include slider and labels with spinbox on the right
+    m_CPUCountLayout = new QVBoxLayout();
     m_CPUCountLayout->setAlignment(Qt::AlignVCenter);
     m_CPUCountLayout->setSpacing(5);
     m_CPUCountLayout->addWidget(m_CPUCountLabel);
-    m_CPUCountLayout->addWidget(m_CPUCountSpinBox);
+
+    // Create horizontal layout for slider and spinbox
+    QHBoxLayout *sliderSpinLayout = new QHBoxLayout();
+    sliderSpinLayout->addWidget(m_CPUCountSlider);
+    sliderSpinLayout->addWidget(m_CPUCountSpinBox);
+    m_CPUCountLayout->addLayout(sliderSpinLayout);
+
+    // Add min/max labels layout
+    QHBoxLayout *cpuLabelsLayout = new QHBoxLayout();
+    cpuLabelsLayout->addWidget(m_minCPULabel);
+    cpuLabelsLayout->addStretch();
+    cpuLabelsLayout->addWidget(m_maxCPULabel);
+    m_CPUCountLayout->addLayout(cpuLabelsLayout);
 
     m_CPUSettingsLayout = new QVBoxLayout();
     m_CPUSettingsLayout->setAlignment(Qt::AlignVCenter);
@@ -141,6 +179,7 @@ void ProcessorTab::selectProcessor(int index) {
  * Select the processor count
  */
 void ProcessorTab::selectCPUCount(int CPUCount) {
+    qDebug() << "Setting CPU count to:" << CPUCount;
     this->m_newMachine->setCPUCount(CPUCount);
 }
 
