@@ -274,9 +274,13 @@ int RamConfigTab::getAmountRam()
  */
 MachineTypeTab::MachineTypeTab(Machine *machine,
                                bool enableFields,
+                               QEMU *qemuObject,
                                QWidget *parent) : QWidget(parent)
 {
     this->m_machine = machine;
+    this->m_qemuObject = qemuObject;
+    
+    qDebug() << "MachineTypeTab constructor - QEMU object:" << (qemuObject != nullptr);
 
     customFilter = new CustomFilter(this);
     this->setMachines();
@@ -339,53 +343,28 @@ void MachineTypeTab::textFilterChanged()
  */
 void MachineTypeTab::setMachines()
 {
+    qDebug() << "setMachines started";
+    
     QStandardItemModel *model = new QStandardItemModel(0, 2, this);
 
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("Machine"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Description"));
 
-    this->addMachine(model, "pc-q35-2.4", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.5", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.6", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.7", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.8", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.9", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.10", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.11", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-2.12", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "pc-q35-3.0", "Standard PC (Q35 + ICH9, 2009)");
-    this->addMachine(model, "q35", "Standard PC (Q35 + ICH9, 2009) (alias of pc-q35-3.0)");
-    this->addMachine(model, "pc-0.10", "Standard PC (i440FX + PIIX, 1996) (deprecated)");
-    this->addMachine(model, "pc-0.11", "Standard PC (i440FX + PIIX, 1996) (deprecated)");
-    this->addMachine(model, "pc-0.12", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.13", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.14", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-0.15", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.0", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.1", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.2", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-1.3", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.4", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.5", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.6", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-1.7", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.0", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.1", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.2", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.3", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.4", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.5", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.6", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.7", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.8", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.9", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.10", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.11", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-2.12", "Standard PC (i440FX + PIIX, 1996)");
-    this->addMachine(model, "pc-i440fx-3.0", "Standard PC (i440FX + PIIX, 1996) (default)");
-    this->addMachine(model, "pc", "Standard PC (i440FX + PIIX, 1996) (alias of pc-i440fx-3.0)");
-    this->addMachine(model, "isapc", "ISA-only PC");
-    this->addMachine(model, "none", "empty machine");
+    // Get machine types from QEMU
+    QMap<QString, QString> machineTypes = getMachineTypesFromQEMU(m_qemuObject);
+    qDebug() << "Got machine types, count:" << machineTypes.size();
+    
+    // Add machines to model, filtering deprecated versions
+    QMapIterator<QString, QString> i(machineTypes);
+    int addedCount = 0;
+    while (i.hasNext()) {
+        i.next();
+        if (!isDeprecatedVersion(i.value())) {
+            this->addMachine(model, i.key(), i.value());
+            addedCount++;
+        }
+    }
+    qDebug() << "Added machines to model:" << addedCount;
 
     customFilter->setSourceModel(model);
 }
@@ -413,6 +392,65 @@ void MachineTypeTab::addMachine(QAbstractItemModel *model,
  *
  * Get the selected machine type
  */
+QMap<QString, QString> MachineTypeTab::getMachineTypesFromQEMU(QEMU *qemuObject)
+{
+    QMap<QString, QString> machineTypes;
+    
+    if (!qemuObject) {
+        qDebug() << "Error: QEMU object is null";
+        return machineTypes;
+    }
+    
+    QString qemuBinary = qemuObject->getQEMUBinary("qemu-system-x86_64");
+    qDebug() << "QEMU binary path:" << qemuBinary;
+    
+    if (qemuBinary.isEmpty()) {
+        qDebug() << "Error: Could not find QEMU binary";
+        return machineTypes;
+    }
+
+    QProcess process;
+    process.start(qemuBinary, QStringList() << "-machine" << "?");
+    bool started = process.waitForStarted();
+    qDebug() << "Process started:" << started;
+    
+    bool finished = process.waitForFinished();
+    qDebug() << "Process finished:" << finished;
+    
+    QString output = process.readAllStandardOutput();
+    QString error = process.readAllStandardError();
+    
+    qDebug() << "QEMU output length:" << output.length();
+    if (!error.isEmpty()) {
+        qDebug() << "QEMU error:" << error;
+    }
+    
+    QStringList lines = output.split("\n");
+    qDebug() << "Number of lines:" << lines.size();
+    
+    // Skip first line which contains "Supported machines are:"
+    for (int i = 1; i < lines.size(); i++) {
+        QString line = lines[i].trimmed();
+        if (line.isEmpty()) continue;
+        
+        // Parse each line in format: "name    description"
+        int firstSpace = line.indexOf(" ");
+        if (firstSpace > 0) {
+            QString name = line.left(firstSpace);
+            QString description = line.mid(firstSpace).trimmed();
+            machineTypes[name] = description;
+        }
+    }
+    
+    qDebug() << "Found machine types:" << machineTypes.size();
+    return machineTypes;
+}
+
+bool MachineTypeTab::isDeprecatedVersion(const QString &description)
+{
+    return description.contains("(deprecated)", Qt::CaseInsensitive);
+}
+
 QString MachineTypeTab::getMachineType()
 {
     QString machineType;

@@ -29,6 +29,9 @@
 #include <QSpinBox>
 
 // Local
+#include "../qemu.h"
+
+// Local
 #include "../machine.h"
 #include "machineconfighardwaretabs.h"
 
@@ -37,7 +40,8 @@ class MachineConfigHardware : public QWidget {
 
     public:
         explicit MachineConfigHardware(Machine *machine,
-                                       QWidget *parent = nullptr);
+                                     QEMU *qemuObject,
+                                     QWidget *parent = nullptr);
         ~MachineConfigHardware();
         QWidget *m_hardwarePageWidget;
 
@@ -62,6 +66,7 @@ class MachineConfigHardware : public QWidget {
         MachineTypeTab *m_machineTypeTab;
 
         Machine *m_machine;
+        QEMU *m_qemuObject;
 
 };
 

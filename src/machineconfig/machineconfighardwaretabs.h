@@ -138,6 +138,7 @@ class MachineTypeTab : public QWidget {
     public:
         explicit MachineTypeTab(Machine *machine,
                                 bool enableFields,
+                                QEMU *qemuObject,
                                 QWidget *parent = nullptr);
         ~MachineTypeTab();
 
@@ -165,11 +166,13 @@ class MachineTypeTab : public QWidget {
         QLineEdit *filterLineEdit;
 
         Machine *m_machine;
+        QEMU *m_qemuObject;
 
         // Methods
-
         void setMachines();
         void addMachine(QAbstractItemModel *model, const QString &machine, const QString &description);
+        QMap<QString, QString> getMachineTypesFromQEMU(QEMU *qemuObject);
+        bool isDeprecatedVersion(const QString &description);
 };
 
 #endif // MACHINECONFIGHARDWARETABS_H

@@ -22,6 +22,8 @@
 // Local
 #include "qemu.h"
 
+#include <QCoreApplication>
+
 /**
  * @brief QEMU object
  * @param parent, parent widget
@@ -40,8 +42,8 @@ QEMU::QEMU(QObject *parent) : QObject(parent)
     qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
     #endif
     #ifdef Q_OS_WIN
-    qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
-    qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\")).toString();
+    qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\Program Files\\qemu")).toString();
+    qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("C:\\Program Files\\qemu")).toString();
     #endif
     #ifdef Q_OS_MACOS
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/local/bin/")).toString();
@@ -120,7 +122,32 @@ QMap<QString, QString> QEMU::QEMUBinaries() const
  */
 QString QEMU::getQEMUBinary(const QString binary) const
 {
-    return this->m_QEMUBinaries.value(binary);
+    #ifdef Q_OS_WIN
+    // Dodaj .exe jeśli nie ma
+    QString searchBinary = binary;
+    if (!searchBinary.endsWith(".exe")) {
+        searchBinary += ".exe";
+    }
+    
+    // Szukaj wersji z 'w'
+    QString windowsBinary = searchBinary;
+    windowsBinary.replace(".exe", "w.exe");
+    
+    if (this->m_QEMUBinaries.contains(windowsBinary)) {
+        return this->m_QEMUBinaries.value(windowsBinary);
+    }
+    
+    // Jeśli nie znaleziono wersji z 'w', spróbuj bez 'w'
+    if (this->m_QEMUBinaries.contains(searchBinary)) {
+        return this->m_QEMUBinaries.value(searchBinary);
+    }
+    #else
+    if (this->m_QEMUBinaries.contains(binary)) {
+        return this->m_QEMUBinaries.value(binary);
+    }
+    #endif
+    
+    return QString();
 }
 
 /**
@@ -133,15 +160,70 @@ void QEMU::setQEMUBinaries(const QString path)
 {
     this->m_QEMUBinaries.clear();
 
-    QDirIterator it(path, QStringList() << "qemu-system-*", QDir::NoFilter, QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        it.next();
-#ifdef Q_OS_WIN
-        if (it.fileName().contains("w")) {
-#else
-        if (!it.fileName().contains("w")) {
-#endif
-            this->m_QEMUBinaries.insert(it.fileName(), it.filePath());
+    qDebug() << "Searching for QEMU binaries in:" << path;
+
+    // Add common QEMU installation paths for Windows
+    QStringList searchPaths;
+    searchPaths << path;
+    #ifdef Q_OS_WIN
+    QString scoopPath = QDir::homePath() + "\\scoop\\apps\\qemu\\current";
+    searchPaths << "C:\\Program Files\\qemu"
+                << "C:\\Program Files (x86)\\qemu"
+                << "C:\\Program Files\\QEMU"
+                << "C:\\Program Files (x86)\\QEMU"
+                << QCoreApplication::applicationDirPath() + "\\qemu"
+                << QCoreApplication::applicationDirPath() + "\\QEMU"
+                << scoopPath;
+    #endif
+
+    bool foundAny = false;
+    for (const QString &searchPath : searchPaths) {
+        QDir dir(searchPath);
+        if (!dir.exists()) {
+            continue;
         }
+        QStringList nameFilters;
+        #ifdef Q_OS_WIN
+        nameFilters << "qemu-system-*.exe";
+        #else
+        nameFilters << "qemu-system-*";
+        #endif
+
+        // Najpierw sprawdź pliki bezpośrednio w katalogu
+        QStringList directFiles = dir.entryList(nameFilters, QDir::Files | QDir::Executable);
+        for (const QString &file : directFiles) {
+            QString filePath = dir.filePath(file);
+            #ifdef Q_OS_WIN
+            if (file.contains("qemu-system-")) {
+                this->m_QEMUBinaries.insert(file, filePath);
+                foundAny = true;
+            }
+            #endif
+        }
+
+        // Następnie sprawdź podkatalogi
+        QDirIterator it(searchPath, nameFilters, QDir::Files | QDir::Executable, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            QString filePath = it.next();
+            QString fileName = it.fileName();
+            
+            #ifdef Q_OS_WIN
+            if (fileName.contains("qemu-system-")) {
+                this->m_QEMUBinaries.insert(fileName, filePath);
+                foundAny = true;
+            }
+            #else
+            if (!fileName.contains("-w64") && !fileName.contains("-w32")) {
+                this->m_QEMUBinaries.insert(fileName, filePath);
+                foundAny = true;
+            }
+            #endif
+        }
+    }
+
+    if (!foundAny) {
+        qDebug() << "Warning: No QEMU binaries found in any search paths";
+    } else {
+        qDebug() << "Found" << m_QEMUBinaries.size() << "QEMU binaries";
     }
 }
