@@ -88,6 +88,7 @@ class MainWindow : public QMainWindow {
         void machineStateChanged(Machine::States newState);
         void machinesMenu(const QPoint &pos);
         void updateMachineDetailsConfig(const QUuid machineUuid);
+        void killMachine();
 
     protected:
 
@@ -119,6 +120,7 @@ class MainWindow : public QMainWindow {
         QAction *m_stopMachineAction;
         QAction *m_resetMachineAction;
         QAction *m_pauseMachineAction;
+        QAction *m_killMachineAction;
         // End menus
 
         // Toolbar

@@ -141,6 +141,7 @@ class Machine: public QObject {
         void pauseMachine();
         bool saveMachine();
         void insertMachineConfigFile();
+        void killMachine();
 
     signals:
         void machineStateChangedSignal(States newState);
