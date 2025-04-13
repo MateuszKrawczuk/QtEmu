@@ -48,6 +48,9 @@ class QEMU : public QObject {
         
         QString BIOSDirectory() const;
         QStringList availableBIOSFiles() const;
+        
+        QString getQEMUVersion() const;
+        bool isQEMUVersionGreaterThan(int major, int minor = 0) const;
 
     protected:
 
