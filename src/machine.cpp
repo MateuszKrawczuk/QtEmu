@@ -264,6 +264,28 @@ void Machine::setDescription(const QString &value)
 }
 
 /**
+ * @brief Get the BIOS path
+ * @return path to the BIOS file
+ *
+ * Get the path to the custom BIOS file
+ */
+QString Machine::getBiosPath() const
+{
+    return biosPath;
+}
+
+/**
+ * @brief Set the BIOS path
+ * @param value, path to the BIOS file
+ *
+ * Set the path to the custom BIOS file
+ */
+void Machine::setBiosPath(const QString &value)
+{
+    biosPath = value;
+}
+
+/**
  * @brief Get the CPU Type of the machine
  *
  * Get the CPU Type of the machine
@@ -942,6 +964,11 @@ QStringList Machine::generateMachineCommand()
     QUuid uuid(this->uuid);
     qemuCommand << "-uuid";
     qemuCommand << uuid.toString(QUuid::WithoutBraces);
+    
+    if (!this->biosPath.isEmpty()) {
+        qemuCommand << "-bios";
+        qemuCommand << QDir::toNativeSeparators(this->biosPath);
+    }
 
     QString accelerators;
     bool firstAccel = true;
@@ -1091,6 +1118,9 @@ bool Machine::saveMachine()
     machineJSONObject["uuid"]        = this->uuid.toString(QUuid::WithoutBraces);
     machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;
     machineJSONObject["binary"] = "qemu-system-x86_64";
+    if (!this->biosPath.isEmpty()) {
+        machineJSONObject["biosPath"] = QDir::toNativeSeparators(this->biosPath);
+    }
 
     QJsonObject cpu;
     cpu["CPUType"]     = this->CPUType;
