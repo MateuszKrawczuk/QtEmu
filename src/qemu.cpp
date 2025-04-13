@@ -37,6 +37,7 @@ QEMU::QEMU(QObject *parent) : QObject(parent)
 
     QString qemuBinariesPath;
     QString qemuImgPath;
+    QString qemuBiosPath;
     #ifdef Q_OS_LINUX
     qemuBinariesPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
     qemuImgPath = settings.value("qemuBinaryPath", QDir::toNativeSeparators("/usr/bin")).toString();
@@ -56,8 +57,24 @@ QEMU::QEMU(QObject *parent) : QObject(parent)
     settings.endGroup();
     settings.sync();
 
+    settings.beginGroup("Configuration");
+    #ifdef Q_OS_LINUX
+    qemuBiosPath = settings.value("qemuBiosPath", QDir::toNativeSeparators("/usr/share/qemu")).toString();
+    #endif
+    #ifdef Q_OS_WIN
+    qemuBiosPath = settings.value("qemuBiosPath", QDir::toNativeSeparators(qemuBinariesPath + "\\share\\qemu")).toString();
+    #endif
+    #ifdef Q_OS_MACOS
+    qemuBiosPath = settings.value("qemuBiosPath", QDir::toNativeSeparators("/usr/local/share/qemu")).toString();
+    #endif
+    #ifdef Q_OS_FREEBSD
+    qemuBiosPath = settings.value("qemuBiosPath", QDir::toNativeSeparators("/usr/local/share/qemu")).toString();
+    #endif
+    settings.endGroup();
+
     this->setQEMUImgPath(qemuImgPath);
     this->setQEMUBinaries(qemuBinariesPath);
+    this->m_BIOSDirectory = qemuBiosPath;
 
     qDebug() << "QEMU object created";
 }
@@ -84,7 +101,7 @@ QString QEMU::QEMUImgPath() const
  *
  * Set the path of the qemu-img binary
  */
-void QEMU::setQEMUImgPath(const QString path)
+void QEMU::setQEMUImgPath(const QString &path)
 {    
 #ifdef Q_OS_LINUX
     QString qemuImgPath = QDir::toNativeSeparators(path + "/qemu-img");
@@ -120,7 +137,7 @@ QMap<QString, QString> QEMU::QEMUBinaries() const
  *
  * Get the path where one binary are located
  */
-QString QEMU::getQEMUBinary(const QString binary) const
+QString QEMU::getQEMUBinary(const QString &binary) const
 {
     #ifdef Q_OS_WIN
     // Dodaj .exe jeśli nie ma
@@ -156,7 +173,7 @@ QString QEMU::getQEMUBinary(const QString binary) const
  *
  * Set the QEMU binaries
  */
-void QEMU::setQEMUBinaries(const QString path)
+void QEMU::setQEMUBinaries(const QString &path)
 {
     this->m_QEMUBinaries.clear();
 
@@ -226,4 +243,35 @@ void QEMU::setQEMUBinaries(const QString path)
     } else {
         qDebug() << "Found" << m_QEMUBinaries.size() << "QEMU binaries";
     }
+}
+
+/**
+ * @brief Get the BIOS directory
+ * @return path to the BIOS directory
+ *
+ * Get the path to the directory containing BIOS files
+ */
+QString QEMU::BIOSDirectory() const
+{
+    return m_BIOSDirectory;
+}
+
+/**
+ * @brief Get available BIOS files
+ * @return list of available BIOS files
+ *
+ * Get a list of available BIOS files in the BIOS directory
+ */
+QStringList QEMU::availableBIOSFiles() const
+{
+    QStringList biosFiles;
+    QDir biosDir(m_BIOSDirectory);
+    
+    if (biosDir.exists()) {
+        QStringList filters;
+        filters << "*.bin" << "*.rom" << "*.fd";
+        biosFiles = biosDir.entryList(filters, QDir::Files | QDir::Readable, QDir::Name);
+    }
+    
+    return biosFiles;
 }

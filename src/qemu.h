@@ -40,16 +40,20 @@ class QEMU : public QObject {
         ~QEMU();
 
         QString QEMUImgPath() const;
-        void setQEMUImgPath(const QString path);
+        void setQEMUImgPath(const QString &path);
 
         QMap<QString, QString> QEMUBinaries() const;
-        QString getQEMUBinary(const QString binary) const;
-        void setQEMUBinaries(const QString path);
+        QString getQEMUBinary(const QString &binary) const;
+        void setQEMUBinaries(const QString &path);
+        
+        QString BIOSDirectory() const;
+        QStringList availableBIOSFiles() const;
 
     protected:
 
     private:
         QString m_QEMUImgPath;
+        QString m_BIOSDirectory;
         QMap<QString, QString> m_QEMUBinaries;
 
 };

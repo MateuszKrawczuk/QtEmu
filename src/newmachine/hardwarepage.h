@@ -32,9 +32,14 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QRadioButton>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QFileDialog>
+#include <QDir>
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 #include "../utils/systemutils.h"
 
 class MachineHardwarePage: public QWizardPage {
@@ -42,6 +47,7 @@ class MachineHardwarePage: public QWizardPage {
 
     public:
         explicit MachineHardwarePage(Machine *machine,
+                                     QEMU *qemuObject,
                                      QWidget *parent = nullptr);
         ~MachineHardwarePage();
 
@@ -57,6 +63,7 @@ class MachineHardwarePage: public QWizardPage {
         QTabWidget *m_hardwareTabWidget;
 
         Machine *m_newMachine;
+        QEMU *m_qemuObject;
 };
 
 class ProcessorTab: public QWidget {
@@ -181,7 +188,7 @@ class OthersTab: public QWidget {
 
     public:
         explicit OthersTab(Machine *machine,
-                          QWidget *parent = nullptr);
+                           QWidget *parent = nullptr);
         ~OthersTab();
 
     signals:
@@ -196,6 +203,35 @@ class OthersTab: public QWidget {
         QComboBox *m_keyboard;
         QLabel *m_keyboardLabel;
         Machine *m_newMachine;
+};
+
+class BiosTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit BiosTab(Machine *machine,
+                         QEMU *qemuObject,
+                         QWidget *parent = nullptr);
+        ~BiosTab();
+
+    private slots:
+        void selectBiosFile();
+        void biosPathChanged(const QString &path);
+        void customBiosToggled(bool checked);
+
+    private:
+        Machine *m_newMachine;
+        QEMU *m_qemuObject;
+
+        QCheckBox *m_useCustomBiosCheckBox;
+        QLabel *m_biosFileLabel;
+        QLineEdit *m_biosPathEdit;
+        QPushButton *m_biosBrowseButton;
+        QComboBox *m_biosFilesCombo;
+        QLabel *m_biosInfoLabel;
+
+        QVBoxLayout *m_biosLayout;
+        QHBoxLayout *m_biosPathLayout;
 };
 
 #endif // HARDWAREPAGE_H

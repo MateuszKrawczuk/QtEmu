@@ -73,6 +73,9 @@ class Machine: public QObject {
         QString getDescription() const;
         void setDescription(const QString &value);
 
+        QString getBiosPath() const;
+        void setBiosPath(const QString &value);
+
         Machine::States getState() const;
         void setState(const States &value);
 
@@ -192,6 +195,9 @@ class Machine: public QObject {
 
         // Hardware - media
         QList<Media *> media;
+        
+        // BIOS
+        QString biosPath;
 
         // Accelerator
         QStringList accelerator;
