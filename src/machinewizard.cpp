@@ -41,7 +41,7 @@ MachineWizard::MachineWizard(Machine *machine,
 
     this->setPage(Page_Name, new MachineNamePage(machine, this));
     this->setPage(Page_Machine, new MachinePage(machine, this));
-    this->setPage(Page_Hardware, new MachineHardwarePage(machine, this));
+    this->setPage(Page_Hardware, new MachineHardwarePage(machine, QEMUGlobalObject, this));
     this->setPage(Page_Accelerator, new MachineAcceleratorPage(machine, this));
     this->setPage(Page_Memory, new MachineMemoryPage(machine, this));
     this->setPage(Page_Disk, new MachineDiskPage(machine, this));

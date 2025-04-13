@@ -22,6 +22,8 @@
 // Local
 #include "hardwarepage.h"
 #include <thread>
+#include <QFileDialog>
+#include <QDir>
 
 /**
  * @brief Machine hardware page
@@ -32,15 +34,18 @@
  * network for the new machine
  */
 MachineHardwarePage::MachineHardwarePage(Machine *machine,
+                                         QEMU *qemuObject,
                                          QWidget *parent) : QWizardPage(parent) {
     this->setTitle(tr("Machine hardware"));
     this->m_newMachine = machine;
+    this->m_qemuObject = qemuObject;
 
     m_hardwareTabWidget = new QTabWidget(this);
     m_hardwareTabWidget->addTab(new ProcessorTab(machine, this), tr("Processor"));
     m_hardwareTabWidget->addTab(new GraphicsTab(machine, this), tr("Graphics"));
     m_hardwareTabWidget->addTab(new AudioTab(machine, this), tr("Audio"));
     m_hardwareTabWidget->addTab(new NetworkTab(machine, this), tr("Network"));
+    m_hardwareTabWidget->addTab(new BiosTab(machine, qemuObject, this), tr("BIOS"));
     m_hardwareTabWidget->addTab(new OthersTab(machine, this), tr("Others"));
 
     m_hardwareLayout = new QVBoxLayout();
@@ -396,7 +401,7 @@ void AudioTab::selectIntelHDCard(bool selectIntelHD) {
         this->m_newMachine->addAudio("intel-hda");
         this->m_newMachine->addAudio("hda-duplex");
     } else {
-        this->m_newMachine->addAudio("intel-hda");
+        this->m_newMachine->removeAudio("intel-hda");
         this->m_newMachine->removeAudio("hda-duplex");
     }
 }
@@ -497,4 +502,165 @@ OthersTab::~OthersTab() {
 void OthersTab::selectKeyboard(int index) {
     QString keyboard = this->m_keyboard->itemData(index).toString();
     this->m_newMachine->setKeyboard(keyboard);
+}
+
+/**
+ * @brief BiosTab tab
+ * @param machine, new machine object
+ * @param qemuObject, QEMU object with BIOS information
+ * @param parent, widget parent
+ *
+ * BiosTab tab. In this tab you can select a custom BIOS file for the machine
+ */
+BiosTab::BiosTab(Machine *machine,
+                 QEMU *qemuObject,
+                 QWidget *parent) : QWidget(parent) {
+    this->m_newMachine = machine;
+    this->m_qemuObject = qemuObject;
+
+    // Add checkbox to enable/disable custom BIOS
+    m_useCustomBiosCheckBox = new QCheckBox(tr("Use custom BIOS"), this);
+    connect(m_useCustomBiosCheckBox, &QCheckBox::toggled,
+            this, &BiosTab::customBiosToggled);
+
+    // Create BIOS file selection components
+    m_biosFileLabel = new QLabel(tr("BIOS File") + ":", this);
+    m_biosFileLabel->setWordWrap(true);
+    m_biosFileLabel->setEnabled(false); // Disabled by default
+
+    m_biosPathEdit = new QLineEdit(this);
+    m_biosPathEdit->setPlaceholderText(tr("Path to custom BIOS file"));
+    m_biosPathEdit->setEnabled(false); // Disabled by default
+    connect(m_biosPathEdit, &QLineEdit::textChanged,
+            this, &BiosTab::biosPathChanged);
+
+    m_biosBrowseButton = new QPushButton(tr("Browse..."), this);
+    m_biosBrowseButton->setEnabled(false); // Disabled by default
+    connect(m_biosBrowseButton, &QPushButton::clicked,
+            this, &BiosTab::selectBiosFile);
+
+    m_biosPathLayout = new QHBoxLayout();
+    m_biosPathLayout->addWidget(m_biosPathEdit);
+    m_biosPathLayout->addWidget(m_biosBrowseButton);
+
+    // Create dropdown for available BIOS files
+    QStringList availableBios = m_qemuObject->availableBIOSFiles();
+    m_biosFilesCombo = new QComboBox(this);
+    m_biosFilesCombo->setEnabled(false); // Disabled by default
+    
+    // Add all available BIOS files
+    for (const QString &biosFile : availableBios) {
+        m_biosFilesCombo->addItem(biosFile, biosFile);
+    }
+    
+    // If no BIOS files are available, add a message
+    if (availableBios.isEmpty()) {
+        m_biosFilesCombo->addItem(tr("No BIOS files found"), "");
+    }
+    
+    connect(m_biosFilesCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            [this](int index) {
+                QString biosPath = m_biosFilesCombo->itemData(index).toString();
+                if (!biosPath.isEmpty()) {
+                    m_biosPathEdit->setText(biosPath);
+                } else {
+                    m_biosPathEdit->clear();
+                }
+            });
+
+    // Add information label
+    m_biosInfoLabel = new QLabel(tr("Custom BIOS files can be used for specific operating systems or advanced features."), this);
+    m_biosInfoLabel->setWordWrap(true);
+    m_biosInfoLabel->setStyleSheet("color: gray; font-style: italic;");
+
+    // Create layout
+    m_biosLayout = new QVBoxLayout();
+    m_biosLayout->setAlignment(Qt::AlignTop);
+    m_biosLayout->addWidget(m_useCustomBiosCheckBox);
+    m_biosLayout->addWidget(m_biosFileLabel);
+    m_biosLayout->addWidget(m_biosFilesCombo);
+    m_biosLayout->addLayout(m_biosPathLayout);
+    m_biosLayout->addWidget(m_biosInfoLabel);
+    m_biosLayout->addStretch();
+
+    this->setLayout(m_biosLayout);
+
+    qDebug() << "BiosTab created";
+}
+
+BiosTab::~BiosTab() {
+    qDebug() << "BiosTab destroyed";
+}
+
+/**
+ * @brief Open file dialog to select BIOS directory
+ *
+ * Opens a file dialog to let the user select a directory containing BIOS files
+ */
+void BiosTab::selectBiosFile() {
+    // Use home directory as default if BIOS directory doesn't exist
+    QString startDir = QDir(m_qemuObject->BIOSDirectory()).exists() ? 
+                      m_qemuObject->BIOSDirectory() : 
+                      QDir::homePath();
+                      
+    QString biosDir = QFileDialog::getExistingDirectory(this,
+                                                      tr("Select BIOS Directory"),
+                                                      startDir,
+                                                      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if (!biosDir.isEmpty()) {
+        // Clear the current items
+        m_biosFilesCombo->clear();
+        
+        // Add files from the selected directory
+        QDir dir(biosDir);
+        QStringList filters;
+        filters << "*.bin" << "*.rom" << "*.fd";
+        QStringList biosFiles = dir.entryList(filters, QDir::Files | QDir::Readable, QDir::Name);
+        
+        if (biosFiles.isEmpty()) {
+            m_biosFilesCombo->addItem(tr("No BIOS files found in selected directory"), "");
+        } else {
+            for (const QString &biosFile : biosFiles) {
+                m_biosFilesCombo->addItem(biosFile, QDir::toNativeSeparators(biosDir + QDir::separator() + biosFile));
+            }
+            
+            // Select the first item
+            if (m_biosFilesCombo->count() > 0) {
+                m_biosFilesCombo->setCurrentIndex(0);
+            }
+        }
+    }
+}
+
+/**
+ * @brief Toggle custom BIOS options
+ * @param checked, whether custom BIOS is enabled
+ *
+ * Enable or disable BIOS selection controls based on checkbox state
+ */
+void BiosTab::customBiosToggled(bool checked) {
+    m_biosFileLabel->setEnabled(checked);
+    m_biosFilesCombo->setEnabled(checked);
+    m_biosPathEdit->setEnabled(checked);
+    m_biosBrowseButton->setEnabled(checked);
+    
+    if (!checked) {
+        // If checkbox is unchecked, clear the BIOS path
+        m_biosPathEdit->clear();
+        m_newMachine->setBiosPath("");
+    }
+}
+
+/**
+ * @brief Update machine BIOS path when text changes
+ * @param path, new BIOS path
+ *
+ * Updates the machine's BIOS path when the text field changes
+ */
+void BiosTab::biosPathChanged(const QString &path) {
+    if (m_useCustomBiosCheckBox->isChecked() && !path.isEmpty()) {
+        m_newMachine->setBiosPath(path);
+    } else {
+        m_newMachine->setBiosPath("");
+    }
 }

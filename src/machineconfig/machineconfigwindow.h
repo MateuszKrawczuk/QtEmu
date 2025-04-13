@@ -57,6 +57,7 @@
 #include "machineconfignetwork.h"
 #include "machineconfigaudio.h"
 #include "machineconfigaccel.h"
+#include "machineconfigbios.h"
 
 class MachineConfigWindow : public QWidget {
     Q_OBJECT
@@ -101,6 +102,7 @@ class MachineConfigWindow : public QWidget {
         MachineConfigNetwork *m_configNetwork;
         MachineConfigAudio *m_configAudio;
         MachineConfigAccel *m_configAccel;
+        MachineConfigBios *m_configBios;
 
         Machine *m_machine;
         QListWidgetItem *m_osWidget;
