@@ -23,6 +23,7 @@
 #include "qemu.h"
 
 #include <QCoreApplication>
+#include <QProcess>
 
 /**
  * @brief QEMU object
@@ -274,4 +275,79 @@ QStringList QEMU::availableBIOSFiles() const
     }
     
     return biosFiles;
+}
+
+/**
+ * @brief Get QEMU version
+ * @return QEMU version as string
+ *
+ * Get the version of QEMU installed on the system
+ */
+QString QEMU::getQEMUVersion() const
+{
+    QString version = "Unknown";
+    
+    // Find path to qemu-system-x86_64
+    QString qemuPath;
+    #ifdef Q_OS_WIN
+    if (this->m_QEMUBinaries.contains("qemu-system-x86_64w.exe")) {
+        qemuPath = this->m_QEMUBinaries.value("qemu-system-x86_64w.exe");
+    } else if (this->m_QEMUBinaries.contains("qemu-system-x86_64.exe")) {
+        qemuPath = this->m_QEMUBinaries.value("qemu-system-x86_64.exe");
+    }
+    #else
+    if (this->m_QEMUBinaries.contains("qemu-system-x86_64")) {
+        qemuPath = this->m_QEMUBinaries.value("qemu-system-x86_64");
+    }
+    #endif
+    
+    if (!qemuPath.isEmpty()) {
+        QProcess process;
+        process.start(qemuPath, QStringList() << "--version");
+        process.waitForFinished(3000);
+        
+        if (process.exitCode() == 0) {
+            QString output = process.readAllStandardOutput();
+            // Typical format: QEMU emulator version 8.1.0
+            QRegularExpression re("version\\s+(\\d+\\.\\d+\\.\\d+)");
+            QRegularExpressionMatch match = re.match(output);
+            if (match.hasMatch()) {
+                version = match.captured(1);
+            }
+        }
+    }
+    
+    return version;
+}
+
+/**
+ * @brief Check if QEMU version is greater than specified
+ * @param major Major version number
+ * @param minor Minor version number
+ * @return true if QEMU version is greater than specified
+ *
+ * Check if the installed QEMU version is greater than the specified version
+ */
+bool QEMU::isQEMUVersionGreaterThan(int major, int minor) const
+{
+    QString versionStr = getQEMUVersion();
+    if (versionStr == "Unknown") {
+        return false;
+    }
+    
+    QStringList versionParts = versionStr.split('.');
+    if (versionParts.size() < 2) {
+        return false;
+    }
+    
+    int installedMajor = versionParts[0].toInt();
+    int installedMinor = versionParts[1].toInt();
+    
+    if (installedMajor > major) {
+        return true;
+    } else if (installedMajor == major && installedMinor > minor) {
+        return true;
+    }
+    
+    return false;
 }
