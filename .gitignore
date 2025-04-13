@@ -207,3 +207,7 @@ build.ninja
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake,clion,qtcreator,meson,visualstudiocode
 .aider*
+
+build/
+bin/
+buildDir
