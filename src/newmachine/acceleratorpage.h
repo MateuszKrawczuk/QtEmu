@@ -33,12 +33,14 @@
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 
 class MachineAcceleratorPage: public QWizardPage {
     Q_OBJECT
 
     public:
         explicit MachineAcceleratorPage(Machine *machine,
+                                        QEMU *qemuObject,
                                         QWidget *parent = nullptr);
         ~MachineAcceleratorPage();
 
@@ -51,6 +53,7 @@ class MachineAcceleratorPage: public QWizardPage {
     private:
         QVBoxLayout *m_acceleratorLayout;
         Machine *m_newMachine;
+        QEMU *m_qemuObject;
 
         QButtonGroup *m_acceleratorGroup;
         QRadioButton *m_tcgRadio = nullptr;
