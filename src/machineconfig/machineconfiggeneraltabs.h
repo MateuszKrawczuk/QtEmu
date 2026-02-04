@@ -80,4 +80,28 @@ class DescriptionTab: public QWidget {
 
 };
 
+class CustomArgumentsTab: public QWidget {
+    Q_OBJECT
+
+    public:
+        explicit CustomArgumentsTab(Machine *machine,
+                                    bool enableFields,
+                                    QWidget *parent = nullptr);
+        ~CustomArgumentsTab();
+        QString getCustomArguments() const;
+
+    signals:
+
+    public slots:
+
+    protected:
+
+    private:
+        QVBoxLayout *m_customArgsLayout;
+
+        QLabel *m_customArgsLabel;
+        QLabel *m_customArgsHintLabel;
+        QPlainTextEdit *m_customArgsTextEdit;
+};
+
 #endif // MACHINECONFIGGENERALTABS_H

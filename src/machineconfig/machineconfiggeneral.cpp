@@ -28,12 +28,14 @@ MachineConfigGeneral::MachineConfigGeneral(Machine *machine,
 
     m_basicTab = new BasicTab(machine, enableFields, this);
     m_descriptionTab = new DescriptionTab(machine, enableFields, this);
+    m_customArgsTab = new CustomArgumentsTab(machine, enableFields, this);
 
     m_generalTabWidget = new QTabWidget(this);
     m_generalTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
                                             QSizePolicy::MinimumExpanding);
     m_generalTabWidget->addTab(this->m_basicTab, tr("Basic Details"));
     m_generalTabWidget->addTab(this->m_descriptionTab, tr("Description"));
+    m_generalTabWidget->addTab(this->m_customArgsTab, tr("Custom Arguments"));
 
     m_generalPageLayout = new QVBoxLayout();
     m_generalPageLayout->setAlignment(Qt::AlignCenter);
@@ -62,4 +64,5 @@ void MachineConfigGeneral::saveGeneralData()
     this->m_machine->setOSType(this->m_basicTab->getMachineType());
     this->m_machine->setOSVersion(this->m_basicTab->getMachineVersion());
     this->m_machine->setDescription(this->m_descriptionTab->getMachineDescription());
+    this->m_machine->setCustomArguments(this->m_customArgsTab->getCustomArguments());
 }

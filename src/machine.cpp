@@ -712,6 +712,28 @@ void Machine::setBoot(Boot *value)
 }
 
 /**
+ * @brief Get the custom QEMU arguments
+ * @return custom arguments string
+ *
+ * Get the custom QEMU command-line arguments
+ */
+QString Machine::getCustomArguments() const
+{
+    return customArguments;
+}
+
+/**
+ * @brief Set the custom QEMU arguments
+ * @param value, custom arguments string
+ *
+ * Set the custom QEMU command-line arguments
+ */
+void Machine::setCustomArguments(const QString &value)
+{
+    customArguments = value;
+}
+
+/**
  * @brief Get the host sound system
  * @return the host sound system
  *
@@ -1200,6 +1222,12 @@ QStringList Machine::generateMachineCommand()
         }
     }
 
+    // Add custom command-line arguments
+    if (!this->customArguments.isEmpty()) {
+        QStringList customArgs = QProcess::splitCommand(this->customArguments);
+        qemuCommand.append(customArgs);
+    }
+
     qDebug() << "Command " << qemuCommand;
 
     return qemuCommand;
@@ -1311,6 +1339,10 @@ bool Machine::saveMachine()
 
     machineJSONObject["accelerator"] = QJsonArray::fromStringList(this->accelerator);
     machineJSONObject["audio"] = QJsonArray::fromStringList(this->audio);
+
+    if (!this->customArguments.isEmpty()) {
+        machineJSONObject["customArguments"] = this->customArguments;
+    }
 
     QJsonDocument machineJSONDocument(machineJSONObject);
 

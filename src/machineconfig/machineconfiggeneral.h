@@ -47,6 +47,7 @@ class MachineConfigGeneral : public QWidget {
         Machine *m_machine;
         BasicTab *m_basicTab;
         DescriptionTab *m_descriptionTab;
+        CustomArgumentsTab *m_customArgsTab;
 };
 
 #endif // MACHINECONFIGGENERAL_H

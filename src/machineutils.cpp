@@ -115,6 +115,7 @@ void MachineUtils::fillMachineObject(Machine *machine,
     machine->setHostSoundSystem(machineJSON["hostsoundsystem"].toString());
     machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
+    machine->setCustomArguments(machineJSON["customArguments"].toString());
     machine->setBoot(machineBoot);
 
     // Load BIOS path if present
