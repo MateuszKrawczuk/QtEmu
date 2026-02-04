@@ -20,12 +20,6 @@ find_package(Qt6 REQUIRED COMPONENTS
 qt_standard_project_setup()
 qt_add_resources(SOURCES qtemu.qrc)
 
-if(APPLE)
-    set(executable_path "$<TARGET_FILE_NAME:QtEmu>.app")
-else()
-    set(executable_path "\${QT_DEPLOY_BIN_DIR}/$<TARGET_FILE_NAME:QtEmu>")
-endif()
-
 qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     ${SOURCES}
     src/aboutwidget.cpp src/aboutwidget.h
@@ -93,7 +87,9 @@ else()
 endif()
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR})
-set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_QtEmu.cmake")
+
+# Use per-config deploy scripts to support multi-config generators (e.g. Visual Studio)
+set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_QtEmu_$<CONFIG>.cmake")
 
 file(GENERATE OUTPUT ${deploy_script} CONTENT "
 # Including the file pointed to by QT_DEPLOY_SUPPORT ensures the generated
@@ -111,4 +107,4 @@ qt_deploy_runtime_dependencies(
 install(TARGETS QtEmu     # Install to CMAKE_INSTALL_PREFIX/bin/QtEmu.exe
         BUNDLE  DESTINATION .      # Install to CMAKE_INSTALL_PREFIX/QtEmu.app/Contents/MacOS/QtEmu
         )
-install(SCRIPT ${deploy_script})    # Add its runtime dependencies
+install(CODE "include(\"${CMAKE_CURRENT_BINARY_DIR}/deploy_QtEmu_\${CMAKE_INSTALL_CONFIG_NAME}.cmake\")")
