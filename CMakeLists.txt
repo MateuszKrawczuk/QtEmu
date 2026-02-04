@@ -45,6 +45,7 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/machine.cpp src/machine.h
     src/machineconfig/machineconfigaccel.cpp src/machineconfig/machineconfigaccel.h
     src/machineconfig/machineconfigaudio.cpp src/machineconfig/machineconfigaudio.h
+    src/machineconfig/machineconfigbios.cpp src/machineconfig/machineconfigbios.h
     src/machineconfig/machineconfigboot.cpp src/machineconfig/machineconfigboot.h
     src/machineconfig/machineconfiggeneral.cpp src/machineconfig/machineconfiggeneral.h
     src/machineconfig/machineconfiggeneraltabs.cpp src/machineconfig/machineconfiggeneraltabs.h
