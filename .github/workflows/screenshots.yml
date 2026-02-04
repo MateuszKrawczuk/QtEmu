@@ -55,7 +55,7 @@ jobs:
           mkdir -p "$SCREENSHOT_DIR"
 
           # Pre-configure settings to skip first-run wizard
-          mkdir -p ~/.config
+          mkdir -p ~/.config/QtEmu
           mkdir -p ~/.qtemu/logs
 
           # Write QSettings for QtEmu (INI format on Linux)
@@ -129,8 +129,10 @@ jobs:
           echo "--- Opening New Machine Wizard ---"
           xdotool windowactivate "$MAIN_WID"
           sleep 0.3
-          # Trigger via Ctrl+N or menu - use keyboard shortcut
-          xdotool key ctrl+m
+          # Open Machine menu -> New Machine (first item)
+          xdotool key alt+m
+          sleep 0.5
+          xdotool key Return
           sleep 2
 
           WIZARD_WID=$(xdotool search --name "Create a new Machine" 2>/dev/null | head -1 || \

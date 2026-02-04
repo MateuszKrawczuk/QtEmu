@@ -62,9 +62,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.7.*'
-          host: 'mac'
           target: 'desktop'
-          arch: 'clang_64'
           modules: 'qtsvg'
 
       # ── Build ──────────────────────────────────────────────────────
@@ -133,9 +131,6 @@ jobs:
            A Qt-based graphical user interface for the QEMU emulator.
            Allows creating, configuring, and managing virtual machines.
           EOF
-
-          # Remove leading spaces from control file
-          sed -i 's/^          //' "${PKG_DIR}/DEBIAN/control"
 
           dpkg-deb --build "${PKG_DIR}"
           mv "${PKG_DIR}.deb" "QtEmu-${VERSION}-ubuntu-amd64.deb"
