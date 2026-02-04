@@ -29,6 +29,14 @@ Machine::Machine(QObject *parent) : QObject(parent)
     connect(m_machineProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &Machine::machineFinished);
 
+    // Initialize cloud-init with default values
+    this->cloudInitEnabled = false;
+    this->cloudInitHostname = "";
+    this->cloudInitUsername = "ubuntu";
+    this->cloudInitPassword = "";
+    this->cloudInitSSHKey = "";
+    this->cloudInitUserData = "";
+
     qDebug() << "Machine object created";
 }
 
@@ -267,6 +275,138 @@ QString Machine::getBiosPath() const
 void Machine::setBiosPath(const QString &value)
 {
     biosPath = value;
+}
+
+/**
+ * @brief Get cloud-init enabled status
+ * @return true if cloud-init is enabled
+ *
+ * Get whether cloud-init is enabled for this machine
+ */
+bool Machine::getCloudInitEnabled() const
+{
+    return cloudInitEnabled;
+}
+
+/**
+ * @brief Set cloud-init enabled status
+ * @param value, true to enable cloud-init
+ *
+ * Set whether cloud-init is enabled for this machine
+ */
+void Machine::setCloudInitEnabled(bool value)
+{
+    cloudInitEnabled = value;
+}
+
+/**
+ * @brief Get cloud-init hostname
+ * @return hostname for the VM
+ *
+ * Get the hostname that will be configured via cloud-init
+ */
+QString Machine::getCloudInitHostname() const
+{
+    return cloudInitHostname;
+}
+
+/**
+ * @brief Set cloud-init hostname
+ * @param value, hostname for the VM
+ *
+ * Set the hostname that will be configured via cloud-init
+ */
+void Machine::setCloudInitHostname(const QString &value)
+{
+    cloudInitHostname = value;
+}
+
+/**
+ * @brief Get cloud-init username
+ * @return username for the VM
+ *
+ * Get the default username that will be created via cloud-init
+ */
+QString Machine::getCloudInitUsername() const
+{
+    return cloudInitUsername;
+}
+
+/**
+ * @brief Set cloud-init username
+ * @param value, username for the VM
+ *
+ * Set the default username that will be created via cloud-init
+ */
+void Machine::setCloudInitUsername(const QString &value)
+{
+    cloudInitUsername = value;
+}
+
+/**
+ * @brief Get cloud-init password
+ * @return password for the VM user
+ *
+ * Get the password that will be set via cloud-init
+ */
+QString Machine::getCloudInitPassword() const
+{
+    return cloudInitPassword;
+}
+
+/**
+ * @brief Set cloud-init password
+ * @param value, password for the VM user
+ *
+ * Set the password that will be set via cloud-init
+ */
+void Machine::setCloudInitPassword(const QString &value)
+{
+    cloudInitPassword = value;
+}
+
+/**
+ * @brief Get cloud-init SSH public key
+ * @return SSH public key
+ *
+ * Get the SSH public key that will be configured via cloud-init
+ */
+QString Machine::getCloudInitSSHKey() const
+{
+    return cloudInitSSHKey;
+}
+
+/**
+ * @brief Set cloud-init SSH public key
+ * @param value, SSH public key
+ *
+ * Set the SSH public key that will be configured via cloud-init
+ */
+void Machine::setCloudInitSSHKey(const QString &value)
+{
+    cloudInitSSHKey = value;
+}
+
+/**
+ * @brief Get cloud-init custom user-data
+ * @return custom user-data YAML
+ *
+ * Get custom user-data YAML content for cloud-init
+ */
+QString Machine::getCloudInitUserData() const
+{
+    return cloudInitUserData;
+}
+
+/**
+ * @brief Set cloud-init custom user-data
+ * @param value, custom user-data YAML
+ *
+ * Set custom user-data YAML content for cloud-init
+ */
+void Machine::setCloudInitUserData(const QString &value)
+{
+    cloudInitUserData = value;
 }
 
 /**
@@ -1048,6 +1188,18 @@ QStringList Machine::generateMachineCommand()
         qemuCommand << QDir::toNativeSeparators(media.at(i)->path());
     }
 
+    // Add cloud-init ISO if enabled
+    if (this->cloudInitEnabled) {
+        QString cloudInitISO = CloudInitIsoUtils::generateCloudInitISO(this);
+        if (!cloudInitISO.isEmpty()) {
+            qemuCommand << "-cdrom";
+            qemuCommand << QDir::toNativeSeparators(cloudInitISO);
+            qDebug() << "Cloud-init ISO attached:" << cloudInitISO;
+        } else {
+            qWarning() << "Failed to generate cloud-init ISO";
+        }
+    }
+
     qDebug() << "Command " << qemuCommand;
 
     return qemuCommand;
@@ -1105,6 +1257,15 @@ bool Machine::saveMachine()
     if (!this->biosPath.isEmpty()) {
         machineJSONObject["biosPath"] = QDir::toNativeSeparators(this->biosPath);
     }
+
+    QJsonObject cloudInit;
+    cloudInit["enabled"] = this->cloudInitEnabled;
+    cloudInit["hostname"] = this->cloudInitHostname;
+    cloudInit["username"] = this->cloudInitUsername;
+    cloudInit["password"] = this->cloudInitPassword;
+    cloudInit["sshKey"] = this->cloudInitSSHKey;
+    cloudInit["userData"] = this->cloudInitUserData;
+    machineJSONObject["cloudInit"] = cloudInit;
 
     QJsonObject cpu;
     cpu["CPUType"]     = this->CPUType;

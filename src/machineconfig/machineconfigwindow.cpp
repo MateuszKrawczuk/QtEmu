@@ -44,6 +44,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_configAudio    = new MachineConfigAudio(machine, this);
     m_configAccel    = new MachineConfigAccel(machine, this);
     m_configBios     = new MachineConfigBios(machine, QEMUGlobalObject, this);
+    m_configCloudInit = new MachineConfigCloudInit(machine, this);
 
     m_optionsListWidget = new QListWidget(this);
     m_optionsListWidget->setViewMode(QListView::ListMode);
@@ -87,8 +88,12 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_optionsListWidget->item(7)->setIcon(QIcon::fromTheme("computer",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/computer.svg"))));
 
+    m_optionsListWidget->addItem(tr("Cloud-init"));
+    m_optionsListWidget->item(8)->setIcon(QIcon::fromTheme("cloud",
+                                                           QIcon(QPixmap(":/images/icons/breeze/32x32/computer.svg"))));
+
     /*m_optionsListWidget->addItem(tr("Display"));
-    m_optionsListWidget->item(7)->setIcon(QIcon::fromTheme("applications-multimedia",
+    m_optionsListWidget->item(9)->setIcon(QIcon::fromTheme("applications-multimedia",
                                                            QIcon(QPixmap(":/images/icons/breeze/32x32/.svg"))));*/
 
     // Prepare window
@@ -103,6 +108,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_optionsStackedWidget->addWidget(this->m_configAudio->m_audioPageWidget);
     m_optionsStackedWidget->addWidget(this->m_configAccel->m_acceleratorPageWidget);
     m_optionsStackedWidget->addWidget(this->m_configBios->m_biosPageWidget);
+    m_optionsStackedWidget->addWidget(this->m_configCloudInit->m_cloudInitPageWidget);
 
     connect(m_optionsListWidget, &QListWidget::currentRowChanged,
             m_optionsStackedWidget, &QStackedWidget::setCurrentIndex);
@@ -169,6 +175,7 @@ void MachineConfigWindow::saveMachineSettings()
     this->m_configAudio->saveAudioData();
     this->m_configAccel->saveAccelData();
     this->m_configBios->saveBiosData();
+    this->m_configCloudInit->saveCloudInitData();
     this->m_machine->saveMachine();
 
     this->m_osWidget->setText(this->m_machine->getName());
