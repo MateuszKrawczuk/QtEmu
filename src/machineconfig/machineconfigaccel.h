@@ -18,6 +18,7 @@
 
 // Local
 #include "../machine.h"
+#include "../qemu.h"
 #include "../utils/systemutils.h"
 
 class MachineConfigAccel : public QWidget {
@@ -25,6 +26,7 @@ class MachineConfigAccel : public QWidget {
 
     public:
         explicit MachineConfigAccel(Machine *machine,
+                                    QEMU *qemuObject,
                                     QWidget *parent = nullptr);
         ~MachineConfigAccel();
 
@@ -68,6 +70,7 @@ class MachineConfigAccel : public QWidget {
         QTreeWidget *m_acceleratorTree;
         QTreeWidgetItem *m_treeItem;
         Machine *m_machine;
+        QEMU *m_qemuObject;
 
         // Methods
         void moveUpButton();

@@ -8,16 +8,19 @@
 #include "machineconfigaccel.h"
 
 #include <QRadioButton>
+#include <QProcess>
 
 /**
  * @brief Accelerator configuration window
  * @param machine, machine to be configured
+ * @param qemuObject, QEMU object with data about QEMU
  * @param parent, parent widget
  *
  * In this window the user can select what accelerators want to use and
  * it's order
  */
 MachineConfigAccel::MachineConfigAccel(Machine *machine,
+                                       QEMU *qemuObject,
                                        QWidget *parent) : QWidget(parent)
 {
     bool enableFields = true;
@@ -27,9 +30,10 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     }
 
     this->m_machine = machine;
+    this->m_qemuObject = qemuObject;
 
     m_acceleratorGroup = new QButtonGroup(this);
-    
+
     m_tcgRadio = new QRadioButton(tr("TCG (default)"), this);
     m_acceleratorGroup->addButton(m_tcgRadio);
 
@@ -42,11 +46,41 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
 
     #ifdef Q_OS_WIN
     m_whpxRadio = new QRadioButton(tr("WHPX"), this);
-    m_haxmRadio = new QRadioButton(tr("HAXM (deprecated)"), this);
+    m_haxmRadio = new QRadioButton(tr("HAXM"), this);
     m_acceleratorGroup->addButton(m_whpxRadio);
     m_acceleratorGroup->addButton(m_haxmRadio);
-    m_haxmRadio->setEnabled(false);
-    m_haxmRadio->setToolTip(tr("HAXM is deprecated and not recommended for use"));
+
+    // Check if QEMU version is > 8.0 (HAXM removed in QEMU 8.1+)
+    bool isQemuNewerThan8 = m_qemuObject->isQEMUVersionGreaterThan(8, 0);
+
+    if (isQemuNewerThan8) {
+        m_haxmRadio->setEnabled(false);
+        m_haxmRadio->setToolTip(tr("HAXM is not supported in QEMU version > 8.0"));
+    }
+
+    // Check if HAXM driver is installed and running
+    bool haxmInstalled = false;
+    QProcess process;
+    process.start("sc", QStringList() << "query" << "IntelHaxm");
+    process.waitForFinished(3000);
+    QString output = process.readAllStandardOutput();
+    haxmInstalled = output.contains("RUNNING");
+
+    if (!haxmInstalled && !isQemuNewerThan8) {
+        m_haxmRadio->setToolTip(tr("HAXM driver is not installed or not running"));
+    }
+
+    // Check if Windows Hypervisor Platform is enabled
+    bool whpxEnabled = false;
+    process.start("powershell", QStringList() << "-Command" <<
+                 "Get-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform | Select-Object -ExpandProperty State");
+    process.waitForFinished(3000);
+    output = process.readAllStandardOutput();
+    whpxEnabled = output.contains("Enabled");
+
+    if (!whpxEnabled) {
+        m_whpxRadio->setToolTip(tr("Windows Hypervisor Platform is not enabled"));
+    }
     #endif
 
     #ifdef Q_OS_MACOS
@@ -54,12 +88,12 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     m_acceleratorGroup->addButton(m_hvfRadio);
     #endif
 
-    QString currentAccel = machine->getAccelerator().isEmpty() ? 
+    QString currentAccel = machine->getAccelerator().isEmpty() ?
                           "tcg" : machine->getAccelerator().first();
-    
+
     // Default to TCG
     m_tcgRadio->setChecked(true);
-    
+
     // Then check platform-specific options
     #ifdef Q_OS_LINUX
     if (currentAccel == "kvm" && m_kvmRadio != nullptr)
@@ -70,6 +104,8 @@ MachineConfigAccel::MachineConfigAccel(Machine *machine,
     #ifdef Q_OS_WIN
     if (currentAccel == "whpx" && m_whpxRadio != nullptr)
         m_whpxRadio->setChecked(true);
+    else if (currentAccel == "hax" && m_haxmRadio != nullptr && m_haxmRadio->isEnabled())
+        m_haxmRadio->setChecked(true);
     #endif
     #ifdef Q_OS_MACOS
     if (currentAccel == "hvf" && m_hvfRadio != nullptr)
@@ -168,6 +204,10 @@ void MachineConfigAccel::saveAccelData()
     #ifdef Q_OS_WIN
     if (m_whpxRadio && m_whpxRadio->isChecked()) {
         m_machine->addAccelerator("whpx");
+        return;
+    }
+    if (m_haxmRadio && m_haxmRadio->isChecked()) {
+        m_machine->addAccelerator("hax");
         return;
     }
     #endif
