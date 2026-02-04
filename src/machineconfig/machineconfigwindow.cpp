@@ -42,7 +42,7 @@ MachineConfigWindow::MachineConfigWindow(Machine *machine,
     m_configMedia    = new MachineConfigMedia(machine, QEMUGlobalObject, this);
     m_configNetwork  = new MachineConfigNetwork(machine, this);
     m_configAudio    = new MachineConfigAudio(machine, this);
-    m_configAccel    = new MachineConfigAccel(machine, this);
+    m_configAccel    = new MachineConfigAccel(machine, QEMUGlobalObject, this);
     m_configBios     = new MachineConfigBios(machine, QEMUGlobalObject, this);
     m_configCloudInit = new MachineConfigCloudInit(machine, this);
 
