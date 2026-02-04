@@ -55,7 +55,6 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
-          modules: 'qtsvg'
 
       - name: Install Qt (macOS)
         if: runner.os == 'macOS'
@@ -64,7 +63,6 @@ jobs:
           version: '6.7.*'
           target: 'desktop'
           arch: 'clang_64'
-          modules: 'qtsvg'
 
       # ── Build ──────────────────────────────────────────────────────
 
