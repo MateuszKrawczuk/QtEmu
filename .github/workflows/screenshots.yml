@@ -240,4 +240,5 @@ jobs:
         with:
           name: QtEmu-Screenshots
           path: screenshots/
+          retention-days: 3
           if-no-files-found: warn
