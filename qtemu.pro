@@ -81,6 +81,7 @@ SOURCES +=  src/main.cpp\
             src/machineconfig/machineconfignetwork.cpp \
             src/machineconfig/machineconfigaudio.cpp \
             src/machineconfig/machineconfigaccel.cpp \
+            src/machineconfig/machineconfigbios.cpp \
             src/utils/newdiskwizard.cpp \
             src/qemu.cpp \
             src/machineconfig/machineconfiggeneraltabs.cpp \
@@ -123,6 +124,7 @@ HEADERS  += src/mainwindow.h \
             src/machineconfig/machineconfignetwork.h \
             src/machineconfig/machineconfigaudio.h \
             src/machineconfig/machineconfigaccel.h \
+            src/machineconfig/machineconfigbios.h \
             src/utils/newdiskwizard.h \
             src/qemu.h \
             src/machineconfig/machineconfiggeneraltabs.h \

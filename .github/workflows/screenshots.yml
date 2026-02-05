@@ -1,0 +1,240 @@
+name: Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master, main, develop ]
+    paths:
+      - 'src/**'
+      - 'images/**'
+      - 'qtemu.qrc'
+      - '.github/workflows/screenshots.yml'
+
+jobs:
+  screenshots:
+    name: Generate Screenshots
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            qt6-base-dev \
+            qt6-tools-dev \
+            qt6-tools-dev-tools \
+            libqt6svg6-dev \
+            libqt6network6 \
+            libgl1-mesa-dev \
+            cmake \
+            g++ \
+            xvfb \
+            x11-utils \
+            xdotool \
+            imagemagick \
+            openbox \
+            xterm \
+            qemu-system-x86 \
+            fonts-dejavu-core
+
+      - name: Build QtEmu
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release --parallel
+
+      - name: Create screenshot script
+        run: |
+          cat > take_screenshots.sh << 'SCRIPT'
+          #!/bin/bash
+          set -e
+
+          SCREENSHOT_DIR="screenshots"
+          mkdir -p "$SCREENSHOT_DIR"
+
+          # Pre-configure settings to skip first-run wizard
+          mkdir -p ~/.config/QtEmu
+          mkdir -p ~/.qtemu/logs
+
+          # Write QSettings for QtEmu (INI format on Linux)
+          cat > ~/.config/QtEmu/QtEmu.conf << 'EOF'
+          [Configuration]
+          firstrunwizard=false
+          language=en
+          qemuBinaryPath=/usr/bin
+
+          [DataFolder]
+          QtEmuData=$HOME/.qtemu/
+          QtEmuLogs=$HOME/.qtemu/logs
+          EOF
+
+          # Replace $HOME with actual path
+          sed -i "s|\$HOME|$HOME|g" ~/.config/QtEmu/QtEmu.conf
+
+          # Create a dummy QEMU path so the app doesn't complain
+          mkdir -p /tmp/qemu-bin
+
+          # Helper: wait for a window matching a name pattern
+          wait_for_window() {
+            local pattern="$1"
+            local timeout="${2:-15}"
+            local count=0
+            while ! xdotool search --name "$pattern" 2>/dev/null | head -1; do
+              sleep 0.5
+              count=$((count + 1))
+              if [ $count -ge $((timeout * 2)) ]; then
+                echo "Timeout waiting for window: $pattern"
+                return 1
+              fi
+            done
+          }
+
+          # Helper: take screenshot of a specific window
+          screenshot_window() {
+            local window_id="$1"
+            local filename="$2"
+            sleep 0.5
+            import -window "$window_id" "$SCREENSHOT_DIR/$filename"
+            echo "Captured: $filename"
+          }
+
+          # Helper: take full desktop screenshot
+          screenshot_desktop() {
+            local filename="$1"
+            sleep 0.5
+            import -window root "$SCREENSHOT_DIR/$filename"
+            echo "Captured desktop: $filename"
+          }
+
+          echo "=== Starting QtEmu for screenshots ==="
+
+          # 1. Main Window screenshot
+          echo "--- Launching QtEmu ---"
+          ./build/QtEmu &
+          APP_PID=$!
+          sleep 3
+
+          MAIN_WID=$(wait_for_window "QtEmu")
+          if [ -n "$MAIN_WID" ]; then
+            # Resize for consistent screenshots
+            xdotool windowsize "$MAIN_WID" 1024 700
+            xdotool windowactivate "$MAIN_WID"
+            sleep 1
+            screenshot_window "$MAIN_WID" "01-main-window.png"
+          fi
+
+          # 2. New Machine Wizard screenshot
+          echo "--- Opening New Machine Wizard ---"
+          xdotool windowactivate "$MAIN_WID"
+          sleep 0.3
+          # Open Machine menu -> New Machine (first item)
+          xdotool key alt+m
+          sleep 0.5
+          xdotool key Return
+          sleep 2
+
+          WIZARD_WID=$(xdotool search --name "Create a new Machine" 2>/dev/null | head -1 || \
+                       xdotool search --name "Machine" 2>/dev/null | tail -1)
+          if [ -n "$WIZARD_WID" ] && [ "$WIZARD_WID" != "$MAIN_WID" ]; then
+            xdotool windowactivate "$WIZARD_WID"
+            sleep 0.5
+            screenshot_window "$WIZARD_WID" "02-new-machine-wizard.png"
+
+            # Navigate through wizard pages
+            for page_num in 3 4 5 6 7; do
+              xdotool key alt+n 2>/dev/null || xdotool key Return
+              sleep 1
+              screenshot_window "$WIZARD_WID" "02-wizard-page-${page_num}.png"
+            done
+
+            # Close wizard
+            xdotool key Escape
+            sleep 1
+          fi
+
+          # 3. Preferences / Config Window screenshot
+          echo "--- Opening Preferences ---"
+          xdotool windowactivate "$MAIN_WID"
+          sleep 0.3
+          # Try menu: File -> Preferences
+          xdotool key alt+F
+          sleep 0.5
+          screenshot_desktop "03-file-menu.png"
+          xdotool key Escape
+          sleep 0.5
+
+          # 4. Help -> About screenshot
+          echo "--- Opening About dialog ---"
+          xdotool windowactivate "$MAIN_WID"
+          sleep 0.3
+          xdotool key alt+H
+          sleep 0.5
+          screenshot_desktop "04-help-menu.png"
+          # Click "About" - it should be the last item
+          xdotool key Up
+          sleep 0.2
+          xdotool key Return
+          sleep 1
+
+          ABOUT_WID=$(xdotool search --name "About" 2>/dev/null | head -1)
+          if [ -n "$ABOUT_WID" ]; then
+            xdotool windowactivate "$ABOUT_WID"
+            sleep 0.5
+            screenshot_window "$ABOUT_WID" "05-about-dialog.png"
+            xdotool key Escape
+            sleep 0.5
+          fi
+
+          # 5. Machine menu (right-click context menu)
+          echo "--- Opening Machine menu ---"
+          xdotool windowactivate "$MAIN_WID"
+          sleep 0.3
+          xdotool key alt+M
+          sleep 0.5
+          screenshot_desktop "06-machine-menu.png"
+          xdotool key Escape
+          sleep 0.5
+
+          # 6. Full desktop overview
+          screenshot_desktop "07-desktop-overview.png"
+
+          # Clean up
+          echo "--- Cleaning up ---"
+          kill $APP_PID 2>/dev/null || true
+          wait $APP_PID 2>/dev/null || true
+
+          echo "=== Screenshot generation complete ==="
+          ls -la "$SCREENSHOT_DIR/"
+          SCRIPT
+
+          chmod +x take_screenshots.sh
+
+      - name: Generate screenshots
+        run: |
+          # Start Xvfb with a good resolution
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1280x1024x24 &
+          XVFB_PID=$!
+          sleep 2
+
+          # Start a lightweight window manager for proper window decoration
+          openbox &
+          sleep 1
+
+          # Run the screenshot script
+          bash take_screenshots.sh || true
+
+          # Cleanup
+          kill $XVFB_PID 2>/dev/null || true
+        env:
+          DISPLAY: ':99'
+          QT_QPA_PLATFORM: xcb
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: QtEmu-Screenshots
+          path: screenshots/
+          if-no-files-found: warn

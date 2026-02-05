@@ -1,0 +1,233 @@
+name: Release
+
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-installers:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            name: Linux
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: macOS
+
+    name: Installer (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Qt installation ────────────────────────────────────────────
+
+      - name: Install Qt and dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            qt6-base-dev \
+            qt6-tools-dev \
+            qt6-tools-dev-tools \
+            libqt6svg6-dev \
+            libqt6network6 \
+            libgl1-mesa-dev \
+            cmake \
+            g++ \
+            file \
+            dpkg-dev \
+            fuse \
+            libfuse2
+
+      - name: Install Qt (Windows)
+        if: runner.os == 'Windows'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.*'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+
+      - name: Install Qt (macOS)
+        if: runner.os == 'macOS'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.*'
+          target: 'desktop'
+          arch: 'clang_64'
+
+      # ── Build ──────────────────────────────────────────────────────
+
+      - name: Configure CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=build/install
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      # ── Linux: AppImage ────────────────────────────────────────────
+
+      - name: Create AppImage (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          # Install linuxdeploy
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
+
+          # Create AppDir structure
+          mkdir -p AppDir/usr/bin
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+
+          cp build/QtEmu AppDir/usr/bin/
+          cp qtemu.desktop AppDir/usr/share/applications/qtemu.desktop
+          cp images/qtemu.png AppDir/usr/share/icons/hicolor/256x256/apps/qtemu.png
+
+          # Generate AppImage
+          export QMAKE=$(which qmake6 2>/dev/null || which qmake)
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --plugin qt \
+            --output appimage \
+            --desktop-file AppDir/usr/share/applications/qtemu.desktop \
+            --icon-file AppDir/usr/share/icons/hicolor/256x256/apps/qtemu.png
+
+          mv QtEmu-*.AppImage QtEmu-${{ github.event.release.tag_name }}-linux-x86_64.AppImage
+
+      - name: Create .deb package (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
+          PKG_DIR="qtemu_${VERSION}_amd64"
+
+          mkdir -p "${PKG_DIR}/DEBIAN"
+          mkdir -p "${PKG_DIR}/usr/bin"
+          mkdir -p "${PKG_DIR}/usr/share/applications"
+          mkdir -p "${PKG_DIR}/usr/share/pixmaps"
+
+          cp build/QtEmu "${PKG_DIR}/usr/bin/qtemu"
+          cp qtemu.desktop "${PKG_DIR}/usr/share/applications/"
+          cp images/qtemu.png "${PKG_DIR}/usr/share/pixmaps/"
+
+          cat > "${PKG_DIR}/DEBIAN/control" << EOF
+          Package: qtemu
+          Version: ${VERSION}
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Depends: qemu-system, libqt6core6, libqt6gui6, libqt6widgets6, libqt6network6, libqt6svg6
+          Maintainer: QtEmu Developers
+          Description: QtEmu - QEMU GUI frontend
+           A Qt-based graphical user interface for the QEMU emulator.
+           Allows creating, configuring, and managing virtual machines.
+          EOF
+
+          dpkg-deb --build "${PKG_DIR}"
+          mv "${PKG_DIR}.deb" "QtEmu-${VERSION}-ubuntu-amd64.deb"
+
+      # ── Windows: Inno Setup installer ──────────────────────────────
+
+      - name: Deploy Qt (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          mkdir deploy
+          Copy-Item "build/Release/QtEmu.exe" "deploy/"
+          windeployqt --release --no-translations --no-opengl-sw "deploy/QtEmu.exe"
+
+      - name: Create Inno Setup script (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.release.tag_name }}" -replace '^v', ''
+          $iss = @"
+          [Setup]
+          AppName=QtEmu
+          AppVersion=$version
+          AppPublisher=QtEmu Developers
+          AppPublisherURL=https://www.qtemu.org
+          DefaultDirName={autopf}\QtEmu
+          DefaultGroupName=QtEmu
+          OutputBaseFilename=QtEmu-$version-windows-setup
+          Compression=lzma2
+          SolidCompression=yes
+          ArchitecturesInstallIn64BitMode=x64compatible
+          WizardStyle=modern
+          OutputDir=installer
+
+          [Files]
+          Source: "deploy\*"; DestDir: "{app}"; Flags: recursesubdirs
+
+          [Icons]
+          Name: "{group}\QtEmu"; Filename: "{app}\QtEmu.exe"
+          Name: "{group}\Uninstall QtEmu"; Filename: "{uninstallexe}"
+          Name: "{autodesktop}\QtEmu"; Filename: "{app}\QtEmu.exe"; Tasks: desktopicon
+
+          [Tasks]
+          Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional icons:"
+
+          [Run]
+          Filename: "{app}\QtEmu.exe"; Description: "Launch QtEmu"; Flags: nowait postinstall skipifsilent
+          "@
+          New-Item -ItemType Directory -Force -Path installer | Out-Null
+          $iss | Out-File -FilePath "QtEmu.iss" -Encoding ASCII
+
+      - name: Build installer (Windows)
+        if: runner.os == 'Windows'
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
+        with:
+          path: QtEmu.iss
+
+      - name: Create ZIP archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.release.tag_name }}" -replace '^v', ''
+          Compress-Archive -Path "deploy/*" -DestinationPath "QtEmu-$version-windows-portable.zip"
+
+      # ── macOS: DMG ─────────────────────────────────────────────────
+
+      - name: Create DMG (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
+
+          # Deploy Qt frameworks into the app bundle
+          macdeployqt build/QtEmu.app -dmg
+
+          mv build/QtEmu.dmg "QtEmu-${VERSION}-macos.dmg"
+
+      # ── Upload release assets ──────────────────────────────────────
+
+      - name: Upload Linux assets
+        if: runner.os == 'Linux'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            QtEmu-*-linux-x86_64.AppImage
+            QtEmu-*-ubuntu-amd64.deb
+
+      - name: Upload Windows assets
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            installer/QtEmu-*-windows-setup.exe
+            QtEmu-*-windows-portable.zip
+
+      - name: Upload macOS assets
+        if: runner.os == 'macOS'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            QtEmu-*-macos.dmg
