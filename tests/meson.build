@@ -31,6 +31,7 @@ test_cloudinitisoutils_sources = [
 
 test_cloudinitisoutils_moc = qt6.preprocess(
     moc_headers: test_cloudinitisoutils_headers,
+    moc_sources: 'test_cloudinitisoutils.cpp',
     include_directories: incdir_tests
 )
 
@@ -70,6 +71,7 @@ test_machine_cloudinit_sources = [
 
 test_machine_cloudinit_moc = qt6.preprocess(
     moc_headers: test_machine_cloudinit_headers,
+    moc_sources: 'test_machine_cloudinit.cpp',
     include_directories: incdir_tests
 )
 
