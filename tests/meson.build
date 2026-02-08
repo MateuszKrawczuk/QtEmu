@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 # Find Qt Test module and other required modules
-qt6_test_dep = dependency('qt6', modules : ['Core', 'Test', 'Network', 'Widgets'])
+qt6_test_dep = dependency('qt6', modules : ['Core', 'Test', 'Network', 'Widgets', 'Gui'])
 
 # Include parent directory for source files
 incdir_tests = include_directories('../src')
@@ -31,7 +31,7 @@ test_cloudinitisoutils_sources = [
 
 test_cloudinitisoutils_moc = qt6.preprocess(
     moc_headers: test_cloudinitisoutils_headers,
-    moc_sources: 'test_cloudinitisoutils.cpp',
+    moc_sources: ['test_cloudinitisoutils.cpp'],
     include_directories: incdir_tests
 )
 
@@ -71,7 +71,7 @@ test_machine_cloudinit_sources = [
 
 test_machine_cloudinit_moc = qt6.preprocess(
     moc_headers: test_machine_cloudinit_headers,
-    moc_sources: 'test_machine_cloudinit.cpp',
+    moc_sources: ['test_machine_cloudinit.cpp'],
     include_directories: incdir_tests
 )
 
