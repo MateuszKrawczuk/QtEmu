@@ -22,6 +22,9 @@
 class CloudInitIsoUtils : public QObject {
     Q_OBJECT
 
+    // Allow tests to access private methods
+    friend class TestCloudInitIsoUtils;
+
     public:
         explicit CloudInitIsoUtils(QObject *parent = nullptr);
         ~CloudInitIsoUtils();

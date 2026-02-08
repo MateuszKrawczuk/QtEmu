@@ -111,3 +111,10 @@ install(TARGETS QtEmu     # Install to CMAKE_INSTALL_PREFIX/bin/QtEmu.exe
         BUNDLE  DESTINATION .      # Install to CMAKE_INSTALL_PREFIX/QtEmu.app/Contents/MacOS/QtEmu
         )
 install(CODE "include(\"${CMAKE_CURRENT_BINARY_DIR}/deploy_QtEmu_\${CMAKE_INSTALL_CONFIG_NAME}.cmake\")")
+
+# Enable testing
+option(BUILD_TESTING "Build tests" ON)
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

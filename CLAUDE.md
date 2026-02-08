@@ -263,7 +263,91 @@ Use `#ifdef Q_OS_*` guards for platform-specific code (`Q_OS_LINUX`, `Q_OS_WIN`,
 
 ## Testing
 
-The project currently has no automated test suite. Manual testing with QEMU is required when verifying changes to command-line generation or machine lifecycle management.
+### Unit Tests
+
+QtEmu uses Qt Test framework for automated testing. Tests are located in the `tests/` directory.
+
+#### Running Tests
+
+```bash
+# Build with tests enabled (default)
+mkdir build && cd build
+cmake -DBUILD_TESTING=ON ..
+make
+ctest
+
+# Run specific test
+./tests/test_cloudinitisoutils
+./tests/test_machine_cloudinit
+
+# Run tests with verbose output
+ctest --verbose
+
+# Run tests matching a pattern
+ctest -R cloudinit
+```
+
+#### Writing Tests
+
+Tests should follow these conventions:
+- One test file per class or module being tested
+- Naming: `test_<classname>.cpp` (lowercase with underscores)
+- Use `QTEST_MAIN()` macro for test runner
+- Include proper cleanup in `cleanup()` and `cleanupTestCase()`
+- Test both positive and negative cases
+- Verify security-critical functionality (e.g., password hashing)
+
+Example test structure:
+```cpp
+class TestMyClass : public QObject
+{
+    Q_OBJECT
+private slots:
+    void initTestCase();      // Run once before all tests
+    void cleanupTestCase();   // Run once after all tests
+    void init();              // Run before each test
+    void cleanup();           // Run after each test
+
+    void testFeature1();      // Individual test cases
+    void testFeature2();
+};
+
+QTEST_MAIN(TestMyClass)
+#include "test_myclass.moc"
+```
+
+#### Test Coverage
+
+Current test coverage:
+- **Cloud-init functionality:** `test_cloudinitisoutils.cpp`
+  - User-data generation (basic, with password, with SSH key, custom)
+  - Meta-data generation
+  - Password hashing (security-critical)
+  - ISO generation and cleanup
+  - YAML validation
+- **Machine cloud-init properties:** `test_machine_cloudinit.cpp`
+  - Getters/setters for all cloud-init properties
+  - JSON serialization/deserialization
+  - Password NOT saved to JSON (security verification)
+  - Default values
+
+#### Test Requirements
+
+When adding new features:
+1. Write unit tests for all new classes and methods
+2. Test security-critical code paths (passwords, authentication, file operations)
+3. Verify backward compatibility (JSON format, API)
+4. Test error handling and edge cases
+5. Ensure tests are platform-independent or use appropriate guards
+
+### Manual Testing
+
+Manual testing with QEMU is still required for:
+- UI functionality and user workflows
+- QEMU command-line generation
+- VM lifecycle management (start, stop, pause, reset)
+- Cross-platform compatibility
+- Performance and resource usage
 
 ## Common Pitfalls
 
