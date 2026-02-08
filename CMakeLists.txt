@@ -42,6 +42,7 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/machineconfig/machineconfigaudio.cpp src/machineconfig/machineconfigaudio.h
     src/machineconfig/machineconfigbios.cpp src/machineconfig/machineconfigbios.h
     src/machineconfig/machineconfigboot.cpp src/machineconfig/machineconfigboot.h
+    src/machineconfig/machineconfigcloudinit.cpp src/machineconfig/machineconfigcloudinit.h
     src/machineconfig/machineconfiggeneral.cpp src/machineconfig/machineconfiggeneral.h
     src/machineconfig/machineconfiggeneraltabs.cpp src/machineconfig/machineconfiggeneraltabs.h
     src/machineconfig/machineconfighardware.cpp src/machineconfig/machineconfighardware.h
@@ -62,6 +63,7 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/newmachine/machinepage.cpp src/newmachine/machinepage.h
     src/newmachine/memorypage.cpp src/newmachine/memorypage.h
     src/qemu.cpp src/qemu.h
+    src/utils/cloudinitisoutils.cpp src/utils/cloudinitisoutils.h
     src/utils/firstrunwizard.cpp src/utils/firstrunwizard.h
     src/utils/logger.cpp src/utils/logger.h
     src/utils/newdiskwizard.cpp src/utils/newdiskwizard.h
@@ -109,3 +111,10 @@ install(TARGETS QtEmu     # Install to CMAKE_INSTALL_PREFIX/bin/QtEmu.exe
         BUNDLE  DESTINATION .      # Install to CMAKE_INSTALL_PREFIX/QtEmu.app/Contents/MacOS/QtEmu
         )
 install(CODE "include(\"${CMAKE_CURRENT_BINARY_DIR}/deploy_QtEmu_\${CMAKE_INSTALL_CONFIG_NAME}.cmake\")")
+
+# Enable testing
+option(BUILD_TESTING "Build tests" ON)
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

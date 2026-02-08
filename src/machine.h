@@ -21,6 +21,7 @@
 #include "media.h"
 #include "machineutils.h"
 #include "utils/logger.h"
+#include "utils/cloudinitisoutils.h"
 
 class Machine: public QObject {
     Q_OBJECT
@@ -59,6 +60,24 @@ class Machine: public QObject {
 
         QString getBiosPath() const;
         void setBiosPath(const QString &value);
+
+        bool getCloudInitEnabled() const;
+        void setCloudInitEnabled(bool value);
+
+        QString getCloudInitHostname() const;
+        void setCloudInitHostname(const QString &value);
+
+        QString getCloudInitUsername() const;
+        void setCloudInitUsername(const QString &value);
+
+        QString getCloudInitPassword() const;
+        void setCloudInitPassword(const QString &value);
+
+        QString getCloudInitSSHKey() const;
+        void setCloudInitSSHKey(const QString &value);
+
+        QString getCloudInitUserData() const;
+        void setCloudInitUserData(const QString &value);
 
         Machine::States getState() const;
         void setState(const States &value);
@@ -182,6 +201,14 @@ class Machine: public QObject {
         
         // BIOS
         QString biosPath;
+
+        // Cloud-init
+        bool cloudInitEnabled;
+        QString cloudInitHostname;
+        QString cloudInitUsername;
+        QString cloudInitPassword;
+        QString cloudInitSSHKey;
+        QString cloudInitUserData;
 
         // Accelerator
         QStringList accelerator;

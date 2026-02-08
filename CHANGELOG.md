@@ -2,6 +2,11 @@
 
 Features:
 * Tested with QEMU up to version 9.2
+* Added comprehensive cloud-init support for automated VM configuration
+  - Automatic generation of cloud-init seed ISO
+  - Configuration of hostname, username, password (SHA-512 hashed), and SSH keys
+  - Support for custom user-data YAML
+  - NoCloud datasource for offline configuration
 * Added support for ARM64 QEMU binaries on macOS and Windows
 * Added new "Others" tab for keyboard layout configuration
 * Improved CPU configuration with side-by-side slider and spinbox layout

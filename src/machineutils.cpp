@@ -70,6 +70,7 @@ void MachineUtils::fillMachineObject(Machine *machine,
     QJsonObject cpuObject = machineJSON["cpu"].toObject();
     QJsonObject bootObject = machineJSON["boot"].toObject();
     QJsonObject kernelObject = bootObject["kernelBoot"].toObject();
+    QJsonObject cloudInitObject = machineJSON["cloudInit"].toObject();
     QJsonArray mediaArray = machineJSON["media"].toArray();
 
     Boot *machineBoot = new Boot(machine);
@@ -115,6 +116,22 @@ void MachineUtils::fillMachineObject(Machine *machine,
     machine->setAudio(MachineUtils::getSoundCards(machineJSON["audio"].toArray()));
     machine->setAccelerator(MachineUtils::getAccelerators(machineJSON["accelerator"].toArray()));
     machine->setBoot(machineBoot);
+
+    // Load BIOS path if present
+    if (machineJSON.contains("biosPath")) {
+        machine->setBiosPath(machineJSON["biosPath"].toString());
+    }
+
+    // Load cloud-init configuration if present
+    if (!cloudInitObject.isEmpty()) {
+        machine->setCloudInitEnabled(cloudInitObject["enabled"].toBool());
+        machine->setCloudInitHostname(cloudInitObject["hostname"].toString());
+        machine->setCloudInitUsername(cloudInitObject["username"].toString());
+        // Note: password is not loaded from JSON for security reasons
+        // User will need to re-enter it when reconfiguring
+        machine->setCloudInitSSHKey(cloudInitObject["sshKey"].toString());
+        machine->setCloudInitUserData(cloudInitObject["userData"].toString());
+    }
 }
 
 /**
