@@ -10,22 +10,19 @@ on:
     branches: [ master, main, develop ]
 
 jobs:
-  build:
+  build-cmake:
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-24.04
             name: Ubuntu 24.04
-            cmake-flags: ""
           - os: windows-latest
             name: Windows
-            cmake-flags: ""
           - os: macos-latest
             name: macOS
-            cmake-flags: ""
 
-    name: Build (${{ matrix.name }})
+    name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -64,7 +61,7 @@ jobs:
           arch: 'clang_64'
 
       - name: Configure CMake
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake-flags }}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build --config Release --parallel
@@ -73,19 +70,124 @@ jobs:
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
-          name: QtEmu-Linux
+          name: QtEmu-Linux-CMake
           path: build/QtEmu
+          retention-days: 3
 
       - name: Upload build artifact (Windows)
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: QtEmu-Windows
+          name: QtEmu-Windows-CMake
           path: build/Release/QtEmu.exe
+          retention-days: 3
 
       - name: Upload build artifact (macOS)
         if: runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
-          name: QtEmu-macOS
+          name: QtEmu-macOS-CMake
           path: build/QtEmu.app
+          retention-days: 3
+
+  build-meson:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            name: Ubuntu 24.04
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: macOS
+
+    name: Meson (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt and Meson (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            qt6-base-dev \
+            qt6-tools-dev \
+            qt6-tools-dev-tools \
+            libqt6svg6-dev \
+            libqt6network6 \
+            libgl1-mesa-dev \
+            meson \
+            ninja-build \
+            g++ \
+            pkg-config
+
+      - name: Install Qt (Windows)
+        if: runner.os == 'Windows'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.*'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+
+      - name: Install Meson (Windows)
+        if: runner.os == 'Windows'
+        run: pip install meson ninja
+
+      - name: Install Qt (macOS)
+        if: runner.os == 'macOS'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.*'
+          target: 'desktop'
+          arch: 'clang_64'
+
+      - name: Install Meson (macOS)
+        if: runner.os == 'macOS'
+        run: brew install meson ninja pkg-config
+
+      - name: Setup MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure Meson (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: meson setup build --buildtype=release
+
+      - name: Configure Meson (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:PKG_CONFIG_PATH = "$env:QT_ROOT_DIR\lib\pkgconfig"
+          meson setup build --buildtype=release
+
+      - name: Build
+        run: meson compile -C build
+
+      - name: Upload build artifact (Ubuntu)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: QtEmu-Linux-Meson
+          path: build/qtemu
+          retention-days: 3
+
+      - name: Upload build artifact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: QtEmu-Windows-Meson
+          path: build/qtemu.exe
+          retention-days: 3
+
+      - name: Upload build artifact (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: QtEmu-macOS-Meson
+          path: build/qtemu
+          retention-days: 3
