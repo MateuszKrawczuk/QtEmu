@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2025 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>
+SPDX-License-Identifier: GPL-2.0-or-later
+-->
+
 # QtEmu Unit Tests
 
 This directory contains unit tests for QtEmu using the Qt Test framework.

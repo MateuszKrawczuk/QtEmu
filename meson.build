@@ -144,3 +144,8 @@ if host_machine.system() == 'linux'
     install_data('qtemu.desktop', install_dir: get_option('datadir') / 'applications')
     install_data('qtemu.png', install_dir: get_option('datadir') / 'pixmaps')
 endif
+
+# Enable testing
+if get_option('build_testing')
+    subdir('tests')
+endif

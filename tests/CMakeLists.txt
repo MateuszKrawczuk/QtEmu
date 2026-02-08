@@ -6,8 +6,8 @@ cmake_minimum_required(VERSION 3.20)
 # Enable testing
 enable_testing()
 
-# Find Qt Test module
-find_package(Qt6 REQUIRED COMPONENTS Test)
+# Find Qt Test module and other required modules
+find_package(Qt6 REQUIRED COMPONENTS Test Core Network Widgets)
 
 # Include parent directory for source files
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -19,6 +19,8 @@ function(add_qtemu_test test_name test_source)
     target_link_libraries(${test_name} PRIVATE
         Qt6::Core
         Qt6::Test
+        Qt6::Network
+        Qt6::Widgets
     )
 
     add_test(NAME ${test_name} COMMAND ${test_name})

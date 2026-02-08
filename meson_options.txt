@@ -1,0 +1,4 @@
+# SPDX-FileCopyrightText: 2025 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+option('build_testing', type: 'boolean', value: true, description: 'Build tests')
