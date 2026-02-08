@@ -1,0 +1,128 @@
+version = 1
+SPDX-PackageName = "QtEmu"
+SPDX-PackageSupplier = "Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-PackageDownloadLocation = "https://gitlab.com/qtemu/gui"
+
+# Documentation files (multiple contributors)
+[[annotations]]
+path = ["CHANGELOG.md", "CONTRIBUTING.md", "INSTALL.md", "README.md", "ROADMAP.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>", "2022-2026 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>"]
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# CLAUDE.md (auto-generated project guide)
+[[annotations]]
+path = "CLAUDE.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Claude <noreply@anthropic.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# License file itself
+[[annotations]]
+path = "LICENSE.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "1989, 1991 Free Software Foundation, Inc."
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Git configuration
+[[annotations]]
+path = ".gitignore"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = ".idea/.gitignore"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2022 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Qt resource files (created by Carlavilla, contributed to by Mateusz)
+[[annotations]]
+path = "qtemu.qrc"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>", "2022-2025 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>"]
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Windows resource file (created by Mateusz)
+[[annotations]]
+path = "qtemu.rc"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Desktop entry (created by Carlavilla)
+[[annotations]]
+path = "qtemu.desktop"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Application icons and branding (created by Carlavilla)
+[[annotations]]
+path = ["qtemu.png", "qtemu.ico", "images/qtemu.png", "images/banner.png", "images/QEMU.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Flag icons (created by Carlavilla)
+[[annotations]]
+path = "images/flags/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# OS logos (CC-BY-3.0, from iconfinder.com/iconsets/flat-round-system by Aha-Soft)
+[[annotations]]
+path = ["images/os/**.png", "images/os/32x32/**", "images/os/64x64/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Aha-Soft"
+SPDX-License-Identifier = "CC-BY-3.0"
+
+[[annotations]]
+path = "images/os/LICENSE"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Aha-Soft"
+SPDX-License-Identifier = "CC-BY-3.0"
+
+# KDE Breeze icons
+[[annotations]]
+path = "images/icons/breeze/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2014 Uri Herrera <uri_herrera@nitrux.in> and others"
+SPDX-License-Identifier = "LGPL-3.0-or-later"
+
+# Qt Creator manual screenshots
+[[annotations]]
+path = "images/qt_creator_manual/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Translation - English template (created by Carlavilla)
+[[annotations]]
+path = "translations/template_qtemu.ts"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Translation - Greek (created by Athanasios Karachalios)
+[[annotations]]
+path = "translations/template_qtemu_el.ts"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Αθανάσιος Καραχάλιος <nasos.karachalios.stagkas@proton.me>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Translation - Polish (created by Mateusz Krawczuk)
+[[annotations]]
+path = "translations/template_qtemu_pl.ts"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2022 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+# Translation - Chinese (created by qazmko1029)
+[[annotations]]
+path = "translations/template_qtemu_zh_CN.ts"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2019 qazmko1029 <qq1185814848@gmail.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
