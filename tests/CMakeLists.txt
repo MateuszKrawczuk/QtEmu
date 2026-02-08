@@ -40,6 +40,8 @@ target_sources(test_cloudinitisoutils PRIVATE
     ${CMAKE_SOURCE_DIR}/src/boot.cpp
     ${CMAKE_SOURCE_DIR}/src/media.cpp
     ${CMAKE_SOURCE_DIR}/src/qemu.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/logger.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/systemutils.cpp
 )
 
 # Machine cloud-init properties tests
@@ -51,6 +53,7 @@ target_sources(test_machine_cloudinit PRIVATE
     ${CMAKE_SOURCE_DIR}/src/media.cpp
     ${CMAKE_SOURCE_DIR}/src/qemu.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/logger.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/systemutils.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cloudinitisoutils.cpp
 )
 
