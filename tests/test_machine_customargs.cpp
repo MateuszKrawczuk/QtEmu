@@ -227,11 +227,13 @@ void TestMachineCustomArgs::testCustomArgumentsSplitCommand()
     QCOMPARE(splitArgs[5], QString("Test VM")); // Quotes should be stripped
 
     // Test empty string
-    QStringList emptyArgs = QProcess::splitCommand(QStringLiteral(""));
+    QString emptyStr;
+    QStringList emptyArgs = QProcess::splitCommand(emptyStr);
     QVERIFY(emptyArgs.isEmpty());
 
     // Test whitespace only
-    QStringList whitespaceArgs = QProcess::splitCommand(QStringLiteral("   "));
+    QString whitespaceStr = QStringLiteral("   ");
+    QStringList whitespaceArgs = QProcess::splitCommand(whitespaceStr);
     QVERIFY(whitespaceArgs.isEmpty());
 }
 
