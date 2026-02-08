@@ -34,6 +34,7 @@ ctest --verbose
 ```bash
 ./test_cloudinitisoutils
 ./test_machine_cloudinit
+./test_machine_customargs
 ```
 
 ### Run tests matching a pattern
@@ -64,6 +65,16 @@ Tests for Machine class cloud-init properties:
 - Default values initialization
 - JSON serialization and deserialization
 - **Security test:** Password NOT saved to JSON file
+
+### test_machine_customargs.cpp
+Tests for Machine class custom QEMU arguments:
+- Getters and setters for customArguments field
+- Default (empty) value initialization
+- Empty and whitespace-only argument handling
+- JSON serialization and deserialization round-trips
+- Special characters in arguments (commas, dots, equals signs)
+- Quoted arguments handling
+- QProcess::splitCommand() parsing verification
 
 ## Writing New Tests
 

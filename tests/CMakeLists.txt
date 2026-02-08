@@ -57,8 +57,22 @@ target_sources(test_machine_cloudinit PRIVATE
     ${CMAKE_SOURCE_DIR}/src/utils/cloudinitisoutils.cpp
 )
 
+# Machine custom arguments tests
+add_qtemu_test(test_machine_customargs test_machine_customargs.cpp)
+target_sources(test_machine_customargs PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/machine.cpp
+    ${CMAKE_SOURCE_DIR}/src/machineutils.cpp
+    ${CMAKE_SOURCE_DIR}/src/boot.cpp
+    ${CMAKE_SOURCE_DIR}/src/media.cpp
+    ${CMAKE_SOURCE_DIR}/src/qemu.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/logger.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/systemutils.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cloudinitisoutils.cpp
+)
+
 # Summary message
 message(STATUS "Tests configured:")
 message(STATUS "  - test_cloudinitisoutils")
 message(STATUS "  - test_machine_cloudinit")
+message(STATUS "  - test_machine_customargs")
 message(STATUS "Run tests with: ctest or make test")

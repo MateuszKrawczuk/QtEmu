@@ -85,8 +85,49 @@ test_machine_cloudinit_exe = executable(
 
 test('test_machine_cloudinit', test_machine_cloudinit_exe, timeout: 30)
 
+# Machine custom arguments tests
+test_machine_customargs_headers = [
+    '../src/machine.h',
+    '../src/machineutils.h',
+    '../src/boot.h',
+    '../src/media.h',
+    '../src/qemu.h',
+    '../src/utils/logger.h',
+    '../src/utils/systemutils.h',
+    '../src/utils/cloudinitisoutils.h'
+]
+
+test_machine_customargs_sources = [
+    'test_machine_customargs.cpp',
+    '../src/machine.cpp',
+    '../src/machineutils.cpp',
+    '../src/boot.cpp',
+    '../src/media.cpp',
+    '../src/qemu.cpp',
+    '../src/utils/logger.cpp',
+    '../src/utils/systemutils.cpp',
+    '../src/utils/cloudinitisoutils.cpp'
+]
+
+test_machine_customargs_moc = qt6.preprocess(
+    moc_headers: test_machine_customargs_headers,
+    moc_sources: ['test_machine_customargs.cpp'],
+    include_directories: incdir_tests
+)
+
+test_machine_customargs_exe = executable(
+    'test_machine_customargs',
+    test_machine_customargs_sources,
+    test_machine_customargs_moc,
+    dependencies: qt6_test_dep,
+    include_directories: incdir_tests
+)
+
+test('test_machine_customargs', test_machine_customargs_exe, timeout: 30)
+
 # Summary message
 message('Tests configured:')
 message('  - test_cloudinitisoutils')
 message('  - test_machine_cloudinit')
+message('  - test_machine_customargs')
 message('Run tests with: meson test or ninja test')

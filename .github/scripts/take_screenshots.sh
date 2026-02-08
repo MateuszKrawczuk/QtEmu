@@ -263,7 +263,17 @@ if [ -n "$MAIN_WID" ]; then
         # The tabs are: General, Hardware, Boot, Media, Network, Audio, Accelerator, BIOS, Cloud-init
         screenshot_window "$CONFIG_WID" "08-config-general.png"
 
-        # Navigate through tabs (Down arrow in the list widget)
+        # The General page has internal tabs: Basic Details, Description, Custom Arguments
+        # Navigate to Custom Arguments tab within General (Ctrl+Tab or click)
+        echo "--- Capturing General sub-tabs ---"
+        xdotool key ctrl+Tab  # Switch to Description tab
+        sleep 0.3
+        screenshot_window "$CONFIG_WID" "08-config-general-description.png"
+        xdotool key ctrl+Tab  # Switch to Custom Arguments tab
+        sleep 0.3
+        screenshot_window "$CONFIG_WID" "08-config-general-customargs.png"
+
+        # Navigate through main tabs (Down arrow in the list widget)
         local tab_names=("hardware" "boot" "media" "network" "audio" "accelerator" "bios" "cloudinit")
         for i in "${!tab_names[@]}"; do
             xdotool key Down
@@ -304,6 +314,22 @@ if [ -n "$MAIN_WID" ]; then
         sleep 0.3
 
         screenshot_window "$CONFIG_WID" "09-config-cloudinit-filled.png"
+
+        # Demonstrate Custom Arguments tab with example data
+        echo "--- Demonstrating Custom Arguments configuration ---"
+        xdotool key Home  # Go to first tab (General)
+        sleep 0.3
+
+        # Navigate to Custom Arguments sub-tab
+        xdotool key ctrl+Tab ctrl+Tab  # Skip Basic and Description to reach Custom Arguments
+        sleep 0.3
+
+        # Tab to the text area and type example arguments
+        xdotool key Tab Tab Tab
+        xdotool type --delay 30 "-device virtio-balloon -device virtio-rng-pci"
+        sleep 0.5
+
+        screenshot_window "$CONFIG_WID" "09-config-customargs-filled.png"
 
         # Close configuration window
         xdotool key Escape
