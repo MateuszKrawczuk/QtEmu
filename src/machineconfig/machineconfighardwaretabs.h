@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
+// SPDX-FileCopyrightText: 2023-2025 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef MACHINECONFIGHARDWARETABS_H

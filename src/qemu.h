@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2006-2009 Urs Wolfer <uwolfer @ fwo.ch>
 // SPDX-FileCopyrightText: 2006-2009 Ben Klopfenstein <benklop gmail com>
 // SPDX-FileCopyrightText: 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
+// SPDX-FileCopyrightText: 2025 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef QEMU_H

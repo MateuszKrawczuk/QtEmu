@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
+// SPDX-FileCopyrightText: 2019 sharpbai <sharpbai@gmail.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef SYSTEMUTILS_H
