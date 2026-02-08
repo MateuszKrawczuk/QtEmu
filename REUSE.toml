@@ -1,0 +1,70 @@
+version = 1
+SPDX-PackageName = "QtEmu"
+SPDX-PackageSupplier = "Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-PackageDownloadLocation = "https://gitlab.com/qtemu/gui"
+
+[[annotations]]
+path = ["**.md", "CHANGELOG.md", "CONTRIBUTING.md", "INSTALL.md", "README.md", "ROADMAP.md", "CLAUDE.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2006-2009 Urs Wolfer <uwolfer @ fwo.ch>", "2006-2009 Ben Klopfenstein <benklop gmail com>", "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"]
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = "LICENSE.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "1989, 1991 Free Software Foundation, Inc."
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = [".gitignore", ".idea/.gitignore"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = ["qtemu.qrc", "qtemu.rc", "qtemu.desktop"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2006-2009 Urs Wolfer <uwolfer @ fwo.ch>", "2006-2009 Ben Klopfenstein <benklop gmail com>", "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"]
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = ["qtemu.png", "qtemu.ico", "images/qtemu.png", "images/banner.png", "images/QEMU.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = "images/flags/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = ["images/os/**.png", "images/os/32x32/**", "images/os/64x64/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Aha-Soft"
+SPDX-License-Identifier = "CC-BY-3.0"
+
+[[annotations]]
+path = "images/os/LICENSE"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Aha-Soft"
+SPDX-License-Identifier = "CC-BY-3.0"
+
+[[annotations]]
+path = "images/icons/breeze/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2014 Uri Herrera <uri_herrera@nitrux.in> and others"
+SPDX-License-Identifier = "LGPL-3.0-or-later"
+
+[[annotations]]
+path = "images/qt_creator_manual/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+[[annotations]]
+path = "translations/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>"
+SPDX-License-Identifier = "GPL-2.0-or-later"

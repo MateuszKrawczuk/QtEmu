@@ -1,4 +1,5 @@
-# Generated from qtemu.pro.
+# SPDX-FileCopyrightText: 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 cmake_minimum_required(VERSION 3.20)
 project(QtEmu VERSION 2.2.0 LANGUAGES CXX)

@@ -1,4 +1,5 @@
-# meson.build is a fast and furious build system
+# SPDX-FileCopyrightText: 2017-2020 Sergio Carlavilla <carlavilla @ mailbox.org>
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 project('QtEmu', 'cpp', default_options : ['cpp_std=c++17', 'warning_level=3'], version: '2.2.0')
 
