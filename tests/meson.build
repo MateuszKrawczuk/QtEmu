@@ -8,17 +8,29 @@ qt6_test_dep = dependency('qt6', modules : ['Core', 'Test', 'Network', 'Widgets'
 incdir_tests = include_directories('../src')
 
 # Cloud-init ISO utils tests
+test_cloudinitisoutils_headers = [
+    '../src/utils/cloudinitisoutils.h',
+    '../src/machine.h',
+    '../src/boot.h',
+    '../src/media.h',
+    '../src/qemu.h',
+    '../src/utils/logger.h',
+    '../src/utils/systemutils.h'
+]
+
 test_cloudinitisoutils_sources = [
     'test_cloudinitisoutils.cpp',
     '../src/utils/cloudinitisoutils.cpp',
     '../src/machine.cpp',
     '../src/boot.cpp',
     '../src/media.cpp',
-    '../src/qemu.cpp'
+    '../src/qemu.cpp',
+    '../src/utils/logger.cpp',
+    '../src/utils/systemutils.cpp'
 ]
 
 test_cloudinitisoutils_moc = qt6.preprocess(
-    moc_sources: test_cloudinitisoutils_sources,
+    moc_headers: test_cloudinitisoutils_headers,
     include_directories: incdir_tests
 )
 
@@ -33,6 +45,17 @@ test_cloudinitisoutils_exe = executable(
 test('test_cloudinitisoutils', test_cloudinitisoutils_exe, timeout: 30)
 
 # Machine cloud-init properties tests
+test_machine_cloudinit_headers = [
+    '../src/machine.h',
+    '../src/machineutils.h',
+    '../src/boot.h',
+    '../src/media.h',
+    '../src/qemu.h',
+    '../src/utils/logger.h',
+    '../src/utils/systemutils.h',
+    '../src/utils/cloudinitisoutils.h'
+]
+
 test_machine_cloudinit_sources = [
     'test_machine_cloudinit.cpp',
     '../src/machine.cpp',
@@ -41,11 +64,12 @@ test_machine_cloudinit_sources = [
     '../src/media.cpp',
     '../src/qemu.cpp',
     '../src/utils/logger.cpp',
+    '../src/utils/systemutils.cpp',
     '../src/utils/cloudinitisoutils.cpp'
 ]
 
 test_machine_cloudinit_moc = qt6.preprocess(
-    moc_sources: test_machine_cloudinit_sources,
+    moc_headers: test_machine_cloudinit_headers,
     include_directories: incdir_tests
 )
 
