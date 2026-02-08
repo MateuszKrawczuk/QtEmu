@@ -56,6 +56,12 @@ MachineConfigCloudInit::MachineConfigCloudInit(Machine *machine,
     m_passwordLineEdit->setText(this->m_machine->getCloudInitPassword());
     m_passwordLineEdit->setPlaceholderText(tr("User password (optional if SSH key is provided)"));
 
+    QLabel *passwordSecurityNote = new QLabel(
+        tr("<i><b>Security Note:</b> Password is hashed using SHA-512 and NOT saved in configuration file. "
+           "You will need to re-enter it if you edit cloud-init settings later.</i>"), this);
+    passwordSecurityNote->setWordWrap(true);
+    passwordSecurityNote->setStyleSheet("QLabel { color: #666666; font-size: 8pt; margin-left: 20px; }");
+
     m_sshKeyLabel = new QLabel(tr("SSH Public Key") + ":", this);
     m_sshKeyLineEdit = new QLineEdit(this);
     m_sshKeyLineEdit->setText(this->m_machine->getCloudInitSSHKey());
@@ -76,6 +82,7 @@ MachineConfigCloudInit::MachineConfigCloudInit(Machine *machine,
     m_basicConfigLayout->addRow(m_hostnameLabel, m_hostnameLineEdit);
     m_basicConfigLayout->addRow(m_usernameLabel, m_usernameLineEdit);
     m_basicConfigLayout->addRow(m_passwordLabel, m_passwordLineEdit);
+    m_basicConfigLayout->addRow("", passwordSecurityNote);
     m_basicConfigLayout->addRow(m_sshKeyLabel, m_sshKeyLayout);
 
     m_basicConfigGroupBox->setLayout(m_basicConfigLayout);

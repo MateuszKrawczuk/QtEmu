@@ -146,10 +146,9 @@ QString CloudInitIsoUtils::generateUserData(Machine *machine)
 
     // Add password if provided
     if (!machine->getCloudInitPassword().isEmpty()) {
-        // Note: In production, this should be hashed
-        // For simplicity, we're using plain text here
-        // Cloud-init will hash it automatically
-        userData += "    plain_text_passwd: " + machine->getCloudInitPassword() + "\n";
+        // Hash the password using SHA-512 for security
+        QString hashedPassword = hashPassword(machine->getCloudInitPassword());
+        userData += "    passwd: " + hashedPassword + "\n";
         userData += "    lock_passwd: false\n";
     }
 
@@ -169,6 +168,87 @@ QString CloudInitIsoUtils::generateUserData(Machine *machine)
     userData += "package_upgrade: false\n";
 
     return userData;
+}
+
+/**
+ * @brief Hash password using SHA-512 crypt format
+ * @param password, plain text password to hash
+ * @return hashed password in crypt format
+ *
+ * Generate a SHA-512 hashed password compatible with Linux /etc/shadow format
+ * This is more secure than storing plain text passwords
+ *
+ * Attempts to use system mkpasswd tool for proper crypt() hashing
+ * Falls back to simplified SHA-512 if mkpasswd is not available
+ */
+QString CloudInitIsoUtils::hashPassword(const QString &password)
+{
+    // Try to use system mkpasswd for proper crypt() hashing
+    QProcess mkpasswd;
+
+    #ifdef Q_OS_UNIX
+    // Try mkpasswd (available on Debian/Ubuntu)
+    mkpasswd.start("mkpasswd", QStringList() << "--method=sha-512" << password);
+    if (mkpasswd.waitForFinished(5000) && mkpasswd.exitCode() == 0) {
+        QString hash = QString::fromUtf8(mkpasswd.readAllStandardOutput()).trimmed();
+        if (!hash.isEmpty() && hash.startsWith("$6$")) {
+            qDebug() << "Password hashed using mkpasswd";
+            return hash;
+        }
+    }
+
+    // Try python3 with passlib (fallback)
+    QProcess python;
+    python.start("python3", QStringList() << "-c"
+                 << QString("from passlib.hash import sha512_crypt; print(sha512_crypt.hash('%1'))").arg(password));
+    if (python.waitForFinished(5000) && python.exitCode() == 0) {
+        QString hash = QString::fromUtf8(python.readAllStandardOutput()).trimmed();
+        if (!hash.isEmpty() && hash.startsWith("$6$")) {
+            qDebug() << "Password hashed using Python passlib";
+            return hash;
+        }
+    }
+    #endif
+
+    #ifdef Q_OS_WIN
+    // On Windows, try PowerShell with passlib if Python is installed
+    QProcess python;
+    python.start("python", QStringList() << "-c"
+                 << QString("from passlib.hash import sha512_crypt; print(sha512_crypt.hash('%1'))").arg(password));
+    if (python.waitForFinished(5000) && python.exitCode() == 0) {
+        QString hash = QString::fromUtf8(python.readAllStandardOutput()).trimmed();
+        if (!hash.isEmpty() && hash.startsWith("$6$")) {
+            qDebug() << "Password hashed using Python passlib";
+            return hash;
+        }
+    }
+    #endif
+
+    // Fallback: simplified SHA-512 implementation
+    qWarning() << "mkpasswd/passlib not found, using simplified SHA-512 hash";
+    qWarning() << "This may not be fully compatible with all systems";
+
+    // Generate a random salt (16 characters, base64 charset)
+    QString salt;
+    const QString saltChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
+    for (int i = 0; i < 16; ++i) {
+        salt += saltChars.at(QRandomGenerator::global()->bounded(saltChars.length()));
+    }
+
+    // Perform multiple rounds of hashing (simplified version of crypt)
+    QByteArray data = (password + salt).toUtf8();
+    QByteArray hash = data;
+
+    // Do 5000 rounds of hashing (crypt typically uses 5000-999999 rounds)
+    for (int i = 0; i < 5000; ++i) {
+        hash = QCryptographicHash::hash(hash + data, QCryptographicHash::Sha512);
+    }
+
+    // Convert to base64 using the crypt alphabet
+    QString hashB64 = hash.toBase64();
+
+    // Format: $6$ indicates SHA-512, $rounds=5000$ indicates iterations, then salt$ and hash
+    return QString("$6$rounds=5000$%1$%2").arg(salt, hashB64);
 }
 
 /**

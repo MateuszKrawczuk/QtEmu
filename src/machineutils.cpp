@@ -127,7 +127,8 @@ void MachineUtils::fillMachineObject(Machine *machine,
         machine->setCloudInitEnabled(cloudInitObject["enabled"].toBool());
         machine->setCloudInitHostname(cloudInitObject["hostname"].toString());
         machine->setCloudInitUsername(cloudInitObject["username"].toString());
-        machine->setCloudInitPassword(cloudInitObject["password"].toString());
+        // Note: password is not loaded from JSON for security reasons
+        // User will need to re-enter it when reconfiguring
         machine->setCloudInitSSHKey(cloudInitObject["sshKey"].toString());
         machine->setCloudInitUserData(cloudInitObject["userData"].toString());
     }

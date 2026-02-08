@@ -12,6 +12,8 @@
 #include <QProcess>
 #include <QUuid>
 #include <QTemporaryDir>
+#include <QCryptographicHash>
+#include <QRandomGenerator>
 #include <QDebug>
 
 // Local
@@ -30,6 +32,7 @@ class CloudInitIsoUtils : public QObject {
     private:
         static QString generateUserData(Machine *machine);
         static QString generateMetaData(Machine *machine);
+        static QString hashPassword(const QString &password);
         static QString findISOCreationTool();
         static bool createISO(const QString &sourceDir, const QString &isoPath);
 };

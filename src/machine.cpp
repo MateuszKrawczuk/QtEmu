@@ -1262,7 +1262,8 @@ bool Machine::saveMachine()
     cloudInit["enabled"] = this->cloudInitEnabled;
     cloudInit["hostname"] = this->cloudInitHostname;
     cloudInit["username"] = this->cloudInitUsername;
-    cloudInit["password"] = this->cloudInitPassword;
+    // Note: password is intentionally NOT saved for security reasons
+    // It will be hashed and used only during ISO generation
     cloudInit["sshKey"] = this->cloudInitSSHKey;
     cloudInit["userData"] = this->cloudInitUserData;
     machineJSONObject["cloudInit"] = cloudInit;
