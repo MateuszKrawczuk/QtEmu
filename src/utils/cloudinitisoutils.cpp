@@ -43,6 +43,14 @@ QString CloudInitIsoUtils::generateCloudInitISO(Machine *machine)
 
     // Generate user-data file
     QString userData = generateUserData(machine);
+
+    // Basic YAML validation
+    if (!userData.startsWith("#cloud-config")) {
+        qWarning() << "Invalid cloud-init user-data: must start with #cloud-config";
+        tempDir.removeRecursively();
+        return QString();
+    }
+
     QString userDataPath = tempDirPath + QDir::separator() + "user-data";
     QFile userDataFile(userDataPath);
     if (!userDataFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -65,12 +73,24 @@ QString CloudInitIsoUtils::generateCloudInitISO(Machine *machine)
     metaDataFile.write(metaData.toUtf8());
     metaDataFile.close();
 
-    // Create ISO file
-    QString isoPath = machine->getPath() + QDir::separator() + "cloud-init.iso";
+    // Create ISO file with unique name to avoid conflicts
+    // Using qtemu prefix and machine UUID for uniqueness
+    QString isoPath = machine->getPath() + QDir::separator() +
+                     "qtemu-cloud-init-" + machine->getUuid().toString(QUuid::WithoutBraces) + ".iso";
 
     // Remove old ISO if it exists
     if (QFile::exists(isoPath)) {
-        QFile::remove(isoPath);
+        qDebug() << "Removing old cloud-init ISO:" << isoPath;
+        if (!QFile::remove(isoPath)) {
+            qWarning() << "Failed to remove old cloud-init ISO";
+        }
+    }
+
+    // Also clean up legacy cloud-init.iso if it exists (for backwards compatibility)
+    QString legacyIsoPath = machine->getPath() + QDir::separator() + "cloud-init.iso";
+    if (QFile::exists(legacyIsoPath)) {
+        qDebug() << "Removing legacy cloud-init ISO:" << legacyIsoPath;
+        QFile::remove(legacyIsoPath);
     }
 
     if (!createISO(tempDirPath, isoPath)) {
@@ -188,38 +208,58 @@ QString CloudInitIsoUtils::hashPassword(const QString &password)
 
     #ifdef Q_OS_UNIX
     // Try mkpasswd (available on Debian/Ubuntu)
-    mkpasswd.start("mkpasswd", QStringList() << "--method=sha-512" << password);
-    if (mkpasswd.waitForFinished(5000) && mkpasswd.exitCode() == 0) {
-        QString hash = QString::fromUtf8(mkpasswd.readAllStandardOutput()).trimmed();
-        if (!hash.isEmpty() && hash.startsWith("$6$")) {
-            qDebug() << "Password hashed using mkpasswd";
-            return hash;
+    // SECURITY: Use stdin to avoid password appearing in process list
+    mkpasswd.start("mkpasswd", QStringList() << "--method=sha-512" << "--stdin");
+    if (mkpasswd.waitForStarted()) {
+        mkpasswd.write(password.toUtf8());
+        mkpasswd.closeWriteChannel();
+
+        if (mkpasswd.waitForFinished(5000) && mkpasswd.exitCode() == 0) {
+            QString hash = QString::fromUtf8(mkpasswd.readAllStandardOutput()).trimmed();
+            if (!hash.isEmpty() && hash.startsWith("$6$")) {
+                qDebug() << "Password hashed using mkpasswd";
+                return hash;
+            }
         }
     }
 
     // Try python3 with passlib (fallback)
+    // SECURITY: Use stdin to prevent command injection
     QProcess python;
     python.start("python3", QStringList() << "-c"
-                 << QString("from passlib.hash import sha512_crypt; print(sha512_crypt.hash('%1'))").arg(password));
-    if (python.waitForFinished(5000) && python.exitCode() == 0) {
-        QString hash = QString::fromUtf8(python.readAllStandardOutput()).trimmed();
-        if (!hash.isEmpty() && hash.startsWith("$6$")) {
-            qDebug() << "Password hashed using Python passlib";
-            return hash;
+                 << "import sys; from passlib.hash import sha512_crypt; "
+                    "print(sha512_crypt.hash(sys.stdin.read().strip()))");
+    if (python.waitForStarted()) {
+        python.write(password.toUtf8());
+        python.closeWriteChannel();
+
+        if (python.waitForFinished(5000) && python.exitCode() == 0) {
+            QString hash = QString::fromUtf8(python.readAllStandardOutput()).trimmed();
+            if (!hash.isEmpty() && hash.startsWith("$6$")) {
+                qDebug() << "Password hashed using Python passlib";
+                return hash;
+            }
         }
     }
     #endif
 
     #ifdef Q_OS_WIN
-    // On Windows, try PowerShell with passlib if Python is installed
+    // On Windows, try Python with passlib if installed
+    // SECURITY: Use stdin to prevent command injection
     QProcess python;
     python.start("python", QStringList() << "-c"
-                 << QString("from passlib.hash import sha512_crypt; print(sha512_crypt.hash('%1'))").arg(password));
-    if (python.waitForFinished(5000) && python.exitCode() == 0) {
-        QString hash = QString::fromUtf8(python.readAllStandardOutput()).trimmed();
-        if (!hash.isEmpty() && hash.startsWith("$6$")) {
-            qDebug() << "Password hashed using Python passlib";
-            return hash;
+                 << "import sys; from passlib.hash import sha512_crypt; "
+                    "print(sha512_crypt.hash(sys.stdin.read().strip()))");
+    if (python.waitForStarted()) {
+        python.write(password.toUtf8());
+        python.closeWriteChannel();
+
+        if (python.waitForFinished(5000) && python.exitCode() == 0) {
+            QString hash = QString::fromUtf8(python.readAllStandardOutput()).trimmed();
+            if (!hash.isEmpty() && hash.startsWith("$6$")) {
+                qDebug() << "Password hashed using Python passlib";
+                return hash;
+            }
         }
     }
     #endif
@@ -240,7 +280,8 @@ QString CloudInitIsoUtils::hashPassword(const QString &password)
     QByteArray hash = data;
 
     // Do 5000 rounds of hashing (crypt typically uses 5000-999999 rounds)
-    for (int i = 0; i < 5000; ++i) {
+    const int CRYPT_ROUNDS = 5000;
+    for (int i = 0; i < CRYPT_ROUNDS; ++i) {
         hash = QCryptographicHash::hash(hash + data, QCryptographicHash::Sha512);
     }
 
@@ -248,7 +289,7 @@ QString CloudInitIsoUtils::hashPassword(const QString &password)
     QString hashB64 = hash.toBase64();
 
     // Format: $6$ indicates SHA-512, $rounds=5000$ indicates iterations, then salt$ and hash
-    return QString("$6$rounds=5000$%1$%2").arg(salt, hashB64);
+    return QString("$6$rounds=%1$%2$%3").arg(CRYPT_ROUNDS).arg(salt, hashB64);
 }
 
 /**
