@@ -224,3 +224,56 @@ QString DescriptionTab::getMachineDescription() const
 {
     return this->m_machineDescTextEdit->toPlainText();
 }
+
+/**
+ * @brief Tab with custom QEMU command-line arguments
+ * @param machine, machine to be configured
+ * @param enableFields, fields enabled or disabled
+ * @param parent, parent widget
+ *
+ * Tab for entering custom QEMU command-line arguments
+ * such as -device virtio-balloon, -global kvm-irqchip.off=true, etc.
+ */
+CustomArgumentsTab::CustomArgumentsTab(Machine *machine,
+                                       bool enableFields,
+                                       QWidget *parent) : QWidget(parent)
+{
+    m_customArgsLabel = new QLabel(tr("Custom QEMU arguments") + ":", this);
+
+    m_customArgsHintLabel = new QLabel(
+        tr("Enter additional QEMU command-line arguments.\n"
+           "Example: -device virtio-balloon -global kvm-irqchip.off=true"), this);
+    m_customArgsHintLabel->setWordWrap(true);
+
+    m_customArgsTextEdit = new QPlainTextEdit(this);
+    m_customArgsTextEdit->setEnabled(enableFields);
+    m_customArgsTextEdit->setPlainText(machine->getCustomArguments());
+    m_customArgsTextEdit->setPlaceholderText(
+        tr("-device virtio-balloon -device virtio-net-pci"));
+
+    m_customArgsLayout = new QVBoxLayout();
+    m_customArgsLayout->setAlignment(Qt::AlignTop);
+    m_customArgsLayout->addWidget(m_customArgsLabel);
+    m_customArgsLayout->addWidget(m_customArgsHintLabel);
+    m_customArgsLayout->addWidget(m_customArgsTextEdit);
+
+    this->setLayout(m_customArgsLayout);
+
+    qDebug() << "CustomArgumentsTab created";
+}
+
+CustomArgumentsTab::~CustomArgumentsTab()
+{
+    qDebug() << "CustomArgumentsTab destroyed";
+}
+
+/**
+ * @brief Get the custom arguments
+ * @return the custom arguments text
+ *
+ * Get the custom QEMU command-line arguments
+ */
+QString CustomArgumentsTab::getCustomArguments() const
+{
+    return this->m_customArgsTextEdit->toPlainText().trimmed();
+}

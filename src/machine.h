@@ -127,6 +127,9 @@ class Machine: public QObject {
         Boot *getBoot() const;
         void setBoot(Boot *value);
 
+        QString getCustomArguments() const;
+        void setCustomArguments(const QString &value);
+
         // Methods
         void addAudio(const QString audio);
         void removeAudio(const QString audio);
@@ -215,6 +218,9 @@ class Machine: public QObject {
 
         // Boot
         Boot *boot;
+
+        // Custom arguments
+        QString customArguments;
 
         // Process
         QProcess *m_machineProcess;
