@@ -37,6 +37,9 @@ Machine::Machine(QObject *parent) : QObject(parent)
     this->cloudInitSSHKey = "";
     this->cloudInitUserData = "";
 
+    // Initialize boot object
+    this->boot = new Boot(this);
+
     qDebug() << "Machine object created";
 }
 
@@ -708,6 +711,9 @@ Boot *Machine::getBoot() const
  */
 void Machine::setBoot(Boot *value)
 {
+    if (boot != nullptr && boot != value) {
+        delete boot;
+    }
     boot = value;
 }
 

@@ -9,6 +9,7 @@
 
 #include <QCoreApplication>
 #include <QProcess>
+#include <QRegularExpression>
 
 /**
  * @brief QEMU object
