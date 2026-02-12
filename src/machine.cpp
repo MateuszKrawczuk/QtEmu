@@ -413,6 +413,28 @@ void Machine::setCloudInitUserData(const QString &value)
 }
 
 /**
+ * @brief Get the BIOS search directory
+ * @return path to the BIOS search directory
+ *
+ * Get the path to the BIOS search directory (QEMU -L flag)
+ */
+QString Machine::getBiosDirectory() const
+{
+    return biosDirectory;
+}
+
+/**
+ * @brief Set the BIOS search directory
+ * @param value, path to the BIOS search directory
+ *
+ * Set the path to the BIOS search directory (QEMU -L flag)
+ */
+void Machine::setBiosDirectory(const QString &value)
+{
+    biosDirectory = value;
+}
+
+/**
  * @brief Get the CPU Type of the machine
  *
  * Get the CPU Type of the machine
@@ -1117,6 +1139,11 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-uuid";
     qemuCommand << uuid.toString(QUuid::WithoutBraces);
     
+    if (!this->biosDirectory.isEmpty()) {
+        qemuCommand << "-L";
+        qemuCommand << QDir::toNativeSeparators(this->biosDirectory);
+    }
+
     if (!this->biosPath.isEmpty()) {
         qemuCommand << "-bios";
         qemuCommand << QDir::toNativeSeparators(this->biosPath);
@@ -1290,6 +1317,9 @@ bool Machine::saveMachine()
     machineJSONObject["binary"] = "qemu-system-x86_64";
     if (!this->biosPath.isEmpty()) {
         machineJSONObject["biosPath"] = QDir::toNativeSeparators(this->biosPath);
+    }
+    if (!this->biosDirectory.isEmpty()) {
+        machineJSONObject["biosDirectory"] = QDir::toNativeSeparators(this->biosDirectory);
     }
 
     QJsonObject cloudInit;

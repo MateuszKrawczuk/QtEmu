@@ -123,6 +123,11 @@ void MachineUtils::fillMachineObject(Machine *machine,
         machine->setBiosPath(machineJSON["biosPath"].toString());
     }
 
+    // Load BIOS directory if present
+    if (machineJSON.contains("biosDirectory")) {
+        machine->setBiosDirectory(machineJSON["biosDirectory"].toString());
+    }
+
     // Load cloud-init configuration if present
     if (!cloudInitObject.isEmpty()) {
         machine->setCloudInitEnabled(cloudInitObject["enabled"].toBool());

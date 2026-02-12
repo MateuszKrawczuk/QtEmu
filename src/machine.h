@@ -61,6 +61,9 @@ class Machine: public QObject {
         QString getBiosPath() const;
         void setBiosPath(const QString &value);
 
+        QString getBiosDirectory() const;
+        void setBiosDirectory(const QString &value);
+
         bool getCloudInitEnabled() const;
         void setCloudInitEnabled(bool value);
 
@@ -206,6 +209,7 @@ class Machine: public QObject {
         
         // BIOS
         QString biosPath;
+        QString biosDirectory;
 
         // Cloud-init
         bool cloudInitEnabled;

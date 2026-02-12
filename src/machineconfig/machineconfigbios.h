@@ -41,17 +41,25 @@ class MachineConfigBios : public QWidget {
     private slots:
         void customBiosToggled(bool checked);
         void selectBiosFile();
+        void customBiosDirToggled(bool checked);
+        void selectBiosDirectory();
 
     protected:
 
     private:
         QVBoxLayout *m_biosPageLayout;
         QHBoxLayout *m_biosFileLayout;
+        QHBoxLayout *m_biosDirLayout;
 
         QCheckBox *m_useCustomBiosCheckBox;
         QLabel *m_biosFileLabel;
         QComboBox *m_biosComboBox;
         QPushButton *m_biosFilePushButton;
+
+        QCheckBox *m_useCustomBiosDirCheckBox;
+        QLabel *m_biosDirLabel;
+        QLineEdit *m_biosDirLineEdit;
+        QPushButton *m_biosDirPushButton;
 
         Machine *m_machine;
         QEMU *m_qemuObject;
