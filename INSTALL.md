@@ -1,8 +1,7 @@
-
- # QtEmu - A front-end written in Qt for the QEMU emulator
- ###### Copyright (C) 2022-2025 Mateusz Krawczuk <mat krawczuk gmail com>
- ###### Copyright (C) 2017-2022 Sergio Carlavilla <carlavilla  mailbox org>
- ###### Copyright (C) 2006-2009 Urs Wolfer <uwolfer at fwo ch> and Ben Klopfenstein <benklop gmail com>
+# QtEmu - A front-end written in Qt for the QEMU emulator
+###### Copyright (C) 2022-2026 Mateusz Krawczuk <mateusz.krawczuk@cybrixsystems.com>
+###### Copyright (C) 2017-2022 Sergio Carlavilla <carlavilla@mailbox.org>
+###### Copyright (C) 2006-2009 Urs Wolfer <uwolfer@fwo.ch> and Ben Klopfenstein <benklop@gmail.com>
 
 ---
    This program is free software; you can redistribute it and/or modify
@@ -30,18 +29,82 @@
 
 # Dependencies for building
 
-  - Archlinux and Parabola (runtime deps include build-time deps):
-    **qt6-base**
+## Ubuntu/Debian
 
-    **Build tools: gcc, make**
+```bash
+sudo apt-get install qt6-base-dev qt6-tools-dev qt6-tools-dev-tools \
+                     libqt6svg6-dev meson ninja-build g++ pkg-config
+```
+
+## Arch Linux
+
+```bash
+sudo pacman -S qt6-base qt6-tools qt6-svg meson ninja gcc pkgconf
+```
+
+## Fedora
+
+```bash
+sudo dnf install qt6-qtbase-devel qt6-qttools-devel qt6-qtsvg-devel \
+                 meson ninja-build gcc-c++ pkgconf-pkg-config
+```
+
+## macOS
+
+```bash
+brew install qt meson ninja pkg-config
+```
+
+## Windows
+
+1. Install Qt 6.5+ from https://www.qt.io/download
+2. Install Python from https://www.python.org/downloads/
+3. Install Meson and Ninja:
+   ```
+   pip install meson ninja
+   ```
+4. Install Visual Studio Build Tools or MSVC
 
 # Build process
 
-From QtEmu's main directory, where qtemu.pro is located, execute:
+**Meson is the primary and recommended build system.**
 
-        mkdir build               # Create a clean directory for the build
-        cd build                  # Go into it
-        cmake ..                  # Ask Qmake to generate a Makefile[*]
-        make                      # Run Make to compile the project
+## Building with Meson (recommended)
 
-[*]you might need to use the command 'cmake' instead
+```bash
+meson setup build --buildtype=release
+meson compile -C build
+```
+
+## Building with CMake (alternative)
+
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release
+```
+
+# Deprecation Notice
+
+> **Warning:** CMake and qmake build support are deprecated and will be removed in the next major release (3.0.0). Please migrate to Meson for building QtEmu.
+
+# Running the application
+
+After building, run:
+
+```bash
+./build/qtemu
+```
+
+On Windows:
+
+```bash
+build\qtemu.exe
+```
+
+On macOS:
+
+```bash
+open build/qtemu.app
+```
