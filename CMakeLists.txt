@@ -52,6 +52,7 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/machineconfig/machineconfigwindow.cpp src/machineconfig/machineconfigwindow.h
     src/machineconfig/createbridgedialog.cpp src/machineconfig/createbridgedialog.h
     src/machineconfig/networkadapterdialog.cpp src/machineconfig/networkadapterdialog.h
+    src/machineconfig/portforwarddialog.cpp src/machineconfig/portforwarddialog.h
     src/machineutils.cpp src/machineutils.h
     src/machinewizard.cpp src/machinewizard.h
     src/main.cpp

@@ -3,11 +3,13 @@
 
 #include "networkadapterdialog.h"
 #include "createbridgedialog.h"
+#include "portforwarddialog.h"
 #include "../utils/networkutils.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFormLayout>
 #include <QDialogButtonBox>
+#include <QHeaderView>
 #include <QRegularExpressionValidator>
 
 NetworkAdapterDialog::NetworkAdapterDialog(NetworkAdapter *adapter,
@@ -28,7 +30,7 @@ NetworkAdapterDialog::~NetworkAdapterDialog()
 void NetworkAdapterDialog::setupUI()
 {
     setWindowTitle(tr("Network Adapter Configuration"));
-    setMinimumWidth(450);
+    setMinimumWidth(500);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -50,6 +52,53 @@ void NetworkAdapterDialog::setupUI()
     formLayout->addRow(tr("Backend Type:"), m_backendCombo);
 
     mainLayout->addLayout(formLayout);
+
+    m_userGroup = new QGroupBox(tr("User Mode Options"), this);
+    QVBoxLayout *userLayout = new QVBoxLayout(m_userGroup);
+    
+    QLabel *portForwardLabel = new QLabel(tr("Port Forwarding Rules:"), m_userGroup);
+    userLayout->addWidget(portForwardLabel);
+    
+    m_portForwardTable = new QTableWidget(m_userGroup);
+    m_portForwardTable->setColumnCount(4);
+    m_portForwardTable->setHorizontalHeaderLabels({
+        tr("Protocol"), tr("Host Port"), tr("Guest Port"), tr("Host Address")
+    });
+    m_portForwardTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_portForwardTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_portForwardTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_portForwardTable->horizontalHeader()->setStretchLastSection(true);
+    m_portForwardTable->verticalHeader()->setVisible(false);
+    m_portForwardTable->setMaximumHeight(120);
+    connect(m_portForwardTable, &QTableWidget::itemSelectionChanged,
+            this, &NetworkAdapterDialog::onPortForwardSelectionChanged);
+    connect(m_portForwardTable, &QTableWidget::cellDoubleClicked,
+            this, &NetworkAdapterDialog::onEditPortForwardClicked);
+    userLayout->addWidget(m_portForwardTable);
+    
+    QHBoxLayout *portForwardBtnLayout = new QHBoxLayout();
+    m_addPortForwardBtn = new QPushButton(tr("Add"), m_userGroup);
+    m_addPortForwardBtn->setEnabled(m_enableFields);
+    connect(m_addPortForwardBtn, &QPushButton::clicked, this, &NetworkAdapterDialog::onAddPortForwardClicked);
+    m_editPortForwardBtn = new QPushButton(tr("Edit"), m_userGroup);
+    m_editPortForwardBtn->setEnabled(false);
+    connect(m_editPortForwardBtn, &QPushButton::clicked, this, &NetworkAdapterDialog::onEditPortForwardClicked);
+    m_removePortForwardBtn = new QPushButton(tr("Remove"), m_userGroup);
+    m_removePortForwardBtn->setEnabled(false);
+    connect(m_removePortForwardBtn, &QPushButton::clicked, this, &NetworkAdapterDialog::onRemovePortForwardClicked);
+    portForwardBtnLayout->addWidget(m_addPortForwardBtn);
+    portForwardBtnLayout->addWidget(m_editPortForwardBtn);
+    portForwardBtnLayout->addWidget(m_removePortForwardBtn);
+    portForwardBtnLayout->addStretch();
+    userLayout->addLayout(portForwardBtnLayout);
+    
+    QLabel *userModeInfo = new QLabel(m_userGroup);
+    userModeInfo->setText(tr("<small>Port forwarding allows access to services inside the VM.<br>"
+                            "Example: Forward host:2222 to guest:22 for SSH access.</small>"));
+    userModeInfo->setStyleSheet(QStringLiteral("color: gray;"));
+    userLayout->addWidget(userModeInfo);
+    
+    mainLayout->addWidget(m_userGroup);
 
     m_bridgeGroup = new QGroupBox(tr("Bridge Options"), this);
     QHBoxLayout *bridgeLayout = new QHBoxLayout(m_bridgeGroup);
@@ -93,6 +142,13 @@ void NetworkAdapterDialog::setupUI()
     m_socketConnectEdit->setEnabled(m_enableFields);
     m_socketConnectEdit->setPlaceholderText(tr("e.g., 127.0.0.1:1234"));
     socketLayout->addRow(tr("Connect to:"), m_socketConnectEdit);
+    
+    QLabel *socketInfo = new QLabel(m_socketGroup);
+    socketInfo->setText(tr("<small>For VM-to-VM networking: one VM listens, others connect.<br>"
+                          "All VMs will be on the same virtual network.</small>"));
+    socketInfo->setStyleSheet(QStringLiteral("color: gray;"));
+    socketLayout->addRow(QString(), socketInfo);
+    
     mainLayout->addWidget(m_socketGroup);
 
     QFormLayout *deviceForm = new QFormLayout();
@@ -166,6 +222,9 @@ void NetworkAdapterDialog::loadFromAdapter()
     m_socketListenEdit->setText(m_adapter->socketListen());
     m_socketConnectEdit->setText(m_adapter->socketConnect());
     m_bootRomCheck->setChecked(m_adapter->bootROM());
+    
+    m_portForwards = m_adapter->portForwards();
+    updatePortForwardTable();
 
     updateBackendOptions();
 }
@@ -188,6 +247,7 @@ void NetworkAdapterDialog::saveToAdapter()
     m_adapter->setSocketListen(m_socketListenEdit->text().trimmed());
     m_adapter->setSocketConnect(m_socketConnectEdit->text().trimmed());
     m_adapter->setBootROM(m_bootRomCheck->isChecked());
+    m_adapter->setPortForwards(m_portForwards);
 }
 
 void NetworkAdapterDialog::onBackendChanged(int index)
@@ -209,11 +269,49 @@ void NetworkAdapterDialog::onAutoMacClicked()
     }
 }
 
+void NetworkAdapterDialog::onAddPortForwardClicked()
+{
+    PortForwardDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        m_portForwards.append(dialog.getPortForward());
+        updatePortForwardTable();
+    }
+}
+
+void NetworkAdapterDialog::onEditPortForwardClicked()
+{
+    int row = m_portForwardTable->currentRow();
+    if (row < 0 || row >= m_portForwards.size()) return;
+    
+    PortForwardDialog dialog(m_portForwards.at(row), this);
+    if (dialog.exec() == QDialog::Accepted) {
+        m_portForwards[row] = dialog.getPortForward();
+        updatePortForwardTable();
+    }
+}
+
+void NetworkAdapterDialog::onRemovePortForwardClicked()
+{
+    int row = m_portForwardTable->currentRow();
+    if (row < 0 || row >= m_portForwards.size()) return;
+    
+    m_portForwards.removeAt(row);
+    updatePortForwardTable();
+}
+
+void NetworkAdapterDialog::onPortForwardSelectionChanged()
+{
+    bool hasSelection = m_portForwardTable->currentRow() >= 0;
+    m_editPortForwardBtn->setEnabled(hasSelection && m_enableFields);
+    m_removePortForwardBtn->setEnabled(hasSelection && m_enableFields);
+}
+
 void NetworkAdapterDialog::updateBackendOptions()
 {
     int backendValue = m_backendCombo->currentData().toInt();
     NetworkBackend backend = static_cast<NetworkBackend>(backendValue);
 
+    m_userGroup->setVisible(backend == NetworkBackend::User);
     m_bridgeGroup->setVisible(backend == NetworkBackend::Bridge);
     m_tapGroup->setVisible(backend == NetworkBackend::Tap);
     m_socketGroup->setVisible(backend == NetworkBackend::Socket);
@@ -224,4 +322,35 @@ void NetworkAdapterDialog::updateBackendOptions()
     m_generateMacBtn->setEnabled(!isNone && m_enableFields);
     m_autoMacCheck->setEnabled(!isNone && m_enableFields);
     m_bootRomCheck->setEnabled(!isNone && m_enableFields);
+}
+
+void NetworkAdapterDialog::updatePortForwardTable()
+{
+    m_portForwardTable->setRowCount(0);
+    
+    for (const PortForward &pf : m_portForwards) {
+        int row = m_portForwardTable->rowCount();
+        m_portForwardTable->insertRow(row);
+        m_portForwardTable->setItem(row, 0, new QTableWidgetItem(pf.protocol.toUpper()));
+        m_portForwardTable->setItem(row, 1, new QTableWidgetItem(QString::number(pf.hostPort)));
+        m_portForwardTable->setItem(row, 2, new QTableWidgetItem(QString::number(pf.guestPort)));
+        m_portForwardTable->setItem(row, 3, new QTableWidgetItem(
+            pf.hostAddress.isEmpty() ? tr("(all)") : pf.hostAddress));
+    }
+    
+    m_portForwardTable->resizeColumnsToContents();
+}
+
+QString NetworkAdapterDialog::formatPortForward(const PortForward &pf)
+{
+    QString result = QString("%1:").arg(pf.protocol);
+    if (!pf.hostAddress.isEmpty()) {
+        result += pf.hostAddress + ":";
+    }
+    result += QString("%1-").arg(pf.hostPort);
+    if (!pf.guestAddress.isEmpty()) {
+        result += pf.guestAddress + ":";
+    }
+    result += QString::number(pf.guestPort);
+    return result;
 }
