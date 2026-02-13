@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QGroupBox>
-#include <QStackedWidget>
+#include <QTableWidget>
 #include "../networkadapter.h"
 
 class NetworkAdapterDialog : public QDialog
@@ -30,14 +30,21 @@ private slots:
     void onBackendChanged(int index);
     void onGenerateMacClicked();
     void onAutoMacClicked();
+    void onAddPortForwardClicked();
+    void onEditPortForwardClicked();
+    void onRemovePortForwardClicked();
+    void onPortForwardSelectionChanged();
 
 private:
     void setupUI();
     void loadFromAdapter();
     void updateBackendOptions();
+    void updatePortForwardTable();
+    QString formatPortForward(const PortForward &pf);
 
     NetworkAdapter *m_adapter;
     bool m_enableFields;
+    QList<PortForward> m_portForwards;
 
     QLineEdit *m_idEdit;
     QComboBox *m_backendCombo;
@@ -46,6 +53,12 @@ private:
     QPushButton *m_generateMacBtn;
     QCheckBox *m_autoMacCheck;
     QCheckBox *m_bootRomCheck;
+
+    QGroupBox *m_userGroup;
+    QTableWidget *m_portForwardTable;
+    QPushButton *m_addPortForwardBtn;
+    QPushButton *m_editPortForwardBtn;
+    QPushButton *m_removePortForwardBtn;
 
     QGroupBox *m_bridgeGroup;
     QComboBox *m_bridgeCombo;
