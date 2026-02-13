@@ -30,6 +30,7 @@ private slots:
     void testCustomArgumentsWithSpecialCharacters();
     void testCustomArgumentsWithQuotes();
     void testCustomArgumentsSplitCommand();
+    void testCustomArgumentsInGeneratedCommand();
 
 private:
     Machine *testMachine;
@@ -235,6 +236,48 @@ void TestMachineCustomArgs::testCustomArgumentsSplitCommand()
     QString whitespaceStr = QStringLiteral("   ");
     QStringList whitespaceArgs = QProcess::splitCommand(whitespaceStr);
     QVERIFY(whitespaceArgs.isEmpty());
+}
+
+void TestMachineCustomArgs::testCustomArgumentsInGeneratedCommand()
+{
+    // Set up minimal machine configuration
+    testMachine->setName("TestVM");
+    testMachine->setType("pc");
+    testMachine->setRAM(1024);
+    testMachine->setCPUType("host");
+    testMachine->setCPUCount(1);
+    testMachine->setCoresSocket(1);
+    testMachine->setThreadsCore(1);
+    testMachine->setSocketCount(1);
+    testMachine->setMaxHotCPU(1);
+    testMachine->setGPUType("std");
+    testMachine->setKeyboard("en-us");
+
+    // Test without custom arguments
+    QStringList commandWithoutCustom = testMachine->generateMachineCommand();
+    QVERIFY(commandWithoutCustom.contains("-name"));
+    QVERIFY(commandWithoutCustom.contains("TestVM"));
+    QVERIFY(!commandWithoutCustom.contains("-device"));
+
+    // Test with custom arguments
+    testMachine->setCustomArguments("-device virtio-balloon -device virtio-rng-pci");
+    QStringList commandWithCustom = testMachine->generateMachineCommand();
+
+    // Verify custom arguments are included
+    QVERIFY(commandWithCustom.contains("-device"));
+    QVERIFY(commandWithCustom.contains("virtio-balloon"));
+    QVERIFY(commandWithCustom.contains("virtio-rng-pci"));
+
+    // Verify base arguments still present
+    QVERIFY(commandWithCustom.contains("-name"));
+    QVERIFY(commandWithCustom.contains("TestVM"));
+
+    // Test empty custom arguments
+    testMachine->setCustomArguments("");
+    QStringList commandWithEmpty = testMachine->generateMachineCommand();
+    // Should be same as without custom arguments
+    QVERIFY(commandWithEmpty.contains("-name"));
+    QVERIFY(commandWithEmpty.contains("TestVM"));
 }
 
 QTEST_MAIN(TestMachineCustomArgs)

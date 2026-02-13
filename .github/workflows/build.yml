@@ -66,6 +66,31 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --parallel
 
+      - name: Run Tests (Linux)
+        if: runner.os == 'Linux'
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          cd build
+          ctest --output-on-failure
+
+      - name: Run Tests (macOS)
+        if: runner.os == 'macOS'
+        env:
+          QT_QPA_PLATFORM: offscreen
+          DYLD_FRAMEWORK_PATH: ${{ env.QT_ROOT_DIR }}/lib
+        run: |
+          cd build
+          ctest --output-on-failure
+
+      - name: Run Tests (Windows)
+        if: runner.os == 'Windows'
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          cd build
+          ctest --output-on-failure -C Release
+
       - name: Upload build artifact (Ubuntu)
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
@@ -167,6 +192,19 @@ jobs:
 
       - name: Build
         run: meson compile -C build
+
+      - name: Run Tests (Linux/Windows)
+        if: runner.os != 'macOS'
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: meson test -C build --print-errorlogs
+
+      - name: Run Tests (macOS)
+        if: runner.os == 'macOS'
+        env:
+          QT_QPA_PLATFORM: offscreen
+          DYLD_FRAMEWORK_PATH: ${{ env.QT_ROOT_DIR }}/lib
+        run: meson test -C build --print-errorlogs
 
       - name: Upload build artifact (Ubuntu)
         if: runner.os == 'Linux'
