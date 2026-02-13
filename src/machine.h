@@ -152,6 +152,8 @@ class Machine: public QObject {
         void insertMachineConfigFile();
         void killMachine();
 
+        QStringList generateMachineCommand();
+
     signals:
         void machineStateChangedSignal(States newState);
 
@@ -236,7 +238,6 @@ class Machine: public QObject {
 
         // Methods
         QProcessEnvironment buildEnvironment();
-        QStringList generateMachineCommand();
         void failConnectMachine();
 };
 #endif // MACHINE_H

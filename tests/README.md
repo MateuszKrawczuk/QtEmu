@@ -75,6 +75,7 @@ Tests for Machine class custom QEMU arguments:
 - Special characters in arguments (commas, dots, equals signs)
 - Quoted arguments handling
 - QProcess::splitCommand() parsing verification
+- **Integration test:** Custom arguments included in generated QEMU command
 
 ## Writing New Tests
 
