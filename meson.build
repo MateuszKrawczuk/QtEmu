@@ -21,6 +21,7 @@ QtEmu_headers = [
                     'src/machinewizard.h',
                     'src/mainwindow.h',
                     'src/media.h',
+                    'src/networkadapter.h',
                     'src/qemu.h',
                     'src/components/customfilter.h',
                     'src/export-import/export.h',
@@ -43,7 +44,10 @@ QtEmu_headers = [
                     'src/machineconfig/machineconfighardwaretabs.h',
                     'src/machineconfig/machineconfigmedia.h',
                     'src/machineconfig/machineconfignetwork.h',
-                    'src/machineconfig/machineconfigwindow.h', 
+                    'src/machineconfig/machineconfigwindow.h',
+                    'src/machineconfig/createbridgedialog.h',
+                    'src/machineconfig/networkadapterdialog.h',
+                    'src/machineconfig/portforwarddialog.h',
                     'src/newmachine/acceleratorpage.h',
                     'src/newmachine/conclusionpage.h',
                     'src/newmachine/diskpage.h',
@@ -54,6 +58,7 @@ QtEmu_headers = [
                     'src/utils/cloudinitisoutils.h',
                     'src/utils/firstrunwizard.h',
                     'src/utils/logger.h',
+                    'src/utils/networkutils.h',
                     'src/utils/newdiskwizard.h',
                     'src/utils/systemutils.h'
                 ]
@@ -69,6 +74,7 @@ QtEmu_sources = [
                     'src/main.cpp',
                     'src/mainwindow.cpp',
                     'src/media.cpp',
+                    'src/networkadapter.cpp',
                     'src/qemu.cpp',
                     'src/components/customfilter.cpp',
                     'src/export-import/export.cpp',
@@ -92,6 +98,9 @@ QtEmu_sources = [
                     'src/machineconfig/machineconfigmedia.cpp',
                     'src/machineconfig/machineconfignetwork.cpp',
                     'src/machineconfig/machineconfigwindow.cpp',
+                    'src/machineconfig/createbridgedialog.cpp',
+                    'src/machineconfig/networkadapterdialog.cpp',
+                    'src/machineconfig/portforwarddialog.cpp',
                     'src/newmachine/acceleratorpage.cpp',
                     'src/newmachine/conclusionpage.cpp',
                     'src/newmachine/diskpage.cpp',
@@ -102,6 +111,7 @@ QtEmu_sources = [
                     'src/utils/cloudinitisoutils.cpp',
                     'src/utils/firstrunwizard.cpp',
                     'src/utils/logger.cpp',
+                    'src/utils/networkutils.cpp',
                     'src/utils/newdiskwizard.cpp',
                     'src/utils/systemutils.cpp'
                 ]

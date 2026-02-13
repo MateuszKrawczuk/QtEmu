@@ -11,6 +11,7 @@ incdir_tests = include_directories('../src')
 test_cloudinitisoutils_headers = [
     '../src/utils/cloudinitisoutils.h',
     '../src/machine.h',
+    '../src/networkadapter.h',
     '../src/boot.h',
     '../src/media.h',
     '../src/qemu.h',
@@ -22,6 +23,7 @@ test_cloudinitisoutils_sources = [
     'test_cloudinitisoutils.cpp',
     '../src/utils/cloudinitisoutils.cpp',
     '../src/machine.cpp',
+    '../src/networkadapter.cpp',
     '../src/boot.cpp',
     '../src/media.cpp',
     '../src/qemu.cpp',
@@ -49,6 +51,7 @@ test('test_cloudinitisoutils', test_cloudinitisoutils_exe, timeout: 30)
 test_machine_cloudinit_headers = [
     '../src/machine.h',
     '../src/machineutils.h',
+    '../src/networkadapter.h',
     '../src/boot.h',
     '../src/media.h',
     '../src/qemu.h',
@@ -61,6 +64,7 @@ test_machine_cloudinit_sources = [
     'test_machine_cloudinit.cpp',
     '../src/machine.cpp',
     '../src/machineutils.cpp',
+    '../src/networkadapter.cpp',
     '../src/boot.cpp',
     '../src/media.cpp',
     '../src/qemu.cpp',
@@ -89,6 +93,7 @@ test('test_machine_cloudinit', test_machine_cloudinit_exe, timeout: 30)
 test_machine_customargs_headers = [
     '../src/machine.h',
     '../src/machineutils.h',
+    '../src/networkadapter.h',
     '../src/boot.h',
     '../src/media.h',
     '../src/qemu.h',
@@ -101,6 +106,7 @@ test_machine_customargs_sources = [
     'test_machine_customargs.cpp',
     '../src/machine.cpp',
     '../src/machineutils.cpp',
+    '../src/networkadapter.cpp',
     '../src/boot.cpp',
     '../src/media.cpp',
     '../src/qemu.cpp',
