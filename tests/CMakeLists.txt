@@ -37,6 +37,7 @@ add_qtemu_test(test_cloudinitisoutils test_cloudinitisoutils.cpp)
 target_sources(test_cloudinitisoutils PRIVATE
     ${CMAKE_SOURCE_DIR}/src/utils/cloudinitisoutils.cpp
     ${CMAKE_SOURCE_DIR}/src/machine.cpp
+    ${CMAKE_SOURCE_DIR}/src/networkadapter.cpp
     ${CMAKE_SOURCE_DIR}/src/boot.cpp
     ${CMAKE_SOURCE_DIR}/src/media.cpp
     ${CMAKE_SOURCE_DIR}/src/qemu.cpp
@@ -49,6 +50,7 @@ add_qtemu_test(test_machine_cloudinit test_machine_cloudinit.cpp)
 target_sources(test_machine_cloudinit PRIVATE
     ${CMAKE_SOURCE_DIR}/src/machine.cpp
     ${CMAKE_SOURCE_DIR}/src/machineutils.cpp
+    ${CMAKE_SOURCE_DIR}/src/networkadapter.cpp
     ${CMAKE_SOURCE_DIR}/src/boot.cpp
     ${CMAKE_SOURCE_DIR}/src/media.cpp
     ${CMAKE_SOURCE_DIR}/src/qemu.cpp
@@ -62,6 +64,7 @@ add_qtemu_test(test_machine_customargs test_machine_customargs.cpp)
 target_sources(test_machine_customargs PRIVATE
     ${CMAKE_SOURCE_DIR}/src/machine.cpp
     ${CMAKE_SOURCE_DIR}/src/machineutils.cpp
+    ${CMAKE_SOURCE_DIR}/src/networkadapter.cpp
     ${CMAKE_SOURCE_DIR}/src/boot.cpp
     ${CMAKE_SOURCE_DIR}/src/media.cpp
     ${CMAKE_SOURCE_DIR}/src/qemu.cpp

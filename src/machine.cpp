@@ -672,6 +672,49 @@ void Machine::setUseNetwork(bool value)
     useNetwork = value;
 }
 
+QList<NetworkAdapter*> Machine::getNetworkAdapters() const
+{
+    return networkAdapters;
+}
+
+NetworkAdapter* Machine::getNetworkAdapter(int index) const
+{
+    if (index >= 0 && index < networkAdapters.size()) {
+        return networkAdapters.at(index);
+    }
+    return nullptr;
+}
+
+void Machine::addNetworkAdapter(NetworkAdapter *adapter)
+{
+    networkAdapters.append(adapter);
+}
+
+void Machine::removeNetworkAdapter(int index)
+{
+    if (index >= 0 && index < networkAdapters.size()) {
+        delete networkAdapters.takeAt(index);
+    }
+}
+
+int Machine::networkAdapterCount() const
+{
+    return networkAdapters.size();
+}
+
+bool Machine::hasAnyNetwork() const
+{
+    if (!networkAdapters.isEmpty()) {
+        for (NetworkAdapter *adapter : networkAdapters) {
+            if (adapter->backend() != NetworkBackend::None) {
+                return true;
+            }
+        }
+        return false;
+    }
+    return useNetwork;
+}
+
 /**
  * @brief Get the list of media
  * @return media list
@@ -1224,10 +1267,21 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << pipe;
 
     // Network
-    if (this->useNetwork) {
+    if (!networkAdapters.isEmpty()) {
+        for (NetworkAdapter *adapter : networkAdapters) {
+            if (adapter->backend() == NetworkBackend::None) {
+                qemuCommand << "-net";
+                qemuCommand << "none";
+            } else {
+                qemuCommand << "-netdev";
+                qemuCommand << adapter->toNetdevCommand();
+                qemuCommand << "-device";
+                qemuCommand << adapter->toDeviceCommand();
+            }
+        }
+    } else if (this->useNetwork) {
         qemuCommand << "-net";
         qemuCommand << "nic";
-
         qemuCommand << "-net";
         qemuCommand << "user";
     } else {
@@ -1311,6 +1365,15 @@ bool Machine::saveMachine()
     machineJSONObject["description"] = this->description;
     machineJSONObject["RAM"]         = this->RAM;
     machineJSONObject["network"]     = this->useNetwork;
+    
+    if (!networkAdapters.isEmpty()) {
+        QJsonArray networkAdaptersArray;
+        for (NetworkAdapter *adapter : networkAdapters) {
+            networkAdaptersArray.append(adapter->toJson());
+        }
+        machineJSONObject["networkAdapters"] = networkAdaptersArray;
+    }
+    
     machineJSONObject["path"]        = QDir::toNativeSeparators(this->path);
     machineJSONObject["uuid"]        = this->uuid.toString(QUuid::WithoutBraces);
     machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;

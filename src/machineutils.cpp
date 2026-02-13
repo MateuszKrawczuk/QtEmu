@@ -7,6 +7,7 @@
 // Local
 #include "machine.h"
 #include "machineutils.h"
+#include "networkadapter.h"
 
 MachineUtils::MachineUtils(QObject *parent) : QObject(parent)
 {
@@ -101,6 +102,23 @@ void MachineUtils::fillMachineObject(Machine *machine,
     machine->setDescription(machineJSON["description"].toString());
     machine->setRAM(machineJSON["RAM"].toInt());
     machine->setUseNetwork(machineJSON["network"].toBool());
+    
+    // Load or migrate network adapters
+    if (machineJSON.contains("networkAdapters")) {
+        QJsonArray networkAdaptersArray = machineJSON["networkAdapters"].toArray();
+        for (const QJsonValue &value : networkAdaptersArray) {
+            NetworkAdapter *adapter = NetworkAdapter::fromJson(value.toObject(), machine);
+            machine->addNetworkAdapter(adapter);
+        }
+    } else if (machineJSON["network"].toBool()) {
+        // Migrate from old format: create default User mode adapter
+        NetworkAdapter *adapter = new NetworkAdapter(machine);
+        adapter->setId(QStringLiteral("net0"));
+        adapter->setBackend(NetworkBackend::User);
+        adapter->setNicModel(NicModel::Virtio);
+        machine->addNetworkAdapter(adapter);
+    }
+    
     machine->setConfigPath(machineConfigPath);
     machine->setPath(machineJSON["path"].toString());
     machine->setUuid(QUuid(machineJSON["uuid"].toString()));
