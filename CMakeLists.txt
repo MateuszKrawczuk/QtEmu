@@ -50,11 +50,14 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/machineconfig/machineconfigmedia.cpp src/machineconfig/machineconfigmedia.h
     src/machineconfig/machineconfignetwork.cpp src/machineconfig/machineconfignetwork.h
     src/machineconfig/machineconfigwindow.cpp src/machineconfig/machineconfigwindow.h
+    src/machineconfig/createbridgedialog.cpp src/machineconfig/createbridgedialog.h
+    src/machineconfig/networkadapterdialog.cpp src/machineconfig/networkadapterdialog.h
     src/machineutils.cpp src/machineutils.h
     src/machinewizard.cpp src/machinewizard.h
     src/main.cpp
     src/mainwindow.cpp src/mainwindow.h
     src/media.cpp src/media.h
+    src/networkadapter.cpp src/networkadapter.h
     src/newmachine/acceleratorpage.cpp src/newmachine/acceleratorpage.h
     src/newmachine/conclusionpage.cpp src/newmachine/conclusionpage.h
     src/newmachine/diskpage.cpp src/newmachine/diskpage.h
@@ -66,6 +69,7 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/utils/cloudinitisoutils.cpp src/utils/cloudinitisoutils.h
     src/utils/firstrunwizard.cpp src/utils/firstrunwizard.h
     src/utils/logger.cpp src/utils/logger.h
+    src/utils/networkutils.cpp src/utils/networkutils.h
     src/utils/newdiskwizard.cpp src/utils/newdiskwizard.h
     src/utils/systemutils.cpp src/utils/systemutils.h
 )

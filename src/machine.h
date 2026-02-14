@@ -19,6 +19,7 @@
 #include "qemu.h"
 #include "boot.h"
 #include "media.h"
+#include "networkadapter.h"
 #include "machineutils.h"
 #include "utils/logger.h"
 #include "utils/cloudinitisoutils.h"
@@ -120,6 +121,13 @@ class Machine: public QObject {
 
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
+        
+        QList<NetworkAdapter*> getNetworkAdapters() const;
+        NetworkAdapter* getNetworkAdapter(int index) const;
+        void addNetworkAdapter(NetworkAdapter *adapter);
+        void removeNetworkAdapter(int index);
+        int networkAdapterCount() const;
+        bool hasAnyNetwork() const;
 
         QList<Media *> getMedia() const;
         void addMedia(Media *media);
@@ -203,6 +211,7 @@ class Machine: public QObject {
 
         // Hardware - Network
         bool useNetwork;
+        QList<NetworkAdapter*> networkAdapters;
 
         // Hardware - media
         QList<Media *> media;
