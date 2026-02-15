@@ -73,9 +73,24 @@ target_sources(test_machine_customargs PRIVATE
     ${CMAKE_SOURCE_DIR}/src/utils/cloudinitisoutils.cpp
 )
 
+# NetworkAdapter tests
+add_qtemu_test(test_networkadapter test_networkadapter.cpp)
+target_sources(test_networkadapter PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/networkadapter.cpp
+)
+
+# NetworkUtils tests
+add_qtemu_test(test_networkutils test_networkutils.cpp)
+target_sources(test_networkutils PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/networkadapter.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/networkutils.cpp
+)
+
 # Summary message
 message(STATUS "Tests configured:")
 message(STATUS "  - test_cloudinitisoutils")
 message(STATUS "  - test_machine_cloudinit")
 message(STATUS "  - test_machine_customargs")
+message(STATUS "  - test_networkadapter")
+message(STATUS "  - test_networkutils")
 message(STATUS "Run tests with: ctest or make test")

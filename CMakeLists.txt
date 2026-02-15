@@ -66,6 +66,7 @@ qt_add_executable(QtEmu WIN32 MACOSX_BUNDLE
     src/newmachine/hardwarepage.cpp src/newmachine/hardwarepage.h
     src/newmachine/machinepage.cpp src/newmachine/machinepage.h
     src/newmachine/memorypage.cpp src/newmachine/memorypage.h
+    src/newmachine/networkpage.cpp src/newmachine/networkpage.h
     src/qemu.cpp src/qemu.h
     src/utils/cloudinitisoutils.cpp src/utils/cloudinitisoutils.h
     src/utils/firstrunwizard.cpp src/utils/firstrunwizard.h

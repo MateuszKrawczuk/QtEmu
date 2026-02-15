@@ -6,6 +6,7 @@
 
 // Local
 #include "conclusionpage.h"
+#include "../networkadapter.h"
 
 /**
  * @brief Conclusion page
@@ -37,6 +38,7 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
     m_RAMDescLabel = new QLabel(tr("RAM") + ":", this);
     m_acceleratorDescLabel = new QLabel(tr("Accelerator") + ":", this);
     m_diskDescLabel = new QLabel(tr("Disk") + ":");
+    m_networkDescLabel = new QLabel(tr("Network") + ":", this);
 
     m_machineNameLabel = new QLabel(this);
     m_machineNameLabel->setWordWrap(true);
@@ -50,6 +52,8 @@ MachineConclusionPage::MachineConclusionPage(Machine *machine,
     m_acceleratorLabel = new QLabel(this);
     m_acceleratorLabel->setWordWrap(true);
     m_diskLabel        = new QLabel(this);
+    m_networkLabel     = new QLabel(this);
+    m_networkLabel->setWordWrap(true);
 
     m_conclusionLayout = new QGridLayout();
     m_conclusionLayout->addWidget(m_conclusionLabel,      0, 0, 1, 4);
@@ -110,6 +114,32 @@ void MachineConclusionPage::initializePage()
         this->m_conclusionLayout->removeWidget(this->m_diskDescLabel);
         this->m_conclusionLayout->removeWidget(this->m_diskLabel);
     }
+
+    QString networkInfo;
+    int adapterCount = this->m_newMachine->networkAdapterCount();
+    if (adapterCount == 0) {
+        networkInfo = tr("Disabled");
+    } else {
+        QStringList adapterInfos;
+        for (int i = 0; i < adapterCount; ++i) {
+            NetworkAdapter *adapter = this->m_newMachine->getNetworkAdapter(i);
+            if (adapter) {
+                QString backendStr;
+                switch (adapter->backend()) {
+                case NetworkBackend::None: backendStr = tr("None"); break;
+                case NetworkBackend::User: backendStr = tr("NAT"); break;
+                case NetworkBackend::Bridge: backendStr = tr("Bridge"); break;
+                case NetworkBackend::Tap: backendStr = tr("TAP"); break;
+                case NetworkBackend::Socket: backendStr = tr("Socket"); break;
+                }
+                adapterInfos << QString("%1 (%2)").arg(adapter->id(), backendStr);
+            }
+        }
+        networkInfo = adapterInfos.join(", ");
+    }
+    this->m_networkLabel->setText(networkInfo);
+    this->m_conclusionLayout->addWidget(this->m_networkDescLabel, 10, 0, 1, 1);
+    this->m_conclusionLayout->addWidget(this->m_networkLabel,     10, 1, 1, 3);
 }
 
 bool MachineConclusionPage::validatePage()
