@@ -10,6 +10,12 @@
 #include <QList>
 #include "../networkadapter.h"
 
+struct BridgeInfo {
+    QString name;
+    bool isActive;
+    QStringList interfaces;
+};
+
 class NetworkUtils
 {
 public:
@@ -35,11 +41,6 @@ public:
     
     static QStringList getPhysicalInterfaces();
     
-    struct BridgeInfo {
-        QString name;
-        bool isActive;
-        QStringList interfaces;
-    };
     static QList<BridgeInfo> getBridgeInfoList();
 
 private:

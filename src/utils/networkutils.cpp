@@ -343,7 +343,7 @@ QStringList NetworkUtils::getPhysicalInterfaces()
     return interfaces;
 }
 
-QList<NetworkUtils::BridgeInfo> NetworkUtils::getBridgeInfoList()
+QList<BridgeInfo> NetworkUtils::getBridgeInfoList()
 {
     QList<BridgeInfo> result;
 
