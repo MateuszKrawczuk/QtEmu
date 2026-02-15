@@ -6,6 +6,7 @@
 #include "../networkadapter.h"
 #include "../utils/networkutils.h"
 #include <QHeaderView>
+#include <QtGlobal>
 
 NetworkPage::NetworkPage(Machine *machine, QWidget *parent)
     : QWizardPage(parent), m_machine(machine), m_adaptersLoaded(false)
@@ -26,8 +27,13 @@ void NetworkPage::setupUI()
     
     m_enableNetworkCheck = new QCheckBox(tr("Enable network connectivity"), this);
     m_enableNetworkCheck->setChecked(true);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
     connect(m_enableNetworkCheck, &QCheckBox::checkStateChanged,
             this, [this](Qt::CheckState state) { onEnableNetworkChanged(static_cast<int>(state)); });
+#else
+    connect(m_enableNetworkCheck, QOverload<int>::of(&QCheckBox::stateChanged),
+            this, &NetworkPage::onEnableNetworkChanged);
+#endif
     m_mainLayout->addWidget(m_enableNetworkCheck);
     
     m_adaptersGroup = new QGroupBox(tr("Network Adapters"), this);
