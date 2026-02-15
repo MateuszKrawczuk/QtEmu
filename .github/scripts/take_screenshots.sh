@@ -133,8 +133,8 @@ if [ -n "$MAIN_WID" ]; then
         sleep 0.5
         screenshot_window "$WIZARD_WID" "02-new-machine-wizard-page1.png"
 
-        # Navigate through wizard pages
-        for page_num in 2 3 4 5 6; do
+        # Navigate through wizard pages (includes Network page added in Phase 3)
+        for page_num in 2 3 4 5 6 7; do
             xdotool key alt+n
             sleep 1
             screenshot_window "$WIZARD_WID" "02-wizard-page-${page_num}.png"
@@ -219,8 +219,8 @@ if [ -n "$MAIN_WID" ]; then
         xdotool key alt+n
         sleep 1
 
-        # Page 3-6: Skip through remaining pages
-        for i in {1..4}; do
+        # Page 3-7: Skip through remaining pages (including Network page)
+        for i in {1..5}; do
             xdotool key alt+n
             sleep 1
         done
