@@ -131,9 +131,65 @@ test_machine_customargs_exe = executable(
 
 test('test_machine_customargs', test_machine_customargs_exe, timeout: 30)
 
+# NetworkAdapter tests
+test_networkadapter_headers = [
+    '../src/networkadapter.h'
+]
+
+test_networkadapter_sources = [
+    'test_networkadapter.cpp',
+    '../src/networkadapter.cpp'
+]
+
+test_networkadapter_moc = qt6.preprocess(
+    moc_headers: test_networkadapter_headers,
+    moc_sources: ['test_networkadapter.cpp'],
+    include_directories: incdir_tests
+)
+
+test_networkadapter_exe = executable(
+    'test_networkadapter',
+    test_networkadapter_sources,
+    test_networkadapter_moc,
+    dependencies: qt6_test_dep,
+    include_directories: incdir_tests
+)
+
+test('test_networkadapter', test_networkadapter_exe, timeout: 30)
+
+# NetworkUtils tests
+test_networkutils_headers = [
+    '../src/networkadapter.h',
+    '../src/utils/networkutils.h'
+]
+
+test_networkutils_sources = [
+    'test_networkutils.cpp',
+    '../src/networkadapter.cpp',
+    '../src/utils/networkutils.cpp'
+]
+
+test_networkutils_moc = qt6.preprocess(
+    moc_headers: test_networkutils_headers,
+    moc_sources: ['test_networkutils.cpp'],
+    include_directories: incdir_tests
+)
+
+test_networkutils_exe = executable(
+    'test_networkutils',
+    test_networkutils_sources,
+    test_networkutils_moc,
+    dependencies: qt6_test_dep,
+    include_directories: incdir_tests
+)
+
+test('test_networkutils', test_networkutils_exe, timeout: 30)
+
 # Summary message
 message('Tests configured:')
 message('  - test_cloudinitisoutils')
 message('  - test_machine_cloudinit')
 message('  - test_machine_customargs')
+message('  - test_networkadapter')
+message('  - test_networkutils')
 message('Run tests with: meson test or ninja test')

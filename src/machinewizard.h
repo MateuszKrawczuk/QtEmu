@@ -24,6 +24,7 @@
 #include "newmachine/acceleratorpage.h"
 #include "newmachine/memorypage.h"
 #include "newmachine/diskpage.h"
+#include "newmachine/networkpage.h"
 #include "newmachine/conclusionpage.h"
 
 class MachineWizard : public QWizard {
@@ -37,7 +38,7 @@ class MachineWizard : public QWizard {
         ~MachineWizard();
 
         enum { Page_Name, Page_Machine, Page_Hardware, Page_Accelerator,
-               Page_Memory, Page_Disk, Page_New_Disk, Page_Conclusion };
+               Page_Memory, Page_Disk, Page_New_Disk, Page_Network, Page_Conclusion };
 
     signals:
 
