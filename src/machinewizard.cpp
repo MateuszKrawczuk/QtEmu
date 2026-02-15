@@ -31,6 +31,7 @@ MachineWizard::MachineWizard(Machine *machine,
     this->setPage(Page_Memory, new MachineMemoryPage(machine, this));
     this->setPage(Page_Disk, new MachineDiskPage(machine, this));
     this->setPage(Page_New_Disk, new MachineNewDiskPage(machine ,this));
+    this->setPage(Page_Network, new NetworkPage(machine, this));
     this->setPage(Page_Conclusion, new MachineConclusionPage(machine, osListWidget, QEMUGlobalObject, this));
 
     this->setStartId(Page_Name);

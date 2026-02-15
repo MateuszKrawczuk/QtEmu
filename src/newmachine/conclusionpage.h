@@ -51,6 +51,7 @@ class MachineConclusionPage: public QWizardPage {
         QLabel *m_RAMDescLabel;
         QLabel *m_acceleratorDescLabel;
         QLabel *m_diskDescLabel;
+        QLabel *m_networkDescLabel;
 
         QLabel *m_conclusionLabel;
         QLabel *m_machineNameLabel;
@@ -62,6 +63,7 @@ class MachineConclusionPage: public QWizardPage {
         QLabel *m_RAMLabel;
         QLabel *m_acceleratorLabel;
         QLabel *m_diskLabel;
+        QLabel *m_networkLabel;
 
         QListWidget *m_osList;
 
