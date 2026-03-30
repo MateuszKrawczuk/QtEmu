@@ -3,6 +3,7 @@
 
 // Local
 #include "exportdetailspage.h"
+#include "../networkadapter.h"
 
 ExportDetailsPage::ExportDetailsPage(Machine *machine,
                                      QWidget *parent) : QWizardPage(parent)
@@ -38,6 +39,27 @@ ExportDetailsPage::ExportDetailsPage(Machine *machine,
     m_acceleratorLabel->setWordWrap(true);
     m_acceleratorLabel->setText(machine->getAcceleratorLabel());
 
+    m_networkDescLabel = new QLabel(tr("Network") + ":", this);
+    m_networkLabel = new QLabel(this);
+    m_networkLabel->setWordWrap(true);
+    QString networkInfo;
+    int adapterCount = machine->networkAdapterCount();
+    if (adapterCount == 0 || !machine->getUseNetwork()) {
+        networkInfo = tr("Disabled");
+    } else {
+        QStringList adapterInfos;
+        for (int i = 0; i < adapterCount; ++i) {
+            NetworkAdapter *adapter = machine->getNetworkAdapter(i);
+            if (adapter) {
+                adapterInfos << QString("%1 (%2)").arg(
+                    adapter->id(),
+                    NetworkAdapter::backendToString(adapter->backend()));
+            }
+        }
+        networkInfo = adapterInfos.join(", ");
+    }
+    m_networkLabel->setText(networkInfo);
+
     m_mainLayout = new QGridLayout();
     m_mainLayout->addWidget(m_machineDescLabel,     0, 0, 1, 1);
     m_mainLayout->addWidget(m_machineNameLabel,     0, 1, 1, 1);
@@ -54,7 +76,9 @@ ExportDetailsPage::ExportDetailsPage(Machine *machine,
     m_mainLayout->addWidget(m_RAMDescLabel,         6, 0, 1, 1);
     m_mainLayout->addWidget(m_RAMLabel,             6, 1, 1, 1);
     m_mainLayout->addWidget(m_acceleratorDescLabel, 7, 0, 1, 1);
-    m_mainLayout->addWidget(m_acceleratorLabel,     7, 1, 1, 1);
+    m_mainLayout->addWidget(m_acceleratorLabel, 7, 1, 1, 1);
+    m_mainLayout->addWidget(m_networkDescLabel, 8, 0, 1, 1);
+    m_mainLayout->addWidget(m_networkLabel, 8, 1, 1, 3);
 
     this->setLayout(m_mainLayout);
 

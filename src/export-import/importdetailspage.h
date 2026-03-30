@@ -42,6 +42,7 @@ class ImportDetailsPage : public QWizardPage {
         QLabel *m_audioDescLabel;
         QLabel *m_RAMDescLabel;
         QLabel *m_acceleratorDescLabel;
+        QLabel *m_networkDescLabel;
 
         QLabel *m_conclusionLabel;
         QLabel *m_machineNameLabel;
@@ -52,6 +53,7 @@ class ImportDetailsPage : public QWizardPage {
         QLabel *m_audioLabel;
         QLabel *m_RAMLabel;
         QLabel *m_acceleratorLabel;
+        QLabel *m_networkLabel;
 
         Machine *m_machine;
 
