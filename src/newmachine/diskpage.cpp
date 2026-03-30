@@ -127,10 +127,10 @@ void MachineDiskPage::useExistingDiskPath()
  */
 int MachineDiskPage::nextId() const
 {
-    if(this->m_noDiskRadio->isChecked() || this->m_useExistingDiskRadio->isChecked()) {
-        return MachineWizard::Page_Conclusion;
-    } else {
+    if(this->m_createDiskRadio->isChecked()) {
         return MachineWizard::Page_New_Disk;
+    } else {
+        return MachineWizard::Page_Network;
     }
 }
 
@@ -290,6 +290,11 @@ void MachineNewDiskPage::initializePage()
 bool MachineNewDiskPage::validatePage()
 {
     return true;
+}
+
+int MachineNewDiskPage::nextId() const
+{
+    return MachineWizard::Page_Network;
 }
 
 /**

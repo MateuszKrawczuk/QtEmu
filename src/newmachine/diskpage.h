@@ -90,6 +90,7 @@ class MachineNewDiskPage: public QWizardPage {
         void selectNameNewDisk();
 
     protected:
+        int nextId() const override;
 
     private:
         void initializePage();
