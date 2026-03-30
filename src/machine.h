@@ -250,7 +250,6 @@ class Machine: public QObject {
         QMessageBox *m_failConnectErrorMessageBox;
 
         // Methods
-        QProcessEnvironment buildEnvironment();
         void failConnectMachine();
 };
 #endif // MACHINE_H
