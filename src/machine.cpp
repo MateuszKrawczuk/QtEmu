@@ -40,6 +40,9 @@ Machine::Machine(QObject *parent) : QObject(parent)
     // Initialize boot object
     this->boot = new Boot(this);
 
+    // Initialize network
+    this->useNetwork = true;
+
     qDebug() << "Machine object created";
 }
 
