@@ -6,6 +6,8 @@
 
 // Local
 #include "hardwarepage.h"
+#include "../networkadapter.h"
+#include "../utils/networkutils.h"
 #include <thread>
 #include <QFileDialog>
 #include <QDir>
@@ -29,7 +31,8 @@ MachineHardwarePage::MachineHardwarePage(Machine *machine,
     m_hardwareTabWidget->addTab(new ProcessorTab(machine, this), tr("Processor"));
     m_hardwareTabWidget->addTab(new GraphicsTab(machine, this), tr("Graphics"));
     m_hardwareTabWidget->addTab(new AudioTab(machine, this), tr("Audio"));
-    m_hardwareTabWidget->addTab(new NetworkTab(machine, this), tr("Network"));
+    m_networkTab = new NetworkTab(machine, this);
+    m_hardwareTabWidget->addTab(m_networkTab, tr("Network"));
     m_hardwareTabWidget->addTab(new BiosTab(machine, qemuObject, this), tr("BIOS"));
     m_hardwareTabWidget->addTab(new OthersTab(machine, this), tr("Others"));
 
@@ -44,6 +47,38 @@ MachineHardwarePage::MachineHardwarePage(Machine *machine,
 
 MachineHardwarePage::~MachineHardwarePage() {
     qDebug() << "MachineHardwarePage destroyed";
+}
+
+bool MachineHardwarePage::validatePage() {
+    if (m_newMachine->getUseNetwork()) {
+        while (m_newMachine->networkAdapterCount() > 0) {
+            m_newMachine->removeNetworkAdapter(0);
+        }
+
+        int backendIdx = m_networkTab->m_backendCombo->currentIndex();
+        NetworkBackend backend = static_cast<NetworkBackend>(
+            m_networkTab->m_backendCombo->itemData(backendIdx).toInt());
+
+        int nicIdx = m_networkTab->m_nicModelCombo->currentIndex();
+        NicModel nic = static_cast<NicModel>(
+            m_networkTab->m_nicModelCombo->itemData(nicIdx).toInt());
+
+        NetworkAdapter *adapter = new NetworkAdapter(m_newMachine);
+        adapter->setId(QStringLiteral("net0"));
+        adapter->setBackend(backend);
+        adapter->setNicModel(nic);
+
+        if (backend == NetworkBackend::Bridge) {
+            adapter->setBridgeName(m_networkTab->m_bridgeNameEdit->text());
+        }
+
+        m_newMachine->addNetworkAdapter(adapter);
+    } else {
+        while (m_newMachine->networkAdapterCount() > 0) {
+            m_newMachine->removeNetworkAdapter(0);
+        }
+    }
+    return true;
 }
 
 /**
@@ -417,20 +452,53 @@ NetworkTab::NetworkTab(Machine *machine,
                        QWidget *parent) : QWidget(parent) {
     this->m_newMachine = machine;
 
-    m_withNetworkRadio = new QRadioButton(tr("User Mode Network Connection (Uses the user mode network stack)"), this);
+    m_withNetworkRadio = new QRadioButton(tr("Enable network"), this);
     m_withNetworkRadio->setChecked(true);
-    this->networkState(true);
+
+    m_withoutNetworkRadio = new QRadioButton(tr("No network"), this);
 
     connect(m_withNetworkRadio, &QAbstractButton::toggled,
             this, &NetworkTab::networkState);
 
-    m_withoutNetworkRadio = new QRadioButton(tr("No network (No network cards installed on this machine"), this);
+    m_backendLabel = new QLabel(tr("Backend") + ":", this);
+    m_backendCombo = new QComboBox(this);
+    populateBackends();
+    connect(m_backendCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &NetworkTab::selectBackend);
+
+    m_nicModelLabel = new QLabel(tr("NIC Model") + ":", this);
+    m_nicModelCombo = new QComboBox(this);
+    populateNicModels();
+    connect(m_nicModelCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &NetworkTab::selectNicModel);
+
+    m_bridgeNameLabel = new QLabel(tr("Bridge name") + ":", this);
+    m_bridgeNameEdit = new QLineEdit(this);
+    m_bridgeNameEdit->setPlaceholderText(tr("e.g. br0"));
+    connect(m_bridgeNameEdit, &QLineEdit::textChanged,
+            this, &NetworkTab::bridgeNameChanged);
+
+    m_networkConfigLayout = new QGridLayout();
+    m_networkConfigLayout->addWidget(m_backendLabel, 0, 0, 1, 1);
+    m_networkConfigLayout->addWidget(m_backendCombo, 0, 1, 1, 3);
+    m_networkConfigLayout->addWidget(m_nicModelLabel, 1, 0, 1, 1);
+    m_networkConfigLayout->addWidget(m_nicModelCombo, 1, 1, 1, 3);
+    m_networkConfigLayout->addWidget(m_bridgeNameLabel, 2, 0, 1, 1);
+    m_networkConfigLayout->addWidget(m_bridgeNameEdit, 2, 1, 1, 3);
+
+    m_configWidget = new QWidget(this);
+    m_configWidget->setLayout(m_networkConfigLayout);
 
     m_networkLayout = new QVBoxLayout();
     m_networkLayout->addWidget(m_withNetworkRadio);
     m_networkLayout->addWidget(m_withoutNetworkRadio);
+    m_networkLayout->addWidget(m_configWidget);
 
     this->setLayout(m_networkLayout);
+
+    this->networkState(true);
+    this->selectBackend(0);
+    this->selectNicModel(0);
 
     qDebug() << "NetworkTab created";
 }
@@ -447,6 +515,54 @@ NetworkTab::~NetworkTab() {
  */
 void NetworkTab::networkState(bool network) {
     this->m_newMachine->setUseNetwork(network);
+    m_configWidget->setEnabled(network);
+}
+
+void NetworkTab::populateBackends() {
+    m_backendCombo->addItem(tr("User Mode (NAT)"), static_cast<int>(NetworkBackend::User));
+    m_backendCombo->addItem(tr("Socket"), static_cast<int>(NetworkBackend::Socket));
+
+    if (NetworkUtils::isBridgeSupported()) {
+        m_backendCombo->insertItem(1, tr("Bridge"), static_cast<int>(NetworkBackend::Bridge));
+    }
+    if (NetworkUtils::isTapSupported()) {
+        int tapIdx = m_backendCombo->count();
+        m_backendCombo->insertItem(tapIdx, tr("TAP"), static_cast<int>(NetworkBackend::Tap));
+    }
+}
+
+void NetworkTab::populateNicModels() {
+    QStringList names = NetworkAdapter::availableNicModelNames();
+    for (int i = 0; i < names.size(); ++i) {
+        m_nicModelCombo->addItem(names.at(i), i);
+    }
+    m_nicModelCombo->setCurrentIndex(0);
+}
+
+void NetworkTab::selectBackend(int index) {
+    if (index < 0) return;
+
+    int backendInt = m_backendCombo->itemData(index).toInt();
+    NetworkBackend backend = static_cast<NetworkBackend>(backendInt);
+
+    bool showBridge = (backend == NetworkBackend::Bridge);
+    m_bridgeNameLabel->setVisible(showBridge);
+    m_bridgeNameEdit->setVisible(showBridge);
+
+    if (backend == NetworkBackend::Bridge && m_bridgeNameEdit->text().isEmpty()) {
+        QStringList bridges = NetworkUtils::getAvailableBridges();
+        if (!bridges.isEmpty()) {
+            m_bridgeNameEdit->setText(bridges.first());
+        }
+    }
+}
+
+void NetworkTab::selectNicModel(int index) {
+    Q_UNUSED(index);
+}
+
+void NetworkTab::bridgeNameChanged(const QString &name) {
+    Q_UNUSED(name);
 }
 
 /**

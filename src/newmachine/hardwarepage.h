@@ -10,6 +10,7 @@
 // Qt
 #include <QWizard>
 #include <QVBoxLayout>
+#include <QGridLayout>
 #include <QTabWidget>
 #include <QComboBox>
 #include <QLabel>
@@ -27,6 +28,8 @@
 #include "../qemu.h"
 #include "../utils/systemutils.h"
 
+class NetworkTab;
+
 class MachineHardwarePage: public QWizardPage {
     Q_OBJECT
 
@@ -43,12 +46,15 @@ class MachineHardwarePage: public QWizardPage {
     protected:
 
     private:
+        bool validatePage() override;
+
         QVBoxLayout *m_hardwareLayout;
 
         QTabWidget *m_hardwareTabWidget;
 
         Machine *m_newMachine;
         QEMU *m_qemuObject;
+        NetworkTab *m_networkTab;
 };
 
 class ProcessorTab: public QWidget {
@@ -147,6 +153,7 @@ class AudioTab: public QWidget {
 
 class NetworkTab: public QWidget {
     Q_OBJECT
+    friend class MachineHardwarePage;
 
     public:
         explicit NetworkTab(Machine *machine,
@@ -156,14 +163,30 @@ class NetworkTab: public QWidget {
 
     public slots:
         void networkState(bool network);
+        void selectBackend(int index);
+        void selectNicModel(int index);
+        void bridgeNameChanged(const QString &name);
 
     protected:
 
     private:
+        void populateBackends();
+        void populateNicModels();
+
         QVBoxLayout *m_networkLayout;
+        QGridLayout *m_networkConfigLayout;
 
         QRadioButton *m_withNetworkRadio;
         QRadioButton *m_withoutNetworkRadio;
+
+        QLabel *m_backendLabel;
+        QComboBox *m_backendCombo;
+        QLabel *m_nicModelLabel;
+        QComboBox *m_nicModelCombo;
+        QLabel *m_bridgeNameLabel;
+        QLineEdit *m_bridgeNameEdit;
+
+        QWidget *m_configWidget;
 
         Machine *m_newMachine;
 };
