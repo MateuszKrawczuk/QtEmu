@@ -23,7 +23,7 @@ public:
     static bool bridgeExists(const QString &bridgeName);
     
     static bool createBridge(const QString &bridgeName, 
-                            const QString &interface,
+                            const QString &networkInterface,
                             QString &errorMsg);
     
     static bool canUsePkexec();
