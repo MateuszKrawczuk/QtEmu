@@ -76,7 +76,13 @@ SOURCES +=  src/main.cpp\
             src/export-import/importdestinationpage.cpp \
             src/export-import/exportdetailspage.cpp \
             src/export-import/importdetailspage.cpp \
-            src/export-import/importmediapage.cpp
+            src/export-import/importmediapage.cpp \
+            src/networkadapter.cpp \
+            src/newmachine/networkpage.cpp \
+            src/machineconfig/networkadapterdialog.cpp \
+            src/machineconfig/portforwarddialog.cpp \
+            src/machineconfig/createbridgedialog.cpp \
+            src/utils/networkutils.cpp
 
 HEADERS  += src/mainwindow.h \
             src/components/customfilter.h \
@@ -119,7 +125,13 @@ HEADERS  += src/mainwindow.h \
             src/export-import/importdestinationpage.h \
             src/export-import/exportdetailspage.h \
             src/export-import/importdetailspage.h \
-            src/export-import/importmediapage.h
+            src/export-import/importmediapage.h \
+            src/networkadapter.h \
+            src/newmachine/networkpage.h \
+            src/machineconfig/networkadapterdialog.h \
+            src/machineconfig/portforwarddialog.h \
+            src/machineconfig/createbridgedialog.h \
+            src/utils/networkutils.h
 
 OTHER_FILES += \
     CHANGELOG \
