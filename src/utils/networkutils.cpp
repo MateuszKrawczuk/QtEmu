@@ -67,7 +67,7 @@ bool NetworkUtils::bridgeExists(const QString &bridgeName)
 }
 
 bool NetworkUtils::createBridge(const QString &bridgeName,
-                                const QString &interface,
+                                const QString &networkInterface,
                                 QString &errorMsg)
 {
     if (bridgeName.isEmpty()) {
@@ -115,10 +115,10 @@ bool NetworkUtils::createBridge(const QString &bridgeName,
     }
     
     // Add interface to bridge if specified
-    if (!interface.isEmpty()) {
+    if (!networkInterface.isEmpty()) {
         args.clear();
         args << QStringLiteral("ip") << QStringLiteral("link") << QStringLiteral("set") 
-             << interface << QStringLiteral("master") << bridgeName;
+             << networkInterface << QStringLiteral("master") << bridgeName;
         
         process.start(QStringLiteral("pkexec"), args);
         process.waitForFinished(30000);
@@ -154,9 +154,9 @@ bool NetworkUtils::createBridge(const QString &bridgeName,
         return false;
     }
     
-    if (!interface.isEmpty()) {
+    if (!networkInterface.isEmpty()) {
         args.clear();
-        args << QStringLiteral("ifconfig") << bridgeName << QStringLiteral("addm") << interface;
+        args << QStringLiteral("ifconfig") << bridgeName << QStringLiteral("addm") << networkInterface;
         
         process.start(QStringLiteral("pkexec"), args);
         process.waitForFinished(30000);
@@ -173,8 +173,8 @@ bool NetworkUtils::createBridge(const QString &bridgeName,
     QProcess process;
     QString script = QStringLiteral("New-VMSwitch -Name '%1' -SwitchType External").arg(bridgeName);
     
-    if (!interface.isEmpty()) {
-        script = QStringLiteral("New-VMSwitch -Name '%1' -NetAdapterName '%2'").arg(bridgeName, interface);
+    if (!networkInterface.isEmpty()) {
+        script = QStringLiteral("New-VMSwitch -Name '%1' -NetAdapterName '%2'").arg(bridgeName, networkInterface);
     }
     
     process.start(QStringLiteral("powershell"), 
