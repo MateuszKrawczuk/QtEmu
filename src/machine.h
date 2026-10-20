@@ -121,7 +121,7 @@ class Machine: public QObject {
 
         bool getUseNetwork() const;
         void setUseNetwork(bool value);
-        
+
         QList<NetworkAdapter*> getNetworkAdapters() const;
         NetworkAdapter* getNetworkAdapter(int index) const;
         void addNetworkAdapter(NetworkAdapter *adapter);
@@ -215,7 +215,7 @@ class Machine: public QObject {
 
         // Hardware - media
         QList<Media *> media;
-        
+
         // BIOS
         QString biosPath;
         QString biosDirectory;
@@ -240,6 +240,7 @@ class Machine: public QObject {
         // Process
         QProcess *m_machineProcess;
         QTcpSocket *m_machineTcpSocket;
+        QByteArray m_pendingErrorOutput;
 
         // Messages
         QMessageBox *m_saveMachineMessageBox;
@@ -251,5 +252,6 @@ class Machine: public QObject {
 
         // Methods
         void failConnectMachine();
+        void processMachineErrorOutput(bool flushPartialLine);
 };
 #endif // MACHINE_H

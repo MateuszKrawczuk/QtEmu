@@ -31,6 +31,7 @@ private slots:
     void testCustomArgumentsWithQuotes();
     void testCustomArgumentsSplitCommand();
     void testCustomArgumentsInGeneratedCommand();
+    void testWHPXMachineArgument();
 
 private:
     Machine *testMachine;
@@ -257,7 +258,8 @@ void TestMachineCustomArgs::testCustomArgumentsInGeneratedCommand()
     QStringList commandWithoutCustom = testMachine->generateMachineCommand();
     QVERIFY(commandWithoutCustom.contains("-name"));
     QVERIFY(commandWithoutCustom.contains("TestVM"));
-    QVERIFY(!commandWithoutCustom.contains("-device"));
+    QVERIFY(!commandWithoutCustom.contains("virtio-balloon"));
+    QVERIFY(!commandWithoutCustom.contains("virtio-rng-pci"));
 
     // Test with custom arguments
     testMachine->setCustomArguments("-device virtio-balloon -device virtio-rng-pci");
@@ -278,6 +280,29 @@ void TestMachineCustomArgs::testCustomArgumentsInGeneratedCommand()
     // Should be same as without custom arguments
     QVERIFY(commandWithEmpty.contains("-name"));
     QVERIFY(commandWithEmpty.contains("TestVM"));
+}
+
+void TestMachineCustomArgs::testWHPXMachineArgument()
+{
+#ifdef Q_OS_WIN
+    testMachine->setType("q35");
+    testMachine->setAccelerator(QStringList() << "whpx");
+
+    QStringList whpxCommand = testMachine->generateMachineCommand();
+    int machineOption = whpxCommand.indexOf("-machine");
+
+    QVERIFY(machineOption >= 0);
+    QCOMPARE(whpxCommand.at(machineOption + 1), QString("q35,kernel-irqchip=off"));
+
+    testMachine->setAccelerator(QStringList() << "tcg");
+    QStringList tcgCommand = testMachine->generateMachineCommand();
+    machineOption = tcgCommand.indexOf("-machine");
+
+    QVERIFY(machineOption >= 0);
+    QCOMPARE(tcgCommand.at(machineOption + 1), QString("q35"));
+#else
+    QSKIP("WHPX is only available on Windows");
+#endif
 }
 
 QTEST_MAIN(TestMachineCustomArgs)

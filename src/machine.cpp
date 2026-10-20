@@ -960,6 +960,7 @@ QString Machine::getAcceleratorLabel()
 void Machine::runMachine(QEMU *QEMUGlobalObject)
 {
     QStringList args = this->generateMachineCommand();
+    m_pendingErrorOutput.clear();
 
     QString program;
     #ifdef Q_OS_LINUX
@@ -1117,15 +1118,45 @@ void Machine::readMachineStandardOut()
  */
 void Machine::readMachineErrorOut()
 {
-    QByteArray rawErrorOutput;
+    m_pendingErrorOutput.append(this->m_machineProcess->readAllStandardError());
+    processMachineErrorOutput(false);
+}
 
-    rawErrorOutput = this->m_machineProcess->readAllStandardError();
-    QString errorOutput = rawErrorOutput;
-    if (errorOutput.isEmpty()) {
+
+/**
+ * @brief Read error output with optional flush
+ *
+ * Read the machine error output but sometimes it will display before the line is complete
+ * so we want to optionally flush the partial line so that we can properly filter warning messages.
+ */
+void Machine::processMachineErrorOutput(bool flushPartialLine)
+{
+    if (flushPartialLine && !m_pendingErrorOutput.isEmpty() &&
+        !m_pendingErrorOutput.endsWith('\n')) {
+        m_pendingErrorOutput.append('\n');
+    }
+
+    QStringList actionableErrors;
+    int newlineIndex = -1;
+    while ((newlineIndex = m_pendingErrorOutput.indexOf('\n')) >= 0) {
+        const QByteArray rawErrorLine = m_pendingErrorOutput.left(newlineIndex);
+        m_pendingErrorOutput.remove(0, newlineIndex + 1);
+        const QString errorLine = QString::fromLocal8Bit(rawErrorLine).trimmed();
+        if (errorLine.isEmpty()) {
+            continue;
+        }
+        if (errorLine.contains("No error") || errorLine.contains("Gtk-WARNING")) {
+            continue;
+        }
+        actionableErrors.append(errorLine);
+    }
+
+    if (actionableErrors.isEmpty()) {
         return;
-    }   
+    }
+
     SystemUtils::showMessage(tr("QEMU - Error Out"),
-                             errorOutput,
+                             actionableErrors.join('\n'),
                              QMessageBox::Critical);
 }
 
@@ -1147,6 +1178,9 @@ void Machine::machineStarted()
  */
 void Machine::machineFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    m_pendingErrorOutput.append(this->m_machineProcess->readAllStandardError());
+    processMachineErrorOutput(true);
+
     qDebug() << "Exit code: " << exitCode << " exit status: " << exitStatus;
     this->state = Machine::Stopped;
     emit(machineStateChangedSignal(Machine::Stopped));
@@ -1176,15 +1210,25 @@ QStringList Machine::generateMachineCommand()
     qemuCommand << "-name";
     qemuCommand << this->name;
 
-    if (!this->type.isEmpty()) {
+    QString machineArgument = this->type;
+#ifdef Q_OS_WIN
+    if (this->accelerator.contains("whpx")) {
+        // WHPX is giving a lot of "Ignoring request for interrupt vector 0"
+        // and the popups in QtEmu is annoying, turning it off reduces this warning
+        machineArgument += machineArgument.isEmpty() ?
+                           "kernel-irqchip=off" : ",kernel-irqchip=off";
+    }
+#endif
+
+    if (!machineArgument.isEmpty()) {
         qemuCommand << "-machine";
-        qemuCommand << this->type;
+        qemuCommand << machineArgument;
     }
 
     QUuid uuid(this->uuid);
     qemuCommand << "-uuid";
     qemuCommand << uuid.toString(QUuid::WithoutBraces);
-    
+
     if (!this->biosDirectory.isEmpty()) {
         qemuCommand << "-L";
         qemuCommand << QDir::toNativeSeparators(this->biosDirectory);
@@ -1254,6 +1298,26 @@ QStringList Machine::generateMachineCommand()
 
     qemuCommand << "-vga";
     qemuCommand << this->GPUType;
+
+    // Clipboard sharing through SPICE so that we can copy and paste between the host and the guest
+    qemuCommand << "-display";
+    qemuCommand << "gtk,clipboard=on";
+
+    qemuCommand << "-chardev";
+    qemuCommand << "qemu-vdagent,id=vdagent0,name=vdagent,clipboard=on,mouse=off";
+    qemuCommand << "-device";
+    qemuCommand << "virtio-serial-pci";
+    qemuCommand << "-device";
+    qemuCommand << "virtserialport,chardev=vdagent0,name=com.redhat.spice.0";
+
+    ///@todo This is a fishy copy paste, limit to WHPX instead?
+    // https://www.qemu.org/docs/master/system/whpx.html#quick-start
+    if (this->type == "q35" || this->type.startsWith("pc-q35")) {
+        qemuCommand << "-device";
+        qemuCommand << "ich9-usb-ehci1";
+        qemuCommand << "-device";
+        qemuCommand << "usb-tablet";
+    }
 
     qemuCommand << "-cpu";
     qemuCommand << this->CPUType;
@@ -1368,7 +1432,7 @@ bool Machine::saveMachine()
     machineJSONObject["description"] = this->description;
     machineJSONObject["RAM"]         = this->RAM;
     machineJSONObject["network"]     = this->useNetwork;
-    
+
     if (!networkAdapters.isEmpty()) {
         QJsonArray networkAdaptersArray;
         for (NetworkAdapter *adapter : networkAdapters) {
@@ -1376,7 +1440,7 @@ bool Machine::saveMachine()
         }
         machineJSONObject["networkAdapters"] = networkAdaptersArray;
     }
-    
+
     machineJSONObject["path"]        = QDir::toNativeSeparators(this->path);
     machineJSONObject["uuid"]        = this->uuid.toString(QUuid::WithoutBraces);
     machineJSONObject["hostsoundsystem"] = this->hostSoundSystem;
